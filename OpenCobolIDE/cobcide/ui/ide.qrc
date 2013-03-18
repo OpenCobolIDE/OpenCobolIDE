@@ -1,0 +1,22 @@
+<RCC>
+  <qresource prefix="ide-icons">
+    <file>rc/accept.png</file>
+    <file>rc/cobol-mimetype.png</file>
+    <file>rc/utilities-terminal.png</file>
+    <file>rc/software-update-urgent.png</file>
+    <file>rc/text-x-generic.png</file>
+    <file>rc/dialog-information.png</file>
+    <file>rc/view-fullscreen.png</file>
+    <file>rc/edit-clear.png</file>
+    <file>rc/system-log-out.png</file>
+    <file>rc/1363472922_application-x-sharedlib.png</file>
+    <file>rc/application-x-executable.png</file>
+    <file>rc/applications-system.png</file>
+    <file>rc/cobol.png</file>
+    <file>rc/document-new.png</file>
+    <file>rc/document-open.png</file>
+    <file>rc/document-save-as.png</file>
+    <file>rc/document-save.png</file>
+    <file>rc/media-playback-start.png</file>
+  </qresource>
+</RCC>
