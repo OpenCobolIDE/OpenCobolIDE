@@ -98,16 +98,17 @@ class TabManager(QObject):
             self.__tabWidget.removeTab(index)
 
     def __on_current_changed(self, index):
-
+        txt = ""
         if self.__current_index != -1:
             tab = self.__tabWidget.widget(self.__current_index)
             if tab:
                 tab.codeEdit.dirtyChanged.disconnect(self.__on_dirty_changed)
         tab = self.__tabWidget.widget(index)
-        tab.codeEdit.dirtyChanged.connect(self.__on_dirty_changed)
-        txt = self.__tabWidget.tabText(index)
+        if tab:
+            tab.codeEdit.dirtyChanged.connect(self.__on_dirty_changed)
+            txt = self.__tabWidget.tabText(index)
+            self.__current_index = index
         self.tabChanged.emit(tab, txt)
-        self.__current_index = index
 
     def __on_dirty_changed(self, dirty):
         finfo = QFileInfo(self.active_tab.codeEdit.tagFilename)
