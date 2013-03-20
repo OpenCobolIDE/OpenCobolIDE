@@ -19,7 +19,7 @@ Contains classes and functions to manage the tab widget
 from PySide.QtCore import QFileInfo, QObject, Signal
 import pcef
 from pcef.editors.generic import GenericEditor
-from PySide.QtGui import QTabWidget, QIcon, QWidget
+from PySide.QtGui import QTabWidget, QIcon, QWidget, QDialog, QMessageBox
 from cobcide import FileType
 from cobcide.tabs import CobolEditor
 
@@ -59,6 +59,13 @@ class TabManager(QObject):
     def active_tab_filename(self):
         return self.active_tab.codeEdit.tagFilename
 
+    @property
+    def active_tab_file_dir(self):
+        """
+        Returns the pant directory of the file shown in the active tab
+        """
+        return QFileInfo(self.active_tab_filename).dir().path()
+
     def open_tab(self, filepath, choice):
         """
         Open a new file tab
@@ -70,15 +77,14 @@ class TabManager(QObject):
                 choice == FileType.Subprogram:
             tab = CobolEditor()
             tab.fileType = choice
-            pcef.openFileInEditor(tab, filepath)
             icon = QIcon(":/ide-icons/rc/cobol-mimetype.png")
         else:
             tab = GenericEditor()
             icon = QIcon(":/ide-icons/rc/text-x-generic.png")
             tab.fileType = choice
         pcef.openFileInEditor(tab, filepath)
-        index = self.__tabWidget.addTab(tab, icon,
-                                         QFileInfo(filepath).fileName())
+        index = self.__tabWidget.addTab(
+            tab, icon, QFileInfo(filepath).fileName())
         self.__tabWidget.setCurrentIndex(index)
         tab.setFocus()
         return tab

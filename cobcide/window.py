@@ -29,6 +29,7 @@ from cobcide.errors_manager import ErrorsManager
 from cobcide.tab_manager import TabManager
 from cobcide.tabs import CobolEditor
 from cobcide.ui import ide_ui
+from settings import Settings
 
 
 class MainWindow(QMainWindow):
@@ -92,9 +93,10 @@ class MainWindow(QMainWindow):
                 self.__ui.actionProgram.setChecked(False)
                 self.__ui.actionSubprogram.setChecked(False)
 
+
     @Slot()
     def on_actionNew_triggered(self):
-         # ask file type
+        # ask file type
         dlg = DlgFileType(
             parent=self,
             label="<p>What kind of file do you want to <b>create</b>?</p>")
@@ -113,7 +115,14 @@ class MainWindow(QMainWindow):
                             "Failed to save file {0}. Check that you have the "
                             "rights to write on that folder and try again."
                             "".format(filename))
-                    tab = self.__tab_manager.open_tab(filename, dlg.choice)
+                    try:
+                        tab = self.__tab_manager.open_tab(filename, dlg.choice)
+                    except UnicodeDecodeError:
+                        QMessageBox.critical(
+                            self, "Encoding error",
+                            "Failed to open %s, bad encoding. At the moment, we"
+                            " only accept utf8 files. This will change in a "
+                            "near future.")
                     if isinstance(tab, CobolEditor):
                         error_manager = ErrorsManager(
                             self.__ui.listWidgetErrors, tab)
@@ -129,16 +138,25 @@ class MainWindow(QMainWindow):
                 extension = "Text files (*.dat *.txt)"
             else:
                 extension = "Cobol files (*.cbl)"
+            s = Settings()
             filename = QFileDialog.getOpenFileName(
-                self, "Choose a file to open", "", extension)[0]
+                self, "Choose a file to open", s.last_used_path,
+                extension)[0]
             if filename != "":
-                tab = self.__tab_manager.open_tab(filename, dlg.choice)
-                if isinstance(tab, CobolEditor):
-                    error_manager = ErrorsManager(
-                        self.__ui.listWidgetErrors, tab)
-                    tab.errors_manager = error_manager
-                self.__update_toolbar()
-                self.setFocus()
+                try:
+                    tab = self.__tab_manager.open_tab(filename, dlg.choice)
+                    s.last_used_path = self.__tab_manager.active_tab_file_dir
+                    if isinstance(tab, CobolEditor):
+                        error_manager = ErrorsManager(
+                            self.__ui.listWidgetErrors, tab)
+                        tab.errors_manager = error_manager
+                    self.__update_toolbar()
+                except UnicodeDecodeError:
+                    QMessageBox.critical(
+                        self, "Encoding error",
+                        "Failed to open %s, bad encoding.\n\n"
+                        "At the moment, we only support utf8 encoding.\n"
+                        "This will change in a near future." % filename)
 
     @Slot(bool)
     def on_actionFullscreen_toggled(self, fullscreen):
@@ -161,9 +179,12 @@ class MainWindow(QMainWindow):
     def on_actionSave_as_triggered(self):
         """ Save the current file as"""
         editor = self.__tab_manager.active_tab
-        filename = QFileDialog.getSaveFileName(self)[0]
+        filename = QFileDialog.getSaveFileName(self, "Choose a save filename",
+                                               self.default_directory)[0]
+        s = Settings()
         if filename != "":
             saveFileFromEditor(editor, filename)
+            s.last_used_path = self.__tab_manager.active_tab_file_dir
 
     @Slot()
     def on_actionAbout_triggered(self):

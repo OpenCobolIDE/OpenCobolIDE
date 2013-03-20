@@ -31,7 +31,6 @@ def main():
     Setup the Qt gui application, create the ide window and run the qt main
     loop.
     """
-    print cobcide.__version__
     app = QApplication(sys.argv)
     # app.setStyleSheet(qdarkstyle.load_stylesheet())
     win = MainWindow()
