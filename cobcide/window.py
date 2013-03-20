@@ -16,7 +16,6 @@
 """
 Contains the IDE main window.
 """
-import subprocess
 from PySide.QtCore import Slot, QThreadPool
 from PySide.QtGui import QMainWindow, QActionGroup
 from PySide.QtGui import QFileDialog
@@ -29,10 +28,12 @@ from cobcide.errors_manager import ErrorsManager
 from cobcide.tab_manager import TabManager
 from cobcide.tabs import CobolEditor
 from cobcide.ui import ide_ui
-from settings import Settings
+from cobcide.settings import Settings
 
 
 class MainWindow(QMainWindow):
+    PAGE_HOME = 0
+    PAGE_EDITOR = 1
     def __init__(self):
         QMainWindow.__init__(self)
         self.__ui = ide_ui.Ui_MainWindow()
@@ -48,6 +49,7 @@ class MainWindow(QMainWindow):
         self.__update_toolbar()
         self.__threadPool = QThreadPool()
         self.__threadPool.setMaxThreadCount(1)
+        self.__ui.stackedWidget.setCurrentIndex(self.PAGE_HOME)
 
     def __update_toolbar(self):
         """
@@ -117,17 +119,19 @@ class MainWindow(QMainWindow):
                             "".format(filename))
                     try:
                         tab = self.__tab_manager.open_tab(filename, dlg.choice)
+                        self.__ui.stackedWidget.setCurrentIndex(
+                            self.PAGE_EDITOR)
+                        if isinstance(tab, CobolEditor):
+                            error_manager = ErrorsManager(
+                                self.__ui.listWidgetErrors, tab)
+                            tab.errors_manager = error_manager
+                        self.__update_toolbar()
                     except UnicodeDecodeError:
                         QMessageBox.critical(
                             self, "Encoding error",
                             "Failed to open %s, bad encoding. At the moment, we"
                             " only accept utf8 files. This will change in a "
                             "near future.")
-                    if isinstance(tab, CobolEditor):
-                        error_manager = ErrorsManager(
-                            self.__ui.listWidgetErrors, tab)
-                        tab.errors_manager = error_manager
-                    self.__update_toolbar()
 
     @Slot()
     def on_actionOpen_triggered(self):
@@ -145,6 +149,8 @@ class MainWindow(QMainWindow):
             if filename != "":
                 try:
                     tab = self.__tab_manager.open_tab(filename, dlg.choice)
+                    self.__ui.stackedWidget.setCurrentIndex(
+                        self.PAGE_EDITOR)
                     s.last_used_path = self.__tab_manager.active_tab_file_dir
                     if isinstance(tab, CobolEditor):
                         error_manager = ErrorsManager(
@@ -237,13 +243,24 @@ class MainWindow(QMainWindow):
         self.__tab_manager.active_tab.codeEdit.setTextCursor(c)
 
     def __on_current_tab_changed(self, widget, txt):
-        self.setWindowTitle("OpenCobol IDE - %s" % txt)
-        self.__update_toolbar()
-        if isinstance(widget, CobolEditor) and widget.errors_manager:
-            widget.errors_manager.updateErrors()
+        if widget:
+            self.setWindowTitle("OpenCobol IDE - %s" % txt)
+            self.__update_toolbar()
+            if isinstance(widget, CobolEditor) and widget.errors_manager:
+                widget.errors_manager.updateErrors()
+            else:
+                self.__ui.listWidgetErrors.clear()
+            self.__ui.tabWidgetLogs.setCurrentIndex(0)
+            self.__ui.menuEdit.clear()
+            self.__ui.menuEdit.addActions(
+                self.__tab_manager.active_tab.codeEdit.contextMenu.actions())
         else:
+            self.setWindowTitle("OpenCobol IDE")
+            self.__update_toolbar()
+            self.__ui.plainTextEditOutput.clear()
             self.__ui.listWidgetErrors.clear()
-        self.__ui.tabWidgetLogs.setCurrentIndex(0)
+            self.__ui.menuEdit.clear()
+            self.__ui.stackedWidget.setCurrentIndex(self.PAGE_HOME)
 
     def __change_current_file_type(self, action):
         if self.__tab_manager.active_tab_type != FileType.Text:
