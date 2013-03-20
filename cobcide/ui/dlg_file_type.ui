@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>477</width>
+    <width>475</width>
     <height>133</height>
    </rect>
   </property>
@@ -21,6 +21,9 @@
      </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+     <property name="centerButtons">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -77,6 +80,12 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>radioButtonProgram</tabstop>
+  <tabstop>radioButtonSubprogram</tabstop>
+  <tabstop>radioButtonText</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources>
   <include location="ide.qrc"/>
  </resources>

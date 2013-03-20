@@ -16,6 +16,7 @@
 Contains the different tabs types (one for cobol files, another for basic text
 files)
 """
+from pcef import styles
 from pygments.token import Comment
 from PySide.QtCore import Slot, QRegExp
 from pcef.core import CodeEditorWidget
@@ -30,6 +31,7 @@ from pcef.panels.search import SearchPanel
 from pcef.panels.misc import CheckersMarkerPanel
 from cobcide import FileType
 from cobcide.errors_manager import ErrorsManager
+from cobcide.toupper_mode import ToUpperMode
 
 
 class CobolEditor(CodeEditorWidget):
@@ -138,6 +140,9 @@ class CobolEditor(CodeEditorWidget):
     def __init__(self, parent=None):
         CodeEditorWidget.__init__(self, parent)
         self.__file_type = FileType.Program
+        self.currentStyle.pygmentsStyle = "default"
+        self.currentStyle.showWhitespaces = False
+        self.currentStyle = self.currentStyle
 
         # Install actions
         self._installActions()
@@ -148,6 +153,7 @@ class CobolEditor(CodeEditorWidget):
         self.installPanel(CheckersMarkerPanel(), self.PANEL_ZONE_LEFT)
 
         # Install modes
+        self.installMode(ToUpperMode())
         self.installMode(CodeCompletionMode())
         self.installMode(RightMarginMode())
         left_margin = RightMarginMode()

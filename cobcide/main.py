@@ -16,11 +16,12 @@
 """
 This module contains the IDE application entry point.
 """
+import logging
+logging.basicConfig()
 import os
 import sys
 sys.path.append(os.path.abspath(os.getcwd() + "/../"))
 from PySide.QtGui import QApplication
-import cobcide
 from cobcide.window import MainWindow
 
 
@@ -32,7 +33,6 @@ def main():
     loop.
     """
     app = QApplication(sys.argv)
-    # app.setStyleSheet(qdarkstyle.load_stylesheet())
     win = MainWindow()
     win.showNormal()
     return app.exec_()

@@ -243,6 +243,7 @@ class MainWindow(QMainWindow):
             widget.errors_manager.updateErrors()
         else:
             self.__ui.listWidgetErrors.clear()
+        self.__ui.tabWidgetLogs.setCurrentIndex(0)
 
     def __change_current_file_type(self, action):
         if self.__tab_manager.active_tab_type != FileType.Text:

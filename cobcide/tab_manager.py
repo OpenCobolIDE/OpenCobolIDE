@@ -101,7 +101,8 @@ class TabManager(QObject):
 
         if self.__current_index != -1:
             tab = self.__tabWidget.widget(self.__current_index)
-            tab.codeEdit.dirtyChanged.disconnect(self.on_dirty_changed)
+            if tab:
+                tab.codeEdit.dirtyChanged.disconnect(self.__on_dirty_changed)
         tab = self.__tabWidget.widget(index)
         tab.codeEdit.dirtyChanged.connect(self.__on_dirty_changed)
         txt = self.__tabWidget.tabText(index)
