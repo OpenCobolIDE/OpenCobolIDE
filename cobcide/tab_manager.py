@@ -43,12 +43,16 @@ class TabManager(QObject):
         self.__tabWidget = tabWidget
         self.__tabWidget.tabCloseRequested.connect(self.__close_tab)
         self.__tabWidget.currentChanged.connect(self.__on_current_changed)
+        self.__current_index = -1
 
     def has_open_tabs(self):
         return self.__tabWidget.count() != 0
 
     @property
     def active_tab(self):
+        """
+        :rtype: pcef.core.CodeEditorWidget
+        """
         return self.__tabWidget.currentWidget()
 
     @property
@@ -94,6 +98,19 @@ class TabManager(QObject):
             self.__tabWidget.removeTab(index)
 
     def __on_current_changed(self, index):
+
+        if self.__current_index != -1:
+            tab = self.__tabWidget.widget(self.__current_index)
+            tab.codeEdit.dirtyChanged.disconnect(self.on_dirty_changed)
         tab = self.__tabWidget.widget(index)
+        tab.codeEdit.dirtyChanged.connect(self.__on_dirty_changed)
         txt = self.__tabWidget.tabText(index)
         self.tabChanged.emit(tab, txt)
+        self.__current_index = index
+
+    def __on_dirty_changed(self, dirty):
+        finfo = QFileInfo(self.active_tab.codeEdit.tagFilename)
+        txt = finfo.fileName()
+        if dirty:
+            txt += "*"
+        self.__tabWidget.setTabText(self.__current_index, txt)
