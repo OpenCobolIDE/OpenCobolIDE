@@ -4,3 +4,6 @@
 ./OpenCobolIDE/cobcide/test.exe
 ./OpenCobolIDE/cobcide/test2.cbl
 ./.idea
+./OpenCobolIDE.egg-info
+./build
+./dist

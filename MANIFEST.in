@@ -1,0 +1,11 @@
+#
+# MANIFEST.in
+#
+# Manifest template for creating the OpenCobolIDE source distribution.
+
+include MANIFEST.in
+include setup.py
+include COPYING
+include README.rst
+include cobcide/ui/*
+include cobcide/ui/rc/*

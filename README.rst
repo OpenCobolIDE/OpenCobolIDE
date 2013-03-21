@@ -1,7 +1,7 @@
-open-cobol-ide
-=========
+OpenCobolIDE
+--------------------
 
-cobcide (OpenCobolIDE) is a simple and lightweight cobol IDE for Ubuntu/Debian.
+OpenCobolIDE is a simple and lightweight cobol IDE for Ubuntu/Debian.
 
 
 The software is written in Python using the PySide Qt bindings and PCEF for the
@@ -16,40 +16,36 @@ Features:
 
 
 License
-=========
+--------------------
 
-Ocide is released under the **GPL** version 3
+OpenCobolIDE is released under the **GPL** version 3
 
 
 Installation
-==============
+--------------------
 
-Currently the ide has not been packaged. Plans are to package it on both
-pypi (as a gui script) and on a ppa.
+The package can be installed from pypi::
 
+    easy_install OpenCobolIDE
 
 Requirements
-================
+--------------------
 
 The project depend on the following library:
-    - **Python**
+    - **Python 2.7**
     - **PySide**
     - **OpenCobol**
     - **PCEF**
+    - **Pygments >= 1.6**
 
-Here are the instructions to install the dependencies manually:
+Here are the instructions to install the dependencies manually::
 
-Install the following package using **apt-get install**:
-    - python2.7
-    - python-pyside
-    - open-cobol
-
-Install the following package using **pip install** or **easy_install**:
-    - pcef
+   sudo apt-get install python2.7 python-pyside open-cobol python-setuptools
+   sudo easy_install pcef
 
 
 Disclaimer
-==============
+--------------------
 
 I am by no way a cobol expert, I just had to work on a cobol project at school
 with an awful IDE (NetExpress on a Windows Xp virtual machine). As I was writing
