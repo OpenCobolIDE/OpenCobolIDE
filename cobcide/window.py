@@ -197,6 +197,7 @@ class MainWindow(QMainWindow):
         dlg = QDialog(self)
         ui = dlg_about_ui.Ui_Dialog()
         ui.setupUi(dlg)
+        ui.labelMain.setText(ui.labelMain.text() % __version__)
         dlg.exec_()
 
     @Slot()
