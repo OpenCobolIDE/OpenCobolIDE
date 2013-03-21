@@ -17,7 +17,7 @@
 Contains the IDE main window.
 """
 from PySide.QtCore import Slot, QThreadPool
-from PySide.QtGui import QMainWindow, QActionGroup
+from PySide.QtGui import QMainWindow, QActionGroup, QDialog
 from PySide.QtGui import QFileDialog
 from PySide.QtGui import QMessageBox, QListWidgetItem
 from pcef import saveFileFromEditor
@@ -27,7 +27,7 @@ from cobcide.dialogs import DlgFileType
 from cobcide.errors_manager import ErrorsManager
 from cobcide.tab_manager import TabManager
 from cobcide.tabs import CobolEditor
-from cobcide.ui import ide_ui
+from cobcide.ui import ide_ui, dlg_about_ui
 from cobcide.settings import Settings
 
 
@@ -194,13 +194,10 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_actionAbout_triggered(self):
-        QMessageBox.about(
-            self, "About OpenCobol IDE",
-            "OpenCobol IDE is a free cobol IDE for GNU/Linux based on "
-            "OpenCobol, Python, Qt (PySide) and PCEF.\n\n"
-            "The software is licensed under the GPL v3.\n\n"
-            "Version: %s\n\n"
-            "Written by Colin Duquesnoy." % __version__)
+        dlg = QDialog(self)
+        ui = dlg_about_ui.Ui_Dialog()
+        ui.setupUi(dlg)
+        dlg.exec_()
 
     @Slot()
     def on_actionCompile_triggered(self):
