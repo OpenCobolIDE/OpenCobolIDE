@@ -20,7 +20,7 @@ This module defines the app constants such as the version, the supported file
 types,...
 """
 #: The OpenCobol IDE version
-__version__ = "1.0.0-dev"
+__version__ = "1.0.0"
 
 
 class FileType:
