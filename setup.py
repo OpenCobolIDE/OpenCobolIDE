@@ -29,7 +29,7 @@ setup(
     name='OpenCobolIDE',
     version=__version__,
     packages=find_packages(),
-    keywords=["QCodeEditor", "PySide code editor"],
+    keywords=["Cobol IDE"],
     package_data={'cobcide.ui': ['*.ui', 'rc/*']},
     package_dir={'cobcide': 'cobcide'},
     url='https://launchpad.net/cobcide',
@@ -38,6 +38,6 @@ setup(
     author_email='colin.duquesnoy@gmail.com',
     description='A simple cobol IDE',
     long_description=long_desc,
-    requires=['PySide', 'pygments(>=1.6)', 'PCEF'],
+    install_requires=['pygments>=1.6', 'pcef'],
     entry_points={'gui_scripts': ['OpenCobolIDE = cobcide.main:main']}
 )

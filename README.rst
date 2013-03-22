@@ -28,6 +28,9 @@ The package can be installed from pypi::
 
     easy_install OpenCobolIDE
 
+
+..note:: You will still have to install PySide on your own...
+
 Requirements
 --------------------
 
