@@ -70,7 +70,7 @@ class TabManager(QObject):
         """
         return QFileInfo(self.active_tab_filename).dir().path()
 
-    def open_tab(self, filepath, choice):
+    def open_tab(self, filepath, choice, encoding):
         """
         Open a new file tab
 
@@ -86,7 +86,7 @@ class TabManager(QObject):
             tab = GenericEditor()
             icon = QIcon(":/ide-icons/rc/text-x-generic.png")
             tab.fileType = choice
-        pcef.openFileInEditor(tab, filepath)
+        pcef.openFileInEditor(tab, filepath, encoding=encoding)
         index = self.__tabWidget.addTab(
             tab, icon, QFileInfo(filepath).fileName())
         self.__tabWidget.setCurrentIndex(index)

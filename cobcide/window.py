@@ -16,12 +16,14 @@
 """
 Contains the IDE main window.
 """
+import chardet
 from PySide.QtCore import Slot, QThreadPool
 from PySide.QtGui import QMainWindow, QActionGroup, QDialog
 from PySide.QtGui import QFileDialog
 from PySide.QtGui import QMessageBox, QListWidgetItem
 from pcef import saveFileFromEditor
 from pcef.code_edit import cursorForPosition
+import sys
 from cobcide import __version__, FileType, cobol
 from cobcide.dialogs import DlgFileType
 from cobcide.errors_manager import ErrorsManager
@@ -111,14 +113,9 @@ class MainWindow(QMainWindow):
                     try:
                         with open(filename, 'w') as f:
                             f.write("")
-                    except IOError or OSError:
-                        QMessageBox.warning(
-                            self, "Failed to create file",
-                            "Failed to save file {0}. Check that you have the "
-                            "rights to write on that folder and try again."
-                            "".format(filename))
-                    try:
-                        tab = self.__tab_manager.open_tab(filename, dlg.choice)
+                        tab = self.__tab_manager.open_tab(
+                            filename, dlg.choice,
+                            encoding=sys.getfilesystemencoding())
                         self.__ui.stackedWidget.setCurrentIndex(
                             self.PAGE_EDITOR)
                         if isinstance(tab, CobolEditor):
@@ -126,12 +123,27 @@ class MainWindow(QMainWindow):
                                 self.__ui.listWidgetErrors, tab)
                             tab.errors_manager = error_manager
                         self.__update_toolbar()
-                    except UnicodeDecodeError:
-                        QMessageBox.critical(
-                            self, "Encoding error",
-                            "Failed to open %s, bad encoding. At the moment, we"
-                            " only accept utf8 files. This will change in a "
-                            "near future.")
+                    except IOError or OSError:
+                        QMessageBox.warning(
+                            self, "Failed to create file",
+                            "Failed to save file {0}. Check that you have the "
+                            "rights to write on that folder and try again."
+                            "".format(filename))
+
+    def detect_encoding(self, filename):
+        """
+        Detect file encoding using chardet.
+
+        :param filename: Filename to check
+
+        :return: encoding - str
+        """
+        try:
+            with open(filename, "r") as f:
+                encoding = chardet.detect(f.read())['encoding']
+        except:
+            encoding = sys.getfilesystemencoding()
+        return encoding
 
     @Slot()
     def on_actionOpen_triggered(self):
@@ -148,7 +160,9 @@ class MainWindow(QMainWindow):
                 extension)[0]
             if filename != "":
                 try:
-                    tab = self.__tab_manager.open_tab(filename, dlg.choice)
+                    encoding = self.detect_encoding(filename)
+                    tab = self.__tab_manager.open_tab(filename, dlg.choice,
+                                                      encoding)
                     self.__ui.stackedWidget.setCurrentIndex(
                         self.PAGE_EDITOR)
                     s.last_used_path = self.__tab_manager.active_tab_file_dir
@@ -159,10 +173,10 @@ class MainWindow(QMainWindow):
                     self.__update_toolbar()
                 except UnicodeDecodeError:
                     QMessageBox.critical(
-                        self, "Encoding error",
-                        "Failed to open %s, bad encoding.\n\n"
-                        "At the moment, we only support utf8 encoding.\n"
-                        "This will change in a near future." % filename)
+                        self, "Bad encoding",
+                        "Failed to open %s, bad encoding.\n\nChardet could not "
+                        "detect a usable encoding, please encode your file with"
+                        "a standard encoding (utf-8 for example)")
 
     @Slot(bool)
     def on_actionFullscreen_toggled(self, fullscreen):
@@ -179,17 +193,27 @@ class MainWindow(QMainWindow):
     def on_actionSave_triggered(self):
         """ Save the current file """
         editor = self.__tab_manager.active_tab
-        saveFileFromEditor(editor)
+        try:
+            saveFileFromEditor(editor, encoding=editor.codeEdit.tagEncoding)
+        except UnicodeEncodeError:
+            # fallback to utf-8
+            saveFileFromEditor(editor, encoding='utf-8')
 
     @Slot()
     def on_actionSave_as_triggered(self):
         """ Save the current file as"""
         editor = self.__tab_manager.active_tab
-        filename = QFileDialog.getSaveFileName(self, "Choose a save filename",
-                                               self.default_directory)[0]
+        s = Settings()
+        filename = QFileDialog.getSaveFileName(
+            self, "Choose a save filename", s.last_used_path)[0]
         s = Settings()
         if filename != "":
-            saveFileFromEditor(editor, filename)
+            try:
+                saveFileFromEditor(editor, filename,
+                                   encoding=editor.codeEdit.tagEncoding)
+            except UnicodeEncodeError:
+                saveFileFromEditor(editor, filename,
+                                   encoding='utf-8')
             s.last_used_path = self.__tab_manager.active_tab_file_dir
 
     @Slot()

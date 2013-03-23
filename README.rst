@@ -43,6 +43,7 @@ The project depend on the following library:
     - **OpenCobol**
     - **PCEF**
     - **Pygments >= 1.6**
+    - **chardet**
 
 Here are the instructions to install the dependencies manually::
 
