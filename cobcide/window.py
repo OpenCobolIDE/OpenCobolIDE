@@ -18,7 +18,7 @@ Contains the IDE main window.
 """
 import chardet
 from PySide.QtCore import Slot, QThreadPool
-from PySide.QtGui import QMainWindow, QActionGroup, QDialog
+from PySide.QtGui import QMainWindow, QActionGroup, QDialog, QLabel
 from PySide.QtGui import QFileDialog
 from PySide.QtGui import QMessageBox, QListWidgetItem
 from pcef import saveFileFromEditor
@@ -44,6 +44,8 @@ class MainWindow(QMainWindow):
             self.__on_error_double_clicked)
         self.__tab_manager = TabManager(self.__ui.tabWidget)
         self.__tab_manager.tabChanged.connect(self.__on_current_tab_changed)
+        self.__tab_manager.cursorPosChanged.connect(
+            self.__on_cursor_pos_changed)
         ag = QActionGroup(self)
         ag.addAction(self.__ui.actionProgram)
         ag.addAction(self.__ui.actionSubprogram)
@@ -52,6 +54,12 @@ class MainWindow(QMainWindow):
         self.__threadPool = QThreadPool()
         self.__threadPool.setMaxThreadCount(1)
         self.__ui.stackedWidget.setCurrentIndex(self.PAGE_HOME)
+        self.lblFilename = QLabel()
+        self.lblEncoding = QLabel()
+        self.lblCursorPos = QLabel()
+        self.__ui.statusbar.addPermanentWidget(self.lblFilename, 200)
+        self.__ui.statusbar.addPermanentWidget(self.lblEncoding, 20)
+        self.__ui.statusbar.addPermanentWidget(self.lblCursorPos, 20)
 
     def __update_toolbar(self):
         """
@@ -200,6 +208,7 @@ class MainWindow(QMainWindow):
         except UnicodeEncodeError:
             # fallback to utf-8
             saveFileFromEditor(editor, encoding='utf-8')
+        self.__update_status_bar_infos(editor)
 
     @Slot()
     def on_actionSave_as_triggered(self):
@@ -217,6 +226,7 @@ class MainWindow(QMainWindow):
                 saveFileFromEditor(editor, filename,
                                    encoding='utf-8')
             s.last_used_path = self.__tab_manager.active_tab_file_dir
+        self.__update_status_bar_infos(editor)
 
     @Slot()
     def on_actionAbout_triggered(self):
@@ -266,6 +276,17 @@ class MainWindow(QMainWindow):
                           column=1)
         self.__tab_manager.active_tab.codeEdit.setTextCursor(c)
 
+    def __update_status_bar_infos(self, widget):
+        if widget:
+            self.lblFilename.setText(widget.codeEdit.tagFilename)
+            self.lblEncoding.setText(widget.codeEdit.tagEncoding)
+            l, c = self.__tab_manager.get_cursor_pos()
+            self.__on_cursor_pos_changed(l, c)
+        else:
+            self.lblFilename.setText("")
+            self.lblEncoding.setText("")
+            self.lblCursorPos.setText("")
+
     def __on_current_tab_changed(self, widget, txt):
         if widget:
             self.setWindowTitle("OpenCobol IDE - %s" % txt)
@@ -285,6 +306,7 @@ class MainWindow(QMainWindow):
             self.__ui.listWidgetErrors.clear()
             self.__ui.menuEdit.clear()
             self.__ui.stackedWidget.setCurrentIndex(self.PAGE_HOME)
+        self.__update_status_bar_infos(widget)
 
     def __change_current_file_type(self, action):
         if self.__tab_manager.active_tab_type != FileType.Text:
@@ -293,3 +315,6 @@ class MainWindow(QMainWindow):
             else:
                 self.__tab_manager.active_tab.fileType = FileType.Subprogram
         self.__update_toolbar()
+
+    def __on_cursor_pos_changed(self, l, c):
+        self.lblCursorPos.setText("{0}:{1}".format(l, c))

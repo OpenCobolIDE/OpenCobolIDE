@@ -33,6 +33,7 @@ class TabManager(QObject):
         - ...
     """
     tabChanged = Signal(QWidget, str)
+    cursorPosChanged = Signal(int, int)
 
     def __init__(self, tabWidget):
         """
@@ -103,9 +104,13 @@ class TabManager(QObject):
             tab = self.__tabWidget.widget(self.__current_index)
             if tab:
                 tab.codeEdit.dirtyChanged.disconnect(self.__on_dirty_changed)
+                tab.codeEdit.cursorPositionChanged.disconnect(
+                    self.__on_cursor_pos_changed)
         tab = self.__tabWidget.widget(index)
         if tab:
             tab.codeEdit.dirtyChanged.connect(self.__on_dirty_changed)
+            tab.codeEdit.cursorPositionChanged.connect(
+                    self.__on_cursor_pos_changed)
             txt = self.__tabWidget.tabText(index)
             self.__current_index = index
         self.tabChanged.emit(tab, txt)
@@ -116,3 +121,17 @@ class TabManager(QObject):
         if dirty:
             txt += "*"
         self.__tabWidget.setTabText(self.__current_index, txt)
+
+    def get_cursor_pos(self):
+        if self.has_open_tabs():
+            tc = self.active_tab.codeEdit.textCursor()
+            l = tc.blockNumber() + 1
+            c = tc.columnNumber() + 1
+        else:
+            l = 0
+            c = 0
+        return l, c
+
+    def __on_cursor_pos_changed(self):
+        l, c = self.get_cursor_pos()
+        self.cursorPosChanged.emit(l, c)
