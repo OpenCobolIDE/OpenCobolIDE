@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="ide-icons">
+    <file>rc/keyword.png</file>
     <file>rc/accept.png</file>
     <file>rc/cobol-mimetype.png</file>
     <file>rc/utilities-terminal.png</file>

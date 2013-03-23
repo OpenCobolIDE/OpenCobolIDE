@@ -30,6 +30,7 @@ from pcef.panels.lines import LineNumberPanel
 from pcef.panels.search import SearchPanel
 from pcef.panels.misc import CheckersMarkerPanel
 from cobcide import FileType
+from cobcide.cc import CobolCompletionModel, COBOL_KEYWORDS
 from cobcide.errors_manager import ErrorsManager
 from cobcide.toupper_mode import ToUpperMode
 
@@ -140,45 +141,54 @@ class CobolEditor(CodeEditorWidget):
     def __init__(self, parent=None):
         CodeEditorWidget.__init__(self, parent)
         self.__file_type = FileType.Program
+        self.errors_manager = None
+        # customise editor style (the default pygments style looks awesome for
+        # cobol)
         self.currentStyle.pygmentsStyle = "default"
         self.currentStyle.showWhitespaces = False
         self.currentStyle = self.currentStyle
-
         # Install actions
         self._installActions()
+        # Install extensions
+        self._install_panels()
+        self._install_modes()
 
-        # Install panels
+    def _install_panels(self):
         self.installPanel(LineNumberPanel(), self.PANEL_ZONE_LEFT)
         self.installPanel(SearchPanel(), self.PANEL_ZONE_BOTTOM)
         self.installPanel(CheckersMarkerPanel(), self.PANEL_ZONE_LEFT)
 
-        # Install modes
+    def _install_modes(self):
+        # convert char to upper
         self.installMode(ToUpperMode())
+        # code completion model, uses document words and the cobol keywords
         self.installMode(CodeCompletionMode())
-        self.installMode(RightMarginMode())
+        self.codeCompletionMode.addModel(CobolCompletionModel())
+        self.codeCompletionMode.periodIsTrigger = False
+        self.codeCompletionMode.minSuggestions = len(COBOL_KEYWORDS) + 20
+        # left margin at col = 7
         left_margin = RightMarginMode()
         left_margin.name = "Left Margin"
         left_margin.marginPos = 7
         self.installMode(left_margin)
-        self.installMode(HighlightLineMode())
-        self.installMode(EditorZoomMode())
-        self.installMode(AutoIndentMode())
-        self.installMode(SyntaxHighlighterMode())
-
-        self.syntaxHighlightingMode.highlighter.hilighlightingBlock.connect(
-            self.__highlighComments)
-
+        # right margin at col = 72
+        self.installMode(RightMarginMode())
         self.rightMarginMode.marginPos = 72
-
-        self.on_codeEdit_redoAvailable(False)
-        self.on_codeEdit_undoAvailable(False)
-        self.ui.codeEdit.setUndoRedoEnabled(True)
-        self.on_codeEdit_copyAvailable(False)
-
-        self.codeCompletionMode.periodIsTrigger = False
-        self.errors_manager = None
+        # highlight current line
+        self.installMode(HighlightLineMode())
+        # zoom in/out
+        self.installMode(EditorZoomMode())
+        # auto indent to same indent level than the previous line
+        self.installMode(AutoIndentMode())
+        # use pygment syntax highlighter + custom highlight for comments
+        self.installMode(SyntaxHighlighterMode())
+        self.syntaxHighlightingMode.highlighter.hilighlightingBlock.connect(
+            self._highlighComments)
 
     def _installActions(self):
+        """
+        Installs the standard pcef code edit actions
+        """
         self.codeEdit.addAction(self.ui.actionUndo)
         self.codeEdit.addAction(self.ui.actionRedo)
         self.codeEdit.addSeparator()
@@ -192,6 +202,10 @@ class CobolEditor(CodeEditorWidget):
         self.ui.actionUnindent.setShortcut("Shift+Tab")  # unable to set it in
         # the designer
         self.codeEdit.addAction(self.ui.actionUnindent)
+        self.on_codeEdit_redoAvailable(False)
+        self.on_codeEdit_undoAvailable(False)
+        self.ui.codeEdit.setUndoRedoEnabled(True)
+        self.on_codeEdit_copyAvailable(False)
 
     #---------------------------------------------------------------------------
     # Slots
@@ -241,7 +255,7 @@ class CobolEditor(CodeEditorWidget):
     def on_actionSelectAll_triggered(self):
         self.codeEdit.selectAll()
 
-    def __highlighComments(self, original_text, highlighter):
+    def _highlighComments(self, original_text, highlighter):
         expression = QRegExp('\*.*')
         index = expression.indexIn(original_text, 0)
         while index >= 0:
