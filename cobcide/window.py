@@ -141,6 +141,8 @@ class MainWindow(QMainWindow):
         try:
             with open(filename, "r") as f:
                 encoding = chardet.detect(f.read())['encoding']
+                if not encoding:
+                    raise Exception()
         except:
             encoding = sys.getfilesystemencoding()
         return encoding
