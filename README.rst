@@ -26,10 +26,13 @@ Installation
 
 The package can be installed from pypi::
 
-    easy_install OpenCobolIDE
+    pip install OpenCobolIDE
 
 
-..note:: You will still have to install PySide on your own...
+You will still have to install PySide and OpenCobol on your own::
+
+    sudo apt-get install python-pyside open-cobol
+
 
 Requirements
 --------------------
