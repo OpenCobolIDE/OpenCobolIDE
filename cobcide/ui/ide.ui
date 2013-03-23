@@ -341,7 +341,7 @@
    </property>
    <property name="icon">
     <iconset resource="ide.qrc">
-     <normaloff>:/ide-icons/rc/1363472922_application-x-sharedlib.png</normaloff>:/ide-icons/rc/1363472922_application-x-sharedlib.png</iconset>
+     <normaloff>:/ide-icons/rc/application-x-sharedlib.png</normaloff>:/ide-icons/rc/application-x-sharedlib.png</iconset>
    </property>
    <property name="text">
     <string>Subprogram</string>

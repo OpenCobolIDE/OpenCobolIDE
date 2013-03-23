@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_file_type.ui'
 #
-# Created: Sat Mar 23 17:58:29 2013
+# Created: Sat Mar 23 18:08:33 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -37,7 +37,7 @@ class Ui_Dialog(object):
         self.verticalLayout.addWidget(self.radioButtonProgram)
         self.radioButtonSubprogram = QtGui.QRadioButton(Dialog)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/ide-icons/rc/1363472922_application-x-sharedlib.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/ide-icons/rc/application-x-sharedlib.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.radioButtonSubprogram.setIcon(icon1)
         self.radioButtonSubprogram.setObjectName("radioButtonSubprogram")
         self.verticalLayout.addWidget(self.radioButtonSubprogram)

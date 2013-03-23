@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Sat Mar 23 17:58:29 2013
+# Created: Sat Mar 23 18:08:33 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -144,7 +144,7 @@ class Ui_MainWindow(object):
         self.actionSubprogram = QtGui.QAction(MainWindow)
         self.actionSubprogram.setCheckable(True)
         icon10 = QtGui.QIcon()
-        icon10.addPixmap(QtGui.QPixmap(":/ide-icons/rc/1363472922_application-x-sharedlib.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon10.addPixmap(QtGui.QPixmap(":/ide-icons/rc/application-x-sharedlib.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionSubprogram.setIcon(icon10)
         self.actionSubprogram.setIconVisibleInMenu(True)
         self.actionSubprogram.setObjectName("actionSubprogram")

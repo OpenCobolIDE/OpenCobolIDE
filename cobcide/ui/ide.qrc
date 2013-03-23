@@ -10,8 +10,8 @@
     <file>rc/view-fullscreen.png</file>
     <file>rc/edit-clear.png</file>
     <file>rc/system-log-out.png</file>
-    <file>rc/1363472922_application-x-sharedlib.png</file>
     <file>rc/application-x-executable.png</file>
+    <file>rc/application-x-sharedlib.png</file>
     <file>rc/applications-system.png</file>
     <file>rc/cobol.png</file>
     <file>rc/document-new.png</file>
