@@ -271,10 +271,13 @@ class MainWindow(QMainWindow):
         """
         :param item: QListWidgetItem
         """
-        line = int(item.text().split(':')[0])
-        c = cursorForPosition(self.__tab_manager.active_tab.codeEdit, line,
+        try:
+            line = int(item.text().split(':')[0])
+            c = cursorForPosition(self.__tab_manager.active_tab.codeEdit, line,
                           column=1)
-        self.__tab_manager.active_tab.codeEdit.setTextCursor(c)
+            self.__tab_manager.active_tab.codeEdit.setTextCursor(c)
+        except ValueError:
+            pass
 
     def __update_status_bar_infos(self, widget):
         if widget:
