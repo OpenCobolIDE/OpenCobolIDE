@@ -116,6 +116,7 @@ class Runner(QRunnable):
             os.chdir(cwd)
             self.events.finished.emit(True)
         else:
-            self.events.lineAvailable.emit("Failed to start %s" % exe_filename)
+            self.events.lineAvailable.emit("Failed to start %s, file does not "
+                                           "exists" % exe_filename)
             self.events.finished.emit(True)
             os.chdir(cwd)
