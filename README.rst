@@ -9,7 +9,7 @@ code editor widget.
 
 Features:
     - syntax highlighting
-    - basic code completion (based on document words)
+    - code completion
     - compile as program (.exe) or as subprogram (.so)
     - run the program from the editor
     - also open text files
@@ -24,6 +24,9 @@ OpenCobolIDE is released under the **GPL** version 3
 Installation
 --------------------
 
+GNU/Linux
+############
+
 The package can be installed from pypi::
 
     pip install OpenCobolIDE
@@ -32,6 +35,12 @@ The package can be installed from pypi::
 You will still have to install PySide and OpenCobol on your own::
 
     sudo apt-get install python-pyside open-cobol
+
+Windows
+############
+
+There is a windows installer available here: https://launchpad.net/cobcide/+download
+
 
 
 Requirements
