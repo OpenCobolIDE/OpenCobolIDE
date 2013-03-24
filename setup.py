@@ -13,7 +13,7 @@ PCEF is code editor framework for PySide applications
 
 This is the setup script, install it as any python package.
 
-.. note:: You will need to install PySide on your own
+.. note:: You will need to install PySide and OpenCobol on your own
 """
 from setuptools import setup, find_packages
 

@@ -80,12 +80,12 @@ class TabManager(QObject):
         # create a new tab
         if choice == FileType.Program or \
                 choice == FileType.Subprogram:
-            tab = CobolEditor()
-            tab.fileType = choice
             icon = QIcon(":/ide-icons/rc/cobol-mimetype.png")
+            tab = CobolEditor(self.__tabWidget)
+            tab.fileType = choice
         else:
-            tab = GenericEditor()
             icon = QIcon(":/ide-icons/rc/text-x-generic.png")
+            tab = GenericEditor(self.__tabWidget)
             tab.fileType = choice
         pcef.openFileInEditor(tab, filepath, encoding=encoding)
         index = self.__tabWidget.addTab(

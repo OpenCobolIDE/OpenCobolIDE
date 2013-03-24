@@ -7,3 +7,4 @@
 ./OpenCobolIDE.egg-info
 ./build
 ./dist
+./cobcide/OpenCobol

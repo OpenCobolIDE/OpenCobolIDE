@@ -121,11 +121,11 @@ class MainWindow(QMainWindow):
                     try:
                         with open(filename, 'w') as f:
                             f.write("")
+                        self.__ui.stackedWidget.setCurrentIndex(
+                            self.PAGE_EDITOR)
                         tab = self.__tab_manager.open_tab(
                             filename, dlg.choice,
                             encoding=sys.getfilesystemencoding())
-                        self.__ui.stackedWidget.setCurrentIndex(
-                            self.PAGE_EDITOR)
                         if isinstance(tab, CobolEditor):
                             error_manager = ErrorsManager(
                                 self.__ui.listWidgetErrors, tab)
@@ -170,11 +170,11 @@ class MainWindow(QMainWindow):
                 extension)[0]
             if filename != "":
                 try:
+                    self.__ui.stackedWidget.setCurrentIndex(
+                        self.PAGE_EDITOR)
                     encoding = self.detect_encoding(filename)
                     tab = self.__tab_manager.open_tab(filename, dlg.choice,
                                                       encoding)
-                    self.__ui.stackedWidget.setCurrentIndex(
-                        self.PAGE_EDITOR)
                     s.last_used_path = self.__tab_manager.active_tab_file_dir
                     if isinstance(tab, CobolEditor):
                         error_manager = ErrorsManager(

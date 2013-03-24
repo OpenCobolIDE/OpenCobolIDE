@@ -18,6 +18,7 @@ This module contains functions related to cobol
 import os
 import subprocess
 from PySide.QtCore import QFileInfo, Signal, QObject, QRunnable
+import sys
 from cobcide import FileType
 
 
@@ -28,6 +29,8 @@ def cmd_from_file_type(filename, fileType):
     extension = ".exe"
     if fileType == FileType.Subprogram:
         extension = ".so"
+        if sys.platform == "win32":
+            extension = ".dll"
     output_filename = os.path.join(dir_path, base_name + extension)
     if len(fileType[1]) == 4:
         cmd = [fileType[1][0], fileType[1][1],
@@ -46,16 +49,25 @@ def compile(filename, fileType):
     """
     results = []
     cmd, output_filename = cmd_from_file_type(filename, fileType)
+    # cmd += ["-I","e:\\OpenCobol\\include", "-L", "e:\\OpenCobol\\lib"]
+    startupinfo = subprocess.STARTUPINFO()
+    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
     p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
+                         startupinfo=startupinfo,
+                         stderr=subprocess.PIPE, env=os.environ.copy())
     while p.poll() is None:
         pass
     std_err = p.communicate()[1]
+    nb_tokens_expected = 4
+    if sys.platform == "win32":
+        nb_tokens_expected += 1
     if p.returncode != 0:
-        for line in std_err.splitlines():
+        lines = std_err.splitlines()
+        print lines
+        for line in lines:
             tokens = line.split(':')
             nb_tokens = len(tokens)
-            if nb_tokens == 4:
+            if nb_tokens == nb_tokens_expected:
                 try:
                     message = tokens[nb_tokens - 1]
                     type = tokens[nb_tokens - 2].strip(" ")
@@ -63,6 +75,11 @@ def compile(filename, fileType):
                     results.append((type, line, message))
                 except ValueError:
                     pass
+        if not len(results):
+            msg = ""
+            for l in lines:
+                msg += "%s\n" % l
+            results.append(("Error", 0, msg))
     return results, output_filename
 
 
@@ -97,7 +114,10 @@ class Runner(QRunnable):
         cwd, exe_filename = self.__get_exe_name()
         if os.path.exists(exe_filename):
             self.events.lineAvailable.emit("> %s" % exe_filename)
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
             p = subprocess.Popen(exe_filename, shell=False,
+                                 startupinfo=startupinfo,
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             while p.poll() is None:
                 stdout, stderr = p.communicate()
