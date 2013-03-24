@@ -50,11 +50,15 @@ def compile(filename, fileType):
     results = []
     cmd, output_filename = cmd_from_file_type(filename, fileType)
     # cmd += ["-I","e:\\OpenCobol\\include", "-L", "e:\\OpenCobol\\lib"]
-    startupinfo = subprocess.STARTUPINFO()
-    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-    p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
-                         startupinfo=startupinfo,
-                         stderr=subprocess.PIPE, env=os.environ.copy())
+    if sys.platform == "win32":
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+                             startupinfo=startupinfo,
+                             stderr=subprocess.PIPE, env=os.environ.copy())
+    else:
+        p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE, env=os.environ.copy())
     while p.poll() is None:
         pass
     std_err = p.communicate()[1]
@@ -114,11 +118,17 @@ class Runner(QRunnable):
         cwd, exe_filename = self.__get_exe_name()
         if os.path.exists(exe_filename):
             self.events.lineAvailable.emit("> %s" % exe_filename)
-            startupinfo = subprocess.STARTUPINFO()
-            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-            p = subprocess.Popen(exe_filename, shell=False,
-                                 startupinfo=startupinfo,
-                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if sys.platform == "win32":
+                startupinfo = subprocess.STARTUPINFO()
+                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                p = subprocess.Popen(exe_filename, shell=False,
+                                     startupinfo=startupinfo,
+                                     stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE)
+            else:
+                p = subprocess.Popen(exe_filename, shell=False,
+                                     stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE)
             while p.poll() is None:
                 stdout, stderr = p.communicate()
                 if stdout:
