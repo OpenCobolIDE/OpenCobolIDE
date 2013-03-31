@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Choose a file type</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="ide.qrc">
+    <normaloff>:/ide-icons/rc/silex-64x64.png</normaloff>:/ide-icons/rc/silex-64x64.png</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">

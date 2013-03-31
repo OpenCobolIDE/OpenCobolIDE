@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_file_type.ui'
 #
-# Created: Sat Mar 23 18:08:33 2013
+# Created: Sun Mar 31 18:51:12 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,6 +13,9 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(475, 133)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/ide-icons/rc/silex-64x64.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Dialog.setWindowIcon(icon)
         self.gridLayout = QtGui.QGridLayout(Dialog)
         self.gridLayout.setObjectName("gridLayout")
         self.buttonBox = QtGui.QDialogButtonBox(Dialog)
@@ -30,21 +33,21 @@ class Ui_Dialog(object):
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
         self.radioButtonProgram = QtGui.QRadioButton(Dialog)
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/ide-icons/rc/application-x-executable.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.radioButtonProgram.setIcon(icon)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/ide-icons/rc/application-x-executable.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.radioButtonProgram.setIcon(icon1)
         self.radioButtonProgram.setObjectName("radioButtonProgram")
         self.verticalLayout.addWidget(self.radioButtonProgram)
         self.radioButtonSubprogram = QtGui.QRadioButton(Dialog)
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/ide-icons/rc/application-x-sharedlib.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.radioButtonSubprogram.setIcon(icon1)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(":/ide-icons/rc/application-x-sharedlib.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.radioButtonSubprogram.setIcon(icon2)
         self.radioButtonSubprogram.setObjectName("radioButtonSubprogram")
         self.verticalLayout.addWidget(self.radioButtonSubprogram)
         self.radioButtonText = QtGui.QRadioButton(Dialog)
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/ide-icons/rc/text-x-generic.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.radioButtonText.setIcon(icon2)
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap(":/ide-icons/rc/text-x-generic.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.radioButtonText.setIcon(icon3)
         self.radioButtonText.setObjectName("radioButtonText")
         self.verticalLayout.addWidget(self.radioButtonText)
         self.formLayout.setLayout(0, QtGui.QFormLayout.FieldRole, self.verticalLayout)

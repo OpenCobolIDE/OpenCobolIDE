@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_about.ui'
 #
-# Created: Sat Mar 23 18:08:33 2013
+# Created: Sun Mar 31 18:51:12 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(607, 431)
+        Dialog.resize(611, 446)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/ide-icons/rc/dialog-information.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Dialog.setWindowIcon(icon)
@@ -61,8 +61,8 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "About OpenCobol IDE", None, QtGui.QApplication.UnicodeUTF8))
-        self.labelIcon.setText(QtGui.QApplication.translate("Dialog", "<html><head/><body><p><img src=\":/ide-icons/rc/cobol.png\"/></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.labelMain.setText(QtGui.QApplication.translate("Dialog", "<html><head/><body><p>OpenCobol IDE</p><p>Version: %s</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.labelIcon.setText(QtGui.QApplication.translate("Dialog", "<html><head/><body><p><img src=\":/ide-icons/rc/silex-64x64.png\"/></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.labelMain.setText(QtGui.QApplication.translate("Dialog", "<html><head/><body><p><span style=\" font-size:14pt;\">OpenCobol IDE</span></p><p>Version: %s</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.textBrowser.setHtml(QtGui.QApplication.translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -76,7 +76,8 @@ class Ui_Dialog(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"https://launchpad.net/cobcide\"><span style=\" text-decoration: underline; color:#0000ff;\">Launchpad repository</span></a></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Credits: </span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:9pt; font-style:italic;\">OpenCobol IDE makes use of the following projects:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:9pt; font-style:italic;\">OpenCobolIDE makes use of the following projects:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- Céline Thiry (silex icon designer)</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- <a href=\"http://python.org/\"><span style=\" text-decoration: underline; color:#0000ff;\">Python</span></a></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- <a href=\"http://qt-project.org/\"><span style=\" text-decoration: underline; color:#0000ff;\">Qt</span></a>/<a href=\"http://qt-project.org/wiki/Category:LanguageBindings::PySide\"><span style=\" text-decoration: underline; color:#0000ff;\">PySide</span></a></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- <a href=\"https://github.com/ColinDuquesnoy/PCEF\"><span style=\" text-decoration: underline; color:#0000ff;\">PCEF</span></a></p>\n"

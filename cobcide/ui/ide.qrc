@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="ide-icons">
+    <file>rc/silex-icon.svg</file>
+    <file>rc/silex-192x192.png</file>
+    <file>rc/silex-64x64.png</file>
     <file>rc/keyword.png</file>
     <file>rc/accept.png</file>
     <file>rc/cobol-mimetype.png</file>
@@ -13,7 +16,6 @@
     <file>rc/application-x-executable.png</file>
     <file>rc/application-x-sharedlib.png</file>
     <file>rc/applications-system.png</file>
-    <file>rc/cobol.png</file>
     <file>rc/document-new.png</file>
     <file>rc/document-open.png</file>
     <file>rc/document-save-as.png</file>
