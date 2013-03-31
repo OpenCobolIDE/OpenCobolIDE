@@ -25,7 +25,7 @@ AllowNoIcons=yes
 LicenseFile=COPYING
 OutputDir=dist
 OutputBaseFilename=OpenCobolIDE_Setup
-SetupIconFile=cobcide\ui\rc\cobol.ico
+SetupIconFile=cobcide\ui\rc\silex-icon.ico
 Compression=lzma
 SolidCompression=yes
 

@@ -39,4 +39,4 @@ setup(name="OpenCobolIDE",
       options={"build_exe": build_exe_options},
       executables=[Executable("cobcide/main.py", base=base,
                               targetName="OpenCobolIDE.exe",
-                              icon="cobcide/ui/rc/cobol.ico")])
+                              icon="cobcide/ui/rc/silex-icon.ico")])
