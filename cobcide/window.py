@@ -124,7 +124,17 @@ class MainWindow(QMainWindow):
             # ask the save filename
             filename = QFileDialog.getSaveFileName(
                 self, "Choose the save filename", "", extension)[0]
-            self._open_file(dlg.choice, filename)
+            if filename != "":
+                try:
+                    with open(filename, "w") as f:
+                        f.write("")
+                    self._open_file(dlg.choice, filename)
+                except IOError or OSError:
+                    QMessageBox.warning(self, "Failed to create file",
+                                        "Failed to create file {0}.\n"
+                                        "Check that you have the access rights "
+                                        "on this folder and retry." % filename)
+
 
     def detect_encoding(self, filename):
         """
