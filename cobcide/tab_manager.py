@@ -103,9 +103,13 @@ class TabManager(QObject):
         if self.__current_index != -1:
             tab = self.__tabWidget.widget(self.__current_index)
             if tab:
-                tab.codeEdit.dirtyChanged.disconnect(self.__on_dirty_changed)
-                tab.codeEdit.cursorPositionChanged.disconnect(
+                try:
+                    tab.codeEdit.dirtyChanged.disconnect(
+                        self.__on_dirty_changed)
+                    tab.codeEdit.cursorPositionChanged.disconnect(
                     self.__on_cursor_pos_changed)
+                except RuntimeError:
+                    pass
         tab = self.__tabWidget.widget(index)
         if tab:
             tab.codeEdit.dirtyChanged.connect(self.__on_dirty_changed)
