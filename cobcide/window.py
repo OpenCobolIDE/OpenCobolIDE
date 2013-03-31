@@ -113,9 +113,12 @@ class MainWindow(QMainWindow):
             parent=self,
             label="<p>What kind of file do you want to <b>create</b>?</p>")
         if dlg.exec_() == DlgFileType.Accepted:
+            extension = "Cobol files (*.cbl)"
+            if dlg.choice == FileType.Text:
+                extension = "Text files (*.txt *.dat)"
             # ask the save filename
             filename = QFileDialog.getSaveFileName(
-                self, "Choose the save filename")[0]
+                self, "Choose the save filename", "", extension)[0]
             if filename != "":
                     # create the file
                     try:
