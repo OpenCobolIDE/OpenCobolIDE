@@ -44,3 +44,20 @@ class Settings(object):
         """
         assert isinstance(path, str) or isinstance(path, unicode)
         self.__settings.setValue("lastUsedPath", path)
+
+    @property
+    def recent_files(self):
+        ret_val = self.__settings.value('recentFileList', [])
+        if ret_val is None:
+            ret_val = []
+        if isinstance(ret_val, unicode):
+            ret_val = [ret_val]
+        return ret_val
+
+    @recent_files.setter
+    def recent_files(self, files):
+        self.__settings.setValue('recentFileList', files)
+
+    def clear_recent_files(self):
+        self.recent_files = []
+

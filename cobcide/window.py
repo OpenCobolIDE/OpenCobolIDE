@@ -20,7 +20,7 @@ import os
 import chardet
 import sys
 
-from PySide.QtCore import Slot, QThreadPool
+from PySide.QtCore import Slot, QThreadPool, QFileInfo
 from PySide.QtGui import QMainWindow, QActionGroup, QDialog, QLabel
 from PySide.QtGui import QFileDialog
 from PySide.QtGui import QMessageBox, QListWidgetItem
@@ -63,6 +63,8 @@ class MainWindow(QMainWindow):
         self.__ui.statusbar.addPermanentWidget(self.lblFilename, 200)
         self.__ui.statusbar.addPermanentWidget(self.lblEncoding, 20)
         self.__ui.statusbar.addPermanentWidget(self.lblCursorPos, 20)
+        self.__ui.wHomePage.set_internal_data(self.__ui.menuRecent_files,
+                                              self.__ui.actionClear)
 
     def __update_toolbar(self):
         """
@@ -122,28 +124,7 @@ class MainWindow(QMainWindow):
             # ask the save filename
             filename = QFileDialog.getSaveFileName(
                 self, "Choose the save filename", "", extension)[0]
-            if filename != "":
-                    filename = os.path.normpath(filename)
-                    # create the file
-                    try:
-                        with open(filename, 'w') as f:
-                            f.write("")
-                        self.__ui.stackedWidget.setCurrentIndex(
-                            self.PAGE_EDITOR)
-                        tab = self.__tab_manager.open_tab(
-                            filename, dlg.choice,
-                            encoding=sys.getfilesystemencoding())
-                        if isinstance(tab, CobolEditor):
-                            error_manager = ErrorsManager(
-                                self.__ui.listWidgetErrors, tab)
-                            tab.errors_manager = error_manager
-                        self.__update_toolbar()
-                    except IOError or OSError:
-                        QMessageBox.warning(
-                            self, "Failed to create file",
-                            "Failed to save file {0}. Check that you have the "
-                            "rights to write on that folder and try again."
-                            "".format(filename))
+            self._open_file(dlg.choice, filename)
 
     def detect_encoding(self, filename):
         """
@@ -162,6 +143,31 @@ class MainWindow(QMainWindow):
             encoding = sys.getfilesystemencoding()
         return encoding
 
+    def _open_file(self, choice, filename):
+        app_settings = Settings()
+        if filename != "":
+            filename = os.path.normpath(filename)
+            try:
+                self.__ui.stackedWidget.setCurrentIndex(
+                    self.PAGE_EDITOR)
+                encoding = self.detect_encoding(filename)
+                tab = self.__tab_manager.open_tab(filename, choice,
+                                                  encoding)
+                app_settings.last_used_path = \
+                    self.__tab_manager.active_tab_file_dir
+                if isinstance(tab, CobolEditor):
+                    error_manager = ErrorsManager(
+                        self.__ui.listWidgetErrors, tab)
+                    tab.errors_manager = error_manager
+                self.__update_toolbar()
+                self.__ui.wHomePage.setCurrentFile(filename)
+            except UnicodeDecodeError:
+                QMessageBox.critical(
+                    self, "Bad encoding",
+                    "Failed to open %s, bad encoding.\n\nChardet could not "
+                    "detect a usable encoding, please encode your file with"
+                    "a standard encoding (utf-8 for example)")
+
     @Slot()
     def on_actionOpen_triggered(self):
          # ask file type
@@ -171,30 +177,11 @@ class MainWindow(QMainWindow):
                 extension = "Text files (*.dat *.txt)"
             else:
                 extension = "Cobol files (*.cbl)"
-            s = Settings()
+            app_settings = Settings()
             filename = QFileDialog.getOpenFileName(
-                self, "Choose a file to open", s.last_used_path,
+                self, "Choose a file to open", app_settings.last_used_path,
                 extension)[0]
-            if filename != "":
-                filename = os.path.normpath(filename)
-                try:
-                    self.__ui.stackedWidget.setCurrentIndex(
-                        self.PAGE_EDITOR)
-                    encoding = self.detect_encoding(filename)
-                    tab = self.__tab_manager.open_tab(filename, dlg.choice,
-                                                      encoding)
-                    s.last_used_path = self.__tab_manager.active_tab_file_dir
-                    if isinstance(tab, CobolEditor):
-                        error_manager = ErrorsManager(
-                            self.__ui.listWidgetErrors, tab)
-                        tab.errors_manager = error_manager
-                    self.__update_toolbar()
-                except UnicodeDecodeError:
-                    QMessageBox.critical(
-                        self, "Bad encoding",
-                        "Failed to open %s, bad encoding.\n\nChardet could not "
-                        "detect a usable encoding, please encode your file with"
-                        "a standard encoding (utf-8 for example)")
+            self._open_file(dlg.choice, filename)
 
     @Slot(bool)
     def on_actionFullscreen_toggled(self, fullscreen):
@@ -216,6 +203,8 @@ class MainWindow(QMainWindow):
         except UnicodeEncodeError:
             # fallback to utf-8
             saveFileFromEditor(editor, encoding='utf-8')
+        self.__ui.wHomePage.setCurrentFile(
+            self.__tab_manager.active_tab_filename)
         self.__update_status_bar_infos(editor)
 
     @Slot()
@@ -234,6 +223,7 @@ class MainWindow(QMainWindow):
             except UnicodeEncodeError:
                 saveFileFromEditor(editor, filename,
                                    encoding='utf-8')
+            self.__ui.wHomePage.setCurrentFile(filename)
             s.last_used_path = self.__tab_manager.active_tab_file_dir
         self.__update_status_bar_infos(editor)
 
@@ -330,3 +320,18 @@ class MainWindow(QMainWindow):
 
     def __on_cursor_pos_changed(self, l, c):
         self.lblCursorPos.setText("{0}:{1}".format(l, c))
+
+    @Slot(str)
+    def on_wHomePage_quick_start_action_triggered(self, text):
+        if text == "Create a new file":
+            self.on_actionNew_triggered()
+        elif text == "Open a file":
+            self.on_actionOpen_triggered()
+        elif text == "About":
+            self.on_actionAbout_triggered()
+
+    @Slot(str, str)
+    def on_wHomePage_recent_action_triggered(self, text, filename):
+        dlg = DlgFileType(parent=self)
+        if dlg.exec_() == DlgFileType.Accepted and QFileInfo(filename).exists():
+            self._open_file(dlg.choice, filename)

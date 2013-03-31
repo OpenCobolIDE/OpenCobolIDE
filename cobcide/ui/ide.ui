@@ -6,33 +6,51 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>765</width>
-    <height>738</height>
+    <width>1195</width>
+    <height>936</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>OpenCobol IDE</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="ide.qrc">
+   <iconset>
     <normaloff>:/ide-icons/rc/silex-64x64.png</normaloff>:/ide-icons/rc/silex-64x64.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout" rowstretch="0" columnstretch="0">
     <property name="margin">
-     <number>3</number>
+     <number>0</number>
     </property>
     <property name="spacing">
-     <number>3</number>
+     <number>0</number>
     </property>
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="page"/>
+      <widget class="QWidget" name="page">
+       <layout class="QGridLayout" name="gridLayout_6">
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="HomePageWidget" name="wHomePage" native="true"/>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="page_2">
        <layout class="QGridLayout" name="gridLayout_2">
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <property name="spacing">
+         <number>0</number>
+        </property>
         <item row="0" column="0">
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
@@ -97,7 +115,7 @@
        </property>
        <widget class="QWidget" name="tab_3">
         <attribute name="icon">
-         <iconset resource="ide.qrc">
+         <iconset>
           <normaloff>:/ide-icons/rc/silex-64x64.png</normaloff>:/ide-icons/rc/silex-64x64.png</iconset>
         </attribute>
         <attribute name="title">
@@ -114,7 +132,7 @@
        </widget>
        <widget class="QWidget" name="tabProgramOutput">
         <attribute name="icon">
-         <iconset resource="ide.qrc">
+         <iconset>
           <normaloff>:/ide-icons/rc/utilities-terminal.png</normaloff>:/ide-icons/rc/utilities-terminal.png</iconset>
         </attribute>
         <attribute name="title">
@@ -136,7 +154,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>765</width>
+     <width>1195</width>
      <height>25</height>
     </rect>
    </property>
@@ -144,11 +162,20 @@
     <property name="title">
      <string>File</string>
     </property>
+    <widget class="QMenu" name="menuRecent_files">
+     <property name="title">
+      <string>Recent files</string>
+     </property>
+     <addaction name="separator"/>
+     <addaction name="actionClear"/>
+    </widget>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSave_as"/>
+    <addaction name="separator"/>
+    <addaction name="menuRecent_files"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -187,7 +214,7 @@
   </widget>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="ide.qrc">
+    <iconset>
      <normaloff>:/ide-icons/rc/system-log-out.png</normaloff>:/ide-icons/rc/system-log-out.png</iconset>
    </property>
    <property name="text">
@@ -205,7 +232,7 @@
   </action>
   <action name="actionCompile">
    <property name="icon">
-    <iconset resource="ide.qrc">
+    <iconset>
      <normaloff>:/ide-icons/rc/applications-system.png</normaloff>:/ide-icons/rc/applications-system.png</iconset>
    </property>
    <property name="text">
@@ -223,7 +250,7 @@
   </action>
   <action name="actionRun">
    <property name="icon">
-    <iconset resource="ide.qrc">
+    <iconset>
      <normaloff>:/ide-icons/rc/media-playback-start.png</normaloff>:/ide-icons/rc/media-playback-start.png</iconset>
    </property>
    <property name="text">
@@ -241,7 +268,7 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="ide.qrc">
+    <iconset>
      <normaloff>:/ide-icons/rc/dialog-information.png</normaloff>:/ide-icons/rc/dialog-information.png</iconset>
    </property>
    <property name="text">
@@ -259,7 +286,7 @@
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset resource="ide.qrc">
+    <iconset>
      <normaloff>:/ide-icons/rc/document-save.png</normaloff>:/ide-icons/rc/document-save.png</iconset>
    </property>
    <property name="text">
@@ -277,7 +304,7 @@
   </action>
   <action name="actionSave_as">
    <property name="icon">
-    <iconset resource="ide.qrc">
+    <iconset>
      <normaloff>:/ide-icons/rc/document-save-as.png</normaloff>:/ide-icons/rc/document-save-as.png</iconset>
    </property>
    <property name="text">
@@ -298,7 +325,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="ide.qrc">
+    <iconset>
      <normaloff>:/ide-icons/rc/view-fullscreen.png</normaloff>:/ide-icons/rc/view-fullscreen.png</iconset>
    </property>
    <property name="text">
@@ -322,7 +349,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="ide.qrc">
+    <iconset>
      <normaloff>:/ide-icons/rc/application-x-executable.png</normaloff>:/ide-icons/rc/application-x-executable.png</iconset>
    </property>
    <property name="text">
@@ -340,7 +367,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="ide.qrc">
+    <iconset>
      <normaloff>:/ide-icons/rc/application-x-sharedlib.png</normaloff>:/ide-icons/rc/application-x-sharedlib.png</iconset>
    </property>
    <property name="text">
@@ -355,7 +382,7 @@
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="ide.qrc">
+    <iconset>
      <normaloff>:/ide-icons/rc/document-new.png</normaloff>:/ide-icons/rc/document-new.png</iconset>
    </property>
    <property name="text">
@@ -373,7 +400,7 @@
   </action>
   <action name="actionOpen">
    <property name="icon">
-    <iconset resource="ide.qrc">
+    <iconset>
      <normaloff>:/ide-icons/rc/document-open.png</normaloff>:/ide-icons/rc/document-open.png</iconset>
    </property>
    <property name="text">
@@ -389,7 +416,30 @@
     <bool>true</bool>
    </property>
   </action>
+  <action name="actionClear">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/ide-icons/rc/edit-clear.png</normaloff>:/ide-icons/rc/edit-clear.png</iconset>
+   </property>
+   <property name="text">
+    <string>Clear list</string>
+   </property>
+   <property name="toolTip">
+    <string>Clear list of recent files</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>HomePageWidget</class>
+   <extends>QWidget</extends>
+   <header>cobcide/home_page.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="ide.qrc"/>
  </resources>
