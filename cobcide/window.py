@@ -16,14 +16,17 @@
 """
 Contains the IDE main window.
 """
+import os
 import chardet
+import sys
+
 from PySide.QtCore import Slot, QThreadPool
 from PySide.QtGui import QMainWindow, QActionGroup, QDialog, QLabel
 from PySide.QtGui import QFileDialog
 from PySide.QtGui import QMessageBox, QListWidgetItem
 from pcef import saveFileFromEditor
 from pcef.code_edit import cursorForPosition
-import sys
+
 from cobcide import __version__, FileType, cobol
 from cobcide.dialogs import DlgFileType
 from cobcide.errors_manager import ErrorsManager
@@ -120,6 +123,7 @@ class MainWindow(QMainWindow):
             filename = QFileDialog.getSaveFileName(
                 self, "Choose the save filename", "", extension)[0]
             if filename != "":
+                    filename = os.path.normpath(filename)
                     # create the file
                     try:
                         with open(filename, 'w') as f:
@@ -172,6 +176,7 @@ class MainWindow(QMainWindow):
                 self, "Choose a file to open", s.last_used_path,
                 extension)[0]
             if filename != "":
+                filename = os.path.normpath(filename)
                 try:
                     self.__ui.stackedWidget.setCurrentIndex(
                         self.PAGE_EDITOR)
@@ -222,6 +227,7 @@ class MainWindow(QMainWindow):
             self, "Choose a save filename", s.last_used_path)[0]
         s = Settings()
         if filename != "":
+            filename = os.path.normpath(filename)
             try:
                 saveFileFromEditor(editor, filename,
                                    encoding=editor.codeEdit.tagEncoding)

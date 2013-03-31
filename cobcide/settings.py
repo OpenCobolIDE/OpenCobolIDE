@@ -16,6 +16,7 @@
 Gives an easy and safe access to the app settings
 """
 from PySide.QtCore import QSettings
+import sys
 
 
 class Settings(object):
@@ -28,7 +29,10 @@ class Settings(object):
         """
         Returns the last used open/save path
         """
-        return self.__settings.value("lastUsedPath", "")
+        default_value = ""
+        if sys.platform == "win32":
+            default_value = "c:\\"
+        return self.__settings.value("lastUsedPath", default_value)
 
     @last_used_path.setter
     def last_used_path(self, path):

@@ -23,6 +23,7 @@ from cobcide import FileType
 
 
 def cmd_from_file_type(filename, fileType):
+    filename = os.path.normpath(filename)
     finfo = QFileInfo(filename)
     dir_path = finfo.dir().path()
     base_name = QFileInfo(finfo.fileName()).baseName()
@@ -32,6 +33,7 @@ def cmd_from_file_type(filename, fileType):
         if sys.platform == "win32":
             extension = ".dll"
     output_filename = os.path.join(dir_path, base_name + extension)
+    output_filename = os.path.normpath(output_filename)
     if len(fileType[1]) == 4:
         cmd = [fileType[1][0], fileType[1][1],
                fileType[1][2].format(output_filename),
@@ -112,6 +114,7 @@ class Runner(QRunnable):
         base_name = QFileInfo(finfo.fileName()).baseName()
         extension = ".exe"
         exe_filename = os.path.join(dir_path, base_name + extension)
+        exe_filename = os.path.normpath(exe_filename)
         return cwd, exe_filename
 
     def run(self):
