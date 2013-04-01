@@ -211,6 +211,11 @@ class MainWindow(QMainWindow):
                     "detect a usable encoding, please encode your file with"
                     "a standard encoding (utf-8 for example)")
 
+    def closeEvent(self, event):
+        event.ignore()
+        if self.__tab_manager.is_clean or self.__tab_manager.cleanup():
+             event.accept()
+
     @Slot()
     def on_actionOpen_triggered(self):
          # ask file type

@@ -71,6 +71,21 @@ class TabManager(QObject):
         """
         return QFileInfo(self.active_tab_filename).dir().path()
 
+    @property
+    def is_clean(self):
+        ret_val = True
+        for i in range(self.__tabWidget.count()):
+            tab = self.__tabWidget.widget(i)
+            if tab.codeEdit.dirty:
+                ret_val = False
+                break
+        return ret_val
+
+    def cleanup(self):
+        while self.__tabWidget.count():
+            self.__tabWidget.tabCloseRequested.emit(0)
+        return self.__tabWidget.count() == 0
+
     def open_tab(self, filepath, choice, encoding):
         """
         Open a new file tab
@@ -96,7 +111,19 @@ class TabManager(QObject):
 
     def __close_tab(self, index):
         if index != -1:
-            self.__tabWidget.removeTab(index)
+            tab = self.__tabWidget.widget(index)
+            if tab is not None and tab.codeEdit.dirty:
+                filename = tab.codeEdit.tagFilename
+                filename = QFileInfo(filename).fileName()
+                if QMessageBox.warning(
+                        self.__tabWidget, "Close document %s" %
+                        filename,"Are you sure you want to close %s without "
+                        "saving?" % filename, QMessageBox.Yes | QMessageBox.No,
+                        QMessageBox.No) == QMessageBox.Yes:
+                    tab.codeEdit.dirty = False
+                    self.__tabWidget.removeTab(index)
+            else:
+                self.__tabWidget.removeTab(index)
 
     def __on_current_changed(self, index):
         txt = ""
