@@ -19,17 +19,15 @@ This module contains the IDE application entry point.
 import os
 import sys
 import logging
+from cobcide.settings import Settings
+
 logging.basicConfig()
 import subprocess
 
-from PySide.QtCore import QFileInfo
 from PySide.QtGui import QApplication, QMessageBox
 
 # allow launching the ide without installing
-path = os.path.abspath(__file__ + "/../../")
-print path
-sys.path.insert(0, path)
-print sys.path
+sys.path.insert(0, os.path.abspath(__file__ + "/../../"))
 from cobcide import desktop_entry
 from cobcide.window import MainWindow
 
@@ -39,7 +37,7 @@ def windows_init():
     Windows specific initialisation:
 
     - set env var to embedded OpenCobol variable
-    - remove any other mingw from path
+    - set PATH to cobol library path only (erase previous values)
     """
     cwd = os.getcwd()
     oc_root_pth = os.path.join(cwd, "OpenCobol")
@@ -52,6 +50,12 @@ def windows_init():
 
 
 def cmd_exists(cmd):
+    """
+    Checks if a cmd exists (used to find the sudo tool)
+
+    :param cmd: The cmd/binary to check
+    :return:
+    """
     p = subprocess.Popen(['whereis', '-b', cmd], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE, stdin=subprocess.PIPE)
     output = p.stdout.read()
@@ -59,6 +63,9 @@ def cmd_exists(cmd):
 
 
 def get_sudo_tool():
+    """
+    Return an appropriate sudo tool or None
+    """
     tools = ["gksudo", "kdesudo", "gnomesu", "kdesu"]
     for t in tools:
         if cmd_exists(t):
@@ -71,18 +78,25 @@ def linux_init():
     GNU/Linux specific init: create a desktop entry for the app if the entry
     does not already exists.
     """
-    if desktop_entry.check(__file__):
-        tool = get_sudo_tool()
-        if tool:
+    settings = Settings()
+    if settings.create_desktop_entry is True:
+        if desktop_entry.check(__file__):
+            tool = get_sudo_tool()
             if QMessageBox.question(
                     None, "Create desktop entry?",
                     "Would you like to create a desktop entry for "
-                    "OpenCobolIDE?", QMessageBox.Yes | QMessageBox.No,
+                    "OpenCobolIDE?",
+                    QMessageBox.Yes | QMessageBox.No,
                     QMessageBox.Yes) == QMessageBox.Yes:
-                print subprocess.Popen(
+                subprocess.Popen(
                     [tool, "python", desktop_entry.__file__],
                     stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                     stdin=subprocess.PIPE).communicate()
+            else:
+                # prevent mbox to appear again
+                settings.create_desktop_entry = False
+            if tool:
+                pass
 
 
 def main():

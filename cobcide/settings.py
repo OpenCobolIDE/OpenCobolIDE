@@ -47,6 +47,10 @@ class Settings(object):
 
     @property
     def recent_files(self):
+        """
+        Returns the list of recent files
+        :return: a list of strings
+        """
         ret_val = self.__settings.value('recentFileList', [])
         if ret_val is None:
             ret_val = []
@@ -56,8 +60,23 @@ class Settings(object):
 
     @recent_files.setter
     def recent_files(self, files):
+        """
+        Save the list of rece,t files
+        :param files: list of strings
+        """
         self.__settings.setValue('recentFileList', files)
 
     def clear_recent_files(self):
+        """
+        Clear the list of recent files
+        :return:
+        """
         self.recent_files = []
 
+    @property
+    def create_desktop_entry(self):
+        return self.__settings.value("createDesktopEntry", True)
+
+    @create_desktop_entry.setter
+    def create_desktop_entry(self, create):
+        self.__settings.setValue("createDesktopEntry", create)
