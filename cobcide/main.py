@@ -16,12 +16,21 @@
 """
 This module contains the IDE application entry point.
 """
-import logging
-logging.basicConfig()
 import os
 import sys
-sys.path.append(os.path.abspath(os.getcwd() + "/../"))
-from PySide.QtGui import QApplication
+import logging
+logging.basicConfig()
+import subprocess
+
+from PySide.QtCore import QFileInfo
+from PySide.QtGui import QApplication, QMessageBox
+
+# allow launching the ide without installing
+path = os.path.abspath(__file__ + "/../../")
+print path
+sys.path.insert(0, path)
+print sys.path
+from cobcide import desktop_entry
 from cobcide.window import MainWindow
 
 
@@ -42,6 +51,40 @@ def windows_init():
     os.environ["PATH"] = os.environ["COB_LIBRARY_PATH"]
 
 
+def cmd_exists(cmd):
+    p = subprocess.Popen(['whereis', '-b', cmd], stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+    output = p.stdout.read()
+    return output != ("%s:\n" % cmd)
+
+
+def get_sudo_tool():
+    tools = ["gksudo", "kdesudo", "gnomesu", "kdesu"]
+    for t in tools:
+        if cmd_exists(t):
+            return t
+    return None
+
+
+def linux_init():
+    """
+    GNU/Linux specific init: create a desktop entry for the app if the entry
+    does not already exists.
+    """
+    if desktop_entry.check(__file__):
+        tool = get_sudo_tool()
+        if tool:
+            if QMessageBox.question(
+                    None, "Create desktop entry?",
+                    "Would you like to create a desktop entry for "
+                    "OpenCobolIDE?", QMessageBox.Yes | QMessageBox.No,
+                    QMessageBox.Yes) == QMessageBox.Yes:
+                print subprocess.Popen(
+                    [tool, "python", desktop_entry.__file__],
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                    stdin=subprocess.PIPE).communicate()
+
+
 def main():
     """
     App main entry point when run as a script.
@@ -49,9 +92,11 @@ def main():
     Setup the Qt gui application, create the ide window and run the qt main
     loop.
     """
+    app = QApplication(sys.argv)
     if sys.platform == "win32":
         windows_init()
-    app = QApplication(sys.argv)
+    else:
+        linux_init()
     win = MainWindow()
     win.showNormal()
     return app.exec_()
