@@ -16,6 +16,7 @@
 Script run as root to create a desktop entry
 """
 import os
+import shutil
 from PySide.QtCore import QFileInfo
 import sys
 
@@ -25,7 +26,7 @@ Version=1.2
 Name=OpenCobolIDE
 Comment=Flash card based learning tool
 Exec={0}
-Icon= {1}
+Icon={1}
 Terminal=false
 Categories=Development;Languages;Cobol;
 """
@@ -41,9 +42,6 @@ def check(main_file):
     ret_val = False
     if not os.path.exists(DESKTOP_ENTRY_PATH):
         ret_val = True
-    # we only create the script if the main script is a binary script
-    if QFileInfo(main_file).suffix() == "py":
-        ret_val = False
     return ret_val
 
 
@@ -51,11 +49,14 @@ def main():
     """
     Creates the desktop entry for the binary script.
     """
-    cobcide_path = QFileInfo(__file__).dir().path()
-    svg_path = os.path.join(cobcide_path, "ui", "rc", "silex-icon.svg")
+    from cobcide import ui
+    cobcide_path = QFileInfo(ui.__file__).dir().path()
+    print cobcide_path
+    icon_path = os.path.join(cobcide_path, "rc", "silex-192x192.png")
+    print icon_path
     # check executable, can be the pip installed binary script or our main.py
     executable = "OpenCobolIDE"
-    desktop_entry = DESKTOP_ENTRY.format(executable, svg_path)
+    desktop_entry = DESKTOP_ENTRY.format(executable, icon_path)
     with open(DESKTOP_ENTRY_PATH, "w") as f:
         f.write(desktop_entry)
 

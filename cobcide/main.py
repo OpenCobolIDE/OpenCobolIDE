@@ -78,8 +78,9 @@ def linux_init():
     GNU/Linux specific init: create a desktop entry for the app if the entry
     does not already exists.
     """
+    print get_sudo_tool()
     settings = Settings()
-    if settings.create_desktop_entry is True:
+    if settings.create_desktop_entry == True:
         if desktop_entry.check(__file__):
             tool = get_sudo_tool()
             if QMessageBox.question(

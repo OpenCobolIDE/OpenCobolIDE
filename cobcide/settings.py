@@ -75,8 +75,8 @@ class Settings(object):
 
     @property
     def create_desktop_entry(self):
-        return self.__settings.value("createDesktopEntry", True)
+        return bool(self.__settings.value("createDesktopEntry", True))
 
     @create_desktop_entry.setter
     def create_desktop_entry(self, create):
-        self.__settings.setValue("createDesktopEntry", create)
+        self.__settings.setValue("createDesktopEntry", bool(create))
