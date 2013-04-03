@@ -65,6 +65,8 @@ class MainWindow(QMainWindow):
         self.__ui.statusbar.addPermanentWidget(self.lblCursorPos, 20)
         self.__ui.wHomePage.set_internal_data(self.__ui.menuRecent_files,
                                               self.__ui.actionClear)
+        self.__ui.dockWidgetNavTree.hide()
+        self.__ui.dockWidgetLogs.hide()
 
     def __update_toolbar(self):
         """
@@ -344,6 +346,9 @@ class MainWindow(QMainWindow):
             self.__ui.menuEdit.clear()
             self.__ui.menuEdit.addActions(
                 self.__tab_manager.active_tab.codeEdit.contextMenu.actions())
+            self.__ui.dockWidgetNavTree.show()
+            self.__ui.dockWidgetLogs.show()
+            cobol.parse_cobol(widget.codeEdit.tagFilename)
         else:
             self.setWindowTitle("OpenCobol IDE")
             self.__update_toolbar()
@@ -351,6 +356,8 @@ class MainWindow(QMainWindow):
             self.__ui.listWidgetErrors.clear()
             self.__ui.menuEdit.clear()
             self.__ui.stackedWidget.setCurrentIndex(self.PAGE_HOME)
+            self.__ui.dockWidgetNavTree.hide()
+            self.__ui.dockWidgetLogs.hide()
         self.__update_status_bar_infos(widget)
 
     def __change_current_file_type(self, action):

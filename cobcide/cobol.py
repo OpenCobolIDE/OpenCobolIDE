@@ -153,3 +153,86 @@ class Runner(QRunnable):
                                            "exists" % exe_filename)
             self.events.finished.emit(True)
             os.chdir(cwd)
+
+
+class TreeNode(object):
+    """
+    A tree node represents a an entry in the navigation tree?
+    """
+
+    class NodeType:
+        Root = -1
+        Division = 0
+        Section = 1
+        Variable = 2
+        Paragraph = 3
+
+    def __init__(self, node_type, line, name):
+        self.node_type = node_type
+        self.line = line
+        self.name = name
+        self.children = []
+
+    def print_tree(self, indent=0):
+        print " " * indent, self.name, self.line
+        for c in self.children:
+            c.print_tree(indent + 4)
+
+
+def parse_cobol(filename):
+    """
+    Parse a cobol file and return  a root TreeNode
+
+    :param filename: The cobol file path
+
+    :return: the root TreeNode
+    """
+    with open(filename, "r") as f:
+        root_node = TreeNode(TreeNode.NodeType.Root, 0,
+                             QFileInfo(filename).fileName())
+        current_div_node = None
+        current_section_node = None
+        lines = f.readlines()
+        last_var_indentation = 7
+        last_var_indentation_lvl = 0
+        last_var_per_lvl = [None, None, None, None, None, None, None]
+        for i, line in enumerate(lines):
+            indentation = len(line) - len(line.lstrip())
+            if indentation >= 7:
+                line = line.strip().upper()
+                # DIVISIONS
+                if "DIVISION" in line.upper():
+                    name = line
+                    div_node = TreeNode(TreeNode.NodeType.Division, i + 1, name)
+                    root_node.children.append(div_node)
+                    current_div_node = div_node
+                    print "DIV: ", div_node.name, "-", div_node.line, "-", \
+                        div_node.node_type
+                # SECTIONS
+                elif "SECTION" in line:
+                    name = line
+                    section_node = TreeNode(TreeNode.NodeType.Section, i + 1, name)
+                    current_div_node.children.append(section_node)
+                    current_section_node = section_node
+                    print "SEC: ", section_node.name, "-", \
+                        section_node.line, "-", section_node.node_type
+                # VARIABLES
+                elif (current_section_node is not None and
+                        "DATA DIVISION" in current_div_node.name):
+                    if indentation == 7:
+                        var_indentation_lvl = 0
+                    elif indentation == last_var_indentation:
+                        var_indentation_lvl = last_var_indentation_lvl
+                    elif indentation > last_var_indentation:
+                        var_indentation_lvl = last_var_indentation_lvl + 1
+                    else:
+                        var_indentation_lvl = last_var_indentation_lvl - 1
+                    var_name = line.split(" ")[1]
+                    # we have a var, check level with indentation
+                    print "VAR: ", var_name, var_indentation_lvl
+                    last_var_indentation_lvl = var_indentation_lvl
+                    last_var_indentation = indentation
+                # PARAGRAPHS
+
+    print "---------------------------"
+    root_node.print_tree()

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Sun Mar 31 23:05:56 2013
+# Created: Tue Apr  2 11:38:38 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -37,8 +37,8 @@ class Ui_MainWindow(object):
         self.page_2 = QtGui.QWidget()
         self.page_2.setObjectName("page_2")
         self.gridLayout_2 = QtGui.QGridLayout(self.page_2)
-        self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.gridLayout_2.setSpacing(0)
+        self.gridLayout_2.setContentsMargins(6, 6, 6, 6)
+        self.gridLayout_2.setSpacing(6)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.tabWidget = QtGui.QTabWidget(self.page_2)
         self.tabWidget.setTabsClosable(True)
@@ -56,8 +56,8 @@ class Ui_MainWindow(object):
         self.toolBarCode = QtGui.QToolBar(MainWindow)
         self.toolBarCode.setObjectName("toolBarCode")
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBarCode)
-        self.dockWidget = QtGui.QDockWidget(MainWindow)
-        self.dockWidget.setObjectName("dockWidget")
+        self.dockWidgetLogs = QtGui.QDockWidget(MainWindow)
+        self.dockWidgetLogs.setObjectName("dockWidgetLogs")
         self.dockWidgetContents = QtGui.QWidget()
         self.dockWidgetContents.setObjectName("dockWidgetContents")
         self.gridLayout_3 = QtGui.QGridLayout(self.dockWidgetContents)
@@ -83,8 +83,8 @@ class Ui_MainWindow(object):
         icon1.addPixmap(QtGui.QPixmap(":/ide-icons/rc/utilities-terminal.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.tabWidgetLogs.addTab(self.tabProgramOutput, icon1, "")
         self.gridLayout_3.addWidget(self.tabWidgetLogs, 0, 0, 1, 1)
-        self.dockWidget.setWidget(self.dockWidgetContents)
-        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidget)
+        self.dockWidgetLogs.setWidget(self.dockWidgetContents)
+        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtGui.QMenuBar(MainWindow)
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 1195, 25))
         self.menuBar.setObjectName("menuBar")
@@ -101,6 +101,19 @@ class Ui_MainWindow(object):
         self.menu = QtGui.QMenu(self.menuBar)
         self.menu.setObjectName("menu")
         MainWindow.setMenuBar(self.menuBar)
+        self.dockWidgetNavTree = QtGui.QDockWidget(MainWindow)
+        self.dockWidgetNavTree.setObjectName("dockWidgetNavTree")
+        self.dockWidgetContents_2 = QtGui.QWidget()
+        self.dockWidgetContents_2.setObjectName("dockWidgetContents_2")
+        self.gridLayout_7 = QtGui.QGridLayout(self.dockWidgetContents_2)
+        self.gridLayout_7.setObjectName("gridLayout_7")
+        self.twNavigation = QtGui.QTreeWidget(self.dockWidgetContents_2)
+        self.twNavigation.setObjectName("twNavigation")
+        self.twNavigation.headerItem().setText(0, "1")
+        self.twNavigation.header().setVisible(False)
+        self.gridLayout_7.addWidget(self.twNavigation, 0, 0, 1, 1)
+        self.dockWidgetNavTree.setWidget(self.dockWidgetContents_2)
+        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidgetNavTree)
         self.actionQuit = QtGui.QAction(MainWindow)
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":/ide-icons/rc/system-log-out.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -211,7 +224,7 @@ class Ui_MainWindow(object):
         self.menuBar.addAction(self.menu.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         self.tabWidget.setCurrentIndex(-1)
         self.tabWidgetLogs.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -220,7 +233,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "OpenCobol IDE", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBarFile.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Tollbar File", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBarCode.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Toolbar Code", None, QtGui.QApplication.UnicodeUTF8))
-        self.dockWidget.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Logs window", None, QtGui.QApplication.UnicodeUTF8))
+        self.dockWidgetLogs.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Logs window", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidgetLogs.setTabText(self.tabWidgetLogs.indexOf(self.tab_3), QtGui.QApplication.translate("MainWindow", "Compiler", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidgetLogs.setTabToolTip(self.tabWidgetLogs.indexOf(self.tab_3), QtGui.QApplication.translate("MainWindow", "Show compiler log", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidgetLogs.setTabText(self.tabWidgetLogs.indexOf(self.tabProgramOutput), QtGui.QApplication.translate("MainWindow", "Output", None, QtGui.QApplication.UnicodeUTF8))
@@ -230,6 +243,7 @@ class Ui_MainWindow(object):
         self.menuView.setTitle(QtGui.QApplication.translate("MainWindow", "View", None, QtGui.QApplication.UnicodeUTF8))
         self.menuCobol.setTitle(QtGui.QApplication.translate("MainWindow", "Cobol", None, QtGui.QApplication.UnicodeUTF8))
         self.menu.setTitle(QtGui.QApplication.translate("MainWindow", "?", None, QtGui.QApplication.UnicodeUTF8))
+        self.dockWidgetNavTree.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Navigation tree", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setToolTip(QtGui.QApplication.translate("MainWindow", "Exit application (Ctrl+Q)", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+Q", None, QtGui.QApplication.UnicodeUTF8))
