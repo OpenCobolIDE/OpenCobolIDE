@@ -40,6 +40,8 @@ class HomePageWidget(qwelcomewindow.QWelcomeWidget):
                         QIcon(":/ide-icons/rc/document-open.png"))
         self.add_action(self.ActionType.QuickStart, "About",
                         QIcon(":/ide-icons/rc/dialog-information.png"))
+        self.ui.lblRecents.setText("Recent files")
+        self.ui.lblQuickStart.setText("Quick start")
 
     def set_internal_data(self, menuRecentFiles, actionClearList):
         self.menuRecentFiles = menuRecentFiles

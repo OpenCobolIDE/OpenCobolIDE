@@ -15,7 +15,7 @@
 """
 Contains the cobol specific completion model
 """
-from pcef.modes.cc import CompletionModel
+from pcef.modes.cc import CompletionModel, Suggestion
 
 # take from pygments_ibm_cobol_lexer.__init__.py
 COBOL_KEYWORDS = [
@@ -101,7 +101,26 @@ class CobolCompletionModel(CompletionModel):
     """
     A simple static completion model based on a list of Cobol keywords
     """
-    def __init__(self):
-        super(CobolCompletionModel, self).__init__(COBOL_KEYWORDS, priority=1)
-        for s in self._suggestions:
-            s.decoration = ":/ide-icons/rc/keyword.png"
+    def __init__(self, analyserMode):
+        super(CobolCompletionModel, self).__init__(priority=1)
+        self.analyserMode = analyserMode
+        # customize cobol keywords icons
+        self.__reserved_suggestions = []
+        for keyword in COBOL_KEYWORDS:
+            self.__reserved_suggestions.append(
+                Suggestion(keyword, ":/ide-icons/rc/keyword.png"))
+
+    def update(self, source_code, line, col, filename, encoding):
+        self.suggestions[:] = []
+        variables = self.analyserMode.variables
+        for var in variables:
+            self.suggestions.append(
+                Suggestion(var.name, icon=":/ide-icons/rc/var.png",
+                           description=var.description))
+
+        paragraphs = self.analyserMode.paragraphs
+        for p in paragraphs:
+            self.suggestions.append(
+                Suggestion(p.name, icon=":/ide-icons/rc/paragraph.png"))
+
+        self.suggestions += self.__reserved_suggestions

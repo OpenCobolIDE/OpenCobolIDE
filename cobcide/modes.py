@@ -16,8 +16,10 @@
 """
 Contains the ToUpperMode
 """
+from PySide.QtCore import QObject, Signal
 from PySide.QtGui import QKeyEvent, QTextCursor
 from pcef.core import Mode
+from cobcide import cobol
 
 
 class ToUpperMode(Mode):
@@ -58,3 +60,59 @@ class ToUpperMode(Mode):
                    line_before_cursor.count('"') % 2 != 0):
                 ev.stop = True
                 tc.insertText(ev.text().upper())
+
+
+class DocumentAnalyserMode(Mode, QObject):
+    """
+    Your mode documentation goes here
+    """
+    NAME = "DocAnalyser"
+    DESCRIPTION = "Analyse document on new text or when the text is saved"
+
+    #: Signal emitted when the document layout changed
+    documentLayoutChanged = Signal()
+
+    @property
+    def root_node(self):
+        return self.__root_node
+
+    @property
+    def variables(self):
+        return self.__vars
+
+    @property
+    def paragraphs(self):
+        return self.__paragraphs
+
+    def __init__(self):
+        QObject.__init__(self)
+        Mode.__init__(self, self.NAME, self.DESCRIPTION)
+        self.__root_node = None
+        self.__vars = []
+        self.__paragraphs = []
+
+    def _onStateChanged(self, state):
+        """
+        Called when the mode is activated/deactivated
+        """
+        if state:
+            self.editor.codeEdit.newTextSet.connect(self.parse)
+            self.editor.codeEdit.textSaved.connect(self.parse)
+        else:
+            self.editor.codeEdit.newTextSet.disconnect(self.parse)
+            self.editor.codeEdit.textSaved.disconnect(self.parse)
+
+    def parse(self):
+        root_node, variables, paragraphs = cobol.parse_document_layout(
+            self.editor.codeEdit.tagFilename)
+        changed = False
+        if(self.__root_node is None or
+           cobol.cmp_doc_node(root_node, self.__root_node)):
+            changed = True
+        self.__root_node = root_node
+        self.__vars = variables
+        self.__paragraphs = paragraphs
+        if changed:
+            self.documentLayoutChanged.emit()
+
+

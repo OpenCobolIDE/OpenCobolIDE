@@ -21,7 +21,7 @@ import chardet
 import sys
 
 from PySide.QtCore import Slot, QThreadPool, QFileInfo, QTimer
-from PySide.QtGui import QMainWindow, QActionGroup, QDialog, QLabel
+from PySide.QtGui import QMainWindow, QActionGroup, QDialog, QLabel, QTreeWidgetItem
 from PySide.QtGui import QFileDialog
 from PySide.QtGui import QMessageBox, QListWidgetItem
 from pcef import saveFileFromEditor
@@ -31,7 +31,7 @@ from cobcide import __version__, FileType, cobol
 from cobcide.dialogs import DlgFileType
 from cobcide.errors_manager import ErrorsManager
 from cobcide.tab_manager import TabManager
-from cobcide.tabs import CobolEditor
+from cobcide.editor import CobolEditor
 from cobcide.ui import ide_ui, dlg_about_ui
 from cobcide.settings import Settings
 
@@ -65,7 +65,7 @@ class MainWindow(QMainWindow):
         self.__ui.statusbar.addPermanentWidget(self.lblCursorPos, 20)
         self.__ui.wHomePage.set_internal_data(self.__ui.menuRecent_files,
                                               self.__ui.actionClear)
-        self.__ui.dockWidgetNavTree.hide()
+        self.__ui.dockWidgetNavPanel.hide()
         self.__ui.dockWidgetLogs.hide()
 
     def __update_toolbar(self):
@@ -197,12 +197,15 @@ class MainWindow(QMainWindow):
                 # save last used path
                 app_settings.last_used_path = \
                     self.__tab_manager.active_tab_file_dir
-                # add an error maneger (to remember the list of errors for the
+                # add an error manager (to remember the list of errors for the
                 # compiler log list widget
                 if isinstance(tab, CobolEditor):
                     error_manager = ErrorsManager(
                         self.__ui.listWidgetErrors, tab)
                     tab.errors_manager = error_manager
+                    # also connect to the document layout changed signal
+                    tab.documentAnalyserMode.documentLayoutChanged.connect(
+                        self.__update_navigation_panel)
                 # update ui
                 self.__update_toolbar()
                 self.__ui.wHomePage.setCurrentFile(filename)
@@ -338,17 +341,19 @@ class MainWindow(QMainWindow):
         if widget:
             self.setWindowTitle("OpenCobol IDE - %s" % txt)
             self.__update_toolbar()
-            if isinstance(widget, CobolEditor) and widget.errors_manager:
-                widget.errors_manager.updateErrors()
+            if isinstance(widget, CobolEditor):
+                if widget.errors_manager:
+                    widget.errors_manager.updateErrors()
+                widget.documentAnalyserMode.parse()
+                self.__ui.dockWidgetNavPanel.show()
             else:
                 self.__ui.listWidgetErrors.clear()
+                self.__ui.dockWidgetNavPanel.hide()
+            self.__update_navigation_panel()
             self.__ui.tabWidgetLogs.setCurrentIndex(0)
             self.__ui.menuEdit.clear()
-            self.__ui.menuEdit.addActions(
-                self.__tab_manager.active_tab.codeEdit.contextMenu.actions())
-            self.__ui.dockWidgetNavTree.show()
+            self.__ui.menuEdit.addActions(widget.codeEdit.contextMenu.actions())
             self.__ui.dockWidgetLogs.show()
-            cobol.parse_cobol(widget.codeEdit.tagFilename)
         else:
             self.setWindowTitle("OpenCobol IDE")
             self.__update_toolbar()
@@ -356,8 +361,9 @@ class MainWindow(QMainWindow):
             self.__ui.listWidgetErrors.clear()
             self.__ui.menuEdit.clear()
             self.__ui.stackedWidget.setCurrentIndex(self.PAGE_HOME)
-            self.__ui.dockWidgetNavTree.hide()
+            self.__ui.dockWidgetNavPanel.hide()
             self.__ui.dockWidgetLogs.hide()
+            self.__ui.twNavigation.clear()
         self.__update_status_bar_infos(widget)
 
     def __change_current_file_type(self, action):
@@ -385,6 +391,21 @@ class MainWindow(QMainWindow):
         print "Open recent file: ", text
         try:
             self._open_file(filename)
-            QTimer.singleShot(100, self.__tab_manager.active_tab.codeEdit.setFocus)
         except IOError or OSError:
             pass
+
+    @Slot(QTreeWidgetItem, int)
+    def on_twNavigation_itemActivated(self, item, column):
+        from pcef.code_edit import cursorForPosition
+        tc = cursorForPosition(
+        self.__tab_manager.active_tab.codeEdit, item.line + 1, 0)
+        self.__tab_manager.active_tab.codeEdit.setTextCursor(tc)
+
+
+    def __update_navigation_panel(self):
+        self.__ui.twNavigation.clear()
+        if(self.__tab_manager.active_tab and
+           isinstance(self.__tab_manager.active_tab, CobolEditor)):
+            self.__ui.twNavigation.addTopLevelItem(
+                self.__tab_manager.active_tab.documentAnalyserMode.root_node)
+        self.__ui.twNavigation.expandAll()

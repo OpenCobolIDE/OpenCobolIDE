@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Tue Apr  2 11:38:38 2013
+# Created: Sat Apr  6 23:28:17 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1195, 936)
+        MainWindow.resize(1283, 1032)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/ide-icons/rc/silex-64x64.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
@@ -86,7 +86,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtGui.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1195, 25))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1283, 25))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtGui.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -101,8 +101,8 @@ class Ui_MainWindow(object):
         self.menu = QtGui.QMenu(self.menuBar)
         self.menu.setObjectName("menu")
         MainWindow.setMenuBar(self.menuBar)
-        self.dockWidgetNavTree = QtGui.QDockWidget(MainWindow)
-        self.dockWidgetNavTree.setObjectName("dockWidgetNavTree")
+        self.dockWidgetNavPanel = QtGui.QDockWidget(MainWindow)
+        self.dockWidgetNavPanel.setObjectName("dockWidgetNavPanel")
         self.dockWidgetContents_2 = QtGui.QWidget()
         self.dockWidgetContents_2.setObjectName("dockWidgetContents_2")
         self.gridLayout_7 = QtGui.QGridLayout(self.dockWidgetContents_2)
@@ -112,8 +112,8 @@ class Ui_MainWindow(object):
         self.twNavigation.headerItem().setText(0, "1")
         self.twNavigation.header().setVisible(False)
         self.gridLayout_7.addWidget(self.twNavigation, 0, 0, 1, 1)
-        self.dockWidgetNavTree.setWidget(self.dockWidgetContents_2)
-        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidgetNavTree)
+        self.dockWidgetNavPanel.setWidget(self.dockWidgetContents_2)
+        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidgetNavPanel)
         self.actionQuit = QtGui.QAction(MainWindow)
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":/ide-icons/rc/system-log-out.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -243,7 +243,7 @@ class Ui_MainWindow(object):
         self.menuView.setTitle(QtGui.QApplication.translate("MainWindow", "View", None, QtGui.QApplication.UnicodeUTF8))
         self.menuCobol.setTitle(QtGui.QApplication.translate("MainWindow", "Cobol", None, QtGui.QApplication.UnicodeUTF8))
         self.menu.setTitle(QtGui.QApplication.translate("MainWindow", "?", None, QtGui.QApplication.UnicodeUTF8))
-        self.dockWidgetNavTree.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Navigation tree", None, QtGui.QApplication.UnicodeUTF8))
+        self.dockWidgetNavPanel.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Navigation panel", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setToolTip(QtGui.QApplication.translate("MainWindow", "Exit application (Ctrl+Q)", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+Q", None, QtGui.QApplication.UnicodeUTF8))

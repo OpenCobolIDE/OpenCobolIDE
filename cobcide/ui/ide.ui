@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1195</width>
-    <height>936</height>
+    <width>1283</width>
+    <height>1032</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -154,7 +154,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1195</width>
+     <width>1283</width>
      <height>25</height>
     </rect>
    </property>
@@ -212,9 +212,9 @@
    <addaction name="menuCobol"/>
    <addaction name="menu"/>
   </widget>
-  <widget class="QDockWidget" name="dockWidgetNavTree">
+  <widget class="QDockWidget" name="dockWidgetNavPanel">
    <property name="windowTitle">
-    <string>Navigation tree</string>
+    <string>Navigation panel</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>

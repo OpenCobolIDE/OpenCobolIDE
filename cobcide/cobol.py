@@ -17,8 +17,11 @@ This module contains functions related to cobol
 """
 import os
 import subprocess
+import weakref
 from PySide.QtCore import QFileInfo, Signal, QObject, QRunnable
 import sys
+import time
+from PySide.QtGui import QTreeWidgetItem, QIcon
 from cobcide import FileType
 
 
@@ -155,23 +158,46 @@ class Runner(QRunnable):
             os.chdir(cwd)
 
 
-class TreeNode(object):
+class DocumentNode(QTreeWidgetItem):
     """
-    A tree node represents a an entry in the navigation tree?
+    Data structure used to hold a document node data:
+        - type (div, section, var, ...)
+        - line number
+        - name or identifier
+        - a list of child nodes
     """
 
-    class NodeType:
+    class Type:
         Root = -1
         Division = 0
         Section = 1
         Variable = 2
         Paragraph = 3
 
-    def __init__(self, node_type, line, name):
+    ICONS = {
+        -1: ":/ide-icons/rc/silex-32x32.png",
+        0:  ":/ide-icons/rc/Office-book.png",
+        1:  ":/ide-icons/rc/text-x-generic.png",
+        2:  ":/ide-icons/rc/var.png",
+        3:  ":/ide-icons/rc/paragraph.png"
+    }
+
+    def __init__(self, node_type, line, name, description=None):
+        QTreeWidgetItem.__init__(self)
         self.node_type = node_type
         self.line = line
         self.name = name
+        if description is None:
+            description = name
+        self.description = description.replace(".", "")
         self.children = []
+        self.setText(0, name)
+        self.setIcon(0, QIcon(self.ICONS[node_type]))
+        self.setToolTip(0, self.description)
+
+    def add_child(self, child):
+        self.children.append(child)
+        self.addChild(child)
 
     def print_tree(self, indent=0):
         print " " * indent, self.name, self.line
@@ -179,60 +205,127 @@ class TreeNode(object):
             c.print_tree(indent + 4)
 
 
-def parse_cobol(filename):
+def cmp_doc_node(self, other):
+    ret_val = 0
+    if len(self.children) == len(other.children):
+        for mine, his in zip(self.children, other.children):
+            if mine.name != his.name:
+                ret_val = 1
+            else:
+                ret_val = cmp_doc_node(mine, his)
+            if ret_val != 0:
+                break
+    else:
+        ret_val = 1
+    return ret_val
+
+
+def _extract_div_node(i, line, root_node):
+    name = line
+    name = name.replace(".", "")
+    node = DocumentNode(DocumentNode.Type.Division, i + 1, name)
+    root_node.add_child(node)
+    last_div_node = node
+    # do not take previous sections into account
+    last_section_node = None
+    return last_div_node, last_section_node
+
+
+def _extract_section_node(i, last_div_node, last_vars, line):
+    name = line
+    name = name.replace(".", "")
+    description = "{0}: {1}".format(i + 1, line)
+    node = DocumentNode(DocumentNode.Type.Section, i + 1, name)
+    last_div_node.add_child(node)
+    last_section_node = node
+    # do not take previous var into account
+    last_vars.clear()
+    return last_section_node
+
+
+def _extract_var_node(i, indentation, last_section_node, last_vars, line):
+    parent_node = None
+    try:
+        lvl = int(line.split(" ")[0], 16)
+        name = line.split(" ")[1]
+    except ValueError:
+        lvl = 0
+        name = line.split(" ")[0]
+    name = name.replace(".", "")
+    description = "{1}".format(i + 1, line)
+    if indentation == 7:
+        lvl = 0
+    if lvl == 0:
+        parent_node = last_section_node
+    else:
+        # trouver les premier niveau inferieur
+        levels = sorted(last_vars.keys(), reverse=True)
+        for l in levels:
+            if l < lvl:
+                parent_node = last_vars[l]
+                break
+    node = DocumentNode(DocumentNode.Type.Variable, i + 1, name,
+                        description)
+    parent_node.add_child(node)
+    last_vars[lvl] = node
+    return node
+
+
+def _extract_paragraph_node(i, last_div_node, last_section_node, line):
+    name = line.replace(".", "")
+    parent_node = last_div_node
+    if last_section_node is not None:
+        parent_node = last_section_node
+    node = DocumentNode(DocumentNode.Type.Paragraph, i + 1, name)
+    parent_node.add_child(node)
+    return node
+
+
+def parse_document_layout(filename):
     """
-    Parse a cobol file and return  a root TreeNode
+    Parse a cobol file and return  a root DocumentNode that describes the
+    layout of the file (sections, divisions, vars,...)
 
     :param filename: The cobol file path
 
-    :return: the root TreeNode
+    :return: the root DocumentNode, a list of variables, a list of paragraphs
     """
-    with open(filename, "r") as f:
-        root_node = TreeNode(TreeNode.NodeType.Root, 0,
+    root_node = DocumentNode(DocumentNode.Type.Root, 0,
                              QFileInfo(filename).fileName())
-        current_div_node = None
-        current_section_node = None
+    variables = []
+    paragraphs = []
+    with open(filename, "r") as f:
+        last_div_node = None
+        last_section_node = None
         lines = f.readlines()
-        last_var_indentation = 7
-        last_var_indentation_lvl = 0
-        last_var_per_lvl = [None, None, None, None, None, None, None]
+        last_vars = {}
         for i, line in enumerate(lines):
             indentation = len(line) - len(line.lstrip())
-            if indentation >= 7:
+            if indentation >= 7 and not line.isspace():
                 line = line.strip().upper()
                 # DIVISIONS
                 if "DIVISION" in line.upper():
-                    name = line
-                    div_node = TreeNode(TreeNode.NodeType.Division, i + 1, name)
-                    root_node.children.append(div_node)
-                    current_div_node = div_node
-                    print "DIV: ", div_node.name, "-", div_node.line, "-", \
-                        div_node.node_type
+                    last_div_node, last_section_node = _extract_div_node(
+                        i, line, root_node)
                 # SECTIONS
                 elif "SECTION" in line:
-                    name = line
-                    section_node = TreeNode(TreeNode.NodeType.Section, i + 1, name)
-                    current_div_node.children.append(section_node)
-                    current_section_node = section_node
-                    print "SEC: ", section_node.name, "-", \
-                        section_node.line, "-", section_node.node_type
+                    last_section_node = _extract_section_node(
+                        i, last_div_node, last_vars, line)
                 # VARIABLES
-                elif (current_section_node is not None and
-                        "DATA DIVISION" in current_div_node.name):
-                    if indentation == 7:
-                        var_indentation_lvl = 0
-                    elif indentation == last_var_indentation:
-                        var_indentation_lvl = last_var_indentation_lvl
-                    elif indentation > last_var_indentation:
-                        var_indentation_lvl = last_var_indentation_lvl + 1
-                    else:
-                        var_indentation_lvl = last_var_indentation_lvl - 1
-                    var_name = line.split(" ")[1]
-                    # we have a var, check level with indentation
-                    print "VAR: ", var_name, var_indentation_lvl
-                    last_var_indentation_lvl = var_indentation_lvl
-                    last_var_indentation = indentation
+                elif (last_div_node is not None and
+                        "DATA DIVISION" in last_div_node.name):
+                    v = _extract_var_node(
+                        i, indentation, last_section_node, last_vars, line)
+                    if v:
+                        variables.append(v)
                 # PARAGRAPHS
-
-    print "---------------------------"
-    root_node.print_tree()
+                elif (last_div_node is not None and
+                      "PROCEDURE DIVISION" in last_div_node.name and
+                      indentation == 7 and
+                      not "EXIT" in line and not "END" in line and not "STOP"
+                      in line):
+                    p = _extract_paragraph_node(
+                        i, last_div_node, last_section_node, line)
+                    if p:
+                        paragraphs.append(p)
+    return root_node, variables, paragraphs

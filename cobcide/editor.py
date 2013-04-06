@@ -32,7 +32,7 @@ from pcef.panels.misc import CheckersMarkerPanel
 from cobcide import FileType
 from cobcide.cc import CobolCompletionModel, COBOL_KEYWORDS
 from cobcide.errors_manager import ErrorsManager
-from cobcide.toupper_mode import ToUpperMode
+from cobcide.modes import ToUpperMode, DocumentAnalyserMode
 
 
 class CobolEditor(CodeEditorWidget):
@@ -135,6 +135,10 @@ class CobolEditor(CodeEditorWidget):
     def checkerPanel(self):
         return self.panel(CheckersMarkerPanel.IDENTIFIER)
 
+    @property
+    def documentAnalyserMode(self):
+        return self.mode(DocumentAnalyserMode.NAME)
+
     #---------------------------------------------------------------------------
     # Methods
     #---------------------------------------------------------------------------
@@ -161,9 +165,11 @@ class CobolEditor(CodeEditorWidget):
     def _install_modes(self):
         # convert char to upper
         self.installMode(ToUpperMode())
+        self.installMode(DocumentAnalyserMode())
         # code completion model, uses document words and the cobol keywords
         self.installMode(CodeCompletionMode())
-        self.codeCompletionMode.addModel(CobolCompletionModel())
+        self.codeCompletionMode.addModel(CobolCompletionModel(
+            self.documentAnalyserMode))
         self.codeCompletionMode.periodIsTrigger = False
         self.codeCompletionMode.minSuggestions = len(COBOL_KEYWORDS) + 20
         # left margin at col = 7
@@ -184,6 +190,7 @@ class CobolEditor(CodeEditorWidget):
         self.installMode(SyntaxHighlighterMode())
         self.syntaxHighlightingMode.highlighter.hilighlightingBlock.connect(
             self._highlighComments)
+
 
     def _installActions(self):
         """

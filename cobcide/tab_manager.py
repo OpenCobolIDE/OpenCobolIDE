@@ -21,7 +21,7 @@ import pcef
 from pcef.editors.generic import GenericEditor
 from PySide.QtGui import QTabWidget, QIcon, QWidget, QDialog, QMessageBox
 from cobcide import FileType
-from cobcide.tabs import CobolEditor
+from cobcide.editor import CobolEditor
 
 
 class TabManager(QObject):
@@ -82,8 +82,10 @@ class TabManager(QObject):
         return ret_val
 
     def cleanup(self):
-        while self.__tabWidget.count():
+        count = self.__tabWidget.count()
+        while count:
             self.__tabWidget.tabCloseRequested.emit(0)
+            count -= 1
         return self.__tabWidget.count() == 0
 
     def open_tab(self, filepath, choice, encoding):
