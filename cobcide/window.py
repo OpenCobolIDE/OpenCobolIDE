@@ -70,6 +70,10 @@ class MainWindow(QMainWindow):
             self.__on_error_double_clicked)
         self.__ui.mnuActiveEditor.setEnabled(False)
 
+        # setup home page
+        self.__ui.wHomePage.set_internal_data(self.__ui.menuRecent_files,
+                                              self.__ui.actionClear)
+
         # setup tab manager
         self.__tab_manager = TabManager(self.__ui.tabWidget)
         self.__tab_manager.tabChanged.connect(self.__on_current_tab_changed)
@@ -112,14 +116,8 @@ class MainWindow(QMainWindow):
         self.__ui.statusbar.addPermanentWidget(self.lblEncoding, 20)
         self.__ui.statusbar.addPermanentWidget(self.lblCursorPos, 20)
 
-        # setup home page
-        self.__ui.wHomePage.set_internal_data(self.__ui.menuRecent_files,
-                                              self.__ui.actionClear)
-
         # show the home page
-        self.__ui.stackedWidget.setCurrentIndex(self.PAGE_HOME)
-        self.__ui.dockWidgetNavPanel.hide()
-        self.__ui.dockWidgetLogs.hide()
+        self.__on_current_tab_changed(None, "")
 
     def __update_toolbar(self):
         """
@@ -288,7 +286,6 @@ class MainWindow(QMainWindow):
             self, "Choose a file to open", app_settings.last_used_path,
             "Cobol files (*.cbl);; Text files (*.txt *.dat)")[0]
         self._open_file(filename)
-        QTimer.singleShot(100, self.__tab_manager.active_tab.codeEdit.setFocus)
 
     @Slot(bool)
     def on_actionFullscreen_toggled(self, fullscreen):
@@ -432,7 +429,7 @@ class MainWindow(QMainWindow):
         :param txt: The new tab text
         """
         if widget:
-            self.setWindowTitle("OpenCobol IDE - %s" % txt)
+            self.setWindowTitle("OpenCobolIDE - %s" % txt)
             self.__update_toolbar()
             if isinstance(widget, CobolEditor):
                 if widget.errors_manager:
@@ -449,8 +446,11 @@ class MainWindow(QMainWindow):
             self.__ui.mnuActiveEditor.addActions(
                 widget.codeEdit.contextMenu.actions())
             self.__ui.dockWidgetLogs.show()
+            self.__ui.menuBar.show()
+            self.__ui.toolBarCode.show()
+            self.__ui.toolBarFile.show()
         else:
-            self.setWindowTitle("OpenCobol IDE")
+            self.setWindowTitle("OpenCobolIDE")
             self.__update_toolbar()
             self.__ui.plainTextEditOutput.clear()
             self.__ui.listWidgetErrors.clear()
@@ -460,6 +460,9 @@ class MainWindow(QMainWindow):
             self.__ui.dockWidgetNavPanel.hide()
             self.__ui.dockWidgetLogs.hide()
             self.__ui.twNavigation.clear()
+            self.__ui.menuBar.hide()
+            self.__ui.toolBarCode.hide()
+            self.__ui.toolBarFile.hide()
         self.__update_status_bar_infos(widget)
 
     def __change_current_file_type(self, action):

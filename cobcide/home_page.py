@@ -18,7 +18,7 @@ This module contains the home page widget
 import qwelcomewindow
 
 from PySide.QtCore import QFileInfo
-from PySide.QtGui import QIcon, QAction
+from PySide.QtGui import QIcon, QAction, QMenu
 
 from cobcide.settings import Settings
 
@@ -81,14 +81,15 @@ class HomePageWidget(qwelcomewindow.QWelcomeWidget):
         """
         for i in range(self.MaxRecentFiles):
             self.recentFileActs.append(
-                QAction(self, visible=False, triggered=self.__openRecentFile))
+                QAction(self, visible=False, triggered=self.openRecentFile))
 
-    def __openRecentFile(self):
+    def openRecentFile(self):
         """
         Slot called when a recent file action is triggered, emits the
         recent_action_triggered.
         """
         action = self.sender()
+        print action
         if action:
             txt = action.data()
             self.recent_action_triggered.emit(action.text(), txt)
@@ -143,7 +144,6 @@ class HomePageWidget(qwelcomewindow.QWelcomeWidget):
         del files[self.MaxRecentFiles:]
         settings.recent_files = files
         self.__updateRecentFileActions()
-
 
 
     def strippedName(self, fullFileName):

@@ -6,12 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1283</width>
-    <height>1032</height>
+    <width>1000</width>
+    <height>750</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1000</width>
+    <height>750</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>OpenCobol IDE</string>
+   <string>OpenCobolIDE</string>
   </property>
   <property name="windowIcon">
    <iconset resource="ide.qrc">
@@ -154,7 +160,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1283</width>
+     <width>1000</width>
      <height>25</height>
     </rect>
    </property>

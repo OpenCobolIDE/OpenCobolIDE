@@ -74,8 +74,8 @@ class DlgAbout(QDialog):
         self.__ui = UiAboutDialog()
         self.__ui.setupUi(self)
         self.__ui.labelMain.setText(self.__ui.labelMain.text() % __version__)
-        self.__ui.tabWidget.setCurrentIndex(0)
-        print
+        # self.__ui.tabWidget.setCurrentIndex(0)
+        # print
 
         versions = [cobol.get_cobc_version(),
                     PySide.QtCore.__version__,

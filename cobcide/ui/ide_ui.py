@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Sun Apr  7 20:34:18 2013
+# Created: Sun Apr  7 22:22:35 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,8 @@ from PySide import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1283, 1032)
+        MainWindow.resize(1000, 750)
+        MainWindow.setMinimumSize(QtCore.QSize(1000, 750))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/ide-icons/rc/silex-64x64.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
@@ -86,7 +87,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtGui.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1283, 25))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1000, 25))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtGui.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -265,7 +266,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "OpenCobol IDE", None, QtGui.QApplication.UnicodeUTF8))
+        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "OpenCobolIDE", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBarFile.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Tollbar File", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBarCode.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Toolbar Code", None, QtGui.QApplication.UnicodeUTF8))
         self.dockWidgetLogs.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Logs", None, QtGui.QApplication.UnicodeUTF8))
