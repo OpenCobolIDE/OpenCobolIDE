@@ -111,16 +111,21 @@ class CobolCompletionModel(CompletionModel):
                 Suggestion(keyword, ":/ide-icons/rc/keyword.png"))
 
     def update(self, source_code, line, col, filename, encoding):
+        """
+        Updates the suggestions list
+        """
         self.suggestions[:] = []
+        # vars
         variables = self.analyserMode.variables
         for var in variables:
             self.suggestions.append(
                 Suggestion(var.name, icon=":/ide-icons/rc/var.png",
                            description=var.description))
-
+        # paragraphs
         paragraphs = self.analyserMode.paragraphs
         for p in paragraphs:
             self.suggestions.append(
                 Suggestion(p.name, icon=":/ide-icons/rc/paragraph.png"))
 
+        # reserved keywords suggestions
         self.suggestions += self.__reserved_suggestions

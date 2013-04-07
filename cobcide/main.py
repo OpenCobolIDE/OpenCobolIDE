@@ -19,8 +19,6 @@ This module contains the IDE application entry point.
 import os
 import sys
 import logging
-from cobcide.settings import Settings
-
 logging.basicConfig()
 import subprocess
 
@@ -30,6 +28,7 @@ from PySide.QtGui import QApplication, QMessageBox
 sys.path.insert(0, os.path.abspath(__file__ + "/../../"))
 from cobcide import desktop_entry
 from cobcide.window import MainWindow
+from cobcide.settings import Settings
 
 
 def windows_init():
@@ -78,10 +77,9 @@ def linux_init():
     GNU/Linux specific init: create a desktop entry for the app if the entry
     does not already exists.
     """
-    print get_sudo_tool()
     settings = Settings()
-    if settings.create_desktop_entry == True:
-        if desktop_entry.check(__file__):
+    if settings.create_desktop_entry:
+        if desktop_entry.check():
             tool = get_sudo_tool()
             if QMessageBox.question(
                     None, "Create desktop entry?",

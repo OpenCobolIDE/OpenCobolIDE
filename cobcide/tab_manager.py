@@ -16,10 +16,13 @@
 """
 Contains classes and functions to manage the tab widget
 """
-from PySide.QtCore import QFileInfo, QObject, Signal
 import pcef
+
+from PySide.QtCore import QFileInfo, QObject, Signal
+from PySide.QtGui import QTabWidget, QIcon, QWidget, QMessageBox
+
 from pcef.editors.generic import GenericEditor
-from PySide.QtGui import QTabWidget, QIcon, QWidget, QDialog, QMessageBox
+
 from cobcide import FileType
 from cobcide.editor import CobolEditor
 
@@ -32,7 +35,9 @@ class TabManager(QObject):
         - notify when active tab changed
         - ...
     """
+    #: Signal emitted when the current tab has changed
     tabChanged = Signal(QWidget, str)
+    #: Signal emitted when the text cursor of the active tab moved.
     cursorPosChanged = Signal(int, int)
 
     def __init__(self, tabWidget):
@@ -47,6 +52,11 @@ class TabManager(QObject):
         self.__current_index = -1
 
     def has_open_tabs(self):
+        """
+        Tells if there are any open tabs
+
+        :return: True if at least one tab is open, else False
+        """
         return self.__tabWidget.count() != 0
 
     @property
@@ -58,10 +68,19 @@ class TabManager(QObject):
 
     @property
     def active_tab_type(self):
+        """
+        Return the active tab type (program, subprogram,...)
+
+        :return: cobcide.FileType
+        """
         return self.active_tab.fileType
 
     @property
     def active_tab_filename(self):
+        """
+        Retursn the active tab filename
+        :return:
+        """
         return self.active_tab.codeEdit.tagFilename
 
     @property
@@ -73,6 +92,11 @@ class TabManager(QObject):
 
     @property
     def is_clean(self):
+        """
+        Checks if all open tabs are clean (not modified)
+
+        :return: True if all open tabs are clean
+        """
         ret_val = True
         for i in range(self.__tabWidget.count()):
             tab = self.__tabWidget.widget(i)
@@ -82,6 +106,11 @@ class TabManager(QObject):
         return ret_val
 
     def cleanup(self):
+        """
+        Try to perform cleanup, request a tab close on every open tab.
+
+        :return: True if all tabs are closed.
+        """
         count = self.__tabWidget.count()
         while count:
             self.__tabWidget.tabCloseRequested.emit(0)
@@ -112,6 +141,11 @@ class TabManager(QObject):
         return tab
 
     def __close_tab(self, index):
+        """
+        Close a tab, only close if clean or user agree to close a dirty editor.
+
+        :param index: The tab index to close
+        """
         if index != -1:
             tab = self.__tabWidget.widget(index)
             if tab is not None and tab.codeEdit.dirty:
@@ -128,6 +162,12 @@ class TabManager(QObject):
                 self.__tabWidget.removeTab(index)
 
     def __on_current_changed(self, index):
+        """
+        Slot called when the current tab changed. Emit the tab changed signal
+        which is more convenient for the client code.
+
+        :param index:The new tab index
+        """
         txt = ""
         if self.__current_index != -1:
             tab = self.__tabWidget.widget(self.__current_index)
@@ -149,6 +189,11 @@ class TabManager(QObject):
         self.tabChanged.emit(tab, txt)
 
     def __on_dirty_changed(self, dirty):
+        """
+        Changes tab text when its status changed
+
+        :param dirty: Dirty flag - bool
+        """
         finfo = QFileInfo(self.active_tab.codeEdit.tagFilename)
         txt = finfo.fileName()
         if dirty:
@@ -156,6 +201,11 @@ class TabManager(QObject):
         self.__tabWidget.setTabText(self.__current_index, txt)
 
     def get_cursor_pos(self):
+        """
+        Returns the active tab cursor position expressed in lines and columns.
+
+        :return: A tuple of int (line, column)
+        """
         if self.has_open_tabs():
             tc = self.active_tab.codeEdit.textCursor()
             l = tc.blockNumber() + 1
@@ -166,5 +216,10 @@ class TabManager(QObject):
         return l, c
 
     def __on_cursor_pos_changed(self):
+        """
+        Slots called when the active tab's text cursor position changed.
+
+        Emits a more convenient signal: cursorPosChanged(line, column)
+        """
         l, c = self.get_cursor_pos()
         self.cursorPosChanged.emit(l, c)

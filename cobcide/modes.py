@@ -14,11 +14,15 @@
 # You should have received a copy of the GNU General Public License
 # along with cobcide.  If not, see <http://www.gnu.org/licenses/>.
 """
-Contains the ToUpperMode
+Contains cobol specific modes:
+  - ToUpperMode
+  - DocumentAnalyserMode
 """
 from PySide.QtCore import QObject, Signal
 from PySide.QtGui import QKeyEvent, QTextCursor
+
 from pcef.core import Mode
+
 from cobcide import cobol
 
 
@@ -74,15 +78,24 @@ class DocumentAnalyserMode(Mode, QObject):
 
     @property
     def root_node(self):
+        """
+        Returns the document root node.
+        """
         return self.__root_node
 
     @property
     def variables(self):
+        """
+        Returns the list of variable document nodes
+        """
         return self.__vars
 
     @property
     def paragraphs(self):
-        return self.__paragraphs
+        """
+        Returns the list of paragraphs document nodes
+        """
+        self.__paragraphs
 
     def __init__(self):
         QObject.__init__(self)
@@ -103,6 +116,13 @@ class DocumentAnalyserMode(Mode, QObject):
             self.editor.codeEdit.textSaved.disconnect(self.parse)
 
     def parse(self):
+        """ Parse the document layout.
+
+        To get the results, use the following properties:
+            - root_node
+            - variables
+            - paragraphs
+        """
         root_node, variables, paragraphs = cobol.parse_document_layout(
             self.editor.codeEdit.tagFilename)
         changed = False

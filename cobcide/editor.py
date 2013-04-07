@@ -16,9 +16,10 @@
 Contains the different tabs types (one for cobol files, another for basic text
 files)
 """
-from pcef import styles
 from pygments.token import Comment
+
 from PySide.QtCore import Slot, QRegExp
+
 from pcef.core import CodeEditorWidget
 from pcef.modes.indent import AutoIndentMode
 from pcef.modes.clh import HighlightLineMode
@@ -29,9 +30,9 @@ from pcef.modes.cc import CodeCompletionMode
 from pcef.panels.lines import LineNumberPanel
 from pcef.panels.search import SearchPanel
 from pcef.panels.misc import CheckersMarkerPanel
+
 from cobcide import FileType
 from cobcide.cc import CobolCompletionModel, COBOL_KEYWORDS
-from cobcide.errors_manager import ErrorsManager
 from cobcide.modes import ToUpperMode, DocumentAnalyserMode
 
 
@@ -191,7 +192,6 @@ class CobolEditor(CodeEditorWidget):
         self.syntaxHighlightingMode.highlighter.hilighlightingBlock.connect(
             self._highlighComments)
 
-
     def _installActions(self):
         """
         Installs the standard pcef code edit actions
@@ -263,6 +263,13 @@ class CobolEditor(CodeEditorWidget):
         self.codeEdit.selectAll()
 
     def _highlighComments(self, original_text, highlighter):
+        """
+        Custom highlighter to fix comment highlighting
+
+        :param original_text: Original text block
+
+        :param highlighter: QSyntaxHighlighter instance
+        """
         expression = QRegExp('\*.*')
         index = expression.indexIn(original_text, 0)
         while index >= 0:

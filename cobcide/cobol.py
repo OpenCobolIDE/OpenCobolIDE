@@ -13,19 +13,40 @@
 # You should have received a copy of the GNU General Public License
 # along with cobcide.  If not, see <http://www.gnu.org/licenses/>.
 """
-This module contains functions related to cobol
+This module contains functions related to cobol:
+    - create compilation command,
+    - compile file
+    - run cobol program
+    - parse cobol document layout
 """
 import os
 import subprocess
-import weakref
-from PySide.QtCore import QFileInfo, Signal, QObject, QRunnable
 import sys
-import time
+
+from PySide.QtCore import QFileInfo, Signal, QObject, QRunnable
 from PySide.QtGui import QTreeWidgetItem, QIcon
+
 from cobcide import FileType
 
 
 def cmd_from_file_type(filename, fileType):
+    """
+    Creates a compilation command that take cares about the file type.
+
+    We do not compile a program or a subprogram with the same command, to
+    compile a program we must use the -X switch and use a *.exe extension on
+    windows. To compile a subprogram we must use the *.dll extension on windows
+    and *.so extension on GNU/Linux.
+
+    The base compilation command for every filetype is stored into the
+    corresponding FileType dictionnary.
+
+    :param filename: The full filename
+
+    :param fileType: The file type
+
+    :return: The compilation command string
+    """
     filename = os.path.normpath(filename)
     finfo = QFileInfo(filename)
     dir_path = finfo.dir().path()
@@ -50,7 +71,7 @@ def cmd_from_file_type(filename, fileType):
 
 def compile(filename, fileType):
     """
-    Compile the filename and return a list of errors
+    Compiles a file and return a list of errors/messages
     """
     results = []
     cmd, output_filename = cmd_from_file_type(filename, fileType)
@@ -93,6 +114,9 @@ def compile(filename, fileType):
 
 
 class RunnerEvents(QObject):
+    """
+    Groups runner events.
+    """
     lineAvailable = Signal(unicode)
     error = Signal(unicode)
     finished = Signal(bool)
@@ -196,23 +220,41 @@ class DocumentNode(QTreeWidgetItem):
         self.setToolTip(0, self.description)
 
     def add_child(self, child):
+        """
+        Add a child to the node (call QTreeWidgetItem::addChilld automatically)
+
+        :param child: The child node to add
+        """
         self.children.append(child)
         self.addChild(child)
 
     def print_tree(self, indent=0):
+        """
+        Print the node tree in stdout
+        """
         print " " * indent, self.name, self.line
         for c in self.children:
             c.print_tree(indent + 4)
 
 
-def cmp_doc_node(self, other):
+def cmp_doc_node(first_node, second_node):
+    """
+    Compare two nodes recursively.
+
+    :param first_node: First node
+
+    :param second_node:
+
+    :return:
+    """
     ret_val = 0
-    if len(self.children) == len(other.children):
-        for mine, his in zip(self.children, other.children):
-            if mine.name != his.name:
+    if len(first_node.children) == len(second_node.children):
+        for first_child, second_child in zip(first_node.children,
+                                             second_node.children):
+            if first_child.name != second_child.name:
                 ret_val = 1
             else:
-                ret_val = cmp_doc_node(mine, his)
+                ret_val = cmp_doc_node(first_child, second_child)
             if ret_val != 0:
                 break
     else:
@@ -221,6 +263,17 @@ def cmp_doc_node(self, other):
 
 
 def _extract_div_node(i, line, root_node):
+    """
+    Extracts a division node from a line
+
+    :param i: The line number (starting from 0)
+
+    :param line: The line string (without indentation)
+
+    :param root_node: The document root node.
+
+    :return: tuple(last_div_node, last_section_node)
+    """
     name = line
     name = name.replace(".", "")
     node = DocumentNode(DocumentNode.Type.Division, i + 1, name)
@@ -232,6 +285,19 @@ def _extract_div_node(i, line, root_node):
 
 
 def _extract_section_node(i, last_div_node, last_vars, line):
+    """
+    Extracts a section node from a line.
+
+    :param i: The line number (starting from 0)
+
+    :param last_div_node: The last div node found
+
+    :param last_vars: The last vars dict
+
+    :param line: The line string (without indentation)
+
+    :return: last_section_node
+    """
     name = line
     name = name.replace(".", "")
     description = "{0}: {1}".format(i + 1, line)
@@ -244,6 +310,21 @@ def _extract_section_node(i, last_div_node, last_vars, line):
 
 
 def _extract_var_node(i, indentation, last_section_node, last_vars, line):
+    """
+    Extract a variable node.
+
+    :param i: The line number (starting from 0)
+
+    :param indentation: The current indentation (counted in spaces)
+
+    :param last_section_node: The last section node found
+
+    :param last_vars: The last vars dict
+
+    :param line: The line string (without indentation)
+
+    :return: The extracted variable node
+    """
     parent_node = None
     try:
         lvl = int(line.split(" ")[0], 16)
@@ -272,6 +353,15 @@ def _extract_var_node(i, indentation, last_section_node, last_vars, line):
 
 
 def _extract_paragraph_node(i, last_div_node, last_section_node, line):
+    """
+    Extracts a paragraph node
+
+    :param i: The line number (starting from 0)
+    :param last_div_node: The last div node found
+    :param last_section_node: The last section node found
+    :param line: The line string (without indentation)
+    :return: The extracted paragraph node
+    """
     name = line.replace(".", "")
     parent_node = last_div_node
     if last_section_node is not None:

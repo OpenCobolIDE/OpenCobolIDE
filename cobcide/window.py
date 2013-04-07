@@ -37,34 +37,53 @@ from cobcide.settings import Settings
 
 
 class MainWindow(QMainWindow):
+    """
+    The IDE main window
+    """
+    #: Home page index
     PAGE_HOME = 0
+    #: The editor page index
     PAGE_EDITOR = 1
+
     def __init__(self):
         QMainWindow.__init__(self)
+        # Create our thread pool (used to launch compilation and run command)
+        self.__threadPool = QThreadPool()
+        self.__threadPool.setMaxThreadCount(1)
+
+        # setup ui
         self.__ui = ide_ui.Ui_MainWindow()
         self.__ui.setupUi(self)
         self.__ui.listWidgetErrors.itemDoubleClicked.connect(
             self.__on_error_double_clicked)
+
+        # setup tab manager
         self.__tab_manager = TabManager(self.__ui.tabWidget)
         self.__tab_manager.tabChanged.connect(self.__on_current_tab_changed)
         self.__tab_manager.cursorPosChanged.connect(
             self.__on_cursor_pos_changed)
+
+        # setup program/subprogram action group
         ag = QActionGroup(self)
         ag.addAction(self.__ui.actionProgram)
         ag.addAction(self.__ui.actionSubprogram)
         ag.triggered.connect(self.__change_current_file_type)
         self.__update_toolbar()
-        self.__threadPool = QThreadPool()
-        self.__threadPool.setMaxThreadCount(1)
-        self.__ui.stackedWidget.setCurrentIndex(self.PAGE_HOME)
+
+        # setup status bar
         self.lblFilename = QLabel()
         self.lblEncoding = QLabel()
         self.lblCursorPos = QLabel()
         self.__ui.statusbar.addPermanentWidget(self.lblFilename, 200)
         self.__ui.statusbar.addPermanentWidget(self.lblEncoding, 20)
         self.__ui.statusbar.addPermanentWidget(self.lblCursorPos, 20)
+
+        # setup home page
         self.__ui.wHomePage.set_internal_data(self.__ui.menuRecent_files,
                                               self.__ui.actionClear)
+
+        # show the home page
+        self.__ui.stackedWidget.setCurrentIndex(self.PAGE_HOME)
         self.__ui.dockWidgetNavPanel.hide()
         self.__ui.dockWidgetLogs.hide()
 
@@ -112,35 +131,6 @@ class MainWindow(QMainWindow):
                 self.__ui.actionProgram.setChecked(False)
                 self.__ui.actionSubprogram.setChecked(False)
 
-
-    @Slot()
-    def on_actionNew_triggered(self):
-        # ask file type
-        dlg = DlgFileType(
-            parent=self,
-            label="<p>What kind of file do you want to <b>create</b>?</p>")
-        if dlg.exec_() == DlgFileType.Accepted:
-            extensions = "Cobol files *.cbl (*.cbl)"
-            default_ext = ".cbl"
-            if dlg.choice == FileType.Text:
-                extensions = "Text files *.txt (*.txt *.dat)"
-                default_ext = ".txt"
-            # ask the save filename
-            filename = QFileDialog.getSaveFileName(
-                self, "Choose the save filename", Settings().last_used_path,
-                extensions)[0]
-            if filename != "":
-                if QFileInfo(filename).suffix() == "":
-                    filename += default_ext
-                try:
-                    with open(filename, "w") as f:
-                        f.write("")
-                    self._open_file(filename, dlg.choice)
-                except IOError or OSError:
-                    QMessageBox.warning(self, "Failed to create file",
-                                        "Failed to create file {0}.\n"
-                                        "Check that you have the access rights "
-                                        "on this folder and retry." % filename)
 
 
     def detect_encoding(self, filename):
@@ -222,7 +212,42 @@ class MainWindow(QMainWindow):
              event.accept()
 
     @Slot()
+    def on_actionNew_triggered(self):
+        """
+        Creates a new file
+        """
+        # ask file type
+        dlg = DlgFileType(
+            parent=self,
+            label="<p>What kind of file do you want to <b>create</b>?</p>")
+        if dlg.exec_() == DlgFileType.Accepted:
+            extensions = "Cobol files *.cbl (*.cbl)"
+            default_ext = ".cbl"
+            if dlg.choice == FileType.Text:
+                extensions = "Text files *.txt (*.txt *.dat)"
+                default_ext = ".txt"
+            # ask the save filename
+            filename = QFileDialog.getSaveFileName(
+                self, "Choose the save filename", Settings().last_used_path,
+                extensions)[0]
+            if filename != "":
+                if QFileInfo(filename).suffix() == "":
+                    filename += default_ext
+                try:
+                    with open(filename, "w") as f:
+                        f.write("")
+                    self._open_file(filename, dlg.choice)
+                except IOError or OSError:
+                    QMessageBox.warning(self, "Failed to create file",
+                                        "Failed to create file {0}.\n"
+                                        "Check that you have the access rights "
+                                        "on this folder and retry." % filename)
+
+    @Slot()
     def on_actionOpen_triggered(self):
+        """
+        Opens a file
+        """
          # ask file type
         app_settings = Settings()
         filename = QFileDialog.getOpenFileName(
@@ -233,6 +258,11 @@ class MainWindow(QMainWindow):
 
     @Slot(bool)
     def on_actionFullscreen_toggled(self, fullscreen):
+        """
+        Toggle fullscreen
+
+        :param fullscreen: Fullscreen state
+        """
         if fullscreen:
             self.showFullScreen()
         else:
@@ -240,11 +270,14 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_actionQuit_triggered(self):
+        """
+        Exits the application
+        """
         self.close()
 
     @Slot()
     def on_actionSave_triggered(self):
-        """ Save the current file """
+        """ Saves the current file """
         editor = self.__tab_manager.active_tab
         try:
             saveFileFromEditor(editor, encoding=editor.codeEdit.tagEncoding)
@@ -257,7 +290,7 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_actionSave_as_triggered(self):
-        """ Save the current file as"""
+        """ Saves the current file as"""
         editor = self.__tab_manager.active_tab
         s = Settings()
         filename = QFileDialog.getSaveFileName(
@@ -277,6 +310,10 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_actionAbout_triggered(self):
+        """
+        Shows the about dialog
+        :return:
+        """
         dlg = QDialog(self)
         ui = dlg_about_ui.Ui_Dialog()
         ui.setupUi(dlg)
@@ -285,6 +322,9 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_actionCompile_triggered(self):
+        """
+        Compiles current file
+        """
         self.__ui.tabWidgetLogs.setCurrentIndex(0)
         self.on_actionSave_triggered()
         filename = self.__tab_manager.active_tab_filename
@@ -295,6 +335,9 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_actionRun_triggered(self):
+        """
+        Run current file executable
+        """
         self.__ui.tabWidgetLogs.setCurrentIndex(1)
         self.__ui.plainTextEditOutput.clear()
         filename = self.__tab_manager.active_tab_filename
@@ -307,6 +350,11 @@ class MainWindow(QMainWindow):
         self.__threadPool.start(runner)
 
     def __on_run_error(self, msg):
+        """
+        Slot called when an error occured when running an executable
+
+        :param msg: Error message
+        """
         self.__ui.plainTextEditOutput.appendPlainText(msg)
         QMessageBox.critical(self, "Error executing program",
                              "An error occured while running a cobol program:"
@@ -316,6 +364,8 @@ class MainWindow(QMainWindow):
     @Slot(QListWidgetItem)
     def __on_error_double_clicked(self, item):
         """
+        Moves the text cursor to the line of the error
+
         :param item: QListWidgetItem
         """
         try:
@@ -327,6 +377,11 @@ class MainWindow(QMainWindow):
             pass
 
     def __update_status_bar_infos(self, widget):
+        """
+        Updates the status bar infos (widgets)
+
+        :param widget: current editor widget
+        """
         if widget:
             self.lblFilename.setText(widget.codeEdit.tagFilename)
             self.lblEncoding.setText(widget.codeEdit.tagEncoding)
@@ -338,6 +393,13 @@ class MainWindow(QMainWindow):
             self.lblCursorPos.setText("")
 
     def __on_current_tab_changed(self, widget, txt):
+        """
+        Updates ui when current file changed
+
+        :param widget: The new editor widget
+
+        :param txt: The new tab text
+        """
         if widget:
             self.setWindowTitle("OpenCobol IDE - %s" % txt)
             self.__update_toolbar()
@@ -367,6 +429,11 @@ class MainWindow(QMainWindow):
         self.__update_status_bar_infos(widget)
 
     def __change_current_file_type(self, action):
+        """
+        Changes the current file type
+
+        :param action: QAction - program or subprogram
+        """
         if self.__tab_manager.active_tab_type != FileType.Text:
             if action == self.__ui.actionProgram:
                 self.__tab_manager.active_tab.fileType = FileType.Program
@@ -375,10 +442,21 @@ class MainWindow(QMainWindow):
         self.__update_toolbar()
 
     def __on_cursor_pos_changed(self, l, c):
+        """
+        Update cursor position label
+
+        :param l: Line number
+        :param c: Columns number
+        """
         self.lblCursorPos.setText("{0}:{1}".format(l, c))
 
     @Slot(str)
     def on_wHomePage_quick_start_action_triggered(self, text):
+        """
+        Executes the quick start action
+
+        :param text: Selected action text
+        """
         if text == "Create a new file":
             self.on_actionNew_triggered()
         elif text == "Open a file":
@@ -388,7 +466,13 @@ class MainWindow(QMainWindow):
 
     @Slot(str, str)
     def on_wHomePage_recent_action_triggered(self, text, filename):
-        print "Open recent file: ", text
+        """
+        Open a recent file (from the recent file menu or from the recent action
+        lists of the home page
+
+        :param text: action text
+        :param filename: recent filename
+        """
         try:
             self._open_file(filename)
         except IOError or OSError:
@@ -396,13 +480,21 @@ class MainWindow(QMainWindow):
 
     @Slot(QTreeWidgetItem, int)
     def on_twNavigation_itemActivated(self, item, column):
+        """
+        Moves the text cursor on the selected document node position
+
+        :param item: cobcide.cobol.DocumentNode
+        :param column:
+        """
         from pcef.code_edit import cursorForPosition
         tc = cursorForPosition(
-        self.__tab_manager.active_tab.codeEdit, item.line + 1, 0)
+            self.__tab_manager.active_tab.codeEdit, item.line + 1, 0)
         self.__tab_manager.active_tab.codeEdit.setTextCursor(tc)
 
-
     def __update_navigation_panel(self):
+        """
+        Updates the navigation panel using the DocumentAnalyserMode infos.
+        """
         self.__ui.twNavigation.clear()
         if(self.__tab_manager.active_tab and
            isinstance(self.__tab_manager.active_tab, CobolEditor)):

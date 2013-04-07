@@ -15,8 +15,10 @@
 """
 Gives an easy and safe access to the app settings
 """
-from PySide.QtCore import QSettings
 import sys
+
+from PySide.QtCore import QSettings
+
 
 
 class Settings(object):
@@ -75,8 +77,18 @@ class Settings(object):
 
     @property
     def create_desktop_entry(self):
+        """
+        Returns the createDesktopEntry flag. True by default.
+
+        :return: flag
+        """
         return bool(self.__settings.value("createDesktopEntry", True))
 
     @create_desktop_entry.setter
     def create_desktop_entry(self, create):
+        """
+        Sets the desktop entry flag
+
+        :param create: flag
+        """
         self.__settings.setValue("createDesktopEntry", bool(create))

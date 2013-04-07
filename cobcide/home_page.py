@@ -16,8 +16,10 @@
 This module contains the home page widget
 """
 import qwelcomewindow
+
 from PySide.QtCore import QFileInfo
 from PySide.QtGui import QIcon, QAction
+
 from cobcide.settings import Settings
 
 
@@ -25,9 +27,10 @@ class HomePageWidget(qwelcomewindow.QWelcomeWidget):
     """
     The home page widget.
 
-    Shows a list of quick start actions and take care of keeping a list
-    of recent files
+    Shows a list of quick start actions, manage the recent files menu and the
+    recent actions
     """
+    #: Number of recent files kept in the app settings.
     MaxRecentFiles = 10
 
     def __init__(self, parent):
@@ -44,36 +47,68 @@ class HomePageWidget(qwelcomewindow.QWelcomeWidget):
         self.ui.lblQuickStart.setText("Quick start")
 
     def set_internal_data(self, menuRecentFiles, actionClearList):
+        """
+        Gives the homepage the recent menu instance and the actionClearList
+        action
+        """
         self.menuRecentFiles = menuRecentFiles
         self.actionClearList = actionClearList
-        self.actionClearList.triggered.connect(self._clear)
-        self.init()
+        self.actionClearList.triggered.connect(self.__clear)
+        self.__init()
 
-    def _clear(self):
+    def __clear(self):
+        """
+        Clear the recent files list and update ui
+        """
         settings = Settings()
         settings.clear_recent_files()
-        self.updateRecentFileActions()
+        self.__updateRecentFileActions()
 
-    def createActions(self):
+    def __init(self):
+        """
+        Loads the recent file list, create its recent actions and create the
+        recent files menu.
+        """
+        self.recentFileActs = []
+        self.__createActions()
+        self.__createMenus()
+
+    def __createActions(self):
+        """
+        Create recent file actions
+        """
         for i in range(self.MaxRecentFiles):
             self.recentFileActs.append(
-                QAction(self, visible=False, triggered=self.openRecentFile))
+                QAction(self, visible=False, triggered=self.__openRecentFile))
 
-    def openRecentFile(self):
+    def __openRecentFile(self):
+        """
+        Slot called when a recent file action is triggered, emits the
+        recent_action_triggered.
+        """
         action = self.sender()
         if action:
             txt = action.data()
             self.recent_action_triggered.emit(action.text(), txt)
 
-    def createMenus(self):
+    def __createMenus(self):
+        """
+        Create menus
+        """
         self.menuRecentFiles.clear()
         for i in range(self.MaxRecentFiles):
             self.menuRecentFiles.addAction(self.recentFileActs[i])
         self.separatorAct = self.menuRecentFiles.addSeparator()
         self.menuRecentFiles.addAction(self.actionClearList)
-        self.updateRecentFileActions()
+        self.__updateRecentFileActions()
 
-    def updateRecentFileActions(self):
+    def __updateRecentFileActions(self):
+        """
+        Update the recent file actions.
+
+        Clears the menu and the recent actions, then fill them with the list
+        stored in the app settings
+        """
         settings = Settings()
         files = settings.recent_files
         files_no = 0
@@ -92,6 +127,9 @@ class HomePageWidget(qwelcomewindow.QWelcomeWidget):
         self.separatorAct.setVisible((numRecentFiles > 0))
 
     def setCurrentFile(self, fileName):
+        """
+        Set the current filename (move it to the top of the stack)
+        """
         self.curFile = fileName
         settings = Settings()
         files = settings.recent_files
@@ -102,17 +140,16 @@ class HomePageWidget(qwelcomewindow.QWelcomeWidget):
         files.insert(0, fileName)
         del files[self.MaxRecentFiles:]
         settings.recent_files = files
-        self.updateRecentFileActions()
+        self.__updateRecentFileActions()
 
-    def init(self):
-        """
-        Loads the recent file list, create its recent actions and create the
-        recent files menu.
-        """
-        self.recentFileActs = []
-        self.createActions()
-        self.createMenus()
 
 
     def strippedName(self, fullFileName):
+        """
+        Returs  the stripped filename (name + extension)
+
+        :param fullFileName: The full filename to strip
+
+        :return: The stripped name
+        """
         return QFileInfo(fullFileName).fileName()

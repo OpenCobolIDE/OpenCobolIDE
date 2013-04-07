@@ -18,6 +18,7 @@ Contains a class that manage the errors lists and update the ui accordingly.
 An error manager is attached to an open tab.
 """
 from PySide.QtGui import QColor, QListWidgetItem, QIcon
+
 from pcef.code_edit import cursorForPosition, TextDecoration
 from pcef.modes.checker import ERROR_TYPE_WARNING, ERROR_TYPE_SYNTAX
 
@@ -40,11 +41,13 @@ class ErrorsManager(object):
         self.__cache_out_filename = None
 
     def __clear_decorations(self):
+        """ Clear all decorations """
         for deco in self.__decorations:
             self.__editor.codeEdit.removeDecoration(deco)
         self.__decorations[:] = []
 
     def __clear_markers(self):
+        """ Clear all markers """
         for marker in self.__markers:
             if self.__checkerPanel:
                 try:
@@ -54,9 +57,17 @@ class ErrorsManager(object):
         self.__markers[:] = []
 
     def updateErrors(self):
+        """Update errors slot"""
         self.set_errors(self.__cache_errors, self.__cache_out_filename)
 
     def set_errors(self, errors, output_filename):
+        """
+        Sets the list of errors (decoration/markers)
+
+        :param errors: The list of errors
+
+        :param output_filename: The output filename
+        """
         self.__cache_errors = errors
         self.__cache_out_filename = output_filename
         # clear all
@@ -87,6 +98,15 @@ class ErrorsManager(object):
         self.__editor.codeEdit.verticalScrollBar().setSliderPosition(vbar_pos)
 
     def addError(self, error_type, line, message=None):
+        """
+        Add an error marker and decoration
+
+        :param error_type: Type of error
+
+        :param line: Error line
+
+        :param message: Error message (tooltip)
+        """
         assert error_type in self.colors and self.colors[error_type] is not None
         c = cursorForPosition(self.__editor.codeEdit, line, 1,
                               selectEndOfLine=True)

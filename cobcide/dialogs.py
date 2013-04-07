@@ -16,8 +16,10 @@
 This module contains the application dialogs
 """
 from PySide.QtGui import QDialog, QButtonGroup
+
 from cobcide import FileType
 from cobcide.ui.dlg_file_type_ui import Ui_Dialog as UiFileTypeDialog
+
 
 class DlgFileType(QDialog):
     """
