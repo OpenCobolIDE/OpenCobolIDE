@@ -114,18 +114,18 @@ class CobolCompletionModel(CompletionModel):
         """
         Updates the suggestions list
         """
-        self.suggestions[:] = []
+        self._suggestions[:] = []
         # vars
         variables = self.analyserMode.variables
         for var in variables:
-            self.suggestions.append(
+            self._suggestions.append(
                 Suggestion(var.name, icon=":/ide-icons/rc/var.png",
                            description=var.description))
         # paragraphs
         paragraphs = self.analyserMode.paragraphs
         for p in paragraphs:
-            self.suggestions.append(
+            self._suggestions.append(
                 Suggestion(p.name, icon=":/ide-icons/rc/paragraph.png"))
 
         # reserved keywords suggestions
-        self.suggestions += self.__reserved_suggestions
+        self._suggestions += self.__reserved_suggestions

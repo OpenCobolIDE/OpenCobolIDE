@@ -18,7 +18,7 @@ This module contains the home page widget
 import qwelcomewindow
 
 from PySide.QtCore import QFileInfo
-from PySide.QtGui import QIcon, QAction, QMenu
+from PySide.QtGui import QIcon, QAction
 
 from cobcide.settings import Settings
 

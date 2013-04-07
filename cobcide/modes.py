@@ -95,7 +95,7 @@ class DocumentAnalyserMode(Mode, QObject):
         """
         Returns the list of paragraphs document nodes
         """
-        self.__paragraphs
+        return self.__paragraphs
 
     def __init__(self):
         QObject.__init__(self)
