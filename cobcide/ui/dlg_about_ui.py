@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_about.ui'
 #
-# Created: Sun Apr  7 22:22:35 2013
+# Created: Sun Apr  7 22:58:53 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!

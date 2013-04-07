@@ -122,7 +122,7 @@
        <widget class="QWidget" name="tab_3">
         <attribute name="icon">
          <iconset resource="ide.qrc">
-          <normaloff>:/ide-icons/rc/silex-64x64.png</normaloff>:/ide-icons/rc/silex-64x64.png</iconset>
+          <normaloff>:/ide-icons/rc/applications-system.png</normaloff>:/ide-icons/rc/applications-system.png</iconset>
         </attribute>
         <attribute name="title">
          <string>Compiler</string>
@@ -139,7 +139,7 @@
        <widget class="QWidget" name="tabProgramOutput">
         <attribute name="icon">
          <iconset resource="ide.qrc">
-          <normaloff>:/ide-icons/rc/utilities-terminal.png</normaloff>:/ide-icons/rc/utilities-terminal.png</iconset>
+          <normaloff>:/ide-icons/rc/media-playback-start.png</normaloff>:/ide-icons/rc/media-playback-start.png</iconset>
         </attribute>
         <attribute name="title">
          <string>Output</string>
