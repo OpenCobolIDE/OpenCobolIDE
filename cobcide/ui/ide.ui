@@ -28,7 +28,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout_6">
@@ -101,7 +101,7 @@
   </widget>
   <widget class="QDockWidget" name="dockWidgetLogs">
    <property name="windowTitle">
-    <string>Logs window</string>
+    <string>Logs</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
@@ -183,11 +183,37 @@
     <property name="title">
      <string>Edit</string>
     </property>
+    <widget class="QMenu" name="mnuActiveEditor">
+     <property name="title">
+      <string>Active editor</string>
+     </property>
+     <addaction name="separator"/>
+    </widget>
+    <addaction name="mnuActiveEditor"/>
+    <addaction name="separator"/>
+    <addaction name="aPreferences"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
      <string>View</string>
     </property>
+    <widget class="QMenu" name="menuToolbars">
+     <property name="title">
+      <string>Toolbars</string>
+     </property>
+     <addaction name="aShowFilesToolbar"/>
+     <addaction name="aShowCodeToolbar"/>
+    </widget>
+    <widget class="QMenu" name="menuDock_panels">
+     <property name="title">
+      <string>Windows</string>
+     </property>
+     <addaction name="aShowLogsWin"/>
+     <addaction name="aShowNavWin"/>
+    </widget>
+    <addaction name="menuToolbars"/>
+    <addaction name="menuDock_panels"/>
+    <addaction name="separator"/>
     <addaction name="actionFullscreen"/>
    </widget>
    <widget class="QMenu" name="menuCobol">
@@ -214,7 +240,7 @@
   </widget>
   <widget class="QDockWidget" name="dockWidgetNavPanel">
    <property name="windowTitle">
-    <string>Navigation panel</string>
+    <string>Navigation</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -450,6 +476,68 @@
    </property>
    <property name="toolTip">
     <string>Clear list of recent files</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="aShowFilesToolbar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Files</string>
+   </property>
+   <property name="toolTip">
+    <string>Show/Hide the files toolbar</string>
+   </property>
+  </action>
+  <action name="aShowCodeToolbar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Code</string>
+   </property>
+   <property name="toolTip">
+    <string>Show/Hide code toolbar</string>
+   </property>
+  </action>
+  <action name="aShowLogsWin">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Logs</string>
+   </property>
+   <property name="toolTip">
+    <string>Show/Hide logs window</string>
+   </property>
+  </action>
+  <action name="aShowNavWin">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Navigation</string>
+   </property>
+   <property name="toolTip">
+    <string>Show/Hide navigation panel</string>
+   </property>
+  </action>
+  <action name="aPreferences">
+   <property name="icon">
+    <iconset resource="ide.qrc">
+     <normaloff>:/ide-icons/rc/Preferences-system.png</normaloff>:/ide-icons/rc/Preferences-system.png</iconset>
+   </property>
+   <property name="text">
+    <string>Preferences</string>
+   </property>
+   <property name="toolTip">
+    <string>Edit the application settings</string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>

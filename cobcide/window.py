@@ -28,7 +28,7 @@ from pcef import saveFileFromEditor
 from pcef.code_edit import cursorForPosition
 
 from cobcide import __version__, FileType, cobol
-from cobcide.dialogs import DlgFileType
+from cobcide.dialogs import DlgFileType, DlgAbout
 from cobcide.errors_manager import ErrorsManager
 from cobcide.tab_manager import TabManager
 from cobcide.editor import CobolEditor
@@ -45,6 +45,18 @@ class MainWindow(QMainWindow):
     #: The editor page index
     PAGE_EDITOR = 1
 
+    def __update_view_toolbar_menu(self):
+        v = self.__ui.toolBarFile.isVisible()
+        self.__ui.aShowFilesToolbar.setChecked(v)
+        v = self.__ui.toolBarCode.isVisible()
+        self.__ui.aShowCodeToolbar.setChecked(v)
+
+    def __update_view_window_menu(self):
+        self.__ui.aShowLogsWin.setChecked(
+            self.__ui.dockWidgetLogs.isVisible())
+        self.__ui.aShowNavWin.setChecked(
+            self.__ui.dockWidgetNavPanel.isVisible())
+
     def __init__(self):
         QMainWindow.__init__(self)
         # Create our thread pool (used to launch compilation and run command)
@@ -56,6 +68,7 @@ class MainWindow(QMainWindow):
         self.__ui.setupUi(self)
         self.__ui.listWidgetErrors.itemDoubleClicked.connect(
             self.__on_error_double_clicked)
+        self.__ui.mnuActiveEditor.setEnabled(False)
 
         # setup tab manager
         self.__tab_manager = TabManager(self.__ui.tabWidget)
@@ -69,6 +82,27 @@ class MainWindow(QMainWindow):
         ag.addAction(self.__ui.actionSubprogram)
         ag.triggered.connect(self.__change_current_file_type)
         self.__update_toolbar()
+
+        # view menu
+        # toolbars
+        self.__ui.toolBarFile.visibilityChanged.connect(
+            self.__update_view_toolbar_menu)
+        self.__ui.toolBarCode.visibilityChanged.connect(
+            self.__update_view_toolbar_menu)
+        self.__ui.aShowCodeToolbar.toggled.connect(
+            self.__ui.toolBarCode.setVisible)
+        self.__ui.aShowFilesToolbar.toggled.connect(
+            self.__ui.toolBarFile.setVisible)
+        # dock windows
+        self.__ui.dockWidgetLogs.visibilityChanged.connect(
+            self.__update_view_window_menu)
+        self.__ui.dockWidgetNavPanel.visibilityChanged.connect(
+            self.__update_view_window_menu)
+        self.__ui.aShowNavWin.toggled.connect(
+            self.__ui.dockWidgetNavPanel.setVisible)
+        self.__ui.aShowLogsWin.toggled.connect(
+            self.__ui.dockWidgetLogs.setVisible)
+
 
         # setup status bar
         self.lblFilename = QLabel()
@@ -314,10 +348,7 @@ class MainWindow(QMainWindow):
         Shows the about dialog
         :return:
         """
-        dlg = QDialog(self)
-        ui = dlg_about_ui.Ui_Dialog()
-        ui.setupUi(dlg)
-        ui.labelMain.setText(ui.labelMain.text() % __version__)
+        dlg = DlgAbout(self)
         dlg.exec_()
 
     @Slot()
@@ -413,15 +444,18 @@ class MainWindow(QMainWindow):
                 self.__ui.dockWidgetNavPanel.hide()
             self.__update_navigation_panel()
             self.__ui.tabWidgetLogs.setCurrentIndex(0)
-            self.__ui.menuEdit.clear()
-            self.__ui.menuEdit.addActions(widget.codeEdit.contextMenu.actions())
+            self.__ui.mnuActiveEditor.setEnabled(True)
+            self.__ui.mnuActiveEditor.clear()
+            self.__ui.mnuActiveEditor.addActions(
+                widget.codeEdit.contextMenu.actions())
             self.__ui.dockWidgetLogs.show()
         else:
             self.setWindowTitle("OpenCobol IDE")
             self.__update_toolbar()
             self.__ui.plainTextEditOutput.clear()
             self.__ui.listWidgetErrors.clear()
-            self.__ui.menuEdit.clear()
+            self.__ui.mnuActiveEditor.clear()
+            self.__ui.mnuActiveEditor.setEnabled(False)
             self.__ui.stackedWidget.setCurrentIndex(self.PAGE_HOME)
             self.__ui.dockWidgetNavPanel.hide()
             self.__ui.dockWidgetLogs.hide()

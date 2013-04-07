@@ -41,6 +41,8 @@ class HomePageWidget(qwelcomewindow.QWelcomeWidget):
                         QIcon(":/ide-icons/rc/document-new.png"))
         self.add_action(self.ActionType.QuickStart, "Open a file",
                         QIcon(":/ide-icons/rc/document-open.png"))
+        self.add_action(self.ActionType.QuickStart, "Preferences",
+                        QIcon(":/ide-icons/rc/Preferences-system.png"))
         self.add_action(self.ActionType.QuickStart, "About",
                         QIcon(":/ide-icons/rc/dialog-information.png"))
         self.ui.lblRecents.setText("Recent files")

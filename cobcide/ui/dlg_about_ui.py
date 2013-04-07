@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_about.ui'
 #
-# Created: Sat Apr  6 23:28:17 2013
+# Created: Sun Apr  7 20:34:18 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,34 +12,40 @@ from PySide import QtCore, QtGui
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(611, 446)
+        Dialog.resize(550, 550)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/ide-icons/rc/dialog-information.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Dialog.setWindowIcon(icon)
         self.verticalLayout = QtGui.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
+        self.tabWidget = QtGui.QTabWidget(Dialog)
+        self.tabWidget.setObjectName("tabWidget")
+        self.tab = QtGui.QWidget()
+        self.tab.setObjectName("tab")
+        self.gridLayout = QtGui.QGridLayout(self.tab)
+        self.gridLayout.setObjectName("gridLayout")
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setContentsMargins(0, 0, -1, -1)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.verticalLayout_3 = QtGui.QVBoxLayout()
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.labelIcon = QtGui.QLabel(Dialog)
+        self.labelIcon = QtGui.QLabel(self.tab)
         self.labelIcon.setObjectName("labelIcon")
         self.verticalLayout_3.addWidget(self.labelIcon)
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem)
         self.horizontalLayout.addLayout(self.verticalLayout_3)
-        self.line = QtGui.QFrame(Dialog)
+        self.line = QtGui.QFrame(self.tab)
         self.line.setFrameShape(QtGui.QFrame.VLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName("line")
         self.horizontalLayout.addWidget(self.line)
         self.verticalLayout_4 = QtGui.QVBoxLayout()
         self.verticalLayout_4.setObjectName("verticalLayout_4")
-        self.labelMain = QtGui.QLabel(Dialog)
+        self.labelMain = QtGui.QLabel(self.tab)
         self.labelMain.setObjectName("labelMain")
         self.verticalLayout_4.addWidget(self.labelMain)
-        self.textBrowser = QtGui.QTextBrowser(Dialog)
+        self.textBrowser = QtGui.QTextBrowser(self.tab)
         self.textBrowser.setReadOnly(True)
         self.textBrowser.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse|QtCore.Qt.TextSelectableByMouse)
         self.textBrowser.setOpenExternalLinks(True)
@@ -47,7 +53,42 @@ class Ui_Dialog(object):
         self.textBrowser.setObjectName("textBrowser")
         self.verticalLayout_4.addWidget(self.textBrowser)
         self.horizontalLayout.addLayout(self.verticalLayout_4)
-        self.verticalLayout.addLayout(self.horizontalLayout)
+        self.gridLayout.addLayout(self.horizontalLayout, 0, 0, 1, 1)
+        self.tabWidget.addTab(self.tab, "")
+        self.tab_2 = QtGui.QWidget()
+        self.tab_2.setObjectName("tab_2")
+        self.verticalLayout_2 = QtGui.QVBoxLayout(self.tab_2)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.label = QtGui.QLabel(self.tab_2)
+        self.label.setObjectName("label")
+        self.verticalLayout_2.addWidget(self.label)
+        self.tbwVersions = QtGui.QTableWidget(self.tab_2)
+        self.tbwVersions.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+        self.tbwVersions.setGridStyle(QtCore.Qt.SolidLine)
+        self.tbwVersions.setCornerButtonEnabled(False)
+        self.tbwVersions.setObjectName("tbwVersions")
+        self.tbwVersions.setColumnCount(1)
+        self.tbwVersions.setRowCount(6)
+        item = QtGui.QTableWidgetItem()
+        self.tbwVersions.setVerticalHeaderItem(0, item)
+        item = QtGui.QTableWidgetItem()
+        self.tbwVersions.setVerticalHeaderItem(1, item)
+        item = QtGui.QTableWidgetItem()
+        self.tbwVersions.setVerticalHeaderItem(2, item)
+        item = QtGui.QTableWidgetItem()
+        self.tbwVersions.setVerticalHeaderItem(3, item)
+        item = QtGui.QTableWidgetItem()
+        self.tbwVersions.setVerticalHeaderItem(4, item)
+        item = QtGui.QTableWidgetItem()
+        self.tbwVersions.setVerticalHeaderItem(5, item)
+        item = QtGui.QTableWidgetItem()
+        self.tbwVersions.setHorizontalHeaderItem(0, item)
+        self.tbwVersions.horizontalHeader().setStretchLastSection(True)
+        self.tbwVersions.verticalHeader().setSortIndicatorShown(False)
+        self.tbwVersions.verticalHeader().setStretchLastSection(False)
+        self.verticalLayout_2.addWidget(self.tbwVersions)
+        self.tabWidget.addTab(self.tab_2, "")
+        self.verticalLayout.addWidget(self.tabWidget)
         self.buttonBox = QtGui.QDialogButtonBox(Dialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Ok)
@@ -55,6 +96,7 @@ class Ui_Dialog(object):
         self.verticalLayout.addWidget(self.buttonBox)
 
         self.retranslateUi(Dialog)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), Dialog.accept)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -81,10 +123,21 @@ class Ui_Dialog(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- <a href=\"http://python.org/\"><span style=\" text-decoration: underline; color:#0000ff;\">Python</span></a></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- <a href=\"http://qt-project.org/\"><span style=\" text-decoration: underline; color:#0000ff;\">Qt</span></a>/<a href=\"http://qt-project.org/wiki/Category:LanguageBindings::PySide\"><span style=\" text-decoration: underline; color:#0000ff;\">PySide</span></a></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- <a href=\"https://github.com/ColinDuquesnoy/PCEF\"><span style=\" text-decoration: underline; color:#0000ff;\">PCEF</span></a></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- <a href=\"https://pypi.python.org/pypi/chardet\"><span style=\" text-decoration: underline; color:#0000ff;\">chardet</span></a></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- <a href=\"http://tango.freedesktop.org/\"><span style=\" text-decoration: underline; color:#0000ff;\">Tango Desktop Project</span></a></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:9pt; font-style:italic;\">- </span><a href=\"http://www.opencobol.org/\"><span style=\" text-decoration: underline; color:#0000ff;\">OpenCobol</span></a></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; text-decoration: underline; color:#0000ff;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">License:</span></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This software is licensed under the <span style=\" font-weight:600;\">GPL v3.</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("Dialog", "About OpenCobolIDE", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("Dialog", "This page shows the third party libraries versions:", None, QtGui.QApplication.UnicodeUTF8))
+        self.tbwVersions.verticalHeaderItem(0).setText(QtGui.QApplication.translate("Dialog", "OpenCobol", None, QtGui.QApplication.UnicodeUTF8))
+        self.tbwVersions.verticalHeaderItem(1).setText(QtGui.QApplication.translate("Dialog", "Qt", None, QtGui.QApplication.UnicodeUTF8))
+        self.tbwVersions.verticalHeaderItem(2).setText(QtGui.QApplication.translate("Dialog", "PySide", None, QtGui.QApplication.UnicodeUTF8))
+        self.tbwVersions.verticalHeaderItem(3).setText(QtGui.QApplication.translate("Dialog", "PCEF", None, QtGui.QApplication.UnicodeUTF8))
+        self.tbwVersions.verticalHeaderItem(4).setText(QtGui.QApplication.translate("Dialog", "Pygments", None, QtGui.QApplication.UnicodeUTF8))
+        self.tbwVersions.verticalHeaderItem(5).setText(QtGui.QApplication.translate("Dialog", "QWelcomeWindow", None, QtGui.QApplication.UnicodeUTF8))
+        self.tbwVersions.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("Dialog", "Version", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("Dialog", "Versions", None, QtGui.QApplication.UnicodeUTF8))
 
 import ide_rc

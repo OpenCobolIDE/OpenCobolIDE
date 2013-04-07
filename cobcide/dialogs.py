@@ -15,10 +15,16 @@
 """
 This module contains the application dialogs
 """
-from PySide.QtGui import QDialog, QButtonGroup
+import PySide
+from PySide.QtGui import QDialog, QButtonGroup, QTableWidgetItem
+import pcef
+import pygments
+import qwelcomewindow
 
+from cobcide import __version__, cobol
 from cobcide import FileType
 from cobcide.ui.dlg_file_type_ui import Ui_Dialog as UiFileTypeDialog
+from cobcide.ui.dlg_about_ui import Ui_Dialog as UiAboutDialog
 
 
 class DlgFileType(QDialog):
@@ -57,3 +63,27 @@ class DlgFileType(QDialog):
             return FileType.Subprogram
         else:
             return FileType.Text
+
+
+class DlgAbout(QDialog):
+    """
+    About dialog. Shows the about text and the 3rd party libraries versions.
+    """
+    def __init__(self, parent=None):
+        QDialog.__init__(self, parent)
+        self.__ui = UiAboutDialog()
+        self.__ui.setupUi(self)
+        self.__ui.labelMain.setText(self.__ui.labelMain.text() % __version__)
+        self.__ui.tabWidget.setCurrentIndex(0)
+        print
+
+        versions = [cobol.get_cobc_version(),
+                    PySide.QtCore.__version__,
+                    PySide.__version__,
+                    pcef.pcef_version,
+                    pygments.__version__,
+                    "1.0",  # there is no __version__ for the QWelcomeWindow
+                    ]
+        for i, version in enumerate(versions):
+            item = QTableWidgetItem(version)
+            self.__ui.tbwVersions.setItem(i, 0, item)

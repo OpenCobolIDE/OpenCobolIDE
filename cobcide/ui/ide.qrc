@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="ide-icons">
+    <file>rc/Preferences-system.png</file>
     <file>rc/silex-32x32.png</file>
     <file>rc/paragraph.png</file>
     <file>rc/var.png</file>

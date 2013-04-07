@@ -29,6 +29,26 @@ from PySide.QtGui import QTreeWidgetItem, QIcon
 from cobcide import FileType
 
 
+def get_cobc_version():
+    """
+    Returns the OpenCobol version string
+
+    :return:
+    """
+    ret_val = "unknown"
+    cmd = ["cobc", "--version"]
+    if sys.platform == "win32":
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        p = subprocess.Popen(cmd, shell=False, startupinfo=startupinfo,
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    else:
+        p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+    stdout, stderr = p.communicate()
+    return stdout.splitlines()[0].split(" ")[2]
+
+
 def cmd_from_file_type(filename, fileType):
     """
     Creates a compilation command that take cares about the file type.

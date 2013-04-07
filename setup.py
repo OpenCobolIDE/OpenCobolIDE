@@ -38,6 +38,6 @@ setup(
     author_email='colin.duquesnoy@gmail.com',
     description='A simple cobol IDE',
     long_description=long_desc,
-    install_requires=['pygments>=1.6', 'pcef', 'chardet'],
+    install_requires=['pygments>=1.6', 'pcef', 'chardet', 'qwelcomewindow'],
     entry_points={'gui_scripts': ['OpenCobolIDE = cobcide.main:main']}
 )
