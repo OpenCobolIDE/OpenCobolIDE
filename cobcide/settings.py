@@ -89,7 +89,7 @@ class Settings(object):
 
         :return: flag
         """
-        return bool(self._settings.value("createDesktopEntry", True))
+        return bool(int(self._settings.value("createDesktopEntry", True)))
 
     @create_desktop_entry.setter
     def create_desktop_entry(self, create):
@@ -98,7 +98,7 @@ class Settings(object):
 
         :param create: flag
         """
-        self._settings.setValue("createDesktopEntry", bool(create))
+        self._settings.setValue("createDesktopEntry", int(create))
 
     @property
     def show_line_numbers(self):
