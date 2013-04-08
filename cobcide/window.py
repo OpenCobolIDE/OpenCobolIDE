@@ -20,19 +20,19 @@ import os
 import chardet
 import sys
 
-from PySide.QtCore import Slot, QThreadPool, QFileInfo, QTimer
-from PySide.QtGui import QMainWindow, QActionGroup, QDialog, QLabel, QTreeWidgetItem
+from PySide.QtCore import Slot, QThreadPool, QFileInfo
+from PySide.QtGui import QMainWindow, QActionGroup, QLabel, QTreeWidgetItem
 from PySide.QtGui import QFileDialog
 from PySide.QtGui import QMessageBox, QListWidgetItem
 from pcef import saveFileFromEditor
 from pcef.code_edit import cursorForPosition
 
-from cobcide import __version__, FileType, cobol
-from cobcide.dialogs import DlgFileType, DlgAbout
+from cobcide import FileType, cobol
+from cobcide.dialogs import DlgFileType, DlgAbout, DlgPreferences
 from cobcide.errors_manager import ErrorsManager
 from cobcide.tab_manager import TabManager
 from cobcide.editor import CobolEditor
-from cobcide.ui import ide_ui, dlg_about_ui
+from cobcide.ui import ide_ui
 from cobcide.settings import Settings
 
 
@@ -449,6 +449,7 @@ class MainWindow(QMainWindow):
             self.__ui.menuBar.show()
             self.__ui.toolBarCode.show()
             self.__ui.toolBarFile.show()
+            self.__ui.statusbar.show()
         else:
             self.setWindowTitle("OpenCobolIDE")
             self.__update_toolbar()
@@ -463,6 +464,7 @@ class MainWindow(QMainWindow):
             self.__ui.menuBar.hide()
             self.__ui.toolBarCode.hide()
             self.__ui.toolBarFile.hide()
+            self.__ui.statusbar.hide()
         self.__update_status_bar_infos(widget)
 
     def __change_current_file_type(self, action):
@@ -498,6 +500,8 @@ class MainWindow(QMainWindow):
             self.on_actionNew_triggered()
         elif text == "Open a file":
             self.on_actionOpen_triggered()
+        elif text == "Preferences":
+            self.on_aPreferences_triggered()
         elif text == "About":
             self.on_actionAbout_triggered()
 
@@ -538,3 +542,9 @@ class MainWindow(QMainWindow):
             self.__ui.twNavigation.addTopLevelItem(
                 self.__tab_manager.active_tab.documentAnalyserMode.root_node)
         self.__ui.twNavigation.expandAll()
+
+    @Slot()
+    def on_aPreferences_triggered(self):
+        dlg = DlgPreferences(self)
+        if dlg.exec_() == DlgPreferences.Accepted:
+            self.__tab_manager.refresh_editor_styles()

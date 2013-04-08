@@ -27,6 +27,7 @@ from PySide.QtCore import QFileInfo, Signal, QObject, QRunnable
 from PySide.QtGui import QTreeWidgetItem, QIcon
 
 from cobcide import FileType
+from cobcide.settings import Settings
 
 
 def get_cobc_version():
@@ -168,17 +169,26 @@ class Runner(QRunnable):
         cwd, exe_filename = self.__get_exe_name()
         if os.path.exists(exe_filename):
             self.events.lineAvailable.emit("> %s" % exe_filename)
+            s = Settings()
             if sys.platform == "win32":
-                startupinfo = subprocess.STARTUPINFO()
-                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-                p = subprocess.Popen(exe_filename, shell=False,
-                                     startupinfo=startupinfo,
-                                     stdout=subprocess.PIPE,
-                                     stderr=subprocess.PIPE)
+                if not s.use_external_shell:
+                    startupinfo = subprocess.STARTUPINFO()
+                    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                    p = subprocess.Popen(exe_filename, shell=False,
+                                         startupinfo=startupinfo,
+                                         stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE)
+                else:
+                    p = subprocess.Popen(exe_filename, shell=True)
             else:
-                p = subprocess.Popen(exe_filename, shell=False,
-                                     stdout=subprocess.PIPE,
-                                     stderr=subprocess.PIPE)
+                if not s.use_external_shell:
+                    p = subprocess.Popen(exe_filename, shell=False,
+                                         stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE)
+                else:
+                    p = subprocess.Popen([exe_filename], shell=True)
+                    p.communicate()
+                    return
             while p.poll() is None:
                 stdout, stderr = p.communicate()
                 if stdout:

@@ -25,6 +25,7 @@ from pcef.editors.generic import GenericEditor
 
 from cobcide import FileType
 from cobcide.editor import CobolEditor
+from cobcide.settings import Settings
 
 
 class TabManager(QObject):
@@ -223,3 +224,13 @@ class TabManager(QObject):
         """
         l, c = self.get_cursor_pos()
         self.cursorPosChanged.emit(l, c)
+
+    def refresh_editor_styles(self):
+        s = Settings()
+        print s.show_line_numbers
+        for i in range(self.__tabWidget.count()):
+            self.__tabWidget.widget(i).currentStyle = s.style
+            self.__tabWidget.widget(i).lineNumberPanel.enabled = \
+                s.show_line_numbers
+            self.__tabWidget.widget(i).codeCompletionMode.enabled = \
+                s.enable_cc

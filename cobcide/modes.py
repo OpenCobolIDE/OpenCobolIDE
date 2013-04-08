@@ -123,16 +123,19 @@ class DocumentAnalyserMode(Mode, QObject):
             - variables
             - paragraphs
         """
-        root_node, variables, paragraphs = cobol.parse_document_layout(
-            self.editor.codeEdit.tagFilename)
-        changed = False
-        if(self.__root_node is None or
-           cobol.cmp_doc_node(root_node, self.__root_node)):
-            changed = True
-        self.__root_node = root_node
-        self.__vars = variables
-        self.__paragraphs = paragraphs
-        if changed:
-            self.documentLayoutChanged.emit()
+        try:
+            root_node, variables, paragraphs = cobol.parse_document_layout(
+                self.editor.codeEdit.tagFilename)
+            changed = False
+            if(self.__root_node is None or
+               cobol.cmp_doc_node(root_node, self.__root_node)):
+                changed = True
+            self.__root_node = root_node
+            self.__vars = variables
+            self.__paragraphs = paragraphs
+            if changed:
+                self.documentLayoutChanged.emit()
+        except TypeError or IOError:
+            pass
 
 
