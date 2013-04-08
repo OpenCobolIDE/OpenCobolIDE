@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Mon Apr  8 03:29:50 2013
-#      by: pyside-uic 0.2.14 running on PySide 1.1.2
+# Created: Mon Apr  8 14:06:24 2013
+#      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
 

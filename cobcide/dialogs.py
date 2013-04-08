@@ -26,6 +26,7 @@ from PySide.QtGui import QDialog, QButtonGroup, QTableWidgetItem, QFont, \
 from pygments.styles import STYLE_MAP
 
 from pcef import styles
+import sys
 
 from cobcide import __version__, cobol
 from cobcide import FileType
@@ -99,83 +100,40 @@ class DlgAbout(QDialog):
 
 CODE_EXAMPLE = \
     """      *******************************************************************
-      ** Virtual printer subprogram
+      ** Example taken from http://progopedia.com/version/opencobol-1.0/*
       *******************************************************************
        IDENTIFICATION DIVISION.
       **************************************
-       PROGRAM-ID. VIRTUAL-PRINTER.
-      **
-       ENVIRONMENT DIVISION.
-      ***************************************
-      **
-       INPUT-OUTPUT SECTION.
-      **-*-*-*-*-*-*-*-*-*-*-*-*-*
-       FILE-CONTROL.
-           SELECT FPRINTER ASSIGN to "./printer.dat"
-           ORGANIZATION LINE SEQUENTIAL
-       ACCESS SEQUENTIAL.
+       PROGRAM-ID. SAMPLE.
       **
        DATA DIVISION.
       **************************************
-       FILE SECTION.
-      **-*-*-*-*-*-*-*-*-*-*-*-*-*
-       FD FPRINTER.
-       01 ENREG-PRINTER PIC X(80).
-      **
        WORKING-STORAGE SECTION.
-      **-*-*-*-*-*-*-*-*-*-*-*-*-*
-       LINKAGE SECTION.
-      **-*-*-*-*-*-*-*-*-*-*-*-*-*
-       01 RECEIVED-PARAM.
-           02 PA-RESET         PIC X       .
-           02 PA-BUFFER        PIC X(80)   .
-           02 PA-WHEN          PIC X(6)    .
-           02 PA-WHAT          PIC X(5)    .
-           02 PA-HOWMANY       PIC 99      .
-       PROCEDURE DIVISION USING RECEIVED-PARAM.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*
+       77 FACT      PIC 9(15) comp  .
+       77 N         PIC 99          .
+       77 I         PIC 99          .
+       77 IST       PIC XX          .
+       77 FACTTST   PIC X(18)       .
+      **
+       PROCEDURE DIVISION.
       **************************************
-       MAIN-PRINTER.
-           IF(PA-RESET = "O")
-               OPEN OUTPUT FPRINTER
-           ELSE
-               OPEN EXTEND FPRINTER
-               IF(PA-WHEN = "AFTER")
-                   IF(PA-WHAT = "PAGE")
-                       MOVE '>-------------------------------------------'
-      -'------------------------------------<' TO ENREG-PRINTER
-                       WRITE ENREG-PRINTER
-                   ELSE
-                       SUBTRACT 1 FROM PA-HOWMANY
-                       PERFORM PA-HOWMANY TIMES
-                           MOVE SPACES TO ENREG-PRINTER
-                           WRITE ENREG-PRINTER
-                       END-PERFORM
-                    END-IF
-                END-IF
-                WRITE ENREG-PRINTER FROM PA-BUFFER
-                IF(PA-WHEN = "BEFORE")
-                   IF(PA-WHAT = "PAGE")
-                       MOVE '>-------------------------------------------'
-      -'------------------------------------<' TO ENREG-PRINTER
-                       WRITE ENREG-PRINTER
-                   ELSE
-                       SUBTRACT 1 FROM PA-HOWMANY
-                       PERFORM PA-HOWMANY TIMES
-                           MOVE SPACES TO ENREG-PRINTER
-                           WRITE ENREG-PRINTER
-                       END-PERFORM
-                   END-IF
-               END-IF
-           END-IF
-           CLOSE FPRINTER
-           MOVE "N"        TO PA-RESET
-           MOVE SPACES     TO PA-BUFFER
-           MOVE "AFTER"    TO PA-WHEN
-           MOVE "LINES"    TO PA-WHAT
-           MOVE 1          TO PA-HOWMANY
+       MAIN-PROCECURE.
+           MOVE 16 to N
+           MOVE 0 to I
+           MOVE 1 to FACT
+           PERFORM UNTIL I GREATER THAN N
+               MOVE I to IST
+               MOVE FACT to FACTTST
+               DISPLAY IST "! = " FACTTST
+               ADD 1 to I
+               MULTIPLY I BY FACT
+                    ON SIZE ERROR DISPLAY "value too big"
+               END-MULTIPLY
+           END-PERFORM
            EXIT PROGRAM.
-       END PROGRAM VIRTUAL-PRINTER.
-
+       END PROGRAM SAMPLE.
+      **
 """
 
 COLOR_NAMES = ["Margin", "ActiveLine", "Selection", "SelectedText",
@@ -217,6 +175,13 @@ class DlgPreferences(QDialog):
         self.ui.pbColor.setStyleSheet(
             "background-color: %s" % s.get_style_color(
                 self.ui.lwColors.currentItem().text()))
+
+        if sys.platform == "win32":
+            self.ui.lblExternalTerminal.hide()
+            self.ui.leTerminal.hide()
+        else:
+            self.ui.lblExternalTerminal.setEnabled(not self.ui.cbUseExtShell.isEnabled())
+            self.ui.leTerminal.setEnabled(not self.ui.cbUseExtShell.isEnabled())
 
     @Slot(int)
     def on_lwMenu_currentRowChanged(self, row):
@@ -275,6 +240,9 @@ class DlgPreferences(QDialog):
         print state
         s = Settings()
         s.use_external_shell = state
+        if sys.platform != "win32":
+            self.ui.lblExternalTerminal.setEnabled(state)
+            self.ui.leTerminal.setEnabled(state)
 
     @Slot(int)
     def on_sbFontSize_valueChanged(self, value):

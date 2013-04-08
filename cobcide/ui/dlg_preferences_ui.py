@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'dlg_preferences.ui'
 #
-# Created: Mon Apr  8 03:29:50 2013
-#      by: pyside-uic 0.2.14 running on PySide 1.1.2
+# Created: Mon Apr  8 14:06:24 2013
+#      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -47,6 +47,12 @@ class Ui_Dialog(object):
         self.cbUseExtShell = QtGui.QCheckBox(self.pGeneral)
         self.cbUseExtShell.setObjectName("cbUseExtShell")
         self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.cbUseExtShell)
+        self.lblExternalTerminal = QtGui.QLabel(self.pGeneral)
+        self.lblExternalTerminal.setObjectName("lblExternalTerminal")
+        self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.lblExternalTerminal)
+        self.leTerminal = QtGui.QLineEdit(self.pGeneral)
+        self.leTerminal.setObjectName("leTerminal")
+        self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.leTerminal)
         self.swMain.addWidget(self.pGeneral)
         self.pStyle = QtGui.QWidget()
         self.pStyle.setObjectName("pStyle")
@@ -175,7 +181,7 @@ class Ui_Dialog(object):
         self.gridLayout.addWidget(self.buttonBox, 1, 0, 1, 2)
 
         self.retranslateUi(Dialog)
-        self.swMain.setCurrentIndex(1)
+        self.swMain.setCurrentIndex(0)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), Dialog.accept)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -189,6 +195,8 @@ class Ui_Dialog(object):
         self.lwMenu.setSortingEnabled(__sortingEnabled)
         self.cbCodeCompletion.setText(QtGui.QApplication.translate("Dialog", "Code completion", None, QtGui.QApplication.UnicodeUTF8))
         self.cbUseExtShell.setText(QtGui.QApplication.translate("Dialog", "Run program in external terminal", None, QtGui.QApplication.UnicodeUTF8))
+        self.lblExternalTerminal.setText(QtGui.QApplication.translate("Dialog", "External terminal command:", None, QtGui.QApplication.UnicodeUTF8))
+        self.leTerminal.setText(QtGui.QApplication.translate("Dialog", "gnome-terminal -e", None, QtGui.QApplication.UnicodeUTF8))
         self.lblFont.setText(QtGui.QApplication.translate("Dialog", "Font: ", None, QtGui.QApplication.UnicodeUTF8))
         self.lblFontSize.setText(QtGui.QApplication.translate("Dialog", "Font size: ", None, QtGui.QApplication.UnicodeUTF8))
         self.lblPygmentStyle.setText(QtGui.QApplication.translate("Dialog", "Pygments style: ", None, QtGui.QApplication.UnicodeUTF8))

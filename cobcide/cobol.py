@@ -198,6 +198,7 @@ class Runner(QRunnable):
                         % ret_val)
                     os.chdir(cwd)
                     self.events.finished.emit(True)
+                    return
             while p.poll() is None:
                 stdout, stderr = p.communicate()
                 if stdout:
