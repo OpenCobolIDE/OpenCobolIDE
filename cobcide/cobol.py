@@ -186,8 +186,10 @@ class Runner(QRunnable):
                                          stdout=subprocess.PIPE,
                                          stderr=subprocess.PIPE)
                 else:
-                    p = subprocess.Popen([exe_filename], shell=True)
-                    p.communicate()
+                    print os.environ
+                    wd = QFileInfo(exe_filename).dir().path()
+                    os.chdir(wd)
+                    os.system("gnome-terminal -e" + " " + exe_filename)
                     return
             while p.poll() is None:
                 stdout, stderr = p.communicate()
