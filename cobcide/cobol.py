@@ -179,7 +179,9 @@ class Runner(QRunnable):
                                          stdout=subprocess.PIPE,
                                          stderr=subprocess.PIPE)
                 else:
-                    p = subprocess.Popen(exe_filename, shell=True)
+                    p = subprocess.Popen(
+                        exe_filename,
+                        creationflags=subprocess.CREATE_NEW_CONSOLE)
             else:
                 if not s.use_external_shell:
                     p = subprocess.Popen(exe_filename, shell=False,
@@ -189,8 +191,13 @@ class Runner(QRunnable):
                     print os.environ
                     wd = QFileInfo(exe_filename).dir().path()
                     os.chdir(wd)
-                    os.system("gnome-terminal -e" + " " + exe_filename)
-                    return
+                    ret_val = os.system("gnome-terminal -e" + " " +
+                                        exe_filename)
+                    self.events.lineAvailable.emit(
+                        ">Program exited with return code %d"
+                        % ret_val)
+                    os.chdir(cwd)
+                    self.events.finished.emit(True)
             while p.poll() is None:
                 stdout, stderr = p.communicate()
                 if stdout:
