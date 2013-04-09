@@ -39,6 +39,7 @@ from cobcide.cc import COBOL_KEYWORDS
 from cobcide.modes import DocumentAnalyserMode
 from cobcide.modes import FolderMode
 from cobcide.modes import ToUpperMode
+from cobcide.modes import CommentsMode
 
 from cobcide.settings import Settings
 
@@ -176,6 +177,7 @@ class CobolEditor(CodeEditorWidget):
         self.installPanel(CheckersMarkerPanel(), self.PANEL_ZONE_LEFT)
 
     def _install_modes(self):
+        self.installMode(CommentsMode())
         # convert char to upper
         self.installMode(ToUpperMode())
         self.installMode(DocumentAnalyserMode())
@@ -204,6 +206,7 @@ class CobolEditor(CodeEditorWidget):
         self.syntaxHighlightingMode.highlighter.hilighlightingBlock.connect(
             self._highlighComments)
         self.installMode(FolderMode())
+
 
     def _installActions(self):
         """

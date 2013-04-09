@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Mon Apr  8 14:06:24 2013
+# Created: Tue Apr  9 12:29:14 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -213,6 +213,8 @@ class Ui_MainWindow(object):
         self.aPreferences.setIcon(icon13)
         self.aPreferences.setIconVisibleInMenu(True)
         self.aPreferences.setObjectName("aPreferences")
+        self.actionComment_Uncomment = QtGui.QAction(MainWindow)
+        self.actionComment_Uncomment.setObjectName("actionComment_Uncomment")
         self.toolBarFile.addAction(self.actionNew)
         self.toolBarFile.addAction(self.actionOpen)
         self.toolBarFile.addSeparator()
@@ -235,6 +237,7 @@ class Ui_MainWindow(object):
         self.menuFile.addAction(self.actionQuit)
         self.mnuActiveEditor.addSeparator()
         self.menuEdit.addAction(self.mnuActiveEditor.menuAction())
+        self.menuEdit.addAction(self.actionComment_Uncomment)
         self.menuEdit.addSeparator()
         self.menuEdit.addAction(self.aPreferences)
         self.menuToolbars.addAction(self.aShowFilesToolbar)
@@ -325,6 +328,9 @@ class Ui_MainWindow(object):
         self.aPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.aPreferences.setToolTip(QtGui.QApplication.translate("MainWindow", "Edit the application settings", None, QtGui.QApplication.UnicodeUTF8))
         self.aPreferences.setShortcut(QtGui.QApplication.translate("MainWindow", "F2", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionComment_Uncomment.setText(QtGui.QApplication.translate("MainWindow", "Comment/Uncomment", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionComment_Uncomment.setToolTip(QtGui.QApplication.translate("MainWindow", "Comment/Uncomment selected/active lines", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionComment_Uncomment.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+/", None, QtGui.QApplication.UnicodeUTF8))
 
 from cobcide.home_page import HomePageWidget
 import ide_rc

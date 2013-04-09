@@ -18,7 +18,7 @@ Contains cobol specific modes:
   - ToUpperMode
   - DocumentAnalyserMode
 """
-from PySide.QtCore import QObject
+from PySide.QtCore import QObject, Qt
 from PySide.QtCore import Signal
 from PySide.QtGui import QKeyEvent
 from PySide.QtGui import QTextCursor
@@ -182,3 +182,78 @@ class FolderMode(Mode):
             if p.end_line - p.line > 1:
                 foldPanel.addIndicator(p.line, p.end_line)
 
+
+class CommentsMode(Mode):
+    """
+    Mode that allow to comment/uncomment a set of lines.
+    """
+    NAME = "CommentsMode"
+    DESCRIPTION = "Comment/uncomment a set of lines"
+
+    def __init__(self):
+        Mode.__init__(self, self.NAME, self.DESCRIPTION)
+
+    def _onStateChanged(self, state):
+        """
+        Called when the mode is activated/deactivated
+        """
+        if state:
+            self.editor.codeEdit.keyPressed.connect(
+                self.__on_keyPressed)
+        else:
+            self.editor.codeEdit.keyPressed.disconnect(
+                self.__on_keyPressed)
+
+    def comment(self):
+        cursor = self.editor.codeEdit.textCursor()
+        cursor.beginEditBlock()
+        sel_start = cursor.selectionStart()
+        sel_end = cursor.selectionEnd()
+        has_selection = True
+        if not cursor.hasSelection():
+            cursor.select(QTextCursor.LineUnderCursor)
+            has_selection = False
+        lines = cursor.selection().toPlainText().splitlines()
+        nb_lines = len(lines)
+        cursor.setPosition(cursor.selectionStart())
+        for i in range(nb_lines):
+            cursor.movePosition(QTextCursor.StartOfLine)
+            cursor.movePosition(QTextCursor.EndOfLine, cursor.KeepAnchor)
+            line = cursor.selectedText().lstrip()
+            if line != "":
+                cursor.movePosition(QTextCursor.StartOfLine)
+                # Uncomment
+                if line.startswith("*"):
+                    cursor.setPosition(cursor.position() + 6)
+                    cursor.movePosition(cursor.Right, cursor.KeepAnchor, 1)
+                    cursor.insertText("")
+                    if i == 0:
+                        sel_start -= 1
+                        sel_end -= 1
+                    else:
+                        sel_end -= 1
+                # comment
+                else:
+                    cursor.movePosition(QTextCursor.StartOfLine)
+                    cursor.setPosition(cursor.position() + 6)
+                    cursor.insertText("*")
+                    if i == 0:
+                        sel_start += 1
+                        sel_end += 1
+                    else:
+                        sel_end += 1
+                # next line
+            cursor.movePosition(QTextCursor.EndOfLine)
+            cursor.setPosition(cursor.position() + 1)
+        cursor.setPosition(sel_start)
+        if has_selection:
+            cursor.setPosition(sel_end,
+                               QTextCursor.KeepAnchor)
+        cursor.endEditBlock()
+        self.editor.codeEdit.setTextCursor(cursor)
+
+    def __on_keyPressed(self, event):
+        if(event.modifiers() & Qt.ControlModifier and
+           event.key() == Qt.Key_Slash):
+            event.stop = True
+            self.comment()

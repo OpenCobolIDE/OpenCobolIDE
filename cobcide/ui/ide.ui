@@ -196,6 +196,7 @@
      <addaction name="separator"/>
     </widget>
     <addaction name="mnuActiveEditor"/>
+    <addaction name="actionComment_Uncomment"/>
     <addaction name="separator"/>
     <addaction name="aPreferences"/>
    </widget>
@@ -547,6 +548,17 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionComment_Uncomment">
+   <property name="text">
+    <string>Comment/Uncomment</string>
+   </property>
+   <property name="toolTip">
+    <string>Comment/Uncomment selected/active lines</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+/</string>
    </property>
   </action>
  </widget>
