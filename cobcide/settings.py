@@ -1,17 +1,18 @@
-# This file is part of OCIDE.
-# 
-# OCIDE is free software: you can redistribute it and/or modify
+#!/usr/bin/env python
+# This file is part of cobcide.
+#
+# cobcide is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
-# OCIDE is distributed in the hope that it will be useful,
+#
+# cobcide is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
-# along with OCIDE.  If not, see <http://www.gnu.org/licenses/>.
+# along with cobcide.  If not, see <http://www.gnu.org/licenses/>.
 """
 Gives an easy and safe access to the app settings
 """
@@ -131,6 +132,14 @@ class Settings(object):
     @use_external_shell.setter
     def use_external_shell(self, state):
         self._settings.setValue("useExternalShell", int(state))
+
+    @property
+    def shell_cmd(self):
+        return str(self._settings.value("shell", "gnome-terminal -e"))
+
+    @shell_cmd.setter
+    def shell_cmd(self, cmd):
+        self._settings.setValue("shell", cmd)
 
     @property
     def font_name(self):

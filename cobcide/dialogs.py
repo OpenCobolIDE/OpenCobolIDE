@@ -1,17 +1,18 @@
-# This file is part of OCIDE.
-# 
-# OCIDE is free software: you can redistribute it and/or modify
+#!/usr/bin/env python
+# This file is part of cobcide.
+#
+# cobcide is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
-# OCIDE is distributed in the hope that it will be useful,
+#
+# cobcide is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
-# along with OCIDE.  If not, see <http://www.gnu.org/licenses/>.
+# along with cobcide.  If not, see <http://www.gnu.org/licenses/>.
 """
 This module contains the application dialogs
 """
@@ -158,6 +159,7 @@ class DlgPreferences(QDialog):
         self.ui.cbCodeCompletion.setChecked(s.enable_cc)
         self.ui.cbLineNbr.setChecked(s.show_line_numbers)
         self.ui.cbUseExtShell.setChecked(s.use_external_shell)
+        self.ui.leTerminal.setText(s.shell_cmd)
         self.ui.cbWhitespaces.setChecked(s.show_whitespaces)
         font = QFont(s.font_name)
         font.setFamily(s.font_name)
@@ -180,8 +182,8 @@ class DlgPreferences(QDialog):
             self.ui.lblExternalTerminal.hide()
             self.ui.leTerminal.hide()
         else:
-            self.ui.lblExternalTerminal.setEnabled(not self.ui.cbUseExtShell.isEnabled())
-            self.ui.leTerminal.setEnabled(not self.ui.cbUseExtShell.isEnabled())
+            self.ui.lblExternalTerminal.setEnabled(self.ui.cbUseExtShell.isChecked())
+            self.ui.leTerminal.setEnabled(self.ui.cbUseExtShell.isChecked())
 
     @Slot(int)
     def on_lwMenu_currentRowChanged(self, row):
@@ -256,6 +258,11 @@ class DlgPreferences(QDialog):
         s = Settings()
         s.font_name = font.family()
         self.refresh_preview()
+
+    @Slot(unicode)
+    def on_leTerminal_textEdited(self, txt):
+        s = Settings()
+        s.shell_cmd = txt
 
     def refresh_preview(self):
         s = Settings()

@@ -191,7 +191,7 @@ class Runner(QRunnable):
                     print os.environ
                     wd = QFileInfo(exe_filename).dir().path()
                     os.chdir(wd)
-                    ret_val = os.system("gnome-terminal -e" + " " +
+                    ret_val = os.system(s.shell_cmd + " " +
                                         exe_filename)
                     self.events.lineAvailable.emit(
                         ">Program exited with return code %d"
