@@ -20,6 +20,7 @@ import sys
 
 from PySide.QtCore import QSettings
 from pcef import style, styles
+from pcef.styles.white import WhiteStyle
 
 
 class Settings(object):
@@ -201,7 +202,7 @@ class Settings(object):
         s.set_style_color("Error", new_style.errorColor)
 
     def get_default_style(self):
-        new_style = styles.getStyle("Default")
+        new_style = WhiteStyle()
         new_style.name = "cobcide"
         new_style.pygmentsStyle = "default"
         new_style.showWhitespaces = False
@@ -210,7 +211,6 @@ class Settings(object):
         return enable_cc, new_style, show_line_nbrs
 
     def init_style_settings(self):
-        print "Init style settings"
         enable_cc, new_style, show_line_nbrs = self.get_default_style()
         self.set_settings_from_style(new_style, enable_cc, show_line_nbrs)
         self.initialized = False

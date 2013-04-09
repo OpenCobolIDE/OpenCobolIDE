@@ -89,7 +89,6 @@ class HomePageWidget(qwelcomewindow.QWelcomeWidget):
         recent_action_triggered.
         """
         action = self.sender()
-        print action
         if action:
             txt = action.data()
             self.recent_action_triggered.emit(action.text(), txt)

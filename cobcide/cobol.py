@@ -114,7 +114,6 @@ def compile(filename, fileType):
         nb_tokens_expected += 1
     if p.returncode != 0:
         lines = std_err.splitlines()
-        print lines
         for line in lines:
             tokens = line.split(':')
             nb_tokens = len(tokens)
@@ -188,7 +187,6 @@ class Runner(QRunnable):
                                          stdout=subprocess.PIPE,
                                          stderr=subprocess.PIPE)
                 else:
-                    print os.environ
                     wd = QFileInfo(exe_filename).dir().path()
                     os.chdir(wd)
                     ret_val = os.system(s.shell_cmd + " " +

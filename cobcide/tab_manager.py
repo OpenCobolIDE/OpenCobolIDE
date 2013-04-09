@@ -227,7 +227,6 @@ class TabManager(QObject):
 
     def refresh_editor_styles(self):
         s = Settings()
-        print s.show_line_numbers
         for i in range(self.__tabWidget.count()):
             self.__tabWidget.widget(i).currentStyle = s.style
             self.__tabWidget.widget(i).lineNumberPanel.enabled = \

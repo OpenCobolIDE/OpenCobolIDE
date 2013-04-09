@@ -22,7 +22,7 @@ import pygments
 
 from PySide.QtCore import Slot
 from PySide.QtGui import QDialog, QButtonGroup, QTableWidgetItem, QFont, \
-    QColorDialog, QColor
+    QColorDialog, QColor, QAbstractButton
 
 from pygments.styles import STYLE_MAP
 
@@ -84,9 +84,6 @@ class DlgAbout(QDialog):
         self.__ui = UiAboutDialog()
         self.__ui.setupUi(self)
         self.__ui.labelMain.setText(self.__ui.labelMain.text() % __version__)
-        # self.__ui.tabWidget.setCurrentIndex(0)
-        # print
-
         versions = [cobol.get_cobc_version(),
                     PySide.QtCore.__version__,
                     PySide.__version__,
@@ -144,13 +141,7 @@ COLOR_NAMES = ["Margin", "ActiveLine", "Selection", "SelectedText",
 
 class DlgPreferences(QDialog):
 
-    def __init__(self, parent):
-        QDialog.__init__(self, parent)
-        self.__init = False
-        self.ui = UiPreferencesDialog()
-        self.ui.setupUi(self)
-        self.ui.lwMenu.setCurrentRow(0)
-        self.ui.lwColors.setCurrentRow(0)
+    def __refresh_ui(self):
         self.ui.plainTextEdit.syntaxHighlightingMode.setLexerFromFilename(
             "*.cbl")
         self.ui.plainTextEdit.codeEdit.setPlainText(CODE_EXAMPLE)
@@ -173,17 +164,24 @@ class DlgPreferences(QDialog):
         else:
             index = self.ui.cmbPygmentsStyle.findText("default")
             self.ui.cmbPygmentsStyle.setCurrentIndex()
-
         self.ui.pbColor.setStyleSheet(
             "background-color: %s" % s.get_style_color(
                 self.ui.lwColors.currentItem().text()))
-
         if sys.platform == "win32":
             self.ui.lblExternalTerminal.hide()
             self.ui.leTerminal.hide()
         else:
             self.ui.lblExternalTerminal.setEnabled(self.ui.cbUseExtShell.isChecked())
             self.ui.leTerminal.setEnabled(self.ui.cbUseExtShell.isChecked())
+
+    def __init__(self, parent):
+        QDialog.__init__(self, parent)
+        self.__init = False
+        self.ui = UiPreferencesDialog()
+        self.ui.setupUi(self)
+        self.ui.lwMenu.setCurrentRow(0)
+        self.ui.lwColors.setCurrentRow(0)
+        self.__refresh_ui()
 
     @Slot(int)
     def on_lwMenu_currentRowChanged(self, row):
@@ -202,7 +200,7 @@ class DlgPreferences(QDialog):
             style = self.ui.cmbPygmentsStyle.itemText(index)
             s = Settings()
             s.pygments_style = style
-            self.refresh_preview()
+            self.__refresh_preview()
 
     @Slot()
     def on_pbColor_clicked(self):
@@ -216,30 +214,28 @@ class DlgPreferences(QDialog):
             self.ui.pbColor.setStyleSheet(
                 "background-color: %s" % s.get_style_color(
                     self.ui.lwColors.currentItem().text()))
-            self.refresh_preview()
+            self.__refresh_preview()
 
     @Slot(bool)
     def on_cbWhitespaces_toggled(self, state):
         s = Settings()
         s.show_whitespaces = state
-        self.refresh_preview()
+        self.__refresh_preview()
 
     @Slot(bool)
     def on_cbLineNbr_toggled(self, state):
         s = Settings()
         s.show_line_numbers = state
-        self.refresh_preview()
+        self.__refresh_preview()
 
     @Slot(bool)
     def on_cbCodeCompletion_toggled(self, state):
-        print state
         s = Settings()
         s.enable_cc = state
-        self.refresh_preview()
+        self.__refresh_preview()
 
     @Slot(bool)
     def on_cbUseExtShell_toggled(self, state):
-        print state
         s = Settings()
         s.use_external_shell = state
         if sys.platform != "win32":
@@ -250,21 +246,33 @@ class DlgPreferences(QDialog):
     def on_sbFontSize_valueChanged(self, value):
         s = Settings()
         s.font_size = value
-        self.refresh_preview()
+        self.__refresh_preview()
 
     @Slot(QFont)
     def on_fcbFont_currentFontChanged(self, font):
         assert isinstance(font, QFont)
         s = Settings()
         s.font_name = font.family()
-        self.refresh_preview()
+        self.__refresh_preview()
 
     @Slot(unicode)
     def on_leTerminal_textEdited(self, txt):
         s = Settings()
         s.shell_cmd = txt
 
-    def refresh_preview(self):
+    @Slot(QAbstractButton)
+    def on_buttonBox_clicked(self, button):
+        assert  isinstance(button, QAbstractButton)
+        if button.text() == "Reset":
+            s = Settings()
+            s.init_style_settings()
+            s.shell_cmd = "gnome-terminal -e"
+            s.use_external_shell = False
+            s.enable_cc = False
+            self.__refresh_ui()
+            self.__refresh_preview()
+
+    def __refresh_preview(self):
         s = Settings()
         self.ui.plainTextEdit.currentStyle = s.style
         self.ui.plainTextEdit.lineNumberPanel.enabled = s.show_line_numbers
