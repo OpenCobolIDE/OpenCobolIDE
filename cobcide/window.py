@@ -16,24 +16,36 @@
 """
 Contains the IDE main window.
 """
-import os
 import chardet
+import os
 import sys
 
-from PySide.QtCore import Slot, QThreadPool, QFileInfo
-from PySide.QtGui import QMainWindow, QActionGroup, QLabel, QTreeWidgetItem
+from PySide.QtCore import QFileInfo
+from PySide.QtCore import QThreadPool
+from PySide.QtCore import Slot
+from PySide.QtGui import QAction
+from PySide.QtGui import QActionGroup
 from PySide.QtGui import QFileDialog
-from PySide.QtGui import QMessageBox, QListWidgetItem
+from PySide.QtGui import QLabel
+from PySide.QtGui import QListWidgetItem
+from PySide.QtGui import QMainWindow
+from PySide.QtGui import QMessageBox
+from PySide.QtGui import QTreeWidgetItem
+from PySide.QtGui import QWidget
+
 from pcef import saveFileFromEditor
 from pcef.code_edit import cursorForPosition
 
-from cobcide import FileType, cobol
-from cobcide.dialogs import DlgFileType, DlgAbout, DlgPreferences
-from cobcide.errors_manager import ErrorsManager
-from cobcide.tab_manager import TabManager
+from cobcide import FileType
+from cobcide import cobol
+from cobcide.dialogs import DlgAbout
+from cobcide.dialogs import DlgFileType
+from cobcide.dialogs import DlgPreferences
 from cobcide.editor import CobolEditor
-from cobcide.ui import ide_ui
+from cobcide.errors_manager import ErrorsManager
 from cobcide.settings import Settings
+from cobcide.tab_manager import TabManager
+from cobcide.ui import ide_ui
 
 
 class MainWindow(QMainWindow):
@@ -44,18 +56,6 @@ class MainWindow(QMainWindow):
     PAGE_HOME = 0
     #: The editor page index
     PAGE_EDITOR = 1
-
-    def __update_view_toolbar_menu(self):
-        v = self.__ui.toolBarFile.isVisible()
-        self.__ui.aShowFilesToolbar.setChecked(v)
-        v = self.__ui.toolBarCode.isVisible()
-        self.__ui.aShowCodeToolbar.setChecked(v)
-
-    def __update_view_window_menu(self):
-        self.__ui.aShowLogsWin.setChecked(
-            self.__ui.dockWidgetLogs.isVisible())
-        self.__ui.aShowNavWin.setChecked(
-            self.__ui.dockWidgetNavPanel.isVisible())
 
     def __init__(self):
         QMainWindow.__init__(self)
@@ -119,6 +119,24 @@ class MainWindow(QMainWindow):
         # show the home page
         self.__on_current_tab_changed(None, "")
 
+    def __update_view_toolbar_menu(self):
+        """
+        Updates the View>Toolbars menu
+        """
+        v = self.__ui.toolBarFile.isVisible()
+        self.__ui.aShowFilesToolbar.setChecked(v)
+        v = self.__ui.toolBarCode.isVisible()
+        self.__ui.aShowCodeToolbar.setChecked(v)
+
+    def __update_view_window_menu(self):
+        """
+        Updates the View>Windows menu
+        """
+        self.__ui.aShowLogsWin.setChecked(
+            self.__ui.dockWidgetLogs.isVisible())
+        self.__ui.aShowNavWin.setChecked(
+            self.__ui.dockWidgetNavPanel.isVisible())
+
     def __update_toolbar(self):
         """
         Update toolbar buttons states depending on the context (whether there
@@ -163,9 +181,34 @@ class MainWindow(QMainWindow):
                 self.__ui.actionProgram.setChecked(False)
                 self.__ui.actionSubprogram.setChecked(False)
 
+    def __update_status_bar_infos(self, widget):
+        """
+        Updates the status bar infos (widgets)
 
+        :param widget: current editor widget
+        """
+        if widget:
+            self.lblFilename.setText(widget.codeEdit.tagFilename)
+            self.lblEncoding.setText(widget.codeEdit.tagEncoding)
+            l, c = self.__tab_manager.get_cursor_pos()
+            self.__on_cursor_pos_changed(l, c)
+        else:
+            self.lblFilename.setText("")
+            self.lblEncoding.setText("")
+            self.lblCursorPos.setText("")
 
-    def detect_encoding(self, filename):
+    def __update_navigation_panel(self):
+        """
+        Updates the navigation panel using the DocumentAnalyserMode infos.
+        """
+        self.__ui.twNavigation.clear()
+        if(self.__tab_manager.active_tab and
+               isinstance(self.__tab_manager.active_tab, CobolEditor)):
+            self.__ui.twNavigation.addTopLevelItem(
+                self.__tab_manager.active_tab.documentAnalyserMode.root_node)
+        self.__ui.twNavigation.expandAll()
+
+    def __detect_encoding(self, filename):
         """
         Detect file encoding using chardet.
 
@@ -182,7 +225,15 @@ class MainWindow(QMainWindow):
             encoding = sys.getfilesystemencoding()
         return encoding
 
-    def detect_file_type(self, filename):
+    def __detect_file_type(self, filename):
+        """
+        Detect file type:
+            - cobol program
+            - cobol subprogram
+            - text file
+
+        :param filename: The file name to check
+        """
         ext = QFileInfo(filename).suffix()
         type = FileType.Text
         if ext == "cbl":
@@ -202,7 +253,15 @@ class MainWindow(QMainWindow):
                 pass
         return type
 
-    def _open_file(self, filename, filetype=None):
+    def __open_file(self, filename, filetype=None):
+        """
+        Open a file in a new editor tab
+
+        :param filename: Filename
+
+        :param filetype: Filetype - optional. A null filetype will trigger the
+                         auto dectection
+        """
         app_settings = Settings()
         if filename != "" and os.path.exists(filename):
             filename = os.path.normpath(filename)
@@ -211,9 +270,9 @@ class MainWindow(QMainWindow):
             try:
                 # detect file type if file type is None
                 if not filetype:
-                    filetype = self.detect_file_type(filename)
+                    filetype = self.__detect_file_type(filename)
                 # detect encoding
-                encoding = self.detect_encoding(filename)
+                encoding = self.__detect_encoding(filename)
                 # open a tab
                 tab = self.__tab_manager.open_tab(filename, filetype, encoding)
                 # save last used path
@@ -239,6 +298,9 @@ class MainWindow(QMainWindow):
                     "a standard encoding (utf-8 for example)")
 
     def closeEvent(self, event):
+        """
+        On close event, performs cleanup
+        """
         event.ignore()
         if self.__tab_manager.is_clean or self.__tab_manager.cleanup():
              event.accept()
@@ -268,7 +330,7 @@ class MainWindow(QMainWindow):
                 try:
                     with open(filename, "w") as f:
                         f.write("")
-                    self._open_file(filename, dlg.choice)
+                    self.__open_file(filename, dlg.choice)
                 except IOError or OSError:
                     QMessageBox.warning(self, "Failed to create file",
                                         "Failed to create file {0}.\n"
@@ -285,7 +347,7 @@ class MainWindow(QMainWindow):
         filename = QFileDialog.getOpenFileName(
             self, "Choose a file to open", app_settings.last_used_path,
             "Cobol files (*.cbl);; Text files (*.txt *.dat)")[0]
-        self._open_file(filename)
+        self.__open_file(filename)
 
     @Slot(bool)
     def on_actionFullscreen_toggled(self, fullscreen):
@@ -377,6 +439,7 @@ class MainWindow(QMainWindow):
         runner.events.error.connect(self.__on_run_error)
         self.__threadPool.start(runner)
 
+    @Slot(str)
     def __on_run_error(self, msg):
         """
         Slot called when an error occured when running an executable
@@ -404,22 +467,7 @@ class MainWindow(QMainWindow):
         except ValueError:
             pass
 
-    def __update_status_bar_infos(self, widget):
-        """
-        Updates the status bar infos (widgets)
-
-        :param widget: current editor widget
-        """
-        if widget:
-            self.lblFilename.setText(widget.codeEdit.tagFilename)
-            self.lblEncoding.setText(widget.codeEdit.tagEncoding)
-            l, c = self.__tab_manager.get_cursor_pos()
-            self.__on_cursor_pos_changed(l, c)
-        else:
-            self.lblFilename.setText("")
-            self.lblEncoding.setText("")
-            self.lblCursorPos.setText("")
-
+    @Slot(QWidget, str)
     def __on_current_tab_changed(self, widget, txt):
         """
         Updates ui when current file changed
@@ -467,6 +515,7 @@ class MainWindow(QMainWindow):
             self.__ui.statusbar.hide()
         self.__update_status_bar_infos(widget)
 
+    @Slot(QAction)
     def __change_current_file_type(self, action):
         """
         Changes the current file type
@@ -480,6 +529,7 @@ class MainWindow(QMainWindow):
                 self.__tab_manager.active_tab.fileType = FileType.Subprogram
         self.__update_toolbar()
 
+    @Slot(int, int)
     def __on_cursor_pos_changed(self, l, c):
         """
         Update cursor position label
@@ -515,7 +565,7 @@ class MainWindow(QMainWindow):
         :param filename: recent filename
         """
         try:
-            self._open_file(filename)
+            self.__open_file(filename)
         except IOError or OSError:
             pass
 
@@ -532,19 +582,11 @@ class MainWindow(QMainWindow):
             self.__tab_manager.active_tab.codeEdit, item.line + 1, 0)
         self.__tab_manager.active_tab.codeEdit.setTextCursor(tc)
 
-    def __update_navigation_panel(self):
-        """
-        Updates the navigation panel using the DocumentAnalyserMode infos.
-        """
-        self.__ui.twNavigation.clear()
-        if(self.__tab_manager.active_tab and
-           isinstance(self.__tab_manager.active_tab, CobolEditor)):
-            self.__ui.twNavigation.addTopLevelItem(
-                self.__tab_manager.active_tab.documentAnalyserMode.root_node)
-        self.__ui.twNavigation.expandAll()
-
     @Slot()
     def on_aPreferences_triggered(self):
+        """
+        Shows the preferences dialog
+        """
         dlg = DlgPreferences(self)
         if dlg.exec_() == DlgPreferences.Accepted:
             self.__tab_manager.refresh_editor_styles()

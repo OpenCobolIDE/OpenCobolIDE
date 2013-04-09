@@ -19,7 +19,9 @@ Gives an easy and safe access to the app settings
 import sys
 
 from PySide.QtCore import QSettings
-from pcef import style, styles
+
+from pcef import style
+from pcef import styles
 from pcef.styles.white import WhiteStyle
 
 

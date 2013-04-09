@@ -22,13 +22,14 @@ import logging
 logging.basicConfig()
 import subprocess
 
-from PySide.QtGui import QApplication, QMessageBox
+from PySide.QtGui import QApplication
+from PySide.QtGui import QMessageBox
 
 # allow launching the ide without installing
 sys.path.insert(0, os.path.abspath(__file__ + "/../../"))
 from cobcide import desktop_entry
-from cobcide.window import MainWindow
 from cobcide.settings import Settings
+from cobcide.window import MainWindow
 
 
 def windows_init():

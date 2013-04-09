@@ -18,12 +18,16 @@ Contains cobol specific modes:
   - ToUpperMode
   - DocumentAnalyserMode
 """
-from PySide.QtCore import QObject, Signal
-from PySide.QtGui import QKeyEvent, QTextCursor
+from PySide.QtCore import QObject
+from PySide.QtCore import Signal
+from PySide.QtGui import QKeyEvent
+from PySide.QtGui import QTextCursor
 
 from pcef.core import Mode
+from pcef.panels.folding import FoldPanel
 
 from cobcide import cobol
+from cobcide.cobol import DocumentNode
 
 
 class ToUpperMode(Mode):
@@ -138,4 +142,43 @@ class DocumentAnalyserMode(Mode, QObject):
         except TypeError or IOError:
             pass
 
+
+class FolderMode(Mode):
+    """
+    Mode that manage the fold panel using the DocumentAnalyser
+    """
+    NAME = "FolderMode"
+    DESCRIPTION = "Manage the fold panel"
+
+    def __init__(self):
+        Mode.__init__(self, self.NAME, self.DESCRIPTION)
+
+    def _onStateChanged(self, state):
+        """
+        Called when the mode is activated/deactivated
+        """
+        if state:
+            self.editor.documentAnalyserMode.documentLayoutChanged.connect(
+                self.__on_documentLayoutChanged)
+        else:
+            self.editor.codeEdit.keyPressed.documentLayoutChanged.disconnect(
+                self.__on_documentLayoutChanged)
+
+    def __on_documentLayoutChanged(self):
+        root_node = self.editor.documentAnalyserMode.root_node
+        paragraphes = self.editor.documentAnalyserMode.paragraphs
+        foldPanel = self.editor.foldPanel
+        assert isinstance(foldPanel, FoldPanel)
+        foldPanel.clearIndicators()
+        for div_node in root_node.children:
+            if div_node.end_line - div_node.line > 1:
+                foldPanel.addIndicator(div_node.line, div_node.end_line)
+            for section_node in div_node.children:
+                if section_node.node_type == DocumentNode.Type.Section:
+                    if section_node.end_line - section_node.line > 1:
+                        foldPanel.addIndicator(
+                            section_node.line, section_node.end_line)
+        for p in paragraphes:
+            if p.end_line - p.line > 1:
+                foldPanel.addIndicator(p.line, p.end_line)
 

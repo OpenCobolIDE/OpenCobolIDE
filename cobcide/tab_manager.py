@@ -18,8 +18,13 @@ Contains classes and functions to manage the tab widget
 """
 import pcef
 
-from PySide.QtCore import QFileInfo, QObject, Signal
-from PySide.QtGui import QTabWidget, QIcon, QWidget, QMessageBox
+from PySide.QtCore import QFileInfo
+from PySide.QtCore import QObject
+from PySide.QtCore import Signal
+from PySide.QtGui import QIcon
+from PySide.QtGui import QMessageBox
+from PySide.QtGui import QTabWidget
+from PySide.QtGui import QWidget
 
 from pcef.editors.generic import GenericEditor
 
@@ -226,6 +231,9 @@ class TabManager(QObject):
         self.cursorPosChanged.emit(l, c)
 
     def refresh_editor_styles(self):
+        """
+        Reshresh style of every open editors
+        """
         s = Settings()
         for i in range(self.__tabWidget.count()):
             self.__tabWidget.widget(i).currentStyle = s.style

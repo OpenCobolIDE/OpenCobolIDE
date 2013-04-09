@@ -23,8 +23,12 @@ import os
 import subprocess
 import sys
 
-from PySide.QtCore import QFileInfo, Signal, QObject, QRunnable
-from PySide.QtGui import QTreeWidgetItem, QIcon
+from PySide.QtCore import QFileInfo
+from PySide.QtCore import QObject
+from PySide.QtCore import QRunnable
+from PySide.QtCore import Signal
+from PySide.QtGui import QIcon
+from PySide.QtGui import QTreeWidgetItem
 
 from cobcide import FileType
 from cobcide.settings import Settings
@@ -175,6 +179,7 @@ class Runner(QRunnable):
                     startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
                     p = subprocess.Popen(exe_filename, shell=False,
                                          startupinfo=startupinfo,
+                                         stdin=subprocess.PIPE,
                                          stdout=subprocess.PIPE,
                                          stderr=subprocess.PIPE)
                 else:
@@ -184,6 +189,7 @@ class Runner(QRunnable):
             else:
                 if not s.use_external_shell:
                     p = subprocess.Popen(exe_filename, shell=False,
+                                         stdin=subprocess.PIPE,
                                          stdout=subprocess.PIPE,
                                          stderr=subprocess.PIPE)
                 else:
@@ -241,13 +247,13 @@ class DocumentNode(QTreeWidgetItem):
         0:  ":/ide-icons/rc/Office-book.png",
         1:  ":/ide-icons/rc/text-x-generic.png",
         2:  ":/ide-icons/rc/var.png",
-        3:  ":/ide-icons/rc/paragraph.png"
-    }
+        3:  ":/ide-icons/rc/paragraph.png"}
 
     def __init__(self, node_type, line, name, description=None):
         QTreeWidgetItem.__init__(self)
         self.node_type = node_type
         self.line = line
+        self.end_line = -1
         self.name = name
         if description is None:
             description = name
@@ -270,7 +276,7 @@ class DocumentNode(QTreeWidgetItem):
         """
         Print the node tree in stdout
         """
-        print " " * indent, self.name, self.line
+        print " " * indent, self.name, self.line, " - ", self.end_line
         for c in self.children:
             c.print_tree(indent + 4)
 
@@ -300,7 +306,7 @@ def cmp_doc_node(first_node, second_node):
     return ret_val
 
 
-def _extract_div_node(i, line, root_node):
+def _extract_div_node(i, line, root_node, last_section_node):
     """
     Extracts a division node from a line
 
@@ -318,6 +324,8 @@ def _extract_div_node(i, line, root_node):
     root_node.add_child(node)
     last_div_node = node
     # do not take previous sections into account
+    if last_section_node:
+        last_section_node.end_line = i
     last_section_node = None
     return last_div_node, last_section_node
 
@@ -427,16 +435,22 @@ def parse_document_layout(filename):
         last_section_node = None
         lines = f.readlines()
         last_vars = {}
+        last_par = None
         for i, line in enumerate(lines):
             indentation = len(line) - len(line.lstrip())
             if indentation >= 7 and not line.isspace():
                 line = line.strip().upper()
                 # DIVISIONS
                 if "DIVISION" in line.upper():
+                    # remember
+                    if last_div_node is not None:
+                        last_div_node.end_line = i
                     last_div_node, last_section_node = _extract_div_node(
-                        i, line, root_node)
+                        i, line, root_node, last_section_node)
                 # SECTIONS
                 elif "SECTION" in line:
+                    if last_section_node:
+                        last_section_node.end_line = i
                     last_section_node = _extract_section_node(
                         i, last_div_node, last_vars, line)
                 # VARIABLES
@@ -452,8 +466,14 @@ def parse_document_layout(filename):
                       indentation == 7 and
                       not "EXIT" in line and not "END" in line and not "STOP"
                       in line):
+                    if last_par:
+                        last_par.end_line = i
                     p = _extract_paragraph_node(
                         i, last_div_node, last_section_node, line)
                     if p:
                         paragraphs.append(p)
+                    last_par = p
+        # close last div
+        last_par.end_line = len(lines) - 1
+        last_div_node.end_line = len(lines)
     return root_node, variables, paragraphs

@@ -15,7 +15,8 @@
 """
 Contains the cobol specific completion model
 """
-from pcef.modes.cc import CompletionModel, Suggestion
+from pcef.modes.cc import CompletionModel
+from pcef.modes.cc import Suggestion
 
 # take from pygments_ibm_cobol_lexer.__init__.py
 COBOL_KEYWORDS = [

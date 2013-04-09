@@ -16,25 +16,30 @@
 Contains the different tabs types (one for cobol files, another for basic text
 files)
 """
-from pcef import styles
+from PySide.QtCore import Slot
+from PySide.QtCore import QRegExp
+
 from pygments.token import Comment
 
-from PySide.QtCore import Slot, QRegExp
-
 from pcef.core import CodeEditorWidget
-from pcef.modes.indent import AutoIndentMode
 from pcef.modes.clh import HighlightLineMode
+from pcef.modes.cc import CodeCompletionMode
+from pcef.modes.indent import AutoIndentMode
 from pcef.modes.margin import RightMarginMode
 from pcef.modes.sh import SyntaxHighlighterMode
 from pcef.modes.zoom import EditorZoomMode
-from pcef.modes.cc import CodeCompletionMode
+from pcef.panels.folding import FoldPanel
 from pcef.panels.lines import LineNumberPanel
-from pcef.panels.search import SearchPanel
 from pcef.panels.misc import CheckersMarkerPanel
+from pcef.panels.search import SearchPanel
 
 from cobcide import FileType
-from cobcide.cc import CobolCompletionModel, COBOL_KEYWORDS
-from cobcide.modes import ToUpperMode, DocumentAnalyserMode
+from cobcide.cc import CobolCompletionModel
+from cobcide.cc import COBOL_KEYWORDS
+from cobcide.modes import DocumentAnalyserMode
+from cobcide.modes import FolderMode
+from cobcide.modes import ToUpperMode
+
 from cobcide.settings import Settings
 
 
@@ -135,6 +140,10 @@ class CobolEditor(CodeEditorWidget):
         self.__file_type = type
 
     @property
+    def foldPanel(self):
+        return self.panel(FoldPanel.IDENTIFIER)
+
+    @property
     def checkerPanel(self):
         return self.panel(CheckersMarkerPanel.IDENTIFIER)
 
@@ -161,6 +170,7 @@ class CobolEditor(CodeEditorWidget):
         self._install_modes()
 
     def _install_panels(self):
+        self.installPanel(FoldPanel(), self.PANEL_ZONE_LEFT)
         self.installPanel(LineNumberPanel(), self.PANEL_ZONE_LEFT)
         self.installPanel(SearchPanel(), self.PANEL_ZONE_BOTTOM)
         self.installPanel(CheckersMarkerPanel(), self.PANEL_ZONE_LEFT)
@@ -193,6 +203,7 @@ class CobolEditor(CodeEditorWidget):
         self.installMode(SyntaxHighlighterMode())
         self.syntaxHighlightingMode.highlighter.hilighlightingBlock.connect(
             self._highlighComments)
+        self.installMode(FolderMode())
 
     def _installActions(self):
         """

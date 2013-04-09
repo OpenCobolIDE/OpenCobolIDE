@@ -18,7 +18,8 @@ This module contains the home page widget
 import qwelcomewindow
 
 from PySide.QtCore import QFileInfo
-from PySide.QtGui import QIcon, QAction
+from PySide.QtGui import QAction
+from PySide.QtGui import QIcon
 
 from cobcide.settings import Settings
 
@@ -143,7 +144,6 @@ class HomePageWidget(qwelcomewindow.QWelcomeWidget):
         del files[self.MaxRecentFiles:]
         settings.recent_files = files
         self.__updateRecentFileActions()
-
 
     def strippedName(self, fullFileName):
         """

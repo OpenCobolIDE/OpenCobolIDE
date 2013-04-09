@@ -16,24 +16,27 @@
 """
 This module contains the application dialogs
 """
-import PySide
 import pcef
 import pygments
+import PySide
+import sys
 
 from PySide.QtCore import Slot
-from PySide.QtGui import QDialog, QButtonGroup, QTableWidgetItem, QFont, \
-    QColorDialog, QColor, QAbstractButton
+from PySide.QtGui import QAbstractButton
+from PySide.QtGui import QButtonGroup
+from PySide.QtGui import QColorDialog
+from PySide.QtGui import QDialog
+from PySide.QtGui import QFont
+from PySide.QtGui import QTableWidgetItem
 
 from pygments.styles import STYLE_MAP
 
-from pcef import styles
-import sys
-
-from cobcide import __version__, cobol
+from cobcide import __version__
+from cobcide import cobol
 from cobcide import FileType
 from cobcide.settings import Settings
-from cobcide.ui.dlg_file_type_ui import Ui_Dialog as UiFileTypeDialog
 from cobcide.ui.dlg_about_ui import Ui_Dialog as UiAboutDialog
+from cobcide.ui.dlg_file_type_ui import Ui_Dialog as UiFileTypeDialog
 from cobcide.ui.dlg_preferences_ui import Ui_Dialog as UiPreferencesDialog
 
 
@@ -96,6 +99,7 @@ class DlgAbout(QDialog):
             self.__ui.tbwVersions.setItem(i, 0, item)
 
 
+#: Example code shown in the preview editor
 CODE_EXAMPLE = \
     """      *******************************************************************
       ** Example taken from http://progopedia.com/version/opencobol-1.0/*
@@ -134,14 +138,31 @@ CODE_EXAMPLE = \
       **
 """
 
+# Enumerates color names
 COLOR_NAMES = ["Margin", "ActiveLine", "Selection", "SelectedText",
                "LineNumber", "PanelBackground", "PanelBackground2",
                "TextOccurences", "SearchResults", "Warning", "Error"]
 
 
 class DlgPreferences(QDialog):
+    """
+    Preferences dialogs. Shows a sets of options that can be changed by the
+    user (mainly editor style )
+    """
+
+    def __init__(self, parent):
+        QDialog.__init__(self, parent)
+        self.__init = False
+        self.ui = UiPreferencesDialog()
+        self.ui.setupUi(self)
+        self.ui.lwMenu.setCurrentRow(0)
+        self.ui.lwColors.setCurrentRow(0)
+        self.__refresh_ui()
 
     def __refresh_ui(self):
+        """
+        Refresh ui; refresh control value from settings values
+        """
         self.ui.plainTextEdit.syntaxHighlightingMode.setLexerFromFilename(
             "*.cbl")
         self.ui.plainTextEdit.codeEdit.setPlainText(CODE_EXAMPLE)
@@ -171,24 +192,37 @@ class DlgPreferences(QDialog):
             self.ui.lblExternalTerminal.hide()
             self.ui.leTerminal.hide()
         else:
-            self.ui.lblExternalTerminal.setEnabled(self.ui.cbUseExtShell.isChecked())
-            self.ui.leTerminal.setEnabled(self.ui.cbUseExtShell.isChecked())
+            self.ui.lblExternalTerminal.setEnabled(
+                self.ui.cbUseExtShell.isChecked())
+            self.ui.leTerminal.setEnabled(
+                self.ui.cbUseExtShell.isChecked())
 
-    def __init__(self, parent):
-        QDialog.__init__(self, parent)
-        self.__init = False
-        self.ui = UiPreferencesDialog()
-        self.ui.setupUi(self)
-        self.ui.lwMenu.setCurrentRow(0)
-        self.ui.lwColors.setCurrentRow(0)
-        self.__refresh_ui()
+    def __refresh_preview(self):
+        """
+        Refresh the preview editor (reset style, turn on/off modes/panels)
+        """
+        s = Settings()
+        self.ui.plainTextEdit.currentStyle = s.style
+        self.ui.plainTextEdit.lineNumberPanel.enabled = s.show_line_numbers
+        self.ui.plainTextEdit.codeCompletionMode.enabled = s.enable_cc
+        self.ui.plainTextEdit.syntaxHighlightingMode.highlighter.rehighlight()
 
     @Slot(int)
     def on_lwMenu_currentRowChanged(self, row):
+        """
+        Chanages the actibe page
+
+        :param row: The current page/row to set
+        """
         self.ui.swMain.setCurrentIndex(row)
 
     @Slot(int)
     def on_lwColors_currentRowChanged(self, row):
+        """
+        Changes the currently displayed color
+
+        :param row: Color row
+        """
         s = Settings()
         self.ui.pbColor.setStyleSheet(
             "background-color: %s" % s.get_style_color(
@@ -196,6 +230,11 @@ class DlgPreferences(QDialog):
 
     @Slot(int)
     def on_cmbPygmentsStyle_currentIndexChanged(self, index):
+        """
+        Changes the pygments style.
+
+        :param index:Pygment style index
+        """
         if self.__init:
             style = self.ui.cmbPygmentsStyle.itemText(index)
             s = Settings()
@@ -204,6 +243,9 @@ class DlgPreferences(QDialog):
 
     @Slot()
     def on_pbColor_clicked(self):
+        """
+        Changes active color
+        """
         dlg = QColorDialog()
         color_name = self.ui.lwColors.currentItem().text()
         s = Settings()
@@ -218,24 +260,44 @@ class DlgPreferences(QDialog):
 
     @Slot(bool)
     def on_cbWhitespaces_toggled(self, state):
+        """
+        Toggle show whitespaces
+
+        :param state: flag - bool
+        """
         s = Settings()
         s.show_whitespaces = state
         self.__refresh_preview()
 
     @Slot(bool)
     def on_cbLineNbr_toggled(self, state):
+        """
+        Shows/Hides the line number panel
+
+        :param state: True to show the panel
+        """
         s = Settings()
         s.show_line_numbers = state
         self.__refresh_preview()
 
     @Slot(bool)
     def on_cbCodeCompletion_toggled(self, state):
+        """
+        Enables/Disables code completion
+
+        :param state: True to enable cc
+        """
         s = Settings()
         s.enable_cc = state
         self.__refresh_preview()
 
     @Slot(bool)
     def on_cbUseExtShell_toggled(self, state):
+        """
+        Enable/Disable run in external terminal
+
+        :param state: State: true = enable
+        """
         s = Settings()
         s.use_external_shell = state
         if sys.platform != "win32":
@@ -244,24 +306,43 @@ class DlgPreferences(QDialog):
 
     @Slot(int)
     def on_sbFontSize_valueChanged(self, value):
+        """
+        Changes font size
+
+        :param value: New size value
+        """
         s = Settings()
         s.font_size = value
         self.__refresh_preview()
 
     @Slot(QFont)
     def on_fcbFont_currentFontChanged(self, font):
-        assert isinstance(font, QFont)
+        """
+        Change current font
+
+        :param font: The new font to set
+        """
         s = Settings()
         s.font_name = font.family()
         self.__refresh_preview()
 
     @Slot(unicode)
     def on_leTerminal_textEdited(self, txt):
+        """
+        Change external terminal base command
+
+        :param txt: Base command
+        """
         s = Settings()
         s.shell_cmd = txt
 
     @Slot(QAbstractButton)
     def on_buttonBox_clicked(self, button):
+        """
+        Reset preferences
+
+        :param button: The clicked button, we only handle the reset button
+        """
         assert  isinstance(button, QAbstractButton)
         if button.text() == "Reset":
             s = Settings()
@@ -271,10 +352,3 @@ class DlgPreferences(QDialog):
             s.enable_cc = False
             self.__refresh_ui()
             self.__refresh_preview()
-
-    def __refresh_preview(self):
-        s = Settings()
-        self.ui.plainTextEdit.currentStyle = s.style
-        self.ui.plainTextEdit.lineNumberPanel.enabled = s.show_line_numbers
-        self.ui.plainTextEdit.codeCompletionMode.enabled = s.enable_cc
-        self.ui.plainTextEdit.syntaxHighlightingMode.highlighter.rehighlight()

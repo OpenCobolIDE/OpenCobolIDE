@@ -18,10 +18,14 @@ Contains a class that manage the errors lists and update the ui accordingly.
 
 An error manager is attached to an open tab.
 """
-from PySide.QtGui import QColor, QListWidgetItem, QIcon
+from PySide.QtGui import QColor
+from PySide.QtGui import QIcon
+from PySide.QtGui import QListWidgetItem
 
-from pcef.code_edit import cursorForPosition, TextDecoration
-from pcef.modes.checker import ERROR_TYPE_WARNING, ERROR_TYPE_SYNTAX
+from pcef.code_edit import cursorForPosition
+from pcef.code_edit import TextDecoration
+from pcef.modes.checker import ERROR_TYPE_SYNTAX
+from pcef.modes.checker import ERROR_TYPE_WARNING
 
 
 class ErrorsManager(object):
