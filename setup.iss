@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "OpenCobolIDE"
-#define MyAppVersion "1.1"
+#define MyAppVersion "1.2.0"
 #define MyAppPublisher "Colin Duquesnoy"
 #define MyAppURL "https://launchpad.net/cobcide"
 #define MyAppExeName "OpenCobolIDE.exe"
@@ -44,7 +44,7 @@ Source: "build\exe.win32-2.7\_socket.pyd"; DestDir: "{app}"; Flags: ignoreversio
 Source: "build\exe.win32-2.7\_ssl.pyd"; DestDir: "{app}"; Flags: ignoreversion
 Source: "build\exe.win32-2.7\bz2.pyd"; DestDir: "{app}"; Flags: ignoreversion
 Source: "build\exe.win32-2.7\library.zip"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\OpenCobolIDE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "build\exe.win32-2.7\OpenCobolIDE.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "build\exe.win32-2.7\pyexpat.pyd"; DestDir: "{app}"; Flags: ignoreversion
 Source: "build\exe.win32-2.7\PySide.QtCore.pyd"; DestDir: "{app}"; Flags: ignoreversion
 Source: "build\exe.win32-2.7\PySide.QtGui.pyd"; DestDir: "{app}"; Flags: ignoreversion

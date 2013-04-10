@@ -26,7 +26,7 @@ from PySide.QtGui import QApplication
 from PySide.QtGui import QMessageBox
 
 # allow launching the ide without installing
-sys.path.insert(0, os.path.abspath(__file__ + "/../../"))
+sys.path.insert(0, os.path.abspath(os.getcwd() + "/../"))
 from cobcide import desktop_entry
 from cobcide.settings import Settings
 from cobcide.window import MainWindow
