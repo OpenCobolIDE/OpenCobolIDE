@@ -242,7 +242,7 @@ class CommentsMode(Mode):
                         sel_end += 1
                     else:
                         sel_end += 1
-                # next line
+            # next line
             cursor.movePosition(QTextCursor.EndOfLine)
             cursor.setPosition(cursor.position() + 1)
         cursor.setPosition(sel_start)

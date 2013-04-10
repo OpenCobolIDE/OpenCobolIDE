@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Tue Apr  9 12:29:14 2013
-#      by: pyside-uic 0.2.13 running on PySide 1.1.1
+# Created: Wed Apr 10 11:51:24 2013
+#      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -89,7 +89,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtGui.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1000, 25))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1000, 20))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtGui.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -237,7 +237,6 @@ class Ui_MainWindow(object):
         self.menuFile.addAction(self.actionQuit)
         self.mnuActiveEditor.addSeparator()
         self.menuEdit.addAction(self.mnuActiveEditor.menuAction())
-        self.menuEdit.addAction(self.actionComment_Uncomment)
         self.menuEdit.addSeparator()
         self.menuEdit.addAction(self.aPreferences)
         self.menuToolbars.addAction(self.aShowFilesToolbar)

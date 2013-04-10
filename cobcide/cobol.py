@@ -99,7 +99,13 @@ def compile(filename, fileType):
     Compiles a file and return a list of errors/messages
     """
     results = []
+    cwd = os.getcwd()
+    if sys.platform == "win32":
+        f_info = QFileInfo(filename)
+        filename = f_info.fileName()
+        os.chdir(f_info.dir().path())
     cmd, output_filename = cmd_from_file_type(filename, fileType)
+    print cmd
     # cmd += ["-I","e:\\OpenCobol\\include", "-L", "e:\\OpenCobol\\lib"]
     if sys.platform == "win32":
         startupinfo = subprocess.STARTUPINFO()
@@ -110,6 +116,8 @@ def compile(filename, fileType):
     else:
         p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, env=os.environ.copy())
+    if sys.platform == "win32":
+        os.chdir(cwd)
     while p.poll() is None:
         pass
     std_err = p.communicate()[1]
