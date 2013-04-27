@@ -380,12 +380,17 @@ def _extract_var_node(i, indentation, last_section_node, last_vars, line):
     :return: The extracted variable node
     """
     parent_node = None
+    raw_tokens = line.split(" ")
+    tokens = []
+    for t in raw_tokens:
+        if not t.isspace() and t != "":
+            tokens.append(t)
     try:
-        lvl = int(line.split(" ")[0], 16)
-        name = line.split(" ")[1]
+        lvl = int(tokens[0], 16)
+        name = tokens[1]
     except ValueError:
         lvl = 0
-        name = line.split(" ")[0]
+        name = tokens[0]
     name = name.replace(".", "")
     description = "{1}".format(i + 1, line)
     if indentation == 7:
@@ -471,7 +476,7 @@ def parse_document_layout(filename):
                 # PARAGRAPHS
                 elif (last_div_node is not None and
                       "PROCEDURE DIVISION" in last_div_node.name and
-                      indentation == 7 and
+                      line.endswith(".") and
                       not "EXIT" in line and not "END" in line and not "STOP"
                       in line):
                     if last_par:
@@ -482,6 +487,8 @@ def parse_document_layout(filename):
                         paragraphs.append(p)
                     last_par = p
         # close last div
-        last_par.end_line = len(lines) - 1
-        last_div_node.end_line = len(lines)
+        if last_par:
+            last_par.end_line = len(lines) - 1
+        if last_div_node:
+            last_div_node.end_line = len(lines)
     return root_node, variables, paragraphs
