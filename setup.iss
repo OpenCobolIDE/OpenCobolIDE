@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "OpenCobolIDE"
-#define MyAppVersion "1.2.0"
+#define MyAppVersion "1.2.1"
 #define MyAppPublisher "Colin Duquesnoy"
 #define MyAppURL "https://launchpad.net/cobcide"
 #define MyAppExeName "OpenCobolIDE.exe"
@@ -24,7 +24,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 LicenseFile=COPYING
 OutputDir=dist
-OutputBaseFilename=OpenCobolIDE_Setup
+OutputBaseFilename=OpenCobolIDE-{#MyAppVersion}_Setup
 SetupIconFile=cobcide\ui\rc\silex-icon.ico
 Compression=lzma
 SolidCompression=yes
