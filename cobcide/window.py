@@ -386,8 +386,10 @@ class MainWindow(QMainWindow):
         """ Saves the current file as"""
         editor = self.__tab_manager.active_tab
         s = Settings()
+        extensions = "Cobol files *.cbl (*.cbl);;Text files *.txt (*.txt *.dat)"
         filename = QFileDialog.getSaveFileName(
-            self, "Choose a save filename", s.last_used_path)[0]
+            self, "Choose a save filename", s.last_used_path, extensions,
+            ".cbl")[0]
         s = Settings()
         if filename != "":
             filename = os.path.normpath(filename)
