@@ -213,10 +213,10 @@ class Runner(QRunnable):
                 stdout, stderr = p.communicate()
                 if stdout:
                     for l in stdout.splitlines():
-                        self.events.lineAvailable.emit(unicode(l))
+                        self.events.lineAvailable.emit(l)
                 if stderr:
                     os.chdir(cwd)
-                    self.events.error.emit(unicode(stderr))
+                    self.events.error.emit(stderr)
                     self.events.lineAvailable.emit(
                         ">Program exited with return code %d" % p.returncode)
                     self.events.finished.emit(True)
