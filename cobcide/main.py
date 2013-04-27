@@ -19,7 +19,6 @@ This module contains the IDE application entry point.
 import os
 import sys
 import logging
-import token
 
 logging.basicConfig()
 import subprocess
