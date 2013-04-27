@@ -122,8 +122,6 @@ def compile(filename, fileType):
         pass
     std_err = p.communicate()[1]
     nb_tokens_expected = 4
-    if sys.platform == "win32":
-        nb_tokens_expected += 1
     if p.returncode != 0:
         lines = std_err.splitlines()
         for line in lines:
