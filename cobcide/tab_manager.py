@@ -139,7 +139,11 @@ class TabManager(QObject):
             icon = QIcon(":/ide-icons/rc/text-x-generic.png")
             tab = GenericEditor(self.__tabWidget)
             tab.fileType = choice
-        pcef.openFileInEditor(tab, filepath, encoding=encoding)
+        filepath = unicode(filepath)
+        try:
+            pcef.openFileInEditor(tab, filepath, encoding=encoding)
+        except UnicodeEncodeError:
+            pass
         index = self.__tabWidget.addTab(
             tab, icon, QFileInfo(filepath).fileName())
         self.__tabWidget.setCurrentIndex(index)
