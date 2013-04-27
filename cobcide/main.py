@@ -19,6 +19,8 @@ This module contains the IDE application entry point.
 import os
 import sys
 import logging
+import token
+
 logging.basicConfig()
 import subprocess
 
@@ -88,10 +90,15 @@ def linux_init():
                     "OpenCobolIDE?",
                     QMessageBox.Yes | QMessageBox.No,
                     QMessageBox.Yes) == QMessageBox.Yes:
-                subprocess.Popen(
-                    [tool, "python", desktop_entry.__file__],
-                    stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                    stdin=subprocess.PIPE).communicate()
+                try:
+                    print subprocess.Popen(
+                        [tool, "python", desktop_entry.__file__],
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                        stdin=subprocess.PIPE).communicate()
+                except:
+                    QMessageBox.warning(None, "Failed to create desktop entry",
+                                        "Could not create desktop entry.\n\nEnsure you have %s installed then restart "
+                                        "the ide" % tool)
             else:
                 # prevent mbox to appear again
                 settings.create_desktop_entry = False
