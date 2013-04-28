@@ -8,3 +8,4 @@
 ./build
 ./dist
 ./cobcide/OpenCobol
+./setup.iss
