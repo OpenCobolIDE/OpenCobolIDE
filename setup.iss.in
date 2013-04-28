@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "OpenCobolIDE"
-#define MyAppVersion "1.2.1"
+#define MyAppVersion "@VERSION@"
 #define MyAppPublisher "Colin Duquesnoy"
 #define MyAppURL "https://launchpad.net/cobcide"
 #define MyAppExeName "OpenCobolIDE.exe"
