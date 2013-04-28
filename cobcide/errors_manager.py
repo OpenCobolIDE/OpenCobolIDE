@@ -18,6 +18,7 @@ Contains a class that manage the errors lists and update the ui accordingly.
 
 An error manager is attached to an open tab.
 """
+from PySide.QtCore import QFileInfo
 from PySide.QtGui import QColor
 from PySide.QtGui import QIcon
 from PySide.QtGui import QListWidgetItem
@@ -43,7 +44,6 @@ class ErrorsManager(object):
         self.colors = {ERROR_TYPE_WARNING: "#FFFF00",
                        ERROR_TYPE_SYNTAX:  "#FF0000"}
         self.__cache_errors = []
-        self.__cache_out_filename = None
 
     def __clear_decorations(self):
         """ Clear all decorations """
@@ -63,39 +63,43 @@ class ErrorsManager(object):
 
     def updateErrors(self):
         """Update errors slot"""
-        self.set_errors(self.__cache_errors, self.__cache_out_filename)
+        self.set_errors(self.__cache_errors)
 
-    def set_errors(self, errors, output_filename):
+    def clear_errors(self):
+        self.__clear_markers()
+        self.__clear_decorations()
+        self.__cache_errors = []
+
+    def set_errors(self, errors):
         """
         Sets the list of errors (decoration/markers)
 
-        :param errors: The list of errors
-
-        :param output_filename: The output filename
+        :param errors: The list of errors tuple (filename, type, line, msg str)
         """
-        self.__cache_errors = errors
-        self.__cache_out_filename = output_filename
-        # clear all
-        self.__clear_markers()
-        self.__clear_decorations()
-        self.__listWidget.clear()
-        if not len(errors) and output_filename:
-            icon = QIcon(":/ide-icons/rc/accept.png")
-            item = QListWidgetItem(icon, "Compilation succeeded: %s" %
-                                         output_filename)
-            self.__listWidget.addItem(item)
-            return
+        self.__cache_errors += errors
+        # if not len(errors) and output_filename:
+        #     icon = QIcon(":/ide-icons/rc/accept.png")
+        #     item = QListWidgetItem(icon, "Compilation succeeded: %s" %
+        #                                  output_filename)
+        #     self.__listWidget.addItem(item)
+        #     return
         current_cursor = self.__editor.codeEdit.textCursor()
         hbar_pos = self.__editor.codeEdit.horizontalScrollBar().sliderPosition()
         vbar_pos = self.__editor.codeEdit.verticalScrollBar().sliderPosition()
         for error in errors:
-            type = error[0]
-            line = error[1]
-            message = error[2]
-            if type == "Error":
+            filename = error[0]
+            type = error[1]
+            line = error[2]
+            message = error[3]
+            if type == "Success":
+                # nothing to do in case of success
+                return
+            elif type == "Error":
                 type = ERROR_TYPE_SYNTAX
             else:
                 type = ERROR_TYPE_WARNING
+            message = "{0} : {1}".format(QFileInfo(filename).fileName(),
+                                         message)
             self.addError(type, line, message)
         # restore context
         self.__editor.codeEdit.setTextCursor(current_cursor)
@@ -122,5 +126,5 @@ class ErrorsManager(object):
         self.__markers.append(
             self.__checkerPanel.addCheckerMarker(error_type, line, message))
         icon = QIcon(self.__checkerPanel.icons[error_type])
-        item = QListWidgetItem(icon, "{0}: {1}".format(line, message))
-        self.__listWidget.addItem(item)
+        # item = QListWidgetItem(icon, "{0}: {1}".format(line, message))
+        # self.__listWidget.addItem(item)

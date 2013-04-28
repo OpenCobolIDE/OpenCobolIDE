@@ -19,6 +19,8 @@ This module contains functions related to cobol:
     - run cobol program
     - parse cobol document layout
 """
+from fileinput import filename
+from gtk.keysyms import Q
 import os
 import subprocess
 import sys
@@ -29,6 +31,7 @@ from PySide.QtCore import QRunnable
 from PySide.QtCore import Signal
 from PySide.QtGui import QIcon
 from PySide.QtGui import QTreeWidgetItem
+import time
 
 from cobcide import FileType
 from cobcide.settings import Settings
@@ -54,93 +57,178 @@ def get_cobc_version():
     return stdout.splitlines()[0].split(" ")[2]
 
 
-def cmd_from_file_type(filename, fileType):
+def detect_file_type(filename):
     """
-    Creates a compilation command that take cares about the file type.
+    Detect file type:
+        - cobol program
+        - cobol subprogram
+        - text file
 
-    We do not compile a program or a subprogram with the same command, to
-    compile a program we must use the -X switch and use a *.exe extension on
-    windows. To compile a subprogram we must use the *.dll extension on windows
-    and *.so extension on GNU/Linux.
-
-    The base compilation command for every filetype is stored into the
-    corresponding FileType dictionnary.
-
-    :param filename: The full filename
-
-    :param fileType: The file type
-
-    :return: The compilation command string
+    :param filename: The file name to check
     """
-    filename = os.path.normpath(filename)
-    finfo = QFileInfo(filename)
-    dir_path = finfo.dir().path()
-    base_name = QFileInfo(finfo.fileName()).baseName()
-    extension = ".exe"
-    if fileType == FileType.Subprogram:
-        extension = ".so"
+    ext = QFileInfo(filename).suffix()
+    type = FileType.Text
+    if ext == "cbl":
+        # if cbl -> open file and check if there is a
+        # "PROCEDURE DIVISION USING"
+        try:
+            # assume this is a program
+            type = FileType.Program
+            with open(filename, 'r') as f:
+                lines = f.readlines()
+                for l in lines:
+                    # This is a subprogram
+                    if "PROCEDURE DIVISION USING" in l.upper():
+                        type = FileType.Subprogram
+                        break
+        except IOError or OSError:
+            pass
+    return type
+
+
+def parse_dependencies(filename):
+    directory = QFileInfo(filename).dir().path()
+    dependencies = []
+    with open(filename, 'r') as f:
+        for l in f.readlines():
+            if 'CALL' in l:
+                raw_tokens = l.split(" ")
+                tokens = []
+                for t in raw_tokens:
+                    if not t.isspace() and t != "":
+                        tokens.append(t)
+                dependency = os.path.join(directory, tokens[1].replace('"', "") + ".cbl")
+                if os.path.exists(dependency):
+                    file_type = detect_file_type(dependency)
+                    dependencies.append((dependency, file_type))
+                    dependencies += parse_dependencies(dependency)
+    return dependencies
+
+
+class CompilerThreadEvents(QObject):
+    """
+    Groups CompilerThread events.
+    """
+    msgReady = Signal(unicode, unicode, int, unicode)
+    finished = Signal(bool)
+
+
+class CompilerThread(QRunnable):
+    def __init__(self, filename, filetype):
+        QRunnable.__init__(self)
+        self.filename = filename
+        self.fileType = filetype
+        self.events = CompilerThreadEvents()
+
+    def run(self):
+        dependencies = parse_dependencies(self.filename)
+
+        def make_unique_sorted(seq):
+            # order preserving
+            checked = []
+            for e in seq:
+                if e not in checked:
+                    checked.append(e)
+            return sorted(checked)
+
+        dependencies = make_unique_sorted(dependencies)
+        for filename, filetype in dependencies:
+            results = self.compile(filename, filetype)
+            for result in results:
+                self.events.msgReady.emit(result[0], result[1], result[2], result[3])
+        results = self.compile(self.filename, self.fileType)
+        for result in results:
+            self.events.msgReady.emit(result[0], result[1], result[2], result[3])
+        self.events.finished.emit(True)
+
+    def cmd_from_file_type(self, filename, fileType):
+        """
+        Creates a compilation command that take cares about the file type.
+
+        We do not compile a program or a subprogram with the same command, to
+        compile a program we must use the -X switch and use a *.exe extension on
+        windows. To compile a subprogram we must use the *.dll extension on windows
+        and *.so extension on GNU/Linux.
+
+        The base compilation command for every filetype is stored into the
+        corresponding FileType dictionnary.
+
+        :param filename: The full filename
+
+        :param fileType: The file type
+
+        :return: The compilation command string
+        """
+        filename = os.path.normpath(filename)
+        finfo = QFileInfo(filename)
+        dir_path = finfo.dir().path()
+        base_name = QFileInfo(finfo.fileName()).baseName()
+        extension = ".exe"
+        if fileType == FileType.Subprogram:
+            extension = ".so"
+            if sys.platform == "win32":
+                extension = ".dll"
+        output_filename = os.path.join(dir_path, base_name + extension)
+        output_filename = os.path.normpath(output_filename)
+        if len(fileType[1]) == 4:
+            cmd = [fileType[1][0], fileType[1][1],
+                   fileType[1][2].format(output_filename),
+                   fileType[1][3].format(filename)]
+        else:
+            cmd = [fileType[1][0],
+                   fileType[1][1].format(output_filename),
+                   fileType[1][2].format(filename)]
+        return cmd, output_filename
+
+    def compile(self, filename, fileType):
+        """
+        Compiles a file and return a list of errors/messages
+        """
+        results = []
+        cwd = os.getcwd()
         if sys.platform == "win32":
-            extension = ".dll"
-    output_filename = os.path.join(dir_path, base_name + extension)
-    output_filename = os.path.normpath(output_filename)
-    if len(fileType[1]) == 4:
-        cmd = [fileType[1][0], fileType[1][1],
-               fileType[1][2].format(output_filename),
-               fileType[1][3].format(filename)]
-    else:
-        cmd = [fileType[1][0],
-               fileType[1][1].format(output_filename),
-               fileType[1][2].format(filename)]
-    return cmd, output_filename
-
-
-def compile(filename, fileType):
-    """
-    Compiles a file and return a list of errors/messages
-    """
-    results = []
-    cwd = os.getcwd()
-    if sys.platform == "win32":
-        f_info = QFileInfo(filename)
-        filename = f_info.fileName()
-        os.chdir(f_info.dir().path())
-    cmd, output_filename = cmd_from_file_type(filename, fileType)
-    print cmd
-    # cmd += ["-I","e:\\OpenCobol\\include", "-L", "e:\\OpenCobol\\lib"]
-    if sys.platform == "win32":
-        startupinfo = subprocess.STARTUPINFO()
-        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
-                             startupinfo=startupinfo,
-                             stderr=subprocess.PIPE, env=os.environ.copy())
-    else:
-        p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE, env=os.environ.copy())
-    if sys.platform == "win32":
-        os.chdir(cwd)
-    while p.poll() is None:
-        pass
-    std_err = p.communicate()[1]
-    nb_tokens_expected = 4
-    if p.returncode != 0:
-        lines = std_err.splitlines()
-        for line in lines:
-            tokens = line.split(':')
-            nb_tokens = len(tokens)
-            if nb_tokens == nb_tokens_expected:
-                try:
-                    message = tokens[nb_tokens - 1]
-                    type = tokens[nb_tokens - 2].strip(" ")
-                    line = int(tokens[nb_tokens - 3])
-                    results.append((type, line, message))
-                except ValueError:
-                    pass
-        if not len(results):
-            msg = ""
-            for l in lines:
-                msg += "%s\n" % l
-            results.append(("Error", 0, msg))
-    return results, output_filename
+            f_info = QFileInfo(filename)
+            filename = f_info.fileName()
+            os.chdir(f_info.dir().path())
+        cmd, output_filename = self.cmd_from_file_type(filename, fileType)
+        # cmd += ["-I","e:\\OpenCobol\\include", "-L", "e:\\OpenCobol\\lib"]
+        if sys.platform == "win32":
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+                                 startupinfo=startupinfo,
+                                 stderr=subprocess.PIPE, env=os.environ.copy())
+        else:
+            p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE, env=os.environ.copy())
+        if sys.platform == "win32":
+            os.chdir(cwd)
+        while p.poll() is None:
+            pass
+        std_err = p.communicate()[1]
+        nb_tokens_expected = 4
+        if p.returncode != 0:
+            lines = std_err.splitlines()
+            for line in lines:
+                tokens = line.split(':')
+                nb_tokens = len(tokens)
+                if nb_tokens == nb_tokens_expected:
+                    try:
+                        message = tokens[nb_tokens - 1]
+                        type = tokens[nb_tokens - 2].strip(" ")
+                        line = int(tokens[nb_tokens - 3])
+                        results.append((filename, type, line, message))
+                    except ValueError:
+                        pass
+            if not len(results):
+                msg = ""
+                for l in lines:
+                    msg += "%s\n" % l
+                results.append(("Error", 0, msg))
+        else:
+            results.append((filename, "Success", -1,
+                            "Compilation succeeded"))
+        return results
 
 
 class RunnerEvents(QObject):

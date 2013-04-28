@@ -23,7 +23,7 @@ import sys
 from PySide.QtCore import QFileInfo
 from PySide.QtCore import QThreadPool
 from PySide.QtCore import Slot
-from PySide.QtGui import QAction
+from PySide.QtGui import QAction, QIcon
 from PySide.QtGui import QActionGroup
 from PySide.QtGui import QFileDialog
 from PySide.QtGui import QLabel
@@ -225,34 +225,6 @@ class MainWindow(QMainWindow):
             encoding = sys.getfilesystemencoding()
         return encoding
 
-    def __detect_file_type(self, filename):
-        """
-        Detect file type:
-            - cobol program
-            - cobol subprogram
-            - text file
-
-        :param filename: The file name to check
-        """
-        ext = QFileInfo(filename).suffix()
-        type = FileType.Text
-        if ext == "cbl":
-            # if cbl -> open file and check if there is a
-            # "PROCEDURE DIVISION USING"
-            try:
-                # assume this is a program
-                type = FileType.Program
-                with open(filename, 'r') as f:
-                    lines = f.readlines()
-                    for l in lines:
-                        # This is a subprogram
-                        if "PROCEDURE DIVISION USING" in l.upper():
-                            type = FileType.Subprogram
-                            break
-            except IOError or OSError:
-                pass
-        return type
-
     def __open_file(self, filename, filetype=None):
         """
         Open a file in a new editor tab
@@ -270,7 +242,7 @@ class MainWindow(QMainWindow):
             try:
                 # detect file type if file type is None
                 if not filetype:
-                    filetype = self.__detect_file_type(filename)
+                    filetype = cobol.detect_file_type(filename)
                 # detect encoding
                 encoding = self.__detect_encoding(filename)
                 # open a tab
@@ -417,13 +389,43 @@ class MainWindow(QMainWindow):
         """
         Compiles current file
         """
+        dependencies = cobol.parse_dependencies(self.__tab_manager.active_tab_filename)
+        for filename, filetype in dependencies:
+            tab = self.__tab_manager.get_tab_by_filename(filename)
+            if tab:
+                tab.errors_manager.clear_errors()
         self.__ui.tabWidgetLogs.setCurrentIndex(0)
+        self.__ui.listWidgetErrors.clear()
+        self.__tab_manager.active_tab.errors_manager.clear_errors()
         self.on_actionSave_triggered()
-        filename = self.__tab_manager.active_tab_filename
-        errors, output_filename = cobol.compile(
-            filename, self.__tab_manager.active_tab_type)
-        self.__tab_manager.active_tab.errors_manager.set_errors(errors,
-                                                                output_filename)
+        self.compile(self.__tab_manager.active_tab_filename,
+                     self.__tab_manager.active_tab_type)
+
+    def compile(self, filename, filetype):
+        runnable = cobol.CompilerThread(filename, filetype)
+        runnable.setAutoDelete(True)
+        runnable.events.finished.connect(self.__ui.actionCompile.setEnabled)
+        runnable.events.msgReady.connect(self.on_compiler_msg_ready)
+        # runnable.run()
+        self.__threadPool.start(runnable)
+
+    def on_compiler_msg_ready(self, filename, type, line, msg):
+        tab = self.__tab_manager.get_tab_by_filename(filename)
+        if tab:
+            tab.errors_manager.set_errors([(filename, type, line, msg)])
+        if type == "Success":
+            icon = QIcon(":/ide-icons/rc/accept.png")
+            if tab:
+                tab.errors_manager.clear_errors()
+        elif type == "Error":
+            icon = QIcon(":/icons/rc/marker_error.png")
+        else:
+            icon = QIcon(":/icons/rc/marker_warning.png")
+        if line != -1:
+            item = QListWidgetItem(icon, "{0}:{1}: {2}".format(filename, line, msg))
+        else:
+            item = QListWidgetItem(icon, "{0}: {1}".format(filename, msg))
+        self.__ui.listWidgetErrors.addItem(item)
 
     @Slot()
     def on_actionRun_triggered(self):
@@ -465,10 +467,15 @@ class MainWindow(QMainWindow):
         :param item: QListWidgetItem
         """
         try:
-            line = int(item.text().split(':')[0])
-            c = cursorForPosition(self.__tab_manager.active_tab.codeEdit, line,
-                          column=1)
-            self.__tab_manager.active_tab.codeEdit.setTextCursor(c)
+            tokens = item.text().split(':')
+            filename = tokens[0]
+            line = int(tokens[1])
+            tab = self.__tab_manager.get_tab_by_filename(filename)
+            if tab:
+                self.__tab_manager.activate_tab_by_filename(filename)
+                c = cursorForPosition(self.__tab_manager.active_tab.codeEdit, line,
+                              column=1)
+                tab.codeEdit.setTextCursor(c)
         except ValueError:
             pass
 

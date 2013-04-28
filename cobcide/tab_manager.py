@@ -245,3 +245,14 @@ class TabManager(QObject):
                 s.show_line_numbers
             self.__tabWidget.widget(i).codeCompletionMode.enabled = \
                 s.enable_cc
+
+    def get_tab_by_filename(self, filename):
+        for i in range(self.__tabWidget.count()):
+            if self.__tabWidget.widget(i).codeEdit.tagFilename == filename:
+                return self.__tabWidget.widget(i)
+        return None
+
+    def activate_tab_by_filename(self, filename):
+        for i in range(self.__tabWidget.count()):
+            if self.__tabWidget.widget(i).codeEdit.tagFilename == filename:
+                self.__tabWidget.setCurrentIndex(i)
