@@ -79,6 +79,7 @@ class MainWindow(QMainWindow):
         self.__tab_manager.tabChanged.connect(self.__on_current_tab_changed)
         self.__tab_manager.cursorPosChanged.connect(
             self.__on_cursor_pos_changed)
+        self._last_program = None
 
         # setup program/subprogram action group
         ag = QActionGroup(self)
@@ -166,11 +167,10 @@ class MainWindow(QMainWindow):
                 if self.__tab_manager.active_tab_type == FileType.Program:
                     self.__ui.actionProgram.setChecked(True)
                     self.__ui.actionSubprogram.setChecked(False)
-                elif self.__tab_manager.active_tab_type == \
-                        FileType.Subprogram:
+                elif self.__tab_manager.active_tab_type == FileType.Subprogram:
                     self.__ui.actionProgram.setChecked(False)
                     self.__ui.actionSubprogram.setChecked(True)
-                    self.__ui.actionRun.setEnabled(False)
+                    self.__ui.actionRun.setEnabled(self._last_program is not None)
             else:
                 # this is a regular text file, we can only save it everything
                 # else is disabled
@@ -433,6 +433,8 @@ class MainWindow(QMainWindow):
         self.__ui.tabWidgetLogs.setCurrentIndex(1)
         self.__ui.plainTextEditOutput.clear()
         filename = self.__tab_manager.active_tab_filename
+        if self.__tab_manager.active_tab_type == FileType.Subprogram:
+            filename = self._last_program
         runner = cobol.Runner(filename)
         runner.setAutoDelete(True)
         runner.events.finished.connect(self.__ui.actionRun.setEnabled)
@@ -440,6 +442,7 @@ class MainWindow(QMainWindow):
             self.__ui.plainTextEditOutput.appendPlainText)
         runner.events.error.connect(self.__on_run_error)
         self.__threadPool.start(runner)
+        self._last_program = filename
 
     @Slot(str)
     def __on_run_error(self, msg):
