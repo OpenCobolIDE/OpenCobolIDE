@@ -19,8 +19,7 @@ This module contains functions related to cobol:
     - run cobol program
     - parse cobol document layout
 """
-from fileinput import filename
-from gtk.keysyms import Q
+import datetime
 import os
 import subprocess
 import sys
@@ -31,7 +30,6 @@ from PySide.QtCore import QRunnable
 from PySide.QtCore import Signal
 from PySide.QtGui import QIcon
 from PySide.QtGui import QTreeWidgetItem
-import time
 
 from cobcide import FileType
 from cobcide.settings import Settings
@@ -57,6 +55,11 @@ def get_cobc_version():
     return stdout.splitlines()[0].split(" ")[2]
 
 
+def modification_date(filename):
+    t = os.path.getmtime(filename)
+    return datetime.datetime.fromtimestamp(t)
+
+
 def detect_file_type(filename):
     """
     Detect file type:
@@ -69,8 +72,6 @@ def detect_file_type(filename):
     ext = QFileInfo(filename).suffix()
     type = FileType.Text
     if ext == "cbl":
-        # if cbl -> open file and check if there is a
-        # "PROCEDURE DIVISION USING"
         try:
             # assume this is a program
             type = FileType.Program
@@ -191,7 +192,12 @@ class CompilerThread(QRunnable):
             filename = f_info.fileName()
             os.chdir(f_info.dir().path())
         cmd, output_filename = self.cmd_from_file_type(filename, fileType)
-        # cmd += ["-I","e:\\OpenCobol\\include", "-L", "e:\\OpenCobol\\lib"]
+        # avoid compiling up to date file
+        if (os.path.exists(output_filename) and
+           modification_date(filename) < modification_date(output_filename)):
+            results.append((filename, "Success", -1,
+                            "Already up to date"))
+            return results
         if sys.platform == "win32":
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW

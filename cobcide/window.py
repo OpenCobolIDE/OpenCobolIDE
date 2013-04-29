@@ -406,7 +406,6 @@ class MainWindow(QMainWindow):
         runnable.setAutoDelete(True)
         runnable.events.finished.connect(self.__ui.actionCompile.setEnabled)
         runnable.events.msgReady.connect(self.on_compiler_msg_ready)
-        # runnable.run()
         self.__threadPool.start(runnable)
 
     def on_compiler_msg_ready(self, filename, type, line, msg):
