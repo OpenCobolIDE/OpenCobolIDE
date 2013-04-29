@@ -389,24 +389,28 @@ class MainWindow(QMainWindow):
         """
         Compiles current file
         """
-        dependencies = cobol.parse_dependencies(self.__tab_manager.active_tab_filename)
-        for filename, filetype in dependencies:
-            tab = self.__tab_manager.get_tab_by_filename(filename)
+        self.compile(self.__tab_manager.active_tab_filename,
+                     self.__tab_manager.active_tab_type, True)
+
+    def compile(self, filename, filetype, background=True):
+        # clear open tab errors
+        dependencies = cobol.parse_dependencies(filename)
+        for fn, ft in dependencies:
+            tab = self.__tab_manager.get_tab_by_filename(fn)
             if tab:
                 tab.errors_manager.clear_errors()
         self.__ui.tabWidgetLogs.setCurrentIndex(0)
         self.__ui.listWidgetErrors.clear()
         self.__tab_manager.active_tab.errors_manager.clear_errors()
         self.on_actionSave_triggered()
-        self.compile(self.__tab_manager.active_tab_filename,
-                     self.__tab_manager.active_tab_type)
-
-    def compile(self, filename, filetype):
         runnable = cobol.CompilerThread(filename, filetype)
         runnable.setAutoDelete(True)
         runnable.events.finished.connect(self.__ui.actionCompile.setEnabled)
         runnable.events.msgReady.connect(self.on_compiler_msg_ready)
-        self.__threadPool.start(runnable)
+        if background:
+            self.__threadPool.start(runnable)
+        else:
+            runnable.run()
 
     def on_compiler_msg_ready(self, filename, type, line, msg):
         tab = self.__tab_manager.get_tab_by_filename(filename)
@@ -436,6 +440,7 @@ class MainWindow(QMainWindow):
         filename = self.__tab_manager.active_tab_filename
         if self.__tab_manager.active_tab_type == FileType.Subprogram:
             filename = self._last_program
+        self.compile(filename, FileType.Program, background=False)
         runner = cobol.Runner(filename)
         runner.setAutoDelete(True)
         runner.events.finished.connect(self.__ui.actionRun.setEnabled)
