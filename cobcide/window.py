@@ -435,12 +435,12 @@ class MainWindow(QMainWindow):
         """
         Run current file executable
         """
-        self.__ui.tabWidgetLogs.setCurrentIndex(1)
         self.__ui.plainTextEditOutput.clear()
         filename = self.__tab_manager.active_tab_filename
         if self.__tab_manager.active_tab_type == FileType.Subprogram:
             filename = self._last_program
         self.compile(filename, FileType.Program, background=False)
+        self.__ui.tabWidgetLogs.setCurrentIndex(1)
         runner = cobol.Runner(filename)
         runner.setAutoDelete(True)
         runner.events.finished.connect(self.__ui.actionRun.setEnabled)
