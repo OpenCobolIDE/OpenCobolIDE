@@ -568,7 +568,7 @@ def parse_document_layout(filename):
                 # PARAGRAPHS
                 elif (last_div_node is not None and
                       "PROCEDURE DIVISION" in last_div_node.name and
-                      line.endswith(".") and
+                      indentation == 7 and not "*" in line and
                       not "EXIT" in line and not "END" in line and not "STOP"
                       in line):
                     if last_par:
