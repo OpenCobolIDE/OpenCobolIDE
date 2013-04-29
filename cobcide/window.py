@@ -120,6 +120,9 @@ class MainWindow(QMainWindow):
         # show the home page
         self.__on_current_tab_changed(None, "")
 
+        # compilation status
+        self._compilation_error = False
+
     def __update_view_toolbar_menu(self):
         """
         Updates the View>Toolbars menu
@@ -394,6 +397,7 @@ class MainWindow(QMainWindow):
 
     def compile(self, filename, filetype, background=True):
         # clear open tab errors
+        self._compilation_error = False
         dependencies = cobol.parse_dependencies(filename)
         for fn, ft in dependencies:
             tab = self.__tab_manager.get_tab_by_filename(fn)
@@ -422,6 +426,7 @@ class MainWindow(QMainWindow):
                 tab.errors_manager.clear_errors()
         elif type == "Error":
             icon = QIcon(":/icons/rc/marker_error.png")
+            self._compilation_error = True
         else:
             icon = QIcon(":/icons/rc/marker_warning.png")
         if line != -1:
@@ -440,15 +445,16 @@ class MainWindow(QMainWindow):
         if self.__tab_manager.active_tab_type == FileType.Subprogram:
             filename = self._last_program
         self.compile(filename, FileType.Program, background=False)
-        self.__ui.tabWidgetLogs.setCurrentIndex(1)
-        runner = cobol.Runner(filename)
-        runner.setAutoDelete(True)
-        runner.events.finished.connect(self.__ui.actionRun.setEnabled)
-        runner.events.lineAvailable.connect(
-            self.__ui.plainTextEditOutput.appendPlainText)
-        runner.events.error.connect(self.__on_run_error)
-        self.__threadPool.start(runner)
-        self._last_program = filename
+        if not self._compilation_error:
+            self.__ui.tabWidgetLogs.setCurrentIndex(1)
+            runner = cobol.Runner(filename)
+            runner.setAutoDelete(True)
+            runner.events.finished.connect(self.__ui.actionRun.setEnabled)
+            runner.events.lineAvailable.connect(
+                self.__ui.plainTextEditOutput.appendPlainText)
+            runner.events.error.connect(self.__on_run_error)
+            self.__threadPool.start(runner)
+            self._last_program = filename
 
     @Slot(str)
     def __on_run_error(self, msg):
@@ -472,8 +478,12 @@ class MainWindow(QMainWindow):
         """
         try:
             tokens = item.text().split(':')
-            filename = tokens[0]
-            line = int(tokens[1])
+            if sys.platform == "win32":
+                filename = tokens[0] + ":" + tokens[1]
+                line = int(tokens[2])
+            else:
+                filename = tokens[0]
+                line = int(tokens[1])
             tab = self.__tab_manager.get_tab_by_filename(filename)
             if tab:
                 self.__tab_manager.activate_tab_by_filename(filename)

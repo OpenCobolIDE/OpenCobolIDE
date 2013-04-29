@@ -190,11 +190,14 @@ class CompilerThread(QRunnable):
         if sys.platform == "win32":
             f_info = QFileInfo(filename)
             filename = f_info.fileName()
+            dir = os.path.normpath(f_info.dir().path())
             os.chdir(f_info.dir().path())
         cmd, output_filename = self.cmd_from_file_type(filename, fileType)
         # avoid compiling up to date file
         if (os.path.exists(output_filename) and
            modification_date(filename) < modification_date(output_filename)):
+            if sys.platform == "win32":
+                filename = os.path.join(dir, filename)
             results.append((filename, "Success", -1,
                             "Already up to date"))
             return results
@@ -223,6 +226,8 @@ class CompilerThread(QRunnable):
                         message = tokens[nb_tokens - 1]
                         type = tokens[nb_tokens - 2].strip(" ")
                         line = int(tokens[nb_tokens - 3])
+                        if sys.platform == "win32":
+                            filename = os.path.join(dir, filename)
                         results.append((filename, type, line, message))
                     except ValueError:
                         pass
@@ -232,6 +237,8 @@ class CompilerThread(QRunnable):
                     msg += "%s\n" % l
                 results.append(("Error", 0, msg))
         else:
+            if sys.platform == "win32":
+                filename = os.path.join(dir, filename)
             results.append((filename, "Success", -1,
                             "Compilation succeeded"))
         return results

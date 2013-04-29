@@ -248,7 +248,8 @@ class TabManager(QObject):
 
     def get_tab_by_filename(self, filename):
         for i in range(self.__tabWidget.count()):
-            if self.__tabWidget.widget(i).codeEdit.tagFilename == filename:
+            cf = self.__tabWidget.widget(i).codeEdit.tagFilename
+            if cf == filename:
                 return self.__tabWidget.widget(i)
         return None
 
