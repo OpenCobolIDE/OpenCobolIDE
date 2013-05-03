@@ -32,6 +32,8 @@ from pcef.panels.folding import FoldPanel
 from pcef.panels.lines import LineNumberPanel
 from pcef.panels.misc import CheckersMarkerPanel
 from pcef.panels.search import SearchPanel
+from pcef.modes.cc import WORD_SEPARATORS
+WORD_SEPARATORS.remove("-")
 
 from cobcide import FileType
 from cobcide.cc import CobolCompletionModel
@@ -159,22 +161,19 @@ class CobolEditor(CodeEditorWidget):
         CodeEditorWidget.__init__(self, parent)
         self.__file_type = FileType.Program
         self.errors_manager = None
-        # customise editor style (the default pygments style looks awesome for
-        # cobol)
-        # self.currentStyle.pygmentsStyle = "default"
-        # self.currentStyle.showWhitespaces = False
         self.currentStyle = Settings().style
-        # Install actions
-        self._installActions()
         # Install extensions
         self._install_panels()
         self._install_modes()
+        # Install actions
+        self._installActions()
 
     def _install_panels(self):
+        pass
         self.installPanel(FoldPanel(), self.PANEL_ZONE_LEFT)
         self.installPanel(LineNumberPanel(), self.PANEL_ZONE_LEFT)
-        self.installPanel(SearchPanel(), self.PANEL_ZONE_BOTTOM)
         self.installPanel(CheckersMarkerPanel(), self.PANEL_ZONE_LEFT)
+        self.installPanel(SearchPanel(), self.PANEL_ZONE_BOTTOM)
 
     def _install_modes(self):
         self.installMode(CommentsMode())
@@ -206,7 +205,6 @@ class CobolEditor(CodeEditorWidget):
         self.syntaxHighlightingMode.highlighter.hilighlightingBlock.connect(
             self._highlighComments)
         self.installMode(FolderMode())
-
 
     def _installActions(self):
         """

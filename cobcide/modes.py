@@ -167,7 +167,10 @@ class FolderMode(Mode):
     def __on_documentLayoutChanged(self):
         root_node = self.editor.documentAnalyserMode.root_node
         paragraphes = self.editor.documentAnalyserMode.paragraphs
-        foldPanel = self.editor.foldPanel
+        try:
+            foldPanel = self.editor.foldPanel
+        except KeyError:
+            return
         assert isinstance(foldPanel, FoldPanel)
         foldPanel.clearIndicators()
         for div_node in root_node.children:

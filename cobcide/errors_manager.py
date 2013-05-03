@@ -38,7 +38,7 @@ class ErrorsManager(object):
         """
         self.__listWidget = listWidgetErrors
         self.__editor = editor
-        self.__checkerPanel = editor.checkerPanel
+        # self.__editor.checkerPanel = editor.checkerPanel
         self.__markers = []
         self.__decorations = []
         self.colors = {ERROR_TYPE_WARNING: "#FFFF00",
@@ -54,9 +54,9 @@ class ErrorsManager(object):
     def __clear_markers(self):
         """ Clear all markers """
         for marker in self.__markers:
-            if self.__checkerPanel:
+            if self.__editor.checkerPanel:
                 try:
-                    self.__checkerPanel.removeMarker(marker)
+                    self.__editor.checkerPanel.removeMarker(marker)
                 except ValueError:
                     pass
         self.__markers[:] = []
@@ -124,7 +124,7 @@ class ErrorsManager(object):
         self.__decorations.append(deco)
         self.__editor.codeEdit.addDecoration(deco)
         self.__markers.append(
-            self.__checkerPanel.addCheckerMarker(error_type, line, message))
-        icon = QIcon(self.__checkerPanel.icons[error_type])
+            self.__editor.checkerPanel.addCheckerMarker(error_type, line, message))
+        icon = QIcon(self.__editor.checkerPanel.icons[error_type])
         # item = QListWidgetItem(icon, "{0}: {1}".format(line, message))
         # self.__listWidget.addItem(item)
