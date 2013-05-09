@@ -431,9 +431,9 @@ class MainWindow(QMainWindow):
         else:
             icon = QIcon(":/icons/rc/marker_warning.png")
         if line != -1:
-            item = QListWidgetItem(icon, "{0}:{1}: {2}".format(filename, line, msg))
+            item = QListWidgetItem(icon, u"{0}:{1}: {2}".format(filename, line, msg))
         else:
-            item = QListWidgetItem(icon, "{0}: {1}".format(filename, msg))
+            item = QListWidgetItem(icon, u"{0}: {1}".format(filename, msg))
         self.__ui.listWidgetErrors.addItem(item)
 
     @Slot()

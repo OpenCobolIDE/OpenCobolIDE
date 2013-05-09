@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # This file is part of open-cobol-ide.
 # 
 # cobcide is free software: you can redistribute it and/or modify
@@ -20,6 +21,7 @@ This module contains functions related to cobol:
     - parse cobol document layout
 """
 import datetime
+import locale
 import os
 import subprocess
 import sys
@@ -235,7 +237,9 @@ class CompilerThread(QRunnable):
                 msg = ""
                 for l in lines:
                     msg += "%s\n" % l
-                results.append(("Error", 0, msg))
+                if sys.platform == "win32":
+                    filename = os.path.join(dir, filename)
+                results.append((filename, "Error", -1, msg.strip()))
         else:
             if sys.platform == "win32":
                 filename = os.path.join(dir, filename)
@@ -270,21 +274,23 @@ class Runner(QRunnable):
         cwd = os.getcwd()
         os.chdir(dir_path)
         base_name = QFileInfo(finfo.fileName()).baseName()
-        extension = ".exe"
+        extension = u".exe"
         exe_filename = os.path.join(dir_path, base_name + extension)
         exe_filename = os.path.normpath(exe_filename)
-        return cwd, exe_filename
+        return cwd, unicode(exe_filename)
 
     def run(self):
         cwd, exe_filename = self.__get_exe_name()
         if os.path.exists(exe_filename):
-            self.events.lineAvailable.emit("> %s" % exe_filename)
+            self.events.lineAvailable.emit(u"> %s" % exe_filename)
             s = Settings()
             if sys.platform == "win32":
                 if not s.use_external_shell:
                     startupinfo = subprocess.STARTUPINFO()
                     startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-                    p = subprocess.Popen(exe_filename, shell=False,
+                    p = subprocess.Popen(exe_filename.encode(
+                                         locale.getpreferredencoding()),
+                                         shell=False,
                                          startupinfo=startupinfo,
                                          stdin=subprocess.PIPE,
                                          stdout=subprocess.PIPE,
@@ -302,10 +308,10 @@ class Runner(QRunnable):
                 else:
                     wd = QFileInfo(exe_filename).dir().path()
                     os.chdir(wd)
-                    ret_val = os.system(s.shell_cmd + " " +
+                    ret_val = os.system(s.shell_cmd + u" " +
                                         exe_filename)
                     self.events.lineAvailable.emit(
-                        ">Program exited with return code %d"
+                        u">Program exited with return code %d"
                         % ret_val)
                     os.chdir(cwd)
                     self.events.finished.emit(True)
@@ -314,21 +320,22 @@ class Runner(QRunnable):
                 stdout, stderr = p.communicate()
                 if stdout:
                     for l in stdout.splitlines():
+                        l = l.decode("utf-8")
                         self.events.lineAvailable.emit(l)
                 if stderr:
                     os.chdir(cwd)
                     self.events.error.emit(stderr)
                     self.events.lineAvailable.emit(
-                        ">Program exited with return code %d" % p.returncode)
+                        u">Program exited with return code %d" % p.returncode)
                     self.events.finished.emit(True)
                     return
-            self.events.lineAvailable.emit(">Program exited with return code %d"
+            self.events.lineAvailable.emit(u">Program exited with return code %d"
                                            % p.returncode)
             os.chdir(cwd)
             self.events.finished.emit(True)
         else:
-            self.events.lineAvailable.emit("Failed to start %s, file does not "
-                                           "exists" % exe_filename)
+            self.events.lineAvailable.emit(u"Failed to start %s, file does not "
+                                           u"exists" % exe_filename)
             self.events.finished.emit(True)
             os.chdir(cwd)
 
