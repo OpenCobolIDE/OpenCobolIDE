@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Wed Apr 10 11:51:24 2013
+# Created: Thu May  9 16:37:51 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -89,7 +89,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtGui.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1000, 20))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1000, 25))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtGui.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -267,7 +267,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "OpenCobolIDE", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolBarFile.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Tollbar File", None, QtGui.QApplication.UnicodeUTF8))
+        self.toolBarFile.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Toolbar File", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBarCode.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Toolbar Code", None, QtGui.QApplication.UnicodeUTF8))
         self.dockWidgetLogs.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Logs", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidgetLogs.setTabText(self.tabWidgetLogs.indexOf(self.tab_3), QtGui.QApplication.translate("MainWindow", "Compiler", None, QtGui.QApplication.UnicodeUTF8))
