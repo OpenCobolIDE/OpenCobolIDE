@@ -240,8 +240,6 @@ class MainWindow(QMainWindow):
         app_settings = Settings()
         if filename != "" and os.path.exists(filename):
             filename = os.path.normpath(filename)
-            self.__ui.stackedWidget.setCurrentIndex(
-                    self.PAGE_EDITOR)
             try:
                 # detect file type if file type is None
                 if not filetype:
@@ -263,6 +261,8 @@ class MainWindow(QMainWindow):
                     tab.documentAnalyserMode.documentLayoutChanged.connect(
                         self.__update_navigation_panel)
                 # update ui
+                self.__ui.stackedWidget.setCurrentIndex(
+                    self.PAGE_EDITOR)
                 self.__update_toolbar()
                 self.__ui.wHomePage.setCurrentFile(filename)
             except UnicodeDecodeError:
@@ -396,6 +396,7 @@ class MainWindow(QMainWindow):
                      self.__tab_manager.active_tab_type, True)
 
     def compile(self, filename, filetype, background=True):
+        self.__ui.dockWidgetLogs.show()
         # clear open tab errors
         self._compilation_error = False
         dependencies = cobol.parse_dependencies(filename)
@@ -509,7 +510,8 @@ class MainWindow(QMainWindow):
                 if widget.errors_manager:
                     widget.errors_manager.updateErrors()
                 widget.documentAnalyserMode.parse()
-                self.__ui.dockWidgetNavPanel.show()
+                if self.__ui.stackedWidget.currentIndex() == 0:
+                    self.__ui.dockWidgetNavPanel.show()
             else:
                 self.__ui.listWidgetErrors.clear()
                 self.__ui.dockWidgetNavPanel.hide()
@@ -519,7 +521,8 @@ class MainWindow(QMainWindow):
             self.__ui.mnuActiveEditor.clear()
             self.__ui.mnuActiveEditor.addActions(
                 widget.codeEdit.contextMenu.actions())
-            self.__ui.dockWidgetLogs.show()
+            if self.__ui.stackedWidget.currentIndex() == 0:
+                self.__ui.dockWidgetLogs.show()
             self.__ui.menuBar.show()
             self.__ui.toolBarCode.show()
             self.__ui.toolBarFile.show()
