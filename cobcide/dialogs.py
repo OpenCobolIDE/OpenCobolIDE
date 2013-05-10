@@ -90,7 +90,7 @@ class DlgAbout(QDialog):
         versions = [cobol.get_cobc_version(),
                     PySide.QtCore.__version__,
                     PySide.__version__,
-                    pcef.pcef_version,
+                    pcef.__version__,
                     pygments.__version__,
                     "1.0",  # there is no __version__ for the QWelcomeWindow
                     ]

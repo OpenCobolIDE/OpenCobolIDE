@@ -169,7 +169,6 @@ class CobolEditor(CodeEditorWidget):
         self._installActions()
 
     def _install_panels(self):
-        pass
         self.installPanel(FoldPanel(), self.PANEL_ZONE_LEFT)
         self.installPanel(LineNumberPanel(), self.PANEL_ZONE_LEFT)
         self.installPanel(CheckersMarkerPanel(), self.PANEL_ZONE_LEFT)
