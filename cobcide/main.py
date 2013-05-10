@@ -118,7 +118,7 @@ def main():
     else:
         linux_init()
     win = MainWindow()
-    win.showNormal()
+    win.show()
     return app.exec_()
 
 

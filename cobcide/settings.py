@@ -38,6 +38,30 @@ class Settings(object):
             styles.addStyle(self.style)
 
     @property
+    def geometry(self):
+        return self._settings.value("mainWindowGeometry")
+
+    @geometry.setter
+    def geometry(self, geometry):
+        self._settings.setValue("mainWindowGeometry", geometry)
+
+    @property
+    def state(self):
+        return self._settings.value("mainWindowState")
+
+    @state.setter
+    def state(self, state):
+        self._settings.setValue("mainWindowState", state)
+
+    @property
+    def maximised(self):
+        return bool(int(self._settings.value("maximised", False)))
+
+    @maximised.setter
+    def maximised(self, value):
+        self._settings.setValue("maximised", int(value))
+
+    @property
     def last_used_path(self):
         """
         Returns the last used open/save path

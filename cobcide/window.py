@@ -20,7 +20,7 @@ import chardet
 import os
 import sys
 
-from PySide.QtCore import QFileInfo
+from PySide.QtCore import QFileInfo, Qt
 from PySide.QtCore import QThreadPool
 from PySide.QtCore import Slot
 from PySide.QtGui import QAction, QIcon
@@ -66,6 +66,12 @@ class MainWindow(QMainWindow):
         # setup ui
         self.__ui = ide_ui.Ui_MainWindow()
         self.__ui.setupUi(self)
+        s = Settings()
+        self.restoreGeometry(s.geometry)
+        self.restoreState(s.state)
+        print s.maximised
+        if s.maximised:
+            self.setWindowState(Qt.WindowMaximized)
         self.__ui.listWidgetErrors.itemDoubleClicked.connect(
             self.__on_error_double_clicked)
         self.__ui.mnuActiveEditor.setEnabled(False)
@@ -278,7 +284,13 @@ class MainWindow(QMainWindow):
         """
         event.ignore()
         if self.__tab_manager.is_clean or self.__tab_manager.cleanup():
-             event.accept()
+            event.accept()
+            s = Settings()
+            s.geometry = self.saveGeometry()
+            s.state = self.saveState()
+            s.maximised = self.isMaximized()
+            print s.maximised
+
 
     @Slot()
     def on_actionNew_triggered(self):
