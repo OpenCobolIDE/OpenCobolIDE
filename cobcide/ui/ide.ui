@@ -391,7 +391,7 @@
     <string>Toggle fullscreen (F12)</string>
    </property>
    <property name="shortcut">
-    <string>F12</string>
+    <string>F11</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -519,6 +519,9 @@
    <property name="toolTip">
     <string>Show/Hide logs window</string>
    </property>
+   <property name="shortcut">
+    <string>F9</string>
+   </property>
   </action>
   <action name="aShowNavWin">
    <property name="checkable">
@@ -529,6 +532,9 @@
    </property>
    <property name="toolTip">
     <string>Show/Hide navigation panel</string>
+   </property>
+   <property name="shortcut">
+    <string>F10</string>
    </property>
   </action>
   <action name="aPreferences">
@@ -547,17 +553,6 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
-   </property>
-  </action>
-  <action name="actionComment_Uncomment">
-   <property name="text">
-    <string>Comment/Uncomment</string>
-   </property>
-   <property name="toolTip">
-    <string>Comment/Uncomment selected/active lines</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+/</string>
    </property>
   </action>
  </widget>

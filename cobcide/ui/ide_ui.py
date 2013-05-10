@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Thu May  9 16:37:51 2013
+# Created: Fri May 10 18:23:49 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -213,8 +213,6 @@ class Ui_MainWindow(object):
         self.aPreferences.setIcon(icon13)
         self.aPreferences.setIconVisibleInMenu(True)
         self.aPreferences.setObjectName("aPreferences")
-        self.actionComment_Uncomment = QtGui.QAction(MainWindow)
-        self.actionComment_Uncomment.setObjectName("actionComment_Uncomment")
         self.toolBarFile.addAction(self.actionNew)
         self.toolBarFile.addAction(self.actionOpen)
         self.toolBarFile.addSeparator()
@@ -303,7 +301,7 @@ class Ui_MainWindow(object):
         self.actionSave_as.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+Shift+S", None, QtGui.QApplication.UnicodeUTF8))
         self.actionFullscreen.setText(QtGui.QApplication.translate("MainWindow", "Fullscreen", None, QtGui.QApplication.UnicodeUTF8))
         self.actionFullscreen.setToolTip(QtGui.QApplication.translate("MainWindow", "Toggle fullscreen (F12)", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionFullscreen.setShortcut(QtGui.QApplication.translate("MainWindow", "F12", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionFullscreen.setShortcut(QtGui.QApplication.translate("MainWindow", "F11", None, QtGui.QApplication.UnicodeUTF8))
         self.actionProgram.setText(QtGui.QApplication.translate("MainWindow", "Program", None, QtGui.QApplication.UnicodeUTF8))
         self.actionProgram.setToolTip(QtGui.QApplication.translate("MainWindow", "<html><head/><body><p>Tells the ide to compile the current file as an executable (.exe)</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSubprogram.setText(QtGui.QApplication.translate("MainWindow", "Subprogram", None, QtGui.QApplication.UnicodeUTF8))
@@ -322,14 +320,13 @@ class Ui_MainWindow(object):
         self.aShowCodeToolbar.setToolTip(QtGui.QApplication.translate("MainWindow", "Show/Hide code toolbar", None, QtGui.QApplication.UnicodeUTF8))
         self.aShowLogsWin.setText(QtGui.QApplication.translate("MainWindow", "Logs", None, QtGui.QApplication.UnicodeUTF8))
         self.aShowLogsWin.setToolTip(QtGui.QApplication.translate("MainWindow", "Show/Hide logs window", None, QtGui.QApplication.UnicodeUTF8))
+        self.aShowLogsWin.setShortcut(QtGui.QApplication.translate("MainWindow", "F9", None, QtGui.QApplication.UnicodeUTF8))
         self.aShowNavWin.setText(QtGui.QApplication.translate("MainWindow", "Navigation", None, QtGui.QApplication.UnicodeUTF8))
         self.aShowNavWin.setToolTip(QtGui.QApplication.translate("MainWindow", "Show/Hide navigation panel", None, QtGui.QApplication.UnicodeUTF8))
+        self.aShowNavWin.setShortcut(QtGui.QApplication.translate("MainWindow", "F10", None, QtGui.QApplication.UnicodeUTF8))
         self.aPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.aPreferences.setToolTip(QtGui.QApplication.translate("MainWindow", "Edit the application settings", None, QtGui.QApplication.UnicodeUTF8))
         self.aPreferences.setShortcut(QtGui.QApplication.translate("MainWindow", "F2", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionComment_Uncomment.setText(QtGui.QApplication.translate("MainWindow", "Comment/Uncomment", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionComment_Uncomment.setToolTip(QtGui.QApplication.translate("MainWindow", "Comment/Uncomment selected/active lines", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionComment_Uncomment.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+/", None, QtGui.QApplication.UnicodeUTF8))
 
 from cobcide.home_page import HomePageWidget
 import ide_rc
