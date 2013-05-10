@@ -55,7 +55,7 @@ class Settings(object):
 
     @property
     def maximised(self):
-        return bool(int(self._settings.value("maximised", False)))
+        return bool(int(self._settings.value("maximised", 0)))
 
     @maximised.setter
     def maximised(self, value):
