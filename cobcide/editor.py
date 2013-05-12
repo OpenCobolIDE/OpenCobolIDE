@@ -34,10 +34,10 @@ from pcef.panels.misc import CheckersMarkerPanel
 from pcef.panels.search import SearchPanel
 from pcef.modes.cc import WORD_SEPARATORS
 WORD_SEPARATORS.remove("-")
+print WORD_SEPARATORS
 
 from cobcide import FileType
 from cobcide.cc import CobolCompletionModel
-from cobcide.cc import COBOL_KEYWORDS
 from cobcide.modes import DocumentAnalyserMode
 from cobcide.modes import FolderMode
 from cobcide.modes import ToUpperMode
@@ -183,8 +183,10 @@ class CobolEditor(CodeEditorWidget):
         self.installMode(CodeCompletionMode())
         self.codeCompletionMode.addModel(CobolCompletionModel(
             self.documentAnalyserMode))
+        self.codeCompletionMode.autoTrigger = True
+        # self.codeCompletionMode.nbTriggerChars = 3
         self.codeCompletionMode.periodIsTrigger = False
-        self.codeCompletionMode.minSuggestions = len(COBOL_KEYWORDS) + 20
+        self.codeCompletionMode.minSuggestions = 20
         # left margin at col = 7
         left_margin = RightMarginMode()
         left_margin.name = "Left Margin"

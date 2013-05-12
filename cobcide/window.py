@@ -69,7 +69,6 @@ class MainWindow(QMainWindow):
         s = Settings()
         self.restoreGeometry(s.geometry)
         self.restoreState(s.state)
-        print s.maximised
         if s.maximised:
             self.setWindowState(Qt.WindowMaximized)
         self.__ui.listWidgetErrors.itemDoubleClicked.connect(
@@ -289,8 +288,6 @@ class MainWindow(QMainWindow):
             s.geometry = self.saveGeometry()
             s.state = self.saveState()
             s.maximised = self.isMaximized()
-            print s.maximised
-
 
     @Slot()
     def on_actionNew_triggered(self):

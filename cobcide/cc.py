@@ -105,16 +105,21 @@ class CobolCompletionModel(CompletionModel):
     def __init__(self, analyserMode):
         super(CobolCompletionModel, self).__init__(priority=1)
         self.analyserMode = analyserMode
+        self.analyserMode.documentLayoutChanged.connect(self._updateSuggestions)
         # customize cobol keywords icons
         self.__reserved_suggestions = []
         for keyword in COBOL_KEYWORDS:
             self.__reserved_suggestions.append(
                 Suggestion(keyword, ":/ide-icons/rc/keyword.png"))
+        self._initialised = False
 
     def update(self, source_code, line, col, filename, encoding):
         """
         Updates the suggestions list
         """
+        pass
+
+    def _updateSuggestions(self):
         self._suggestions[:] = []
         # vars
         variables = self.analyserMode.variables
@@ -130,3 +135,5 @@ class CobolCompletionModel(CompletionModel):
 
         # reserved keywords suggestions
         self._suggestions += self.__reserved_suggestions
+        self._initialised = True
+
