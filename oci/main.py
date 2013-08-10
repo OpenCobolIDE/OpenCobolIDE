@@ -15,7 +15,7 @@ This is module contains the application main function.
 import os
 import sys
 from PyQt4 import QtGui
-
+from oci.main_window import MainWindow
 
 
 def windows_init():
@@ -40,4 +40,10 @@ def main():
     if sys.platform == "win32":
         windows_init()
     # open main window
+    win = MainWindow()
+    win.show()
     app.exec_()
+    
+    
+if __name__ == "__main__":
+    main()

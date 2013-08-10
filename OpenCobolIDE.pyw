@@ -16,5 +16,5 @@ import os
 # setup environement to force pyqode to use PyQt4
 os.environ['QT_API'] = 'PyQt'
 import pyqode.core
-from oci import main
+from oci.main import main
 main()
