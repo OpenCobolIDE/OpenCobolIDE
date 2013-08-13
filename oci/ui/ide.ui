@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1004</width>
-    <height>792</height>
+    <width>1280</width>
+    <height>1024</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1000</width>
-    <height>750</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -46,6 +46,12 @@
         </property>
         <item row="0" column="0">
          <widget class="QHomeWidget" name="QHomeWidget">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="title" stdset="0">
            <string>Welcome to OpenCobolIDE</string>
           </property>
@@ -66,14 +72,7 @@
          <number>6</number>
         </property>
         <item row="0" column="0">
-         <widget class="QTabWidget" name="tabWidget">
-          <property name="currentIndex">
-           <number>-1</number>
-          </property>
-          <property name="tabsClosable">
-           <bool>true</bool>
-          </property>
-         </widget>
+         <widget class="QCodeEditTabWidget" name="tabWidgetEditors"/>
         </item>
        </layout>
       </widget>
@@ -123,9 +122,9 @@
      <item row="0" column="0">
       <widget class="QTabWidget" name="tabWidgetLogs">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
-       <widget class="QWidget" name="tab_3">
+       <widget class="QWidget" name="tabCompiler">
         <attribute name="icon">
          <iconset resource="ide.qrc">
           <normaloff>:/ide-icons/rc/applications-system.png</normaloff>:/ide-icons/rc/applications-system.png</iconset>
@@ -137,6 +136,9 @@
          <string>Show compiler log</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_4">
+         <property name="margin">
+          <number>6</number>
+         </property>
          <item row="0" column="0">
           <widget class="QListWidget" name="listWidgetErrors"/>
          </item>
@@ -151,8 +153,14 @@
          <string>Output</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_5">
+         <property name="margin">
+          <number>6</number>
+         </property>
+         <property name="spacing">
+          <number>6</number>
+         </property>
          <item row="0" column="0">
-          <widget class="QPlainTextEdit" name="plainTextEditOutput"/>
+          <widget class="QInteractiveConsole" name="consoleOutput"/>
          </item>
         </layout>
        </widget>
@@ -166,7 +174,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1004</width>
+     <width>1280</width>
      <height>25</height>
     </rect>
    </property>
@@ -258,6 +266,9 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QGridLayout" name="gridLayout_7">
+     <property name="margin">
+      <number>6</number>
+     </property>
      <item row="0" column="0">
       <widget class="QTreeWidget" name="twNavigation">
        <attribute name="headerVisible">
@@ -534,8 +545,18 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>QCodeEditTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>pyqode.widgets</header>
+  </customwidget>
+  <customwidget>
    <class>QHomeWidget</class>
    <extends>QWidget</extends>
+   <header>pyqode.widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>QInteractiveConsole</class>
+   <extends>QTextEdit</extends>
    <header>pyqode.widgets</header>
   </customwidget>
  </customwidgets>
