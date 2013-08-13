@@ -41,7 +41,7 @@ def main():
         windows_init()
     # open main window
     win = MainWindow()
-    win.show()
+    win.showCentered()
     app.exec_()
     
     
