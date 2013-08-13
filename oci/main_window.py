@@ -12,9 +12,10 @@
 """
 Contains the main window implementation
 """
+import pyqode.core
+from oci import __version__
 from oci.ui import loadUi
-from PyQt4 import QtGui
-from pyqode.widgets import QHomeWidget
+from PyQt4 import QtCore, QtGui
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -22,13 +23,29 @@ class MainWindow(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
         loadUi("ide.ui", self, "ide.qrc")
-        # unable to set icon from them with a fallback in Qt Designer
         self.setupIcons()
-        self.QHomeWidget.setupRecentFiles(organization="CD",
-                           menuRecentFiles=self.menuRecent_files,
-                           actionClearMnuRecentFiles=self.actionClear)
+        self.QHomeWidget.setupRecentFiles(
+            organization="ColinDuquesnoy",
+            menuRecentFiles=self.menuRecent_files,
+            actionClearMnuRecentFiles=self.actionClear)
         self.setupQuickStartActions()
         self.setPage(home=True)
+        self.tabWidgetEditors.lastTabClosed.connect(self.setPage)
+
+    @QtCore.pyqtSlot()
+    def on_actionNew_triggered(self):
+        print("New")
+
+    @QtCore.pyqtSlot()
+    def on_actionOpen_triggered(self):
+        # todo se souvenir du path
+        fn = QtGui.QFileDialog.getOpenFileName(self, "Open a file", "")
+        if fn:
+            tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
+            tab.openFile(fn)
+            self.tabWidgetEditors.addEditorTab(tab)
+            self.setPage(False)
+            self.QHomeWidget.setCurrentFile(fn)
 
     def setupIcons(self):
         docOpenIcon = QtGui.QIcon.fromTheme(
@@ -74,9 +91,19 @@ class MainWindow(QtGui.QMainWindow):
         self.QHomeWidget.addAction(self.actionNew)
         self.QHomeWidget.addAction(self.actionOpen)
         self.QHomeWidget.addAction(self.actionPreferences)
+        self.QHomeWidget.addAction(self.actionHelp)
+        self.QHomeWidget.addAction(self.actionAbout)
         self.QHomeWidget.addAction(self.actionQuit)
 
-    def setPage(self, home=False):
+    def showCentered(self):
+        screenGeometry = QtGui.QApplication.desktop().screenGeometry()
+        x = (screenGeometry.width() - self.width()) / 2
+        y = (screenGeometry.height() - self.height()) / 2
+        print(self.pos().x(), self.pos().y(), x, y)
+        self.move(x, y)
+        self.show()
+
+    def setPage(self, home=True):
         if home:
             self.stackedWidget.setCurrentIndex(0)
             self.menuBar.hide()
@@ -84,3 +111,17 @@ class MainWindow(QtGui.QMainWindow):
             self.toolBarCode.hide()
             self.dockWidgetLogs.hide()
             self.dockWidgetNavPanel.hide()
+            self.setMinimumWidth(800)
+            self.setMaximumHeight(500)
+            self.resize(800, 500)
+            self.showNormal()
+            self.statusBar().showMessage("OpenCobolIDE v.%s" % __version__)
+        else:
+            self.statusBar().clearMessage()
+            self.menuBar.show()
+            self.toolBarFile.show()
+            self.toolBarCode.show()
+            self.dockWidgetLogs.show()
+            self.dockWidgetNavPanel.show()
+            self.stackedWidget.setCurrentIndex(1)
+            self.showMaximized()
