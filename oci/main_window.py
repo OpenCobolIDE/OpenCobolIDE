@@ -12,8 +12,10 @@
 """
 Contains the main window implementation
 """
+import os
 import pyqode.core
 from oci import __version__
+from oci.settings import Settings
 from oci.ui import loadUi
 from PyQt4 import QtCore, QtGui
 
@@ -28,9 +30,14 @@ class MainWindow(QtGui.QMainWindow):
             organization="ColinDuquesnoy",
             menuRecentFiles=self.menuRecent_files,
             actionClearMnuRecentFiles=self.actionClear)
+        self.QHomeWidget.fileOpenRequested.connect(self.openFile)
         self.setupQuickStartActions()
-        self.setPage(home=True)
-        self.tabWidgetEditors.lastTabClosed.connect(self.setPage)
+        self.showHomePage(True)
+        self.tabWidgetEditors.lastTabClosed.connect(self.showHomePage)
+        self.tabWidgetEditors.dirtyChanged.connect(
+            self.actionSave.setEnabled)
+        self.tabWidgetEditors.dirtyChanged.emit(False)
+
 
     @QtCore.pyqtSlot()
     def on_actionNew_triggered(self):
@@ -38,13 +45,37 @@ class MainWindow(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionOpen_triggered(self):
-        # todo se souvenir du path
-        fn = QtGui.QFileDialog.getOpenFileName(self, "Open a file", "")
+        self.openFile(QtGui.QFileDialog.getOpenFileName(
+            self, "Open a file", Settings().lastFilePath,
+            "Cobol files (*.cbl *.cob);; Text files (*.txt *.dat)"))
+
+    @QtCore.pyqtSlot()
+    def on_actionSave_triggered(self):
+        self.tabWidgetEditors.saveCurrent()
+
+    # save as, check if the tab title change
+
+    @QtCore.pyqtSlot()
+    def on_actionQuit_triggered(self):
+        if QtGui.QMessageBox.question(
+                self, "Quit OpenCobolIDE?",
+                "Are you sure you want to quit OpenCobolIDE?",
+                QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
+                QtGui.QMessageBox.No) == QtGui.QMessageBox.Yes:
+            QtGui.QApplication.exit(0)
+
+    def openFile(self, fn):
         if fn:
-            tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
-            tab.openFile(fn)
+            extension = os.path.splitext(fn)[1]
+            if extension.lower() in [".cbl", ".cob"]:
+                print("Cobol editor")
+                tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
+            else:
+                tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
+            Settings().lastFilePath = fn
+            tab.openFile(fn, detectEncoding=True)
             self.tabWidgetEditors.addEditorTab(tab)
-            self.setPage(False)
+            self.showHomePage(False)
             self.QHomeWidget.setCurrentFile(fn)
 
     def setupIcons(self):
@@ -103,7 +134,7 @@ class MainWindow(QtGui.QMainWindow):
         self.move(x, y)
         self.show()
 
-    def setPage(self, home=True):
+    def showHomePage(self, home=True):
         if home:
             self.stackedWidget.setCurrentIndex(0)
             self.menuBar.hide()
@@ -112,16 +143,18 @@ class MainWindow(QtGui.QMainWindow):
             self.dockWidgetLogs.hide()
             self.dockWidgetNavPanel.hide()
             self.setMinimumWidth(800)
-            self.setMaximumHeight(500)
+            self.setMinimumHeight(600)
             self.resize(800, 500)
             self.showNormal()
             self.statusBar().showMessage("OpenCobolIDE v.%s" % __version__)
         else:
-            self.statusBar().clearMessage()
+            self.stackedWidget.setCurrentIndex(1)
             self.menuBar.show()
             self.toolBarFile.show()
             self.toolBarCode.show()
             self.dockWidgetLogs.show()
             self.dockWidgetNavPanel.show()
-            self.stackedWidget.setCurrentIndex(1)
             self.showMaximized()
+            QtGui.QApplication.processEvents()
+            self.statusBar().clearMessage()
+
