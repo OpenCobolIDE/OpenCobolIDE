@@ -25,6 +25,7 @@ from PySide.QtGui import QTextCursor
 
 from pcef.core import Mode
 from pcef.panels.folding import FoldPanel
+import time
 
 from cobcide import cobol
 from cobcide.cobol import DocumentNode
@@ -68,7 +69,6 @@ class ToUpperMode(Mode):
                    line_before_cursor.count('"') % 2 != 0):
                 ev.stop = True
                 tc.insertText(ev.text().upper())
-
 
 
 class DocumentAnalyserMode(Mode, QObject):
@@ -129,6 +129,7 @@ class DocumentAnalyserMode(Mode, QObject):
             - paragraphs
         """
         try:
+            s = time.time()
             root_node, variables, paragraphs = cobol.parse_document_layout(
                 self.editor.codeEdit.tagFilename)
             changed = False
@@ -139,7 +140,9 @@ class DocumentAnalyserMode(Mode, QObject):
             self.__vars = variables
             self.__paragraphs = paragraphs
             if changed:
+                print("changed")
                 self.documentLayoutChanged.emit()
+            print("parse %f" % (time.time() - s))
         except TypeError or IOError:
             pass
 

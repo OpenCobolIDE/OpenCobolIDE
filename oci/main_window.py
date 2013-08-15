@@ -14,10 +14,12 @@ Contains the main window implementation
 """
 import os
 import pyqode.core
+from PyQt4 import QtCore, QtGui
 from oci import __version__
+from oci.editor import QCobolCodeEdit
 from oci.settings import Settings
 from oci.ui import loadUi
-from PyQt4 import QtCore, QtGui
+
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -37,7 +39,6 @@ class MainWindow(QtGui.QMainWindow):
         self.tabWidgetEditors.dirtyChanged.connect(
             self.actionSave.setEnabled)
         self.tabWidgetEditors.dirtyChanged.emit(False)
-
 
     @QtCore.pyqtSlot()
     def on_actionNew_triggered(self):
@@ -64,17 +65,21 @@ class MainWindow(QtGui.QMainWindow):
                 QtGui.QMessageBox.No) == QtGui.QMessageBox.Yes:
             QtGui.QApplication.exit(0)
 
+    def closeEvent(self, QCloseEvent):
+        self.tabWidgetEditors.closeEvent(QCloseEvent)
+
     def openFile(self, fn):
         if fn:
             extension = os.path.splitext(fn)[1]
+            icon = None
             if extension.lower() in [".cbl", ".cob"]:
-                print("Cobol editor")
-                tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
+                tab = QCobolCodeEdit(self.tabWidgetEditors)
+                icon = QtGui.QIcon(tab.icon)
             else:
                 tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
             Settings().lastFilePath = fn
             tab.openFile(fn, detectEncoding=True)
-            self.tabWidgetEditors.addEditorTab(tab)
+            self.tabWidgetEditors.addEditorTab(tab, icon=icon)
             self.showHomePage(False)
             self.QHomeWidget.setCurrentFile(fn)
 
@@ -86,7 +91,8 @@ class MainWindow(QtGui.QMainWindow):
         docSaveAsIcon = QtGui.QIcon.fromTheme(
             "document-save", QtGui.QIcon(":/ide-icons/rc/document-save.png"))
         docNewIcon = QtGui.QIcon.fromTheme(
-            "document-save-as", QtGui.QIcon(":/ide-icons/rc/document-save-as.png"))
+            "document-save-as",
+            QtGui.QIcon(":/ide-icons/rc/document-save-as.png"))
         compileIcon = QtGui.QIcon.fromTheme(
             "application-x-executable", QtGui.QIcon(
                 ":/ide-icons/rc/application-x-executable.png"))
@@ -103,7 +109,8 @@ class MainWindow(QtGui.QMainWindow):
         helpIcon = QtGui.QIcon.fromTheme(
             "help", QtGui.QIcon(":/ide-icons/rc/help.png"))
         preferencesIcon = QtGui.QIcon.fromTheme(
-            "preferences-system", QtGui.QIcon(":/ide-icons/rc/Preferences-system.png"))
+            "preferences-system",
+            QtGui.QIcon(":/ide-icons/rc/Preferences-system.png"))
         self.actionPreferences.setIcon(preferencesIcon)
         self.actionHelp.setIcon(helpIcon)
         self.actionClear.setIcon(clearIcon)
@@ -157,4 +164,3 @@ class MainWindow(QtGui.QMainWindow):
             self.showMaximized()
             QtGui.QApplication.processEvents()
             self.statusBar().clearMessage()
-

@@ -1,1 +1,3 @@
-__author__ = 'colin'
+"""
+Contains function related to open-cobol such as compile, get version,...
+"""
