@@ -13,7 +13,7 @@
 Contains the main window implementation
 """
 import os
-from PyQt4.QtGui import QToolButton, QActionGroup
+from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem
 import pyqode.core
 from PyQt4 import QtCore, QtGui
 from oci import __version__, constants, cobol
@@ -24,6 +24,9 @@ from oci.ui import loadUi
 
 
 class MainWindow(QtGui.QMainWindow):
+
+    compilerMsgReady = QtCore.pyqtSignal(pyqode.core.CheckerMessage)
+    compilationFinished = QtCore.pyqtSignal(bool)
 
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
@@ -43,6 +46,35 @@ class MainWindow(QtGui.QMainWindow):
             self.onCurrentEditorChanged)
         self.tabWidgetEditors.dirtyChanged.emit(False)
         self.setupToolbar()
+        self.jobRunner = pyqode.core.JobRunner(self, nbThreadsMax=1)
+        self.compilerMsgReady.connect(self.addCompilerMsg)
+        self.compilationFinished.connect(self.onCompilationFinished)
+        # todo init those values from settings after restoring the geometry
+        self.wasMaximised = True
+        self.prevSize = self.size()
+
+    @pyqode.core.memoized
+    def makeIcon(self, icon):
+        if isinstance(icon, tuple):
+            return QtGui.QIcon.fromTheme(
+                icon[0], QtGui.QIcon(icon[1]))
+        elif isinstance(icon, str):
+            return QtGui.QIcon(icon)
+        else:
+            return None
+
+    def addCompilerMsg(self, message):
+        if message.line != -1:
+            desc = "{}:{}: {}".format(message.filename,
+                                      message.line, message.description)
+        else:
+            desc = "{}: {}".format(message.filename, message.description)
+        item = QListWidgetItem(self.makeIcon(message.icon), desc)
+        self.listWidgetErrors.addItem(item)
+
+    def onCompilationFinished(self, status):
+        self.actionCompile.setEnabled(True)
+        self.onCurrentEditorChanged(self.tabWidgetEditors.currentIndex())
 
     def setupToolbar(self):
         """
@@ -97,8 +129,45 @@ class MainWindow(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionCompile_triggered(self):
+        self.listWidgetErrors.clear()
+        self.actionCompile.setEnabled(False)
+        self.actionRun.setEnabled(False)
+        self.tabWidgetLogs.setCurrentIndex(0)
         editor = self.tabWidgetEditors.currentWidget()
-        cobol.compile(editor.filePath, editor.programType)
+        self.jobRunner.startJob(self.compileCurrent, False,
+                                editor.filePath, editor.programType)
+        #self.compileCurrent(editor.filePath, editor.programType)
+
+    def compileCurrent(self, filePath, programType):
+        dependencies = cobol.parseDependencies(filePath)
+        globalStatus = True
+        for path, pgmType in dependencies:
+            status, messags = cobol.compile(path, pgmType)
+            globalStatus &= status
+            for msg in messags:
+                self.compilerMsgReady.emit(msg)
+            if status == 0:
+                self.compilerMsgReady.emit(pyqode.core.CheckerMessage(
+                    "Compilation succeeded", pyqode.core.MSG_STATUS_INFO, -1,
+                    icon=":/ide-icons/rc/accept.png",
+                    filename=path))
+            else:
+                self.compilerMsgReady.emit(pyqode.core.CheckerMessage(
+                    "Compilation failed", pyqode.core.MSG_STATUS_ERROR, -1,
+                    filename=path))
+        status, messages = cobol.compile(filePath, programType)
+        for msg in messages:
+            self.compilerMsgReady.emit(msg)
+        if status == 0:
+                self.compilerMsgReady.emit(pyqode.core.CheckerMessage(
+                    "Compilation succeeded", pyqode.core.MSG_STATUS_INFO, -1,
+                    icon=":/ide-icons/rc/accept.png",
+                    filename=filePath))
+        else:
+            self.compilerMsgReady.emit(pyqode.core.CheckerMessage(
+                "Compilation failed", pyqode.core.MSG_STATUS_ERROR, -1,
+                filename=filePath))
+        self.compilationFinished.emit(globalStatus)
 
     def onCurrentEditorChanged(self, index):
         w = self.tabWidgetEditors.widget(index)
@@ -197,15 +266,17 @@ class MainWindow(QtGui.QMainWindow):
 
     def showHomePage(self, home=True):
         if home:
+            self.prevSize = self.size()
+            self.wasMaximised = self.isMaximized()
             self.stackedWidget.setCurrentIndex(0)
             self.menuBar.hide()
             self.toolBarFile.hide()
             self.toolBarCode.hide()
             self.dockWidgetLogs.hide()
             self.dockWidgetNavPanel.hide()
-            self.setMinimumWidth(800)
-            self.setMinimumHeight(600)
-            self.resize(800, 500)
+            self.setMinimumWidth(700)
+            self.setMinimumHeight(400)
+            self.resize(700, 400)
             self.showNormal()
             self.statusBar().showMessage("OpenCobolIDE v.%s" % __version__)
         else:
@@ -215,6 +286,8 @@ class MainWindow(QtGui.QMainWindow):
             self.toolBarCode.show()
             self.dockWidgetLogs.show()
             self.dockWidgetNavPanel.show()
-            self.showMaximized()
+            self.resize(self.prevSize)
+            if self.wasMaximised:
+                self.showMaximized()
             QtGui.QApplication.processEvents()
             self.statusBar().clearMessage()
