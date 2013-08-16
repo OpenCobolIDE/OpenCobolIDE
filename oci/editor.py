@@ -5,6 +5,7 @@ from pygments.lexers.compiled import CobolFreeformatLexer
 import pyqode.core
 from PyQt4 import QtCore
 from pygments.token import Comment
+from oci import cobol
 from oci.code_completion import CobolDocumentWordsProvider, CobolAnalyserProvider
 from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode
 from oci.cobol import CobolFolder
@@ -21,38 +22,21 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
     a cobol code editor widget
     """
 
-    class FileType:
-        """
-        Enumerates the supported file types along with their base compile command
-        string
-        """
-        #: Cobol program (executable compiled with -x switch)
-        Program = (0, ['cobc', '-x', '-o {0}', '{0}'])
-        #: Cobol subprogram (shared object/dll compiled without the -x switch)
-        Subprogram = (1, ['cobc', '-o {0}', '{0}'])
-
     @property
-    def fileType(self):
-        return self.__fileType[0]
+    def programType(self):
+        return self.__fileType
 
-    @fileType.setter
-    def fileType(self, value):
-        if value == 0:
-            self.__fileType = self.FileType.Program
-        else:
-            self.__fileType = self.FileType.Subprogram
+    @programType.setter
+    def programType(self, value):
+        self.__fileType = value
 
     @property
     def icon(self):
         return ":/ide-icons/rc/silex-32x32.png"
 
-    @property
-    def compileCommand(self):
-        return self.__fileType[1]
-
     def __init__(self, parent=None):
         pyqode.core.QCodeEdit.__init__(self, parent)
-        self.__fileType = self.FileType.Program
+        self.__fileType = -1
         self.setLineWrapMode(self.NoWrap)
         self.setupPanels()
         self.setupModes()
@@ -74,7 +58,9 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         """
         self.installMode(pyqode.core.CaretLineHighlighterMode())
 
-        # margins
+        # generic modes
+        self.installMode(pyqode.core.ZoomMode())
+        self.installMode(pyqode.core.SymbolMatcherMode())
 
         # code completion
         self.installMode(pyqode.core.CodeCompletionMode())
@@ -92,47 +78,18 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.syntaxHighlighterMode.blockHighlightFinished.connect(
             self._highlighComments)
 
-
-        self.installMode(pyqode.core.ZoomMode())
-        self.installMode(pyqode.core.SymbolMatcherMode())
-
-        # cobol specific
+        # cobol specific modes
         self.installMode(pyqode.core.RightMarginMode())
         self.installMode(LeftMarginMode())
         self.installMode(ToUpperMode())
         self.installMode(CommentsMode())
 
-
     def openFile(self, filePath, replaceTabsBySpaces=True, encoding=None,
                  detectEncoding=False):
         pyqode.core.QCodeEdit.openFile(self, filePath, replaceTabsBySpaces,
                                        encoding, detectEncoding)
-        self.__fileType = self.detectFileType(filePath)
-        self.foldingPanel.repaint()
-
-    def detectFileType(self, filename):
-        """
-        Detect file type:
-            - cobol program
-            - cobol subprogram
-            - text file
-
-        :param filename: The file name to check
-        """
-        ext = QtCore.QFileInfo(filename).suffix()
-        type = self.FileType.Program
-        if ext == "cbl" or ext == "cob":
-            try:
-                with open(filename, 'r') as f:
-                    lines = f.readlines()
-                    for l in lines:
-                        # This is a subprogram
-                        if "PROCEDURE DIVISION USING" in l.upper():
-                            type = self.FileType.Subprogram
-                            break
-            except IOError or OSError:
-                pass
-        return type
+        self.__fileType = cobol.detectFileType(filePath)
+        print(self.__fileType)
 
     def _highlighComments(self, highlighter, text):
         """
