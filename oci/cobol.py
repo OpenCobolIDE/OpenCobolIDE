@@ -350,9 +350,10 @@ def parse_document_layout(filename):
 
 class CobolFolder(pyqode.core.IndentBasedFoldDetector):
     def getFoldIndent(self, highlighter, block, text):
+        text = text.upper()
         indent = int((len(text) - len(text.lstrip())))
         prev = block.previous()
-        while not len(prev.text().strip()):
+        while prev.isValid() and not len(prev.text().strip()):
             prev = prev.previous()
         pusd = block.previous().userData()
         if len(text.strip()) == 0:
@@ -366,7 +367,7 @@ class CobolFolder(pyqode.core.IndentBasedFoldDetector):
                 return 0
             if "SECTION" in text:
                 return 2
-            if "END" in text:
+            if "END" in text or  "STOP" in text:
                 return pusd.foldIndent
             return 3
         return indent
