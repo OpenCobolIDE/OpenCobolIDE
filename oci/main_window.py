@@ -13,9 +13,10 @@
 Contains the main window implementation
 """
 import os
+from PyQt4.QtGui import QToolButton, QActionGroup
 import pyqode.core
 from PyQt4 import QtCore, QtGui
-from oci import __version__
+from oci import __version__, constants, cobol
 from oci.editor import QCobolCodeEdit
 from oci.settings import Settings
 from oci.ui import loadUi
@@ -38,7 +39,36 @@ class MainWindow(QtGui.QMainWindow):
         self.tabWidgetEditors.lastTabClosed.connect(self.showHomePage)
         self.tabWidgetEditors.dirtyChanged.connect(
             self.actionSave.setEnabled)
+        self.tabWidgetEditors.currentChanged.connect(
+            self.onCurrentEditorChanged)
         self.tabWidgetEditors.dirtyChanged.emit(False)
+        self.setupToolbar()
+
+    def setupToolbar(self):
+        """
+        Setup the toolbar (adds a drop-down button for program types)
+        """
+        # create program type group
+        ag = QActionGroup(self)
+        ag.addAction(self.actionProgram)
+        ag.addAction(self.actionSubprogram)
+        ag.triggered.connect(self.on_programType_triggered)
+        self.programActionGroup = ag
+
+        self.tb = QToolButton()
+        self.tb.setMenu(self.menuProgramType)
+        self.tb.setPopupMode(QToolButton.InstantPopup)
+        self.tb.setText("Executable")
+        self.toolBarCode.insertWidget(self.actionCompile, self.tb)
+        self.toolBarCode.insertSeparator(self.actionCompile)
+
+    def on_programType_triggered(self, action):
+        self.tb.setText(action.text())
+        editor = self.tabWidgetEditors.currentWidget()
+        if action.text() == "Executable":
+            editor.programType = constants.ProgramType.Executable
+        else:
+            editor.programType = constants.ProgramType.Module
 
     @QtCore.pyqtSlot()
     def on_actionNew_triggered(self):
@@ -64,6 +94,30 @@ class MainWindow(QtGui.QMainWindow):
                 QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No) == QtGui.QMessageBox.Yes:
             QtGui.QApplication.exit(0)
+
+    @QtCore.pyqtSlot()
+    def on_actionCompile_triggered(self):
+        editor = self.tabWidgetEditors.currentWidget()
+        cobol.compile(editor.filePath, editor.programType)
+
+    def onCurrentEditorChanged(self, index):
+        w = self.tabWidgetEditors.widget(index)
+        try:
+            if w.programType[0] == constants.ProgramType.Executable[0]:
+                self.programActionGroup.triggered.emit(self.actionProgram)
+                self.actionProgram.setChecked(True)
+                self.actionRun.setEnabled(True)
+                self.actionCompile.setEnabled(True)
+            else:
+                self.programActionGroup.triggered.emit(self.actionSubprogram)
+                self.actionSubprogram.setChecked(True)
+                self.actionRun.setEnabled(False)
+                self.actionCompile.setEnabled(True)
+            self.tb.setEnabled(True)
+        except AttributeError:
+            self.tb.setEnabled(False)
+            self.actionRun.setEnabled(False)
+            self.actionCompile.setEnabled(False)
 
     def closeEvent(self, QCloseEvent):
         self.tabWidgetEditors.closeEvent(QCloseEvent)
