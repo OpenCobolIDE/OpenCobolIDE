@@ -1,12 +1,23 @@
 """
 Contains and functions to cobol source code analysis
 """
+import os
+import sys
+
+if sys.platform != "win32":
+    import pexpect
+else:
+    import winpexpect as pexpect
+
 import pyqode.core
+
 from PyQt4.QtCore import QFileInfo
 from PySide.QtGui import QIcon, QTreeWidgetItem
 
 
 # taken from pygments_ibm_cobol_lexer.__init__.py
+from oci import constants
+
 KEYWORDS = [
     "ACCEPT", "ACCESS", "ADD", "ADDRESS", "ADVANCING", "AFTER", "ALL",
     "ALPHABET",
@@ -371,3 +382,92 @@ class CobolFolder(pyqode.core.IndentBasedFoldDetector):
                 return pusd.foldIndent
             return 3
         return indent
+
+
+def detectFileType(filename):
+    """
+    Detect file type:
+        - cobol program
+        - cobol subprogram
+        - text file
+
+    :param filename: The file name to check
+    """
+    ext = os.path.splitext(filename)[1].lower()
+    type = constants.ProgramType.Executable
+    if ext == ".cbl" or ext == ".cob":
+        try:
+            with open(filename, 'r') as f:
+                lines = f.readlines()
+                for l in lines:
+                    # This is a subprogram
+                    if "PROCEDURE DIVISION USING" in l.upper():
+                        type = constants.ProgramType.Module
+                        break
+        except IOError or OSError:
+            pass
+    return type
+
+
+def parseDependencies(filename):
+    directory = QFileInfo(filename).dir().path()
+    dependencies = []
+    with open(filename, 'r') as f:
+        for l in f.readlines():
+            if 'CALL' in l:
+                raw_tokens = l.split(" ")
+                tokens = []
+                for t in raw_tokens:
+                    if not t.isspace() and t != "":
+                        tokens.append(t)
+                dependency = os.path.join(directory, tokens[1].replace('"', "") + ".cbl")
+                if os.path.exists(dependency):
+                    file_type = detectFileType(dependency)
+                    dependencies.append((dependency, file_type))
+                    dependencies += parseDependencies(dependency)
+
+    def make_unique_sorted(seq):
+        # order preserving
+        checked = []
+        for e in seq:
+            if e not in checked:
+                checked.append(e)
+        return sorted(checked)
+    return make_unique_sorted(dependencies)
+
+
+def compile(filename, fileType, customOptions=None):
+    """
+    Compile a single cobol file, return the compiler exit status and output.
+    The output is a list of checker messages (those can be used to implements
+    a cobol live checker mode)
+    """
+    if customOptions is None:
+        customOptions = []
+    # prepare command
+    customOptionsStr = " ".join(customOptions)
+    outputFilename = os.path.splitext(filename)[0] + fileType[2]
+    cmd = fileType[1].format(customOptionsStr, outputFilename, filename)
+    # run it using pexpect
+    messages = []
+    output, status = pexpect.run(cmd,withexitstatus=True,cwd=os.path.dirname(filename),
+                                 env=os.environ.copy())
+    nbTokensExpected = 4
+    if sys.platform == "win32":
+        nbTokensExpected = 5
+    if status:
+        lines = output.splitlines()
+        for l in lines:
+            tokens = l.split(":")
+            if len(tokens) == nbTokensExpected:
+                desc = tokens[len(tokens) - 1]
+                errType = tokens[len(tokens) - 2]
+                lineNbr = int(tokens[len(tokens) - 3])
+                status = pyqode.core.MSG_STATUS_WARNING
+                if errType == "Error":
+                    status = pyqode.core.MSG_STATUS_ERROR
+                messages.append(pyqode.core.CheckerMessage(
+                    desc, status, lineNbr, filename=filename))
+    print status, output
+    return status, messages
+
