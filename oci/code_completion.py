@@ -30,7 +30,12 @@ class CobolAnalyserProvider(pyqode.core.CompletionProvider):
     def complete(self, code, line, column, completionPrefix,
                  filePath, fileEncoding):
         completions = []
-        root, vars, functions = cobol.parse_document_layout(filePath)
+        try:
+            root, vars, functions = cobol.parse_document_layout(filePath)
+        except AttributeError:
+            root = None
+            vars = []
+            functions = []
         for var in vars:
             completions.append(pyqode.core.Completion(
                 var.name, icon=constants.ICON_VAR))
@@ -38,4 +43,5 @@ class CobolAnalyserProvider(pyqode.core.CompletionProvider):
             completions.append(pyqode.core.Completion(
                 func.name, icon=constants.ICON_PARAGRAPH))
         completions += self.__keywordsCompletions
+
         return completions
