@@ -240,6 +240,14 @@
     <property name="title">
      <string>Cobol</string>
     </property>
+    <widget class="QMenu" name="menuProgramType">
+     <property name="title">
+      <string>Program type</string>
+     </property>
+     <addaction name="actionProgram"/>
+     <addaction name="actionSubprogram"/>
+    </widget>
+    <addaction name="menuProgramType"/>
     <addaction name="separator"/>
     <addaction name="actionCompile"/>
     <addaction name="actionRun"/>
@@ -540,6 +548,25 @@
    </property>
    <property name="shortcut">
     <string>F1</string>
+   </property>
+  </action>
+  <action name="actionProgram">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Executable</string>
+   </property>
+  </action>
+  <action name="actionSubprogram">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Module</string>
    </property>
   </action>
  </widget>
