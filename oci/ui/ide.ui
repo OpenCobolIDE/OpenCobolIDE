@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1022</width>
-    <height>836</height>
+    <width>1104</width>
+    <height>724</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -34,7 +34,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout_6">
@@ -140,7 +140,13 @@
           <number>6</number>
          </property>
          <item row="0" column="0">
-          <widget class="QListWidget" name="listWidgetErrors"/>
+          <widget class="QErrorsTable" name="errorsTable">
+           <column/>
+           <column/>
+           <column/>
+           <column/>
+           <column/>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -174,7 +180,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1022</width>
+     <width>1104</width>
      <height>25</height>
     </rect>
    </property>
@@ -579,6 +585,11 @@
   <customwidget>
    <class>QHomeWidget</class>
    <extends>QWidget</extends>
+   <header>pyqode.widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>QErrorsTable</class>
+   <extends>QTableWidget</extends>
    <header>pyqode.widgets</header>
   </customwidget>
   <customwidget>
