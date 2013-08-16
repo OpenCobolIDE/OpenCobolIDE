@@ -53,28 +53,14 @@ class MainWindow(QtGui.QMainWindow):
         self.wasMaximised = True
         self.prevSize = self.size()
 
-    @pyqode.core.memoized
-    def makeIcon(self, icon):
-        if isinstance(icon, tuple):
-            return QtGui.QIcon.fromTheme(
-                icon[0], QtGui.QIcon(icon[1]))
-        elif isinstance(icon, str):
-            return QtGui.QIcon(icon)
-        else:
-            return None
-
     def addCompilerMsg(self, message):
-        if message.line != -1:
-            desc = "{}:{}: {}".format(message.filename,
-                                      message.line, message.description)
-        else:
-            desc = "{}: {}".format(message.filename, message.description)
-        item = QListWidgetItem(self.makeIcon(message.icon), desc)
-        self.listWidgetErrors.addItem(item)
+        self.errorsTable.addMessage(message)
 
     def onCompilationFinished(self, status):
         self.actionCompile.setEnabled(True)
         self.onCurrentEditorChanged(self.tabWidgetEditors.currentIndex())
+        self.errorsTable.setSortingEnabled(True)
+        self.errorsTable.sortItems(1)
 
     def setupToolbar(self):
         """
@@ -86,7 +72,6 @@ class MainWindow(QtGui.QMainWindow):
         ag.addAction(self.actionSubprogram)
         ag.triggered.connect(self.on_programType_triggered)
         self.programActionGroup = ag
-
         self.tb = QToolButton()
         self.tb.setMenu(self.menuProgramType)
         self.tb.setPopupMode(QToolButton.InstantPopup)
@@ -129,7 +114,8 @@ class MainWindow(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionCompile_triggered(self):
-        self.listWidgetErrors.clear()
+        self.errorsTable.clear()
+        self.errorsTable.setSortingEnabled(False)
         self.actionCompile.setEnabled(False)
         self.actionRun.setEnabled(False)
         self.tabWidgetLogs.setCurrentIndex(0)
@@ -260,7 +246,6 @@ class MainWindow(QtGui.QMainWindow):
         screenGeometry = QtGui.QApplication.desktop().screenGeometry()
         x = (screenGeometry.width() - self.width()) / 2
         y = (screenGeometry.height() - self.height()) / 2
-        print(self.pos().x(), self.pos().y(), x, y)
         self.move(x, y)
         self.show()
 
