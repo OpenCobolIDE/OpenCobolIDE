@@ -562,9 +562,9 @@ class MainWindow(QMainWindow):
         """
         if self.__tab_manager.active_tab_type != FileType.Text:
             if action == self.__ui.actionProgram:
-                self.__tab_manager.active_tab.fileType = FileType.Program
+                self.__tab_manager.active_tab.programType = FileType.Program
             else:
-                self.__tab_manager.active_tab.fileType = FileType.Subprogram
+                self.__tab_manager.active_tab.programType = FileType.Subprogram
         self.__update_toolbar()
 
     @Slot(int, int)
