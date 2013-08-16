@@ -79,7 +79,7 @@ class TabManager(QObject):
 
         :return: cobcide.FileType
         """
-        return self.active_tab.programType
+        return self.active_tab.fileType
 
     @property
     def active_tab_filename(self):
