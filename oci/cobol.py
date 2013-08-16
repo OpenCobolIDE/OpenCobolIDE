@@ -294,7 +294,7 @@ def _extract_paragraph_node(i, last_div_node, last_section_node, line):
     return node
 
 
-def parse_document_layout(filename):
+def parse_document_layout(filename, code=None):
     """
     Parses a cobol file and return  a root DocumentNode that describes the
     layout of the file (sections, divisions, vars,...), a list of paragraphes
@@ -309,54 +309,59 @@ def parse_document_layout(filename):
                              QFileInfo(filename).fileName())
     variables = []
     paragraphs = []
-    with open(filename, "r") as f:
-        last_div_node = None
-        last_section_node = None
-        lines = f.readlines()
-        last_vars = {}
-        last_par = None
-        for i, line in enumerate(lines):
-            indentation = len(line) - len(line.lstrip())
-            if indentation >= 7 and not line.isspace():
-                line = line.strip().upper()
-                # DIVISIONS
-                if "DIVISION" in line.upper():
-                    # remember
-                    if last_div_node is not None:
-                        last_div_node.end_line = i
-                    last_div_node, last_section_node = _extract_div_node(
-                        i, line, root_node, last_section_node)
-                # SECTIONS
-                elif "SECTION" in line:
-                    if last_section_node:
-                        last_section_node.end_line = i
-                    last_section_node = _extract_section_node(
-                        i, last_div_node, last_vars, line)
-                # VARIABLES
-                elif (last_div_node is not None and
-                        "DATA DIVISION" in last_div_node.name):
-                    v = _extract_var_node(
-                        i, indentation, last_section_node, last_vars, line)
-                    if v:
-                        variables.append(v)
-                # PARAGRAPHS
-                elif (last_div_node is not None and
-                      "PROCEDURE DIVISION" in last_div_node.name and
-                      indentation == 7 and not "*" in line and
-                      not "EXIT" in line and not "END" in line and not "STOP"
-                      in line):
-                    if last_par:
-                        last_par.end_line = i
-                    p = _extract_paragraph_node(
-                        i, last_div_node, last_section_node, line)
-                    if p:
-                        paragraphs.append(p)
-                    last_par = p
-        # close last div
-        if last_par:
-            last_par.end_line = len(lines) - 1
-        if last_div_node:
-            last_div_node.end_line = len(lines)
+    if code is None:
+        with open(filename, "r") as f:
+            lines = f.readlines()
+    else:
+        lines = code.splitlines()
+
+    last_div_node = None
+    last_section_node = None
+
+    last_vars = {}
+    last_par = None
+    for i, line in enumerate(lines):
+        indentation = len(line) - len(line.lstrip())
+        if indentation >= 7 and not line.isspace():
+            line = line.strip().upper()
+            # DIVISIONS
+            if "DIVISION" in line.upper():
+                # remember
+                if last_div_node is not None:
+                    last_div_node.end_line = i
+                last_div_node, last_section_node = _extract_div_node(
+                    i, line, root_node, last_section_node)
+            # SECTIONS
+            elif "SECTION" in line:
+                if last_section_node:
+                    last_section_node.end_line = i
+                last_section_node = _extract_section_node(
+                    i, last_div_node, last_vars, line)
+            # VARIABLES
+            elif (last_div_node is not None and
+                    "DATA DIVISION" in last_div_node.name):
+                v = _extract_var_node(
+                    i, indentation, last_section_node, last_vars, line)
+                if v:
+                    variables.append(v)
+            # PARAGRAPHS
+            elif (last_div_node is not None and
+                  "PROCEDURE DIVISION" in last_div_node.name and
+                  indentation == 7 and not "*" in line and
+                  not "EXIT" in line and not "END" in line and not "STOP"
+                  in line):
+                if last_par:
+                    last_par.end_line = i
+                p = _extract_paragraph_node(
+                    i, last_div_node, last_section_node, line)
+                if p:
+                    paragraphs.append(p)
+                last_par = p
+    # close last div
+    if last_par:
+        last_par.end_line = len(lines) - 1
+    if last_div_node:
+        last_div_node.end_line = len(lines)
     return root_node, variables, paragraphs
 
 
@@ -468,6 +473,5 @@ def compile(filename, fileType, customOptions=None):
                 status = pyqode.core.MSG_STATUS_ERROR
             messages.append(pyqode.core.CheckerMessage(
                 desc, status, lineNbr, filename=filename))
-    print status, messages
     return status, messages
 
