@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
-    <height>1024</height>
+    <width>1022</width>
+    <height>836</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -122,7 +122,7 @@
      <item row="0" column="0">
       <widget class="QTabWidget" name="tabWidgetLogs">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tabCompiler">
         <attribute name="icon">
@@ -174,7 +174,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1280</width>
+     <width>1022</width>
      <height>25</height>
     </rect>
    </property>
