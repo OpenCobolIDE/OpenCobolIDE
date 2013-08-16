@@ -87,12 +87,12 @@ class MainWindow(QtGui.QMainWindow):
         docOpenIcon = QtGui.QIcon.fromTheme(
             "document-open", QtGui.QIcon(":/ide-icons/rc/document-open.png"))
         docSaveIcon = QtGui.QIcon.fromTheme(
-            "document-new", QtGui.QIcon(":/ide-icons/rc/document-new.png"))
-        docSaveAsIcon = QtGui.QIcon.fromTheme(
             "document-save", QtGui.QIcon(":/ide-icons/rc/document-save.png"))
+        docSaveAsIcon = QtGui.QIcon.fromTheme(
+            "document-save-as", QtGui.QIcon(":/ide-icons/rc/document-save-as.png"))
         docNewIcon = QtGui.QIcon.fromTheme(
-            "document-save-as",
-            QtGui.QIcon(":/ide-icons/rc/document-save-as.png"))
+            "document-new",
+            QtGui.QIcon(":/ide-icons/rc/document-new.png"))
         compileIcon = QtGui.QIcon.fromTheme(
             "application-x-executable", QtGui.QIcon(
                 ":/ide-icons/rc/application-x-executable.png"))
