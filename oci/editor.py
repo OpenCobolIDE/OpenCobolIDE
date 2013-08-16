@@ -68,6 +68,7 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
             CobolDocumentWordsProvider())
         self.textSaved.connect(self.codeCompletionMode.requestPreload)
         self.codeCompletionMode.addCompletionProvider(CobolAnalyserProvider())
+        self.settings.setValue("triggerSymbols", [], section="codeCompletion")
 
         # auto indent
         self.installMode(pyqode.core.AutoIndentMode())
