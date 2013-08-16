@@ -140,9 +140,7 @@ class DocumentAnalyserMode(Mode, QObject):
             self.__vars = variables
             self.__paragraphs = paragraphs
             if changed:
-                print("changed")
                 self.documentLayoutChanged.emit()
-            print("parse %f" % (time.time() - s))
         except TypeError or IOError:
             pass
 

@@ -90,7 +90,6 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         pyqode.core.QCodeEdit.openFile(self, filePath, replaceTabsBySpaces,
                                        encoding, detectEncoding)
         self.__fileType = cobol.detectFileType(filePath)
-        print(self.__fileType)
 
     def _highlighComments(self, highlighter, text):
         """
