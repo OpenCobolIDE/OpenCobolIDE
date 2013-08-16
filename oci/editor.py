@@ -6,8 +6,11 @@ import pyqode.core
 from PyQt4 import QtCore
 from pygments.token import Comment
 from oci.code_completion import CobolDocumentWordsProvider, CobolAnalyserProvider
-from oci.modes import ToUpperMode, CommentsMode
+from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode
 from oci.cobol import CobolFolder
+
+
+# make pygments hihlighter uses our custom cobol fold detector
 pyqode.core.PygmentsSyntaxHighlighter.LEXERS_FOLD_DETECTORS[
             CobolFreeformatLexer] = CobolFolder()
 
@@ -51,34 +54,54 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         pyqode.core.QCodeEdit.__init__(self, parent)
         self.__fileType = self.FileType.Program
         self.setLineWrapMode(self.NoWrap)
+        self.setupPanels()
+        self.setupModes()
+
+    def setupPanels(self):
+        """
+        Setup the editor's panels
+        """
         self.installPanel(pyqode.core.FoldingPanel())
         self.installPanel(pyqode.core.LineNumberPanel(),
                           pyqode.core.PanelPosition.LEFT)
         self.installPanel(pyqode.core.MarkerPanel())
         self.installPanel(pyqode.core.SearchAndReplacePanel(),
                           pyqode.core.PanelPosition.BOTTOM)
+
+    def setupModes(self):
+        """
+        Setup the editor's modes
+        """
         self.installMode(pyqode.core.CaretLineHighlighterMode())
-        leftMargin = pyqode.core.RightMarginMode()
-        leftMargin.name = "leftMarginMode"
-        self.installMode(leftMargin)
-        leftMargin.marginPos = 7
-        self.installMode(pyqode.core.RightMarginMode())
+
+        # margins
+
+        # code completion
         self.installMode(pyqode.core.CodeCompletionMode())
         self.codeCompletionMode.addCompletionProvider(
             CobolDocumentWordsProvider())
+        self.textSaved.connect(self.codeCompletionMode.requestPreload)
         self.codeCompletionMode.addCompletionProvider(CobolAnalyserProvider())
+
+        # auto indent
         self.installMode(pyqode.core.AutoIndentMode())
         self.autoIndentMode.minIndent = 7
-        self.installMode(pyqode.core.ZoomMode())
-        self.installMode(pyqode.core.FileWatcherMode())
-        self.installMode(pyqode.core.SymbolMatcherMode())
+
+        # syntax highlighter
         self.installMode(pyqode.core.PygmentsSyntaxHighlighter(self.document()))
         self.syntaxHighlighterMode.blockHighlightFinished.connect(
             self._highlighComments)
 
-        self.textSaved.connect(self.codeCompletionMode.requestPreload)
+
+        self.installMode(pyqode.core.ZoomMode())
+        self.installMode(pyqode.core.SymbolMatcherMode())
+
+        # cobol specific
+        self.installMode(pyqode.core.RightMarginMode())
+        self.installMode(LeftMarginMode())
         self.installMode(ToUpperMode())
         self.installMode(CommentsMode())
+
 
     def openFile(self, filePath, replaceTabsBySpaces=True, encoding=None,
                  detectEncoding=False):

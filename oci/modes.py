@@ -3,7 +3,7 @@ Contains cobol specific modes
 """
 from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QTextCursor, QAction
-from pyqode.core import Mode
+from pyqode.core import Mode, RightMarginMode
 
 class ToUpperMode(Mode):
     """
@@ -116,3 +116,23 @@ class CommentsMode(Mode):
            event.key() == Qt.Key_Slash):
             event.accept()
             self.comment()
+
+
+class LeftMarginMode(RightMarginMode):
+    """
+    Show a left margin at column 7
+    """
+    IDENTIFIER = "leftMarginMode"
+
+    def _onInstall(self, editor):
+        RightMarginMode._onInstall(self, editor)
+        # adapt the right margin automatically
+        self.editor.settings.setValue("rightMarginPos", 72)
+        self.marginPos = int(self.editor.settings.addProperty(
+            "leftMarginPos", "7"))
+
+    def _onSettingsChanged(self, section, key):
+        #RightMarginMode._onSettingsChanged(self, section, key)
+        if key == "leftMarginPos" or not key:
+            self.marginPos = self.editor.settings.value("leftMarginPos")
+
