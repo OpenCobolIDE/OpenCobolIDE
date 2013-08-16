@@ -1,6 +1,7 @@
 """
 Contains and functions to cobol source code analysis
 """
+from PyQt4 import QtCore
 import os
 import sys
 
@@ -447,27 +448,26 @@ def compile(filename, fileType, customOptions=None):
     # prepare command
     customOptionsStr = " ".join(customOptions)
     outputFilename = os.path.splitext(filename)[0] + fileType[2]
-    cmd = fileType[1].format(customOptionsStr, outputFilename, filename)
+    cmd = fileType[1].format(customOptionsStr,
+                             QtCore.QFileInfo(outputFilename).fileName(),
+                             QtCore.QFileInfo(filename).fileName())
     # run it using pexpect
     messages = []
     output, status = pexpect.run(cmd,withexitstatus=True,cwd=os.path.dirname(filename),
                                  env=os.environ.copy())
     nbTokensExpected = 4
-    if sys.platform == "win32":
-        nbTokensExpected = 5
-    if status:
-        lines = output.splitlines()
-        for l in lines:
-            tokens = l.split(":")
-            if len(tokens) == nbTokensExpected:
-                desc = tokens[len(tokens) - 1]
-                errType = tokens[len(tokens) - 2]
-                lineNbr = int(tokens[len(tokens) - 3])
-                status = pyqode.core.MSG_STATUS_WARNING
-                if errType == "Error":
-                    status = pyqode.core.MSG_STATUS_ERROR
-                messages.append(pyqode.core.CheckerMessage(
-                    desc, status, lineNbr, filename=filename))
-    print status, output
+    lines = output.splitlines()
+    for l in lines:
+        tokens = l.split(":")
+        if len(tokens) == nbTokensExpected:
+            desc = tokens[len(tokens) - 1]
+            errType = tokens[len(tokens) - 2]
+            lineNbr = int(tokens[len(tokens) - 3])
+            status = pyqode.core.MSG_STATUS_WARNING
+            if errType == "Error":
+                status = pyqode.core.MSG_STATUS_ERROR
+            messages.append(pyqode.core.CheckerMessage(
+                desc, status, lineNbr, filename=filename))
+    print status, messages
     return status, messages
 
