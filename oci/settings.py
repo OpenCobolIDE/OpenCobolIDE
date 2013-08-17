@@ -16,6 +16,7 @@
 """
 Gives an easy and safe access to the app settings
 """
+from PyQt4 import QtCore
 import os
 import sys
 
@@ -29,11 +30,11 @@ from pcef.styles.white import WhiteStyle
 class Settings(object):
 
     def __init__(self):
-        self._settings = QSettings("CD", "OpenCobolIDE")
+        self._settings = QSettings("OCIDE", "OpenCobolIDE")
 
     @property
     def geometry(self):
-        return self._settings.value("mainWindowGeometry")
+        return bytes(self._settings.value("mainWindowGeometry"))
 
     @geometry.setter
     def geometry(self, geometry):
@@ -41,7 +42,7 @@ class Settings(object):
 
     @property
     def state(self):
-        return self._settings.value("mainWindowState")
+        return bytes(self._settings.value("mainWindowState"))
 
     @state.setter
     def state(self, state):
@@ -49,11 +50,35 @@ class Settings(object):
 
     @property
     def maximised(self):
-        return bool(int(self._settings.value("maximised", 0)))
+        return bool(int(self._settings.value("maximised", "0")))
 
     @maximised.setter
     def maximised(self, value):
         self._settings.setValue("maximised", int(value))
+
+    @property
+    def size(self):
+        return self._settings.value("size", QtCore.QSize(900, 700))
+
+    @property
+    def navigationPanelVisible(self):
+        return bool(int(self._settings.value("navigationPanelVisible", "1")))
+
+    @navigationPanelVisible.setter
+    def navigationPanelVisible(self, value):
+        return self._settings.setValue("navigationPanelVisible", int(value))
+
+    @property
+    def logPanelVisible(self):
+        return bool(int(self._settings.value("logPanelVisible", "0")))
+
+    @logPanelVisible.setter
+    def logPanelVisible(self, value):
+        return self._settings.setValue("logPanelVisible", int(value))
+
+    @size.setter
+    def size(self, value):
+        self._settings.setValue("size", value)
 
     @property
     def lastFilePath(self):

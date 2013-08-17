@@ -31,6 +31,15 @@ class MainWindow(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
         loadUi("ide.ui", self, "ide.qrc")
+        #self.errorsTable.setColumnCount(6)
+        self.stackedWidget.setCurrentIndex(0)
+        s = Settings()
+        if s.geometry:
+            self.restoreGeometry(s.geometry)
+        if s.state:
+            self.restoreState(s.state)
+        self.wasMaximised = s.maximised
+        self.prevSize = s.size
         self.setupIcons()
         self.QHomeWidget.setupRecentFiles(
             organization="ColinDuquesnoy",
@@ -49,9 +58,6 @@ class MainWindow(QtGui.QMainWindow):
         self.jobRunner = pyqode.core.JobRunner(self, nbThreadsMax=1)
         self.compilerMsgReady.connect(self.addCompilerMsg)
         self.compilationFinished.connect(self.onCompilationFinished)
-        # todo init those values from settings after restoring the geometry
-        self.wasMaximised = True
-        self.prevSize = self.size()
 
     def addCompilerMsg(self, message):
         self.errorsTable.addMessage(message)
@@ -60,7 +66,7 @@ class MainWindow(QtGui.QMainWindow):
         self.actionCompile.setEnabled(True)
         self.onCurrentEditorChanged(self.tabWidgetEditors.currentIndex())
         self.errorsTable.setSortingEnabled(True)
-        self.errorsTable.sortItems(1)
+        self.errorsTable.sortItems(0)
 
     def setupToolbar(self):
         """
@@ -177,6 +183,14 @@ class MainWindow(QtGui.QMainWindow):
 
     def closeEvent(self, QCloseEvent):
         self.tabWidgetEditors.closeEvent(QCloseEvent)
+        if self.stackedWidget.currentIndex() == 1:
+            s = Settings()
+            s.geometry = self.saveGeometry()
+            s.state = self.saveState()
+            s.maximised = self.isMaximized()
+            s.size = self.size()
+            s.navigationPanelVisible = self.dockWidgetNavPanel.isVisible()
+            s.logPanelVisible = self.dockWidgetLogs.isVisible()
 
     def openFile(self, fn):
         if fn:
@@ -252,8 +266,13 @@ class MainWindow(QtGui.QMainWindow):
 
     def showHomePage(self, home=True):
         if home:
-            self.prevSize = self.size()
-            self.wasMaximised = self.isMaximized()
+            if self.stackedWidget.currentIndex() == 1:
+                self.prevSize = self.size()
+                self.wasMaximised = self.isMaximized()
+                s = Settings()
+                s.navigationPanelVisible = self.dockWidgetNavPanel.isVisible()
+                s.logPanelVisible = self.dockWidgetLogs.isVisible()
+                print(s.navigationPanelVisible, s.logPanelVisible)
             self.stackedWidget.setCurrentIndex(0)
             self.menuBar.hide()
             self.toolBarFile.hide()
@@ -272,7 +291,18 @@ class MainWindow(QtGui.QMainWindow):
                 self.toolBarFile.show()
                 self.toolBarCode.show()
                 self.dockWidgetNavPanel.show()
-                self.resize(self.prevSize)
+                self.setMinimumWidth(900)
+                self.setMinimumHeight(700)
                 if self.wasMaximised:
                     self.showMaximized()
+                else:
+                    if self.prevSize.width() < 900:
+                        self.prevSize.setWidth(900)
+                    if self.prevSize.height() < 700:
+                        self.prevSize.setHeight(700)
+                    self.resize(self.prevSize)
                 self.statusBar().clearMessage()
+                s = Settings()
+                print(s.navigationPanelVisible, s.logPanelVisible)
+                self.dockWidgetNavPanel.setVisible(s.navigationPanelVisible)
+                self.dockWidgetLogs.setVisible(s.logPanelVisible)
