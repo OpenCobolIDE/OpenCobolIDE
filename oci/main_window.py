@@ -213,19 +213,24 @@ class MainWindow(QtGui.QMainWindow):
             self.showNormal()
 
     def openFile(self, fn):
-        if fn:
-            extension = os.path.splitext(fn)[1]
-            icon = None
-            if extension.lower() in [".cbl", ".cob"]:
-                tab = QCobolCodeEdit(self.tabWidgetEditors)
-                icon = QtGui.QIcon(tab.icon)
-            else:
-                tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
-            Settings().lastFilePath = fn
-            tab.openFile(fn, detectEncoding=True)
-            self.tabWidgetEditors.addEditorTab(tab, icon=icon)
-            self.showHomePage(False)
-            self.QHomeWidget.setCurrentFile(fn)
+        try:
+            if fn:
+                extension = os.path.splitext(fn)[1]
+                icon = None
+                if extension.lower() in [".cbl", ".cob"]:
+                    tab = QCobolCodeEdit(self.tabWidgetEditors)
+                    icon = QtGui.QIcon(tab.icon)
+                else:
+                    tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
+                Settings().lastFilePath = fn
+                tab.openFile(fn, detectEncoding=True)
+                self.tabWidgetEditors.addEditorTab(tab, icon=icon)
+                self.showHomePage(False)
+                self.QHomeWidget.setCurrentFile(fn)
+        except IOError:
+            QtGui.QMessageBox.warning(
+                self, "File does not exist",
+                "Cannot open file %s, the file does not exists." % fn)
 
     def setupIcons(self):
         docOpenIcon = QtGui.QIcon.fromTheme(
