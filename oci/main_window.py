@@ -121,6 +121,7 @@ class MainWindow(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionCompile_triggered(self):
+        self.tabWidgetEditors.saveAll()
         self.errorsTable.clear()
         self.errorsTable.setSortingEnabled(False)
         self.actionCompile.setEnabled(False)
