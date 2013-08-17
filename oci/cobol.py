@@ -121,7 +121,7 @@ class DocumentNode(QTreeWidgetItem):
         2:  ":/ide-icons/rc/var.png",
         3:  ":/ide-icons/rc/paragraph.png"}
 
-    def __init__(self, node_type, line, name, description=None):
+    def __init__(self, node_type, line, name, description=None, createIcon=True):
         QTreeWidgetItem.__init__(self)
         self.node_type = node_type
         self.line = line
@@ -132,7 +132,8 @@ class DocumentNode(QTreeWidgetItem):
         self.description = description.replace(".", "")
         self.children = []
         self.setText(0, name)
-        self.setIcon(0, QIcon(self.ICONS[node_type]))
+        if createIcon:
+            self.setIcon(0, QIcon(self.ICONS[node_type]))
         self.setToolTip(0, self.description)
 
     def add_child(self, child):
@@ -178,7 +179,7 @@ def cmp_doc_node(first_node, second_node):
     return ret_val
 
 
-def _extract_div_node(i, line, root_node, last_section_node):
+def _extract_div_node(i, line, root_node, last_section_node, createIcon):
     """
     Extracts a division node from a line
 
@@ -192,7 +193,8 @@ def _extract_div_node(i, line, root_node, last_section_node):
     """
     name = line
     name = name.replace(".", "")
-    node = DocumentNode(DocumentNode.Type.Division, i + 1, name)
+    node = DocumentNode(DocumentNode.Type.Division, i + 1, name,
+                        createIcon=createIcon)
     root_node.add_child(node)
     last_div_node = node
     # do not take previous sections into account
@@ -202,7 +204,7 @@ def _extract_div_node(i, line, root_node, last_section_node):
     return last_div_node, last_section_node
 
 
-def _extract_section_node(i, last_div_node, last_vars, line):
+def _extract_section_node(i, last_div_node, last_vars, line, createIcon):
     """
     Extracts a section node from a line.
 
@@ -219,7 +221,8 @@ def _extract_section_node(i, last_div_node, last_vars, line):
     name = line
     name = name.replace(".", "")
     description = "{0}: {1}".format(i + 1, line)
-    node = DocumentNode(DocumentNode.Type.Section, i + 1, name)
+    node = DocumentNode(DocumentNode.Type.Section, i + 1, name,
+                        createIcon=createIcon)
     last_div_node.add_child(node)
     last_section_node = node
     # do not take previous var into account
@@ -227,7 +230,8 @@ def _extract_section_node(i, last_div_node, last_vars, line):
     return last_section_node
 
 
-def _extract_var_node(i, indentation, last_section_node, last_vars, line):
+def _extract_var_node(i, indentation, last_section_node, last_vars, line,
+                      createIcon):
     """
     Extract a variable node.
 
@@ -269,13 +273,14 @@ def _extract_var_node(i, indentation, last_section_node, last_vars, line):
                 parent_node = last_vars[l]
                 break
     node = DocumentNode(DocumentNode.Type.Variable, i + 1, name,
-                        description)
+                        description, createIcon=createIcon)
     parent_node.add_child(node)
     last_vars[lvl] = node
     return node
 
 
-def _extract_paragraph_node(i, last_div_node, last_section_node, line):
+def _extract_paragraph_node(i, last_div_node, last_section_node, line,
+                            createIcon):
     """
     Extracts a paragraph node
 
@@ -289,12 +294,13 @@ def _extract_paragraph_node(i, last_div_node, last_section_node, line):
     parent_node = last_div_node
     if last_section_node is not None:
         parent_node = last_section_node
-    node = DocumentNode(DocumentNode.Type.Paragraph, i + 1, name)
+    node = DocumentNode(DocumentNode.Type.Paragraph, i + 1, name,
+                        createIcon=createIcon)
     parent_node.add_child(node)
     return node
 
 
-def parse_document_layout(filename, code=None):
+def parse_document_layout(filename, code=None, createIcon=True):
     """
     Parses a cobol file and return  a root DocumentNode that describes the
     layout of the file (sections, divisions, vars,...), a list of paragraphes
@@ -306,7 +312,8 @@ def parse_document_layout(filename, code=None):
     :rtype: DocumentNode, list of DocumentNode, list of DocumentNode
     """
     root_node = DocumentNode(DocumentNode.Type.Root, 0,
-                             QFileInfo(filename).fileName())
+                             QFileInfo(filename).fileName(),
+                             createIcon=createIcon)
     variables = []
     paragraphs = []
     if code is None:
@@ -330,18 +337,19 @@ def parse_document_layout(filename, code=None):
                 if last_div_node is not None:
                     last_div_node.end_line = i
                 last_div_node, last_section_node = _extract_div_node(
-                    i, line, root_node, last_section_node)
+                    i, line, root_node, last_section_node, createIcon)
             # SECTIONS
             elif "SECTION" in line:
                 if last_section_node:
                     last_section_node.end_line = i
                 last_section_node = _extract_section_node(
-                    i, last_div_node, last_vars, line)
+                    i, last_div_node, last_vars, line, createIcon)
             # VARIABLES
             elif (last_div_node is not None and
                     "DATA DIVISION" in last_div_node.name):
                 v = _extract_var_node(
-                    i, indentation, last_section_node, last_vars, line)
+                    i, indentation, last_section_node, last_vars, line,
+                    createIcon)
                 if v:
                     variables.append(v)
             # PARAGRAPHS
@@ -353,7 +361,7 @@ def parse_document_layout(filename, code=None):
                 if last_par:
                     last_par.end_line = i
                 p = _extract_paragraph_node(
-                    i, last_div_node, last_section_node, line)
+                    i, last_div_node, last_section_node, line, createIcon)
                 if p:
                     paragraphs.append(p)
                 last_par = p
@@ -373,7 +381,20 @@ class CobolFolder(pyqode.core.IndentBasedFoldDetector):
         while prev.isValid() and not len(prev.text().strip()):
             prev = prev.previous()
         pusd = block.previous().userData()
+        pb = prev
         if len(text.strip()) == 0:
+            while not len(pb.text().strip()) and pb.isValid():
+                pb = pb.previous()
+            pbIndent = (len(pb.text()) - len(pb.text().lstrip()))
+            # check next blocks to see if their indent is >= then the last block
+            nb = block.next()
+            while not len(nb.text().strip()) and nb.isValid():
+                nb = nb.next()
+            nbIndent = (len(nb.text()) - len(nb.text().lstrip()))
+            # print(pb.userState())
+            if nbIndent >= pbIndent or pb.userState() & 0x7F:
+                if pb.userData():
+                    return pb.userData().foldIndent
             return -1
         if indent == 6:
             if pusd:
