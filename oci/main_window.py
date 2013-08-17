@@ -31,7 +31,6 @@ class MainWindow(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
         loadUi("ide.ui", self, "ide.qrc")
-        #self.errorsTable.setColumnCount(6)
         self.stackedWidget.setCurrentIndex(0)
         s = Settings()
         if s.geometry:
@@ -55,6 +54,8 @@ class MainWindow(QtGui.QMainWindow):
             self.onCurrentEditorChanged)
         self.tabWidgetEditors.dirtyChanged.emit(False)
         self.setupToolbar()
+        self.errorsTable.messageActivated.connect(
+            self.onCompilerMessageActivated)
         self.jobRunner = pyqode.core.JobRunner(self, nbThreadsMax=1)
         self.compilerMsgReady.connect(self.addCompilerMsg)
         self.compilationFinished.connect(self.onCompilationFinished)
@@ -192,6 +193,10 @@ class MainWindow(QtGui.QMainWindow):
             s.navigationPanelVisible = self.dockWidgetNavPanel.isVisible()
             s.logPanelVisible = self.dockWidgetLogs.isVisible()
 
+    def onCompilerMessageActivated(self, message):
+        self.openFile(message.filename)
+        self.tabWidgetEditors.currentWidget().gotoLine(message.line, move=True)
+
     def openFile(self, fn):
         if fn:
             extension = os.path.splitext(fn)[1]
@@ -272,7 +277,6 @@ class MainWindow(QtGui.QMainWindow):
                 s = Settings()
                 s.navigationPanelVisible = self.dockWidgetNavPanel.isVisible()
                 s.logPanelVisible = self.dockWidgetLogs.isVisible()
-                print(s.navigationPanelVisible, s.logPanelVisible)
             self.stackedWidget.setCurrentIndex(0)
             self.menuBar.hide()
             self.toolBarFile.hide()
@@ -303,6 +307,5 @@ class MainWindow(QtGui.QMainWindow):
                     self.resize(self.prevSize)
                 self.statusBar().clearMessage()
                 s = Settings()
-                print(s.navigationPanelVisible, s.logPanelVisible)
                 self.dockWidgetNavPanel.setVisible(s.navigationPanelVisible)
                 self.dockWidgetLogs.setVisible(s.logPanelVisible)
