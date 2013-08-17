@@ -118,6 +118,7 @@ class MainWindow(QtGui.QMainWindow):
         self.errorsTable.setSortingEnabled(False)
         self.actionCompile.setEnabled(False)
         self.actionRun.setEnabled(False)
+        self.dockWidgetLogs.show()
         self.tabWidgetLogs.setCurrentIndex(0)
         editor = self.tabWidgetEditors.currentWidget()
         self.jobRunner.startJob(self.compileCurrent, False,
@@ -265,14 +266,13 @@ class MainWindow(QtGui.QMainWindow):
             self.showNormal()
             self.statusBar().showMessage("OpenCobolIDE v.%s" % __version__)
         else:
-            self.stackedWidget.setCurrentIndex(1)
-            self.menuBar.show()
-            self.toolBarFile.show()
-            self.toolBarCode.show()
-            self.dockWidgetLogs.show()
-            self.dockWidgetNavPanel.show()
-            self.resize(self.prevSize)
-            if self.wasMaximised:
-                self.showMaximized()
-            QtGui.QApplication.processEvents()
-            self.statusBar().clearMessage()
+            if self.stackedWidget.currentIndex() == 0:
+                self.stackedWidget.setCurrentIndex(1)
+                self.menuBar.show()
+                self.toolBarFile.show()
+                self.toolBarCode.show()
+                self.dockWidgetNavPanel.show()
+                self.resize(self.prevSize)
+                if self.wasMaximised:
+                    self.showMaximized()
+                self.statusBar().clearMessage()
