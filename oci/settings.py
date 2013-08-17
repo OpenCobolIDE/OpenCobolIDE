@@ -57,6 +57,14 @@ class Settings(object):
         self._settings.setValue("maximised", int(value))
 
     @property
+    def fullscreen(self):
+        return bool(int(self._settings.value("fullscreen", "0")))
+
+    @fullscreen.setter
+    def fullscreen(self, value):
+        self._settings.setValue("fullscreen", int(value))
+
+    @property
     def size(self):
         return self._settings.value("size", QtCore.QSize(900, 700))
 

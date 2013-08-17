@@ -16,6 +16,7 @@ import os
 import sys
 from PyQt4 import QtGui
 from oci.main_window import MainWindow
+from oci.settings import Settings
 
 
 def windows_init():
@@ -41,7 +42,10 @@ def main():
         windows_init()
     # open main window
     win = MainWindow()
-    win.showCentered()
+    if Settings().fullscreen:
+        win.showFullScreen()
+    else:
+        win.showCentered()
     app.exec_()
     
     

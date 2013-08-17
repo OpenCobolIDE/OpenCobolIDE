@@ -39,6 +39,7 @@ class MainWindow(QtGui.QMainWindow):
             self.restoreState(s.state)
         self.wasMaximised = s.maximised
         self.prevSize = s.size
+        self.actionFullscreen.setChecked(s.fullscreen)
         self.setupIcons()
         self.QHomeWidget.setupRecentFiles(
             organization="ColinDuquesnoy",
@@ -117,6 +118,7 @@ class MainWindow(QtGui.QMainWindow):
                 "Are you sure you want to quit OpenCobolIDE?",
                 QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No) == QtGui.QMessageBox.Yes:
+            self.saveSettings()
             QtGui.QApplication.exit(0)
 
     @QtCore.pyqtSlot()
@@ -183,8 +185,7 @@ class MainWindow(QtGui.QMainWindow):
             self.actionRun.setEnabled(False)
             self.actionCompile.setEnabled(False)
 
-    def closeEvent(self, QCloseEvent):
-        self.tabWidgetEditors.closeEvent(QCloseEvent)
+    def saveSettings(self):
         if self.stackedWidget.currentIndex() == 1:
             s = Settings()
             s.geometry = self.saveGeometry()
@@ -193,10 +194,23 @@ class MainWindow(QtGui.QMainWindow):
             s.size = self.size()
             s.navigationPanelVisible = self.dockWidgetNavPanel.isVisible()
             s.logPanelVisible = self.dockWidgetLogs.isVisible()
+            s.fullscreen = self.isFullScreen()
+            print(s.fullscreen)
+
+    def closeEvent(self, QCloseEvent):
+        self.tabWidgetEditors.closeEvent(QCloseEvent)
+        self.saveSettings()
 
     def onCompilerMessageActivated(self, message):
         self.openFile(message.filename)
         self.tabWidgetEditors.currentWidget().gotoLine(message.line, move=True)
+
+    @QtCore.pyqtSlot()
+    def on_actionFullscreen_triggered(self):
+        if self.actionFullscreen.isChecked():
+            self.showFullScreen()
+        else:
+            self.showNormal()
 
     def openFile(self, fn):
         if fn:
@@ -284,10 +298,11 @@ class MainWindow(QtGui.QMainWindow):
             self.toolBarCode.hide()
             self.dockWidgetLogs.hide()
             self.dockWidgetNavPanel.hide()
-            self.setMinimumWidth(700)
-            self.setMinimumHeight(400)
-            self.resize(700, 400)
-            self.showNormal()
+            if not self.isFullScreen():
+                self.setMinimumWidth(700)
+                self.setMinimumHeight(400)
+                self.resize(700, 400)
+                self.showNormal()
             self.statusBar().showMessage("OpenCobolIDE v.%s" % __version__)
         else:
             if self.stackedWidget.currentIndex() == 0:
