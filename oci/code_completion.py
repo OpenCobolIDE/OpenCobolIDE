@@ -32,7 +32,7 @@ class CobolAnalyserProvider(pyqode.core.CompletionProvider):
         completions = []
         try:
             root, vars, functions = cobol.parse_document_layout(
-                filePath, code=code, createIcon=False)
+                filePath, code=code, createIcon=False, encoding=fileEncoding)
         except AttributeError as e:
             root = None
             vars = []
