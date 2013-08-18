@@ -16,6 +16,7 @@ import os
 from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem
 import pyqode.core
 from PyQt4 import QtCore, QtGui
+import sys
 from oci import __version__, constants, cobol
 from oci.editor import QCobolCodeEdit
 from oci.settings import Settings
@@ -119,7 +120,8 @@ class MainWindow(QtGui.QMainWindow):
                 QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
                 QtGui.QMessageBox.No) == QtGui.QMessageBox.Yes:
             self.saveSettings()
-            QtGui.QApplication.exit(0)
+            QtGui.QApplication.instance().aboutToQuit.emit()
+            sys.exit(0)
 
     @QtCore.pyqtSlot()
     def on_actionCompile_triggered(self):
