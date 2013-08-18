@@ -197,14 +197,17 @@ class MainWindow(QtGui.QMainWindow):
             s.navigationPanelVisible = self.dockWidgetNavPanel.isVisible()
             s.logPanelVisible = self.dockWidgetLogs.isVisible()
             s.fullscreen = self.isFullScreen()
-            print(s.fullscreen)
 
     def closeEvent(self, QCloseEvent):
         self.tabWidgetEditors.closeEvent(QCloseEvent)
         self.saveSettings()
 
     def onCompilerMessageActivated(self, message):
-        self.openFile(message.filename)
+        index = self.tabWidgetEditors.isFileOpen(message.filename)
+        if index == -1:
+            self.openFile(message.filename)
+        else:
+            self.tabWidgetEditors.setCurrentIndex(index)
         self.tabWidgetEditors.currentWidget().gotoLine(message.line, move=True)
 
     @QtCore.pyqtSlot()

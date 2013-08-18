@@ -1,9 +1,13 @@
 """
 Contains cobol specific modes
 """
-from PyQt4.QtCore import Qt
+import os
+from PyQt4.QtCore import Qt, QFileInfo
 from PyQt4.QtGui import QTextCursor, QAction
 from pyqode.core import Mode, RightMarginMode
+from pyqode.core import CheckerMode, CHECK_TRIGGER_TXT_SAVED
+from oci import cobol, constants
+
 
 class ToUpperMode(Mode):
     """
@@ -135,4 +139,25 @@ class LeftMarginMode(RightMarginMode):
         #RightMarginMode._onSettingsChanged(self, section, key)
         if key == "leftMarginPos" or not key:
             self.marginPos = self.editor.settings.value("leftMarginPos")
+
+
+def checkFile(queue, code, filePath, fileEncoding):
+    tmp = os.path.join(constants.getAppTempDirectory(),
+                       QFileInfo(filePath).fileName())
+    with open(tmp, 'wb') as f:
+        f.write(code.encode(fileEncoding))
+    fileType = cobol.detectFileType(tmp)
+    output = os.path.join(constants.getAppTempDirectory(),
+                          QFileInfo(tmp).baseName() + fileType[2])
+    status, messages = cobol.compile(tmp, fileType, outputFilename=output)
+    queue.put(messages)
+
+
+class CobolCheckerMode(CheckerMode):
+    IDENTIFIER = "cobolCheckerMode"
+    DESCRIPTION = "Checks your cobol code on the fly (by compiling it to a " \
+                  "temp file"
+
+    def __init__(self):
+        CheckerMode.__init__(self, checkFile)
 

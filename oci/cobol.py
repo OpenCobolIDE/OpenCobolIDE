@@ -129,7 +129,7 @@ class DocumentNode(QTreeWidgetItem):
         self.name = name
         if description is None:
             description = name
-        self.description = description.replace(".", "")
+        self.description = description.replace(u".", u"")
         self.children = []
         self.setText(0, name)
         if createIcon:
@@ -149,7 +149,7 @@ class DocumentNode(QTreeWidgetItem):
         """
         Print the node tree in stdout
         """
-        print " " * indent, self.name, self.line, " - ", self.end_line
+        print u" " * indent, self.name, self.line, u" - ", self.end_line
         for c in self.children:
             c.print_tree(indent + 4)
 
@@ -192,7 +192,7 @@ def _extract_div_node(i, line, root_node, last_section_node, createIcon):
     :return: tuple(last_div_node, last_section_node)
     """
     name = line
-    name = name.replace(".", "")
+    name = name.replace(u".", u"")
     node = DocumentNode(DocumentNode.Type.Division, i + 1, name,
                         createIcon=createIcon)
     root_node.add_child(node)
@@ -219,8 +219,8 @@ def _extract_section_node(i, last_div_node, last_vars, line, createIcon):
     :return: last_section_node
     """
     name = line
-    name = name.replace(".", "")
-    description = "{0}: {1}".format(i + 1, line)
+    name = name.replace(u".", u"")
+    description = u"{0}: {1}".format(i + 1, line)
     node = DocumentNode(DocumentNode.Type.Section, i + 1, name,
                         createIcon=createIcon)
     last_div_node.add_child(node)
@@ -248,10 +248,10 @@ def _extract_var_node(i, indentation, last_section_node, last_vars, line,
     :return: The extracted variable node
     """
     parent_node = None
-    raw_tokens = line.split(" ")
+    raw_tokens = line.split(u" ")
     tokens = []
     for t in raw_tokens:
-        if not t.isspace() and t != "":
+        if not t.isspace() and t != u"":
             tokens.append(t)
     try:
         lvl = int(tokens[0], 16)
@@ -259,8 +259,8 @@ def _extract_var_node(i, indentation, last_section_node, last_vars, line,
     except ValueError:
         lvl = 0
         name = tokens[0]
-    name = name.replace(".", "")
-    description = "{1}".format(i + 1, line)
+    name = name.replace(u".", u"")
+    description = u"{1}".format(i + 1, line)
     if indentation == 7:
         lvl = 0
     if lvl == 0:
@@ -290,7 +290,7 @@ def _extract_paragraph_node(i, last_div_node, last_section_node, line,
     :param line: The line string (without indentation)
     :return: The extracted paragraph node
     """
-    name = line.replace(".", "")
+    name = line.replace(u".", u"")
     parent_node = last_div_node
     if last_section_node is not None:
         parent_node = last_section_node
@@ -332,21 +332,21 @@ def parse_document_layout(filename, code=None, createIcon=True):
         if indentation >= 7 and not line.isspace():
             line = line.strip().upper()
             # DIVISIONS
-            if "DIVISION" in line.upper():
+            if u"DIVISION" in line.upper():
                 # remember
                 if last_div_node is not None:
                     last_div_node.end_line = i
                 last_div_node, last_section_node = _extract_div_node(
                     i, line, root_node, last_section_node, createIcon)
             # SECTIONS
-            elif "SECTION" in line:
+            elif u"SECTION" in line:
                 if last_section_node:
                     last_section_node.end_line = i
                 last_section_node = _extract_section_node(
                     i, last_div_node, last_vars, line, createIcon)
             # VARIABLES
             elif (last_div_node is not None and
-                    "DATA DIVISION" in last_div_node.name):
+                    u"DATA DIVISION" in last_div_node.name):
                 v = _extract_var_node(
                     i, indentation, last_section_node, last_vars, line,
                     createIcon)
@@ -354,9 +354,9 @@ def parse_document_layout(filename, code=None, createIcon=True):
                     variables.append(v)
             # PARAGRAPHS
             elif (last_div_node is not None and
-                  "PROCEDURE DIVISION" in last_div_node.name and
+                  u"PROCEDURE DIVISION" in last_div_node.name and
                   indentation == 7 and not "*" in line and
-                  not "EXIT" in line and not "END" in line and not "STOP"
+                  not u"EXIT" in line and not u"END" in line and not u"STOP"
                   in line):
                 if last_par:
                     last_par.end_line = i
@@ -463,7 +463,11 @@ def parseDependencies(filename):
     return make_unique_sorted(dependencies)
 
 
-def compile(filename, fileType, customOptions=None):
+def makeOutputFilePath(fileType, filename):
+    return os.path.splitext(filename)[0] + fileType[2]
+
+
+def compile(filename, fileType, customOptions=None, outputFilename=None):
     """
     Compile a single cobol file, return the compiler exit status and output.
     The output is a list of checker messages (those can be used to implements
@@ -473,7 +477,8 @@ def compile(filename, fileType, customOptions=None):
         customOptions = []
     # prepare command
     customOptionsStr = " ".join(customOptions)
-    outputFilename = os.path.splitext(filename)[0] + fileType[2]
+    if outputFilename is None:
+        outputFilename = makeOutputFilePath(fileType, filename)
     cmd = fileType[1].format(customOptionsStr,
                              QtCore.QFileInfo(outputFilename).fileName(),
                              QtCore.QFileInfo(filename).fileName())

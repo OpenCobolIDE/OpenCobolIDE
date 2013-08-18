@@ -1,6 +1,7 @@
 """
 Contains application constants
 """
+import os
 import pyqode.core
 # cobol use - extensively for complex identifier, don't break them!
 import sys
@@ -26,3 +27,22 @@ class ProgramType:
     Executable = (0, 'cobc -x {0} -o {1} {2}', EXECUTABLE_EXTENSION)
     #: Cobol subprogram (shared object/dll compiled without the -x switch)
     Module = (1, 'cobc {0} -o {1} {2}', MODULE_EXTENSION)
+
+
+def getAppTempDirectory():
+    """
+    Returns a platform dependant temp fold
+    """
+    if sys.platform == "win32":
+        pth = os.path.join(os.getcwd(), "temp")
+        if not os.path.exists(pth):
+            os.mkdir(pth)
+        return pth
+    else:
+        pth = os.path.join(os.path.expanduser("~"), ".OpenCobolIDE")
+        if not os.path.exists(pth):
+            os.mkdir(pth)
+        pth = os.path.join(pth, "temp")
+        if not os.path.exists(pth):
+            os.mkdir(pth)
+        return pth

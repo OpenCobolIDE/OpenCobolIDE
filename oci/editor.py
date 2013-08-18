@@ -7,7 +7,7 @@ from PyQt4 import QtCore
 from pygments.token import Comment
 from oci import cobol
 from oci.code_completion import CobolDocumentWordsProvider, CobolAnalyserProvider
-from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode
+from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode, CobolCheckerMode
 from oci.cobol import CobolFolder
 
 
@@ -72,7 +72,7 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
 
         # auto indent
         self.installMode(pyqode.core.AutoIndentMode())
-        self.autoIndentMode.minIndent = 7
+        self.autoIndentMode.minIndent = 7 * " "
 
         # syntax highlighter
         self.installMode(pyqode.core.PygmentsSyntaxHighlighter(self.document()))
@@ -84,6 +84,7 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.installMode(LeftMarginMode())
         self.installMode(ToUpperMode())
         self.installMode(CommentsMode())
+        self.installMode(CobolCheckerMode())
 
     def openFile(self, filePath, replaceTabsBySpaces=True, encoding=None,
                  detectEncoding=False):
