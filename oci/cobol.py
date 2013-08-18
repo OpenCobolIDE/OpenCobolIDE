@@ -13,7 +13,7 @@ else:
 import pyqode.core
 
 from PyQt4.QtCore import QFileInfo
-from PySide.QtGui import QIcon, QTreeWidgetItem
+from PyQt4.QtGui import QIcon, QTreeWidgetItem
 
 
 # taken from pygments_ibm_cobol_lexer.__init__.py
@@ -116,10 +116,10 @@ class DocumentNode(QTreeWidgetItem):
 
     ICONS = {
         -1: ":/ide-icons/rc/silex-32x32.png",
-        0:  ":/ide-icons/rc/Office-book.png",
-        1:  ":/ide-icons/rc/text-x-generic.png",
-        2:  ":/ide-icons/rc/var.png",
-        3:  ":/ide-icons/rc/paragraph.png"}
+        0:  ":/ide-icons/rc/division",
+        1:  ":/ide-icons/rc/section",
+        2:  ":/ide-icons/rc/var",
+        3:  ":/ide-icons/rc/paragraph"}
 
     def __init__(self, node_type, line, name, description=None, createIcon=True):
         QTreeWidgetItem.__init__(self)
@@ -300,7 +300,8 @@ def _extract_paragraph_node(i, last_div_node, last_section_node, line,
     return node
 
 
-def parse_document_layout(filename, code=None, createIcon=True):
+def parse_document_layout(filename, code=None, createIcon=True,
+                          encoding="utf-8"):
     """
     Parses a cobol file and return  a root DocumentNode that describes the
     layout of the file (sections, divisions, vars,...), a list of paragraphes
@@ -328,6 +329,8 @@ def parse_document_layout(filename, code=None, createIcon=True):
     last_vars = {}
     last_par = None
     for i, line in enumerate(lines):
+        if not isinstance(line, unicode):
+            line = line.decode(encoding)
         indentation = len(line) - len(line.lstrip())
         if indentation >= 7 and not line.isspace():
             line = line.strip().upper()

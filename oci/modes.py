@@ -2,7 +2,7 @@
 Contains cobol specific modes
 """
 import os
-from PyQt4.QtCore import Qt, QFileInfo
+from PyQt4.QtCore import Qt, QFileInfo, QObject, pyqtSignal
 from PyQt4.QtGui import QTextCursor, QAction
 from pyqode.core import Mode, RightMarginMode
 from pyqode.core import CheckerMode, CHECK_TRIGGER_TXT_SAVED
@@ -161,3 +161,76 @@ class CobolCheckerMode(CheckerMode):
     def __init__(self):
         CheckerMode.__init__(self, checkFile)
 
+
+class DocumentAnalyserMode(Mode, QObject):
+    """
+    Your mode documentation goes here
+    """
+    IDENTIFIER = "analyserMode"
+    DESCRIPTION = "Analyse document when file content is saved/open"
+
+    #: Signal emitted when the document layout changed
+    documentLayoutChanged = pyqtSignal(object)
+
+    @property
+    def root_node(self):
+        """
+        Returns the document root node.
+        """
+        return self.__root_node
+
+    @property
+    def variables(self):
+        """
+        Returns the list of variable document nodes
+        """
+        return self.__vars
+
+    @property
+    def paragraphs(self):
+        """
+        Returns the list of paragraphs document nodes
+        """
+        return self.__paragraphs
+
+    def __init__(self):
+        QObject.__init__(self)
+        Mode.__init__(self)
+        self.__root_node = None
+        self.__vars = []
+        self.__paragraphs = []
+
+    def _onStateChanged(self, state):
+        """
+        Called when the mode is activated/deactivated
+        """
+        if state:
+            self.editor.newTextSet.connect(self.parse)
+            self.editor.textSaved.connect(self.parse)
+        else:
+            self.editor.newTextSet.disconnect(self.parse)
+            self.editor.textSaved.disconnect(self.parse)
+
+    def parse(self):
+        """ Parse the document layout.
+
+        To get the results, use the following properties:
+            - root_node
+            - variables
+            - paragraphs
+        """
+        try:
+            root_node, variables, paragraphs = cobol.parse_document_layout(
+                self.editor.filePath, encoding=self.editor.fileEncoding)
+            changed = False
+            if(self.__root_node is None or
+               cobol.cmp_doc_node(root_node, self.__root_node)):
+                changed = True
+            self.__root_node = root_node
+            self.__vars = variables
+            self.__paragraphs = paragraphs
+            if changed:
+                self.documentLayoutChanged.emit(self.root_node)
+                print("Document changed")
+        except TypeError or IOError:
+            pass

@@ -7,7 +7,8 @@ from PyQt4 import QtCore
 from pygments.token import Comment
 from oci import cobol
 from oci.code_completion import CobolDocumentWordsProvider, CobolAnalyserProvider
-from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode, CobolCheckerMode
+from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode
+from oci.modes import CobolCheckerMode, DocumentAnalyserMode
 from oci.cobol import CobolFolder
 
 
@@ -85,6 +86,7 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.installMode(ToUpperMode())
         self.installMode(CommentsMode())
         self.installMode(CobolCheckerMode())
+        self.installMode(DocumentAnalyserMode())
 
     def openFile(self, filePath, replaceTabsBySpaces=True, encoding=None,
                  detectEncoding=False):

@@ -33,11 +33,14 @@ class MainWindow(QtGui.QMainWindow):
         QtGui.QMainWindow.__init__(self)
         loadUi("ide.ui", self, "ide.qrc")
         self.stackedWidget.setCurrentIndex(0)
+        self.__prevRootNode = None
         s = Settings()
         if s.geometry:
             self.restoreGeometry(s.geometry)
         if s.state:
             self.restoreState(s.state)
+        self.dockWidgetNavPanel.setFloating(False)
+        self.dockWidgetLogs.setFloating(False)
         self.wasMaximised = s.maximised
         self.prevSize = s.size
         self.actionFullscreen.setChecked(s.fullscreen)
@@ -70,6 +73,16 @@ class MainWindow(QtGui.QMainWindow):
         self.onCurrentEditorChanged(self.tabWidgetEditors.currentIndex())
         self.errorsTable.setSortingEnabled(True)
         self.errorsTable.sortItems(0)
+
+    def updateNavigationPanel(self, rootNode):
+        """
+        Updates the navigation panel using the DocumentAnalyserMode infos.
+        """
+        if self.__prevRootNode != rootNode:
+            self.twNavigation.clear()
+            self.twNavigation.addTopLevelItem(rootNode)
+            self.twNavigation.expandAll()
+            self.__prevRootNode = rootNode
 
     def setupToolbar(self):
         """
@@ -199,6 +212,10 @@ class MainWindow(QtGui.QMainWindow):
                 self.actionSubprogram.setChecked(True)
                 self.actionRun.setEnabled(False)
                 self.actionCompile.setEnabled(True)
+            w.analyserMode.parse()
+            rn = w.analyserMode.root_node
+            if rn:
+                self.updateNavigationPanel(rn)
             self.tb.setEnabled(True)
         except AttributeError:
             self.tb.setEnabled(False)
@@ -243,6 +260,8 @@ class MainWindow(QtGui.QMainWindow):
                 if extension.lower() in [".cbl", ".cob"]:
                     tab = QCobolCodeEdit(self.tabWidgetEditors)
                     icon = QtGui.QIcon(tab.icon)
+                    tab.analyserMode.documentLayoutChanged.connect(
+                        self.updateNavigationPanel)
                 else:
                     tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
                 Settings().lastFilePath = fn
