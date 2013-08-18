@@ -10,8 +10,10 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 """
-This is module contains the application main function.
+This module contains the application main function.
 """
+import logging
+logging.basicConfig(level=logging.WARNING)
 import os
 import sys
 from PyQt4 import QtGui
