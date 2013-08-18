@@ -463,7 +463,7 @@ def parseDependencies(filename):
     return make_unique_sorted(dependencies)
 
 
-def makeOutputFilePath(fileType, filename):
+def makeOutputFilePath(filename, fileType):
     return os.path.splitext(filename)[0] + fileType[2]
 
 
@@ -478,7 +478,7 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
     # prepare command
     customOptionsStr = " ".join(customOptions)
     if outputFilename is None:
-        outputFilename = makeOutputFilePath(fileType, filename)
+        outputFilename = makeOutputFilePath(filename, fileType)
     cmd = fileType[1].format(customOptionsStr,
                              QtCore.QFileInfo(outputFilename).fileName(),
                              QtCore.QFileInfo(filename).fileName())

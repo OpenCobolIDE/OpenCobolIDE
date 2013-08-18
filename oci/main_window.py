@@ -135,9 +135,27 @@ class MainWindow(QtGui.QMainWindow):
         editor = self.tabWidgetEditors.currentWidget()
         self.jobRunner.startJob(self.compileCurrent, False,
                                 editor.filePath, editor.programType)
-        #self.compileCurrent(editor.filePath, editor.programType)
+
+    @QtCore.pyqtSlot()
+    def on_actionRun_triggered(self):
+        self.actionRun.setEnabled(False)
+        self.tabWidgetLogs.setCurrentIndex(1)
+        self.dockWidgetLogs.show()
+        target = cobol.makeOutputFilePath(
+            self.tabWidgetEditors.currentWidget().filePath,
+            self.tabWidgetEditors.currentWidget().programType)
+        cwd = os.path.dirname(target)
+        self.consoleOutput.processFinished.connect(self.onProgramFinished)
+        self.consoleOutput.runProcess(target, cwd=cwd)
+
+    def onProgramFinished(self, status):
+        self.actionRun.setEnabled(True)
 
     def compileCurrent(self, filePath, programType):
+        """
+        Compiles the current file and its dependencies (executed in a background
+        thread
+        """
         dependencies = cobol.parseDependencies(filePath)
         globalStatus = True
         for path, pgmType in dependencies:
