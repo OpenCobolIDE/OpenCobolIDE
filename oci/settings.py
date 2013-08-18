@@ -20,17 +20,13 @@ from PyQt4 import QtCore
 import os
 import sys
 
-from PySide.QtCore import QSettings
-
-from pcef import style
-from pcef import styles
-from pcef.styles.white import WhiteStyle
+from PyQt4.QtCore import QSettings
 
 
 class Settings(object):
 
     def __init__(self):
-        self._settings = QSettings("OCIDE", "OpenCobolIDE")
+        self._settings = QSettings("OpenCobolIDE", "OpenCobolIDE")
 
     @property
     def geometry(self):
