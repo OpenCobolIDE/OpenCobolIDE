@@ -13,7 +13,7 @@
 Contains the main window implementation
 """
 import os
-from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem
+from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem, QTreeWidgetItem
 import pyqode.core
 from PyQt4 import QtCore, QtGui
 import sys
@@ -80,8 +80,13 @@ class MainWindow(QtGui.QMainWindow):
         """
         if self.__prevRootNode != rootNode:
             self.twNavigation.clear()
+            #rootNode.setExpanded(True)
             self.twNavigation.addTopLevelItem(rootNode)
-            self.twNavigation.expandAll()
+            self.twNavigation.expandItem(rootNode)
+            for i in range(rootNode.childCount()):
+                self.twNavigation.expandItem(rootNode.child(i))
+            #self.twNavigation.expandAll()
+            #self.twNavigation.expandChildren()
             self.__prevRootNode = rootNode
 
     def setupToolbar(self):
@@ -253,6 +258,16 @@ class MainWindow(QtGui.QMainWindow):
         else:
             self.showNormal()
 
+    @QtCore.pyqtSlot(QTreeWidgetItem, int)
+    def on_twNavigation_itemActivated(self, item, column):
+        """
+        Moves the text cursor on the selected document node position
+
+        :param item: oci.cobol.DocumentNode
+        """
+        w = self.tabWidgetEditors.currentWidget()
+        w.gotoLine(item.line, move=True)
+
     def openFile(self, fn):
         try:
             if fn:
@@ -349,8 +364,8 @@ class MainWindow(QtGui.QMainWindow):
             if not self.isFullScreen():
                 self.setMinimumWidth(700)
                 self.setMinimumHeight(400)
-                self.resize(700, 400)
                 self.showNormal()
+                self.resize(700, 400)
             self.statusBar().showMessage("OpenCobolIDE v.%s" % __version__)
         else:
             if self.stackedWidget.currentIndex() == 0:
