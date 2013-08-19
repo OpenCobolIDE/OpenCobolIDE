@@ -28,7 +28,6 @@ from oci.settings import Settings
 from oci.ui import loadUi
 
 
-
 class MainWindow(QtGui.QMainWindow):
 
     compilerMsgReady = QtCore.pyqtSignal(pyqode.core.CheckerMessage)
@@ -51,7 +50,7 @@ class MainWindow(QtGui.QMainWindow):
         self.actionFullscreen.setChecked(s.fullscreen)
         self.setupIcons()
         self.QHomeWidget.setupRecentFiles(
-            organization="ColinDuquesnoy",
+            organization="OpenCobolIDE",
             menuRecentFiles=self.menuRecent_files,
             actionClearMnuRecentFiles=self.actionClear)
         self.QHomeWidget.fileOpenRequested.connect(self.openFile)
@@ -133,13 +132,23 @@ class MainWindow(QtGui.QMainWindow):
     def on_actionOpen_triggered(self):
         self.openFile(QtGui.QFileDialog.getOpenFileName(
             self, "Open a file", Settings().lastFilePath,
-            "Cobol files (*.cbl *.cob);; Text files (*.txt *.dat)"))
+            "Cobol files (*.cbl *.CBL *.cob *.COB);; Other text files (*)"))
 
     @QtCore.pyqtSlot()
     def on_actionSave_triggered(self):
         self.tabWidgetEditors.saveCurrent()
 
-    # save as, check if the tab title change
+    @QtCore.pyqtSlot()
+    def on_actionSaveAs_triggered(self):
+        filter = "Cobol files (*.cbl *.CBL *.cob *.COB);; Other text files (*)"
+        fn, filter = QtGui.QFileDialog.getSaveFileNameAndFilter(
+            self, "Save file as...", Settings().lastFilePath, filter)
+        if os.path.splitext(fn)[1] == "":
+            if filter == "Cobol files (*.cbl *.CBL *.cob *.COB)":
+                fn += ".cob"
+        if fn:
+            self.tabWidgetEditors.saveCurrent(filePath=fn)
+            self.QHomeWidget.setCurrentFile(fn)
 
     @QtCore.pyqtSlot()
     def on_actionQuit_triggered(self):
@@ -366,17 +375,21 @@ class MainWindow(QtGui.QMainWindow):
                 s = Settings()
                 s.navigationPanelVisible = self.dockWidgetNavPanel.isVisible()
                 s.logPanelVisible = self.dockWidgetLogs.isVisible()
+                self.setMinimumWidth(700)
+                self.setMinimumHeight(400)
+                self.resize(700, 400)
+                if not self.isFullScreen():
+                    self.showCentered()
+            self.consoleOutput.clear()
+            self.setMinimumWidth(700)
+            self.setMinimumHeight(400)
+            self.resize(700, 400)
             self.stackedWidget.setCurrentIndex(0)
             self.menuBar.hide()
             self.toolBarFile.hide()
             self.toolBarCode.hide()
             self.dockWidgetLogs.hide()
             self.dockWidgetNavPanel.hide()
-            if not self.isFullScreen():
-                self.setMinimumWidth(700)
-                self.setMinimumHeight(400)
-                self.showNormal()
-                self.resize(700, 400)
             self.statusBar().showMessage("OpenCobolIDE v.%s" % __version__)
         else:
             if self.stackedWidget.currentIndex() == 0:
@@ -395,6 +408,7 @@ class MainWindow(QtGui.QMainWindow):
                     if self.prevSize.height() < 700:
                         self.prevSize.setHeight(700)
                     self.resize(self.prevSize)
+                    self.showCentered()
                 self.statusBar().clearMessage()
                 s = Settings()
                 self.dockWidgetNavPanel.setVisible(s.navigationPanelVisible)
