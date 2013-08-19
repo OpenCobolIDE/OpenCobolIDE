@@ -14,11 +14,6 @@
 # You should have received a copy of the GNU General Public License along with
 # OpenCobolIDE. If not, see http://www.gnu.org/licenses/.
 """
-This the application main script. It simply calls oci.main
+Contains the application dialogs
 """
-import os
-# setup environement to force pyqode to use PyQt4
-os.environ['QT_API'] = 'PyQt'
-import pyqode.core
-from oci.main import main
-main()
+

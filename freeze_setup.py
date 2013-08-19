@@ -1,13 +1,18 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
+# Copyright 2013 Colin Duquesnoy
 #
-# PCEF - PySide Code Editing framework
-# Copyright 2013, Colin Duquesnoy <colin.duquesnoy@gmail.com>
+# This file is part of OpenCobolIDE.
 #
-# This software is released under the LGPLv3 license.
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+# OpenCobolIDE is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
 #
+# OpenCobolIDE is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# OpenCobolIDE. If not, see http://www.gnu.org/licenses/.
 """
 This is a setup script for cx_freeze to freeze the python package for
 distribution.

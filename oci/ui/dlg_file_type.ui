@@ -6,19 +6,103 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>475</width>
-    <height>133</height>
+    <width>356</width>
+    <height>144</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Choose a file type</string>
+   <string>New file</string>
   </property>
   <property name="windowIcon">
    <iconset resource="ide.qrc">
     <normaloff>:/ide-icons/rc/silex-64x64.png</normaloff>:/ide-icons/rc/silex-64x64.png</iconset>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="0">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Type</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="comboBox">
+       <item>
+        <property name="text">
+         <string>Program</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Module</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Directory</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLineEdit" name="lineEditPath"/>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButton">
+         <property name="text">
+          <string>...</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLineEdit" name="lineEdit"/>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_2">
+         <item>
+          <property name="text">
+           <string>.cbl</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>.cob</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>.CBL</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>.COB</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -27,68 +111,19 @@
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
      <property name="centerButtons">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
-   </item>
-   <item row="1" column="0">
-    <layout class="QFormLayout" name="formLayout">
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;What kind of file do you want to  &lt;span style=&quot; font-weight:600;&quot;&gt;open&lt;/span&gt;?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QRadioButton" name="radioButtonProgram">
-         <property name="text">
-          <string>A cobol program</string>
-         </property>
-         <property name="icon">
-          <iconset resource="ide.qrc">
-           <normaloff>:/ide-icons/rc/application-x-executable.png</normaloff>:/ide-icons/rc/application-x-executable.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioButtonSubprogram">
-         <property name="text">
-          <string>A cobol sub program</string>
-         </property>
-         <property name="icon">
-          <iconset resource="ide.qrc">
-           <normaloff>:/ide-icons/rc/application-x-sharedlib.png</normaloff>:/ide-icons/rc/application-x-sharedlib.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioButtonText">
-         <property name="text">
-          <string>A regular text file</string>
-         </property>
-         <property name="icon">
-          <iconset resource="ide.qrc">
-           <normaloff>:/ide-icons/rc/text-x-generic.png</normaloff>:/ide-icons/rc/text-x-generic.png</iconset>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
    </item>
   </layout>
  </widget>
  <tabstops>
-  <tabstop>radioButtonProgram</tabstop>
-  <tabstop>radioButtonSubprogram</tabstop>
-  <tabstop>radioButtonText</tabstop>
   <tabstop>buttonBox</tabstop>
+  <tabstop>comboBox</tabstop>
+  <tabstop>lineEdit</tabstop>
+  <tabstop>comboBox_2</tabstop>
+  <tabstop>lineEditPath</tabstop>
+  <tabstop>toolButton</tabstop>
  </tabstops>
  <resources>
   <include location="ide.qrc"/>
@@ -101,12 +136,12 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>257</x>
+     <y>238</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
-     <y>274</y>
+     <y>144</y>
     </hint>
    </hints>
   </connection>
@@ -117,12 +152,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>325</x>
+     <y>238</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
-     <y>274</y>
+     <y>144</y>
     </hint>
    </hints>
   </connection>
