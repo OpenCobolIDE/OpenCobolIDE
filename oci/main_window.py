@@ -22,7 +22,7 @@ import pyqode.core
 from PyQt4 import QtCore, QtGui
 import sys
 from oci import __version__, constants, cobol
-from oci.dlg import DlgNewFile
+from oci.dialogs import DlgNewFile, DlgAbout
 from oci.editor import QCobolCodeEdit
 from oci.settings import Settings
 from oci.ui import loadUi
@@ -142,6 +142,7 @@ class MainWindow(QtGui.QMainWindow):
         ag.triggered.connect(self.on_programType_triggered)
         self.programActionGroup = ag
         self.tb = QToolButton()
+        self.tb.setToolTip("Select the cobol program type to make")
         self.tb.setMenu(self.menuProgramType)
         self.tb.setPopupMode(QToolButton.InstantPopup)
         self.tb.setText("Executable")
@@ -213,6 +214,11 @@ class MainWindow(QtGui.QMainWindow):
                                 editor.filePath, editor.programType)
 
     @QtCore.pyqtSlot()
+    def on_actionAbout_triggered(self):
+        dlg = DlgAbout(self)
+        dlg.exec_()
+
+    @QtCore.pyqtSlot()
     def on_actionRun_triggered(self):
         self.actionRun.setEnabled(False)
         self.tabWidgetLogs.setCurrentIndex(1)
@@ -224,6 +230,20 @@ class MainWindow(QtGui.QMainWindow):
         cwd = os.path.dirname(target)
         self.consoleOutput.processFinished.connect(self.onProgramFinished)
         self.consoleOutput.runProcess(target, cwd=cwd)
+
+    @QtCore.pyqtSlot()
+    def on_actionPreferences_triggered(self):
+        QtGui.QMessageBox.information(
+            self, "Not implemented",
+            "This feature has not been implemented yet.It should be ready for "
+            "the next beta release.")
+
+    @QtCore.pyqtSlot()
+    def on_actionHelp_triggered(self):
+        QtGui.QMessageBox.information(
+            self, "Not implemented",
+            "This feature has not been implemented yet.It should be ready for "
+            "the final release.")
 
     def onProgramFinished(self, status):
         self.actionRun.setEnabled(True)
