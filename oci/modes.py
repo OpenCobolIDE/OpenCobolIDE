@@ -246,6 +246,5 @@ class DocumentAnalyserMode(Mode, QObject):
             self.__paragraphs = paragraphs
             if changed:
                 self.documentLayoutChanged.emit(self.root_node)
-                print("Document changed")
         except TypeError or IOError:
             pass

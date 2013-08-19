@@ -122,7 +122,6 @@ class MainWindow(QtGui.QMainWindow):
     @QtCore.pyqtSlot()
     def on_actionNew_triggered(self):
         dlg = DlgNewFile(self)
-        print(dlg.path())
         if dlg.exec_() == DlgNewFile.Accepted:
             pth = dlg.path()
             content = dlg.template()
