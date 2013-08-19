@@ -69,6 +69,44 @@ class MainWindow(QtGui.QMainWindow):
         self.compilerMsgReady.connect(self.addCompilerMsg)
         self.compilationFinished.connect(self.onCompilationFinished)
 
+        # View actions
+        # toolbars
+        self.toolBarFile.visibilityChanged.connect(
+            self.updateViewToolbarMenu)
+        self.toolBarCode.visibilityChanged.connect(
+            self.updateViewToolbarMenu)
+        self.aShowCodeToolbar.toggled.connect(
+            self.toolBarCode.setVisible)
+        self.aShowFilesToolbar.toggled.connect(
+            self.toolBarFile.setVisible)
+        # dock windows
+        self.dockWidgetLogs.visibilityChanged.connect(
+            self.updateViewWindowMenu)
+        self.dockWidgetNavPanel.visibilityChanged.connect(
+            self.updateViewWindowMenu)
+        self.aShowNavWin.toggled.connect(
+            self.dockWidgetNavPanel.setVisible)
+        self.aShowLogsWin.toggled.connect(
+            self.dockWidgetLogs.setVisible)
+
+    def updateViewToolbarMenu(self):
+        """
+        Updates the View>Toolbars menu
+        """
+        v = self.toolBarFile.isVisible()
+        self.aShowFilesToolbar.setChecked(v)
+        v = self.toolBarCode.isVisible()
+        self.aShowCodeToolbar.setChecked(v)
+
+    def updateViewWindowMenu(self):
+        """
+        Updates the View>Windows menu
+        """
+        self.aShowLogsWin.setChecked(
+            self.dockWidgetLogs.isVisible())
+        self.aShowNavWin.setChecked(
+            self.dockWidgetNavPanel.isVisible())
+
     def addCompilerMsg(self, message):
         self.errorsTable.addMessage(message)
 
