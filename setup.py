@@ -23,7 +23,7 @@ This is the setup script, install it as any python package.
 from setuptools import setup, find_packages
 
 # properly get pcef version
-execfile('cobcide/__init__.py')
+execfile('oci/__init__.py')
 
 # get long description
 with open('README.rst', 'r') as readme:
@@ -34,15 +34,16 @@ setup(
     name='OpenCobolIDE',
     version=__version__,
     packages=find_packages(),
-    keywords=["Cobol IDE"],
-    package_data={'cobcide.ui': ['*.ui', 'rc/*']},
-    package_dir={'cobcide': 'cobcide'},
-    url='https://launchpad.net/cobcide',
+    keywords=["Cobol; OpenCobol; IDE"],
+    package_data={'oci.ui': ['*.ui', 'rc/*']},
+    package_dir={'oci': 'oci'},
+    url='https://github.com/ColinDuquesnoy/OpenCobolIDE',
     license='GPL v3',
     author='Colin Duquesnoy',
     author_email='colin.duquesnoy@gmail.com',
     description='A simple cobol IDE',
     long_description=long_desc,
-    install_requires=['pygments>=1.6', 'pyqode-core', 'pyqode-widgets', 'chardet'],
-    entry_points={'gui_scripts': ['OpenCobolIDE = cobcide.main:main']}
+    install_requires=['pygments>=1.6', 'pyqode-core', 'pyqode-widgets',
+                      'chardet'],
+    entry_points={'gui_scripts': ['OpenCobolIDE = oci.main:main']}
 )

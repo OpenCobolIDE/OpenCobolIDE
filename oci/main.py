@@ -20,6 +20,9 @@ import logging
 logging.basicConfig(level=logging.WARNING)
 import os
 import sys
+# setup environement to force pyqode to use PyQt4
+os.environ['QT_API'] = 'PyQt'
+import pyqode.core
 from PyQt4 import QtGui
 from oci.main_window import MainWindow
 from oci.settings import Settings
