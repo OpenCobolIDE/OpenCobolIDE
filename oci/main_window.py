@@ -154,6 +154,7 @@ class MainWindow(QtGui.QMainWindow):
         self.actionRun.setEnabled(False)
         self.tabWidgetLogs.setCurrentIndex(1)
         self.dockWidgetLogs.show()
+        self.consoleOutput.setFocus(True)
         target = cobol.makeOutputFilePath(
             self.tabWidgetEditors.currentWidget().filePath,
             self.tabWidgetEditors.currentWidget().programType)
