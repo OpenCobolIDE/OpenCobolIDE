@@ -19,6 +19,10 @@ Contains the application dialogs
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 import os
+import pygments
+import pyqode.core
+import pyqode.widgets
+from oci import cobol, __version__
 from oci.settings import Settings
 from oci.ui import loadUi
 
@@ -142,3 +146,22 @@ class DlgNewFile(QtGui.QDialog):
         enable =  name != "" and os.path.exists(pth) and os.path.isdir(pth)
         bt = self.buttonBox.button(QtGui.QDialogButtonBox.Ok)
         bt.setEnabled(enable)
+
+
+class DlgAbout(QtGui.QDialog):
+    """
+    About dialog. Shows the about text and the 3rd party libraries versions.
+    """
+    def __init__(self, parent=None):
+        QtGui.QDialog.__init__(self, parent)
+        loadUi("dlg_about.ui", self)
+        self.labelMain.setText(self.labelMain.text() % __version__)
+        versions = [cobol.get_cobc_version(),
+                    QtCore.PYQT_VERSION_STR,
+                    QtCore.QT_VERSION_STR,
+                    pyqode.core.__version__,
+                    pyqode.widgets.__version__,
+                    pygments.__version__]
+        for i, version in enumerate(versions):
+            item = QtGui.QTableWidgetItem(version)
+            self.tbwVersions.setItem(i, 0, item)

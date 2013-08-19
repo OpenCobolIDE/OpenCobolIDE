@@ -18,6 +18,7 @@ Contains and functions to cobol source code analysis
 """
 from PyQt4 import QtCore
 import os
+import subprocess
 import sys
 
 if sys.platform != "win32":
@@ -519,3 +520,17 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
                 desc, status, lineNbr, filename=filename))
     return status, messages
 
+def get_cobc_version():
+    """ Returns the OpenCobol compiler version as a string """
+    ret_val = "unknown"
+    cmd = ["cobc", "--version"]
+    if sys.platform == "win32":
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        p = subprocess.Popen(cmd, shell=False, startupinfo=startupinfo,
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    else:
+        p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+    stdout, stderr = p.communicate()
+    return stdout.splitlines()[0].split(" ")[2]
