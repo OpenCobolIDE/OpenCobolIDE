@@ -1,13 +1,18 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
+# Copyright 2013 Colin Duquesnoy
 #
-# PCEF - PySide Code Editing framework
-# Copyright 2013, Colin Duquesnoy <colin.duquesnoy@gmail.com>
+# This file is part of OpenCobolIDE.
 #
-# This software is released under the LGPLv3 license.
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+# OpenCobolIDE is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
 #
+# OpenCobolIDE is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# OpenCobolIDE. If not, see http://www.gnu.org/licenses/.
 """
 PCEF is code editor framework for PySide applications
 
@@ -18,7 +23,7 @@ This is the setup script, install it as any python package.
 from setuptools import setup, find_packages
 
 # properly get pcef version
-execfile('cobcide/__init__.py')
+execfile('oci/__init__.py')
 
 # get long description
 with open('README.rst', 'r') as readme:
@@ -29,15 +34,16 @@ setup(
     name='OpenCobolIDE',
     version=__version__,
     packages=find_packages(),
-    keywords=["Cobol IDE"],
-    package_data={'cobcide.ui': ['*.ui', 'rc/*']},
-    package_dir={'cobcide': 'cobcide'},
-    url='https://launchpad.net/cobcide',
+    keywords=["Cobol; OpenCobol; IDE"],
+    package_data={'oci.ui': ['*.ui', 'rc/*']},
+    package_dir={'oci': 'oci'},
+    url='https://github.com/ColinDuquesnoy/OpenCobolIDE',
     license='GPL v3',
     author='Colin Duquesnoy',
     author_email='colin.duquesnoy@gmail.com',
     description='A simple cobol IDE',
     long_description=long_desc,
-    install_requires=['pygments>=1.6', 'pcef>=0.2.2', 'chardet', 'qwelcomewindow'],
-    entry_points={'gui_scripts': ['OpenCobolIDE = cobcide.main:main']}
+    install_requires=['pygments>=1.6', 'pyqode-core', 'pyqode-widgets',
+                      'chardet'],
+    entry_points={'gui_scripts': ['OpenCobolIDE = oci.main:main']}
 )
