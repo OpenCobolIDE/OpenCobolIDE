@@ -28,7 +28,7 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="comboBoxType">
        <item>
         <property name="text">
          <string>Program</string>
@@ -37,6 +37,11 @@
        <item>
         <property name="text">
          <string>Module</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Empty</string>
         </property>
        </item>
       </widget>
@@ -72,10 +77,10 @@
      <item row="1" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="lineEditName"/>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_2">
+        <widget class="QComboBox" name="comboBoxExtension">
          <item>
           <property name="text">
            <string>.cbl</string>
@@ -119,9 +124,9 @@
  </widget>
  <tabstops>
   <tabstop>buttonBox</tabstop>
-  <tabstop>comboBox</tabstop>
-  <tabstop>lineEdit</tabstop>
-  <tabstop>comboBox_2</tabstop>
+  <tabstop>comboBoxType</tabstop>
+  <tabstop>lineEditName</tabstop>
+  <tabstop>comboBoxExtension</tabstop>
   <tabstop>lineEditPath</tabstop>
   <tabstop>toolButton</tabstop>
  </tabstops>

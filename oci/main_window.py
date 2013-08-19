@@ -22,6 +22,7 @@ import pyqode.core
 from PyQt4 import QtCore, QtGui
 import sys
 from oci import __version__, constants, cobol
+from oci.dlg import DlgNewFile
 from oci.editor import QCobolCodeEdit
 from oci.settings import Settings
 from oci.ui import loadUi
@@ -120,10 +121,14 @@ class MainWindow(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionNew_triggered(self):
-        item, retval = QInputDialog.getItem(
-            self, "New file", "What kind of file do you want to create",
-            ["Program", "Module"])
-        print(item)
+        dlg = DlgNewFile(self)
+        print(dlg.path())
+        if dlg.exec_() == DlgNewFile.Accepted:
+            pth = dlg.path()
+            content = dlg.template()
+            with open(pth, 'wb') as f:
+                f.write(content)
+            self.openFile(pth)
 
     @QtCore.pyqtSlot()
     def on_actionOpen_triggered(self):
