@@ -103,8 +103,6 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.installMode(CobolCheckerMode())
         self.installMode(DocumentAnalyserMode())
 
-        self.style.setValue("pygmentsStyle", "native")
-
     def openFile(self, filePath, replaceTabsBySpaces=True, encoding=None,
                  detectEncoding=False):
         pyqode.core.QCodeEdit.openFile(self, filePath, replaceTabsBySpaces,
