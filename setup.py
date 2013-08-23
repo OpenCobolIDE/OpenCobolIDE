@@ -36,14 +36,17 @@ setup(
     packages=find_packages(),
     keywords=["Cobol; OpenCobol; IDE"],
     package_data={'oci.ui': ['*.ui', 'rc/*']},
-    package_dir={'oci': 'oci'},
+    package_dir={'oci': 'oci', "oci_designer_plugins": "oci_designer_plugins"},
     url='https://github.com/ColinDuquesnoy/OpenCobolIDE',
     license='GPL v3',
     author='Colin Duquesnoy',
     author_email='colin.duquesnoy@gmail.com',
     description='A simple cobol IDE',
     long_description=long_desc,
+    zip_safe=False,
     install_requires=['pygments>=1.6', 'pyqode-core', 'pyqode-widgets',
                       'chardet'],
-    entry_points={'gui_scripts': ['OpenCobolIDE = oci.main:main']}
+    entry_points={'gui_scripts': ['OpenCobolIDE = oci.main:main'],
+                  'pyqode_plugins': [
+                      'oci_widgets = oci_designer_plugins.cobol_plugin']}
 )
