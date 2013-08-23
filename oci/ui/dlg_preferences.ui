@@ -6,428 +6,336 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
-    <height>670</height>
+    <width>843</width>
+    <height>761</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Preferences</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="ide.qrc">
-    <normaloff>:/ide-icons/rc/Preferences-system.png</normaloff>:/ide-icons/rc/Preferences-system.png</iconset>
+   <iconset theme="preferences-system"/>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QListWidget" name="lwMenu">
-     <property name="maximumSize">
-      <size>
-       <width>72</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="textElideMode">
-      <enum>Qt::ElideMiddle</enum>
-     </property>
-     <property name="viewMode">
-      <enum>QListView::IconMode</enum>
-     </property>
-     <item>
-      <property name="text">
-       <string>General</string>
-      </property>
-      <property name="toolTip">
-       <string>General</string>
-      </property>
-      <property name="icon">
-       <iconset resource="ide.qrc">
-        <normaloff>:/ide-icons/rc/Preferences-system-64.png</normaloff>:/ide-icons/rc/Preferences-system-64.png</iconset>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Style</string>
-      </property>
-      <property name="toolTip">
-       <string> Style</string>
-      </property>
-      <property name="icon">
-       <iconset resource="ide.qrc">
-        <normaloff>:/ide-icons/rc/Mypaint-icon.png</normaloff>:/ide-icons/rc/Mypaint-icon.png</iconset>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QStackedWidget" name="swMain">
-     <property name="currentIndex">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="leftMargin">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="pGeneral">
-      <layout class="QFormLayout" name="formLayout">
-       <property name="fieldGrowthPolicy">
-        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+     <item>
+      <widget class="QListWidget" name="lwMenu">
+       <property name="maximumSize">
+        <size>
+         <width>72</width>
+         <height>16777215</height>
+        </size>
        </property>
-       <item row="0" column="0">
-        <widget class="QCheckBox" name="cbCodeCompletion">
-         <property name="text">
-          <string>Code completion</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
+       <property name="iconSize">
+        <size>
+         <width>64</width>
+         <height>64</height>
+        </size>
+       </property>
+       <property name="textElideMode">
+        <enum>Qt::ElideMiddle</enum>
+       </property>
+       <property name="viewMode">
+        <enum>QListView::IconMode</enum>
+       </property>
+       <item>
+        <property name="text">
+         <string>General</string>
+        </property>
+        <property name="toolTip">
+         <string>General</string>
+        </property>
+        <property name="icon">
+         <iconset theme="preferences-system">
+          <normaloff>:/ide-icons/rc/Preferences-system-64.png</normaloff>:/ide-icons/rc/Preferences-system-64.png</iconset>
+        </property>
        </item>
-       <item row="1" column="0">
-        <widget class="QCheckBox" name="cbUseExtShell">
-         <property name="text">
-          <string>Run program in external terminal</string>
-         </property>
-        </widget>
+       <item>
+        <property name="text">
+         <string>Style</string>
+        </property>
+        <property name="toolTip">
+         <string> Style</string>
+        </property>
+        <property name="icon">
+         <iconset theme="applications-graphics" resource="ide.qrc">
+          <normaloff>:/ide-icons/rc/Mypaint-icon.png</normaloff>:/ide-icons/rc/Mypaint-icon.png</iconset>
+        </property>
        </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="lblExternalTerminal">
-         <property name="text">
-          <string>External terminal command:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="leTerminal">
-         <property name="text">
-          <string>gnome-terminal -e</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="pStyle">
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="1" column="0">
-        <layout class="QFormLayout" name="formLayout_2">
-         <property name="sizeConstraint">
-          <enum>QLayout::SetMinimumSize</enum>
-         </property>
-         <property name="fieldGrowthPolicy">
-          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-         </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QStackedWidget" name="stackedWidget">
+       <property name="currentIndex">
+        <number>1</number>
+       </property>
+       <widget class="QWidget" name="page_3">
+        <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="0">
-          <widget class="QLabel" name="lblFont">
-           <property name="text">
-            <string>Font: </string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="lblFontSize">
-           <property name="text">
-            <string>Font size: </string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <property name="topMargin">
+          <widget class="QTabWidget" name="tabWidget">
+           <property name="currentIndex">
             <number>0</number>
            </property>
-           <item>
-            <widget class="QSpinBox" name="sbFontSize">
-             <property name="minimumSize">
-              <size>
-               <width>50</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>10</number>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="lblPygmentStyle">
-           <property name="text">
-            <string>Pygments style: </string>
-           </property>
+           <widget class="QWidget" name="tabEditorsettings">
+            <attribute name="title">
+             <string>Editor settings</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_2">
+             <item row="0" column="0">
+              <widget class="QPropertyGrid" name="propGridSettings"/>
+             </item>
+            </layout>
+           </widget>
           </widget>
          </item>
-         <item row="3" column="0">
-          <widget class="QListWidget" name="lwColors">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="page_4">
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="0" column="0">
+          <widget class="QTabWidget" name="tabWidget_2">
+           <property name="currentIndex">
+            <number>0</number>
            </property>
-           <property name="maximumSize">
-            <size>
-             <width>129</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <item>
-            <property name="text">
-             <string>Margin</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>ActiveLine</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Selection</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>SelectedText</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>LineNumber</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>PanelBackground</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>PanelBackground2</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>TextOccurences</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>SearchResults</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Warning</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Error</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <widget class="QWidget" name="tab">
+            <attribute name="title">
+             <string>Editor</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
              <item>
-              <widget class="QPushButton" name="pbColor">
-               <property name="minimumSize">
-                <size>
-                 <width>50</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background-color: rgb(0, 0, 0);</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="autoDefault">
-                <bool>true</bool>
-               </property>
-               <property name="flat">
-                <bool>false</bool>
+              <widget class="QPropertyGrid" name="propGridStyle"/>
+             </item>
+             <item>
+              <widget class="Line" name="line">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
                </property>
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_4">
+              <widget class="QCobolCodeEdit" name="codeEdit">
+               <property name="plainText">
+                <string>      *******************************************************************
+      ** Example taken from http://progopedia.com/version/opencobol-1.0/*
+      *******************************************************************
+       IDENTIFICATION DIVISION.
+      **************************************
+       PROGRAM-ID. SAMPLE.
+      **
+       DATA DIVISION.
+      **************************************
+       WORKING-STORAGE SECTION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*
+       77 FACT      PIC 9(15) comp  .
+       77 N         PIC 99          .
+       77 I         PIC 99          .
+       77 IST       PIC XX          .
+       77 FACTTST   PIC X(18)       .
+      **
+       PROCEDURE DIVISION.
+      **************************************
+       MAIN-PROCECURE.
+           MOVE 16 to N
+           MOVE 0 to I
+           MOVE 1 to FACT
+           PERFORM UNTIL I GREATER THAN N
+               MOVE I to IST
+               MOVE FACT to FACTTST
+               DISPLAY IST &quot;! = &quot; FACTTST
+               ADD 1 to I
+               MULTIPLY I BY FACT
+                    ON SIZE ERROR DISPLAY &quot;value too big&quot;
+               END-MULTIPLY
+           END-PERFORM
+           EXIT PROGRAM.
+       END PROGRAM SAMPLE.
+      **
+</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="tab_2">
+            <attribute name="title">
+             <string>Console</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <item>
+              <layout class="QFormLayout" name="formLayout">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label">
+                 <property name="text">
+                  <string>Background</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QColorButton" name="colorButtonConsoleBck">
+                 <property name="color" stdset="0">
+                  <color>
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_2">
+                 <property name="text">
+                  <string>Foreground</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QColorButton" name="colorButtonConsoleFore">
+                 <property name="color" stdset="0">
+                  <color>
+                   <red>64</red>
+                   <green>64</green>
+                   <blue>64</blue>
+                  </color>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_3">
+                 <property name="text">
+                  <string>User input</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string>Application output</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QColorButton" name="colorButtonConsoleApp">
+                 <property name="color" stdset="0">
+                  <color>
+                   <red>64</red>
+                   <green>64</green>
+                   <blue>255</blue>
+                  </color>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QColorButton" name="colorButtonConsoleUsr">
+                 <property name="color" stdset="0">
+                  <color>
+                   <red>34</red>
+                   <green>170</green>
+                   <blue>34</blue>
+                  </color>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="Line" name="line_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
+              </widget>
+             </item>
+             <item>
+              <widget class="QInteractiveConsole" name="console"/>
              </item>
             </layout>
-           </item>
-           <item>
-            <spacer name="verticalSpacer">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="0" column="1">
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QFontComboBox" name="fcbFont">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>200</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="fontFilters">
-              <set>QFontComboBox::MonospacedFonts</set>
-             </property>
-             <property name="currentFont">
-              <font>
-               <family>DejaVu Sans Mono</family>
-               <pointsize>6</pointsize>
-               <weight>50</weight>
-               <italic>true</italic>
-               <bold>false</bold>
-              </font>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="2" column="1">
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QComboBox" name="cmbPygmentsStyle">
-             <property name="minimumSize">
-              <size>
-               <width>200</width>
-               <height>0</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="4" column="0">
-          <widget class="QCheckBox" name="cbLineNbr">
-           <property name="text">
-            <string>Show line numbers</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QCheckBox" name="cbWhitespaces">
-           <property name="text">
-            <string>Show whitespaces</string>
-           </property>
-           <property name="checked">
-            <bool>false</bool>
-           </property>
+           </widget>
+           <widget class="QWidget" name="tab_3">
+            <attribute name="title">
+             <string>Home page</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <spacer name="horizontalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioButtonWhite">
+                 <property name="text">
+                  <string>White</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioButtonDark">
+                 <property name="text">
+                  <string>Dark</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QHomeWidget" name="homeWidget">
+               <property name="title" stdset="0">
+                <string>Welcome to OpenCoblIDE</string>
+               </property>
+               <property name="icon" stdset="0">
+                <iconset resource="ide.qrc">
+                 <normaloff>:/ide-icons/rc/silex-64x64.png</normaloff>:/ide-icons/rc/silex-64x64.png</iconset>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
           </widget>
          </item>
         </layout>
-       </item>
-       <item row="2" column="0">
-        <widget class="CobolEditor" name="plainTextEdit">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>1</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
+       </widget>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item row="1" column="0" colspan="2">
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::Reset</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
@@ -435,9 +343,34 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>CobolEditor</class>
+   <class>QCodeEdit</class>
    <extends>QPlainTextEdit</extends>
-   <header>cobcide/editor.h</header>
+   <header>pyqode.core</header>
+  </customwidget>
+  <customwidget>
+   <class>QPropertyGrid</class>
+   <extends>QWidget</extends>
+   <header>pyqode.widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>QHomeWidget</class>
+   <extends>QWidget</extends>
+   <header>pyqode.widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>QInteractiveConsole</class>
+   <extends>QTextEdit</extends>
+   <header>pyqode.widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>QColorButton</class>
+   <extends>QWidget</extends>
+   <header>pyqode.widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>QCobolCodeEdit</class>
+   <extends>QCodeEdit</extends>
+   <header>oci.editor</header>
   </customwidget>
  </customwidgets>
  <resources>
