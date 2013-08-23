@@ -165,3 +165,20 @@ class DlgAbout(QtGui.QDialog):
         for i, version in enumerate(versions):
             item = QtGui.QTableWidgetItem(version)
             self.tbwVersions.setItem(i, 0, item)
+
+
+class DlgPreferences(QtGui.QDialog):
+    def __init__(self, parent=None):
+        QtGui.QDialog.__init__(self, parent)
+        loadUi("dlg_preferences.ui", self)
+        self.codeEdit.syntaxHighlighterMode.setLexerFromFilename("*.cbl")
+        self.codeEdit.syntaxHighlighterMode.rehighlight()
+        self.console.runProcess("python")
+        lw = self.lwMenu
+        assert isinstance(lw, QtGui.QListWidget)
+        lw.item(0).setIcon(QtGui.QIcon.fromTheme(
+            "preferences-system",
+            QtGui.QIcon(":/ide-icons/rc/Preferences-system.png")))
+        lw.item(1).setIcon(QtGui.QIcon.fromTheme(
+            "applications-graphics",
+            QtGui.QIcon(":/ide-icons/rc/Mypaint-icon.png")))

@@ -22,7 +22,7 @@ import pyqode.core
 from PyQt4 import QtCore, QtGui
 import sys
 from oci import __version__, constants, cobol
-from oci.dialogs import DlgNewFile, DlgAbout
+from oci.dialogs import DlgNewFile, DlgAbout, DlgPreferences
 from oci.editor import QCobolCodeEdit
 from oci.settings import Settings
 from oci.ui import loadUi
@@ -233,10 +233,12 @@ class MainWindow(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionPreferences_triggered(self):
-        QtGui.QMessageBox.information(
-            self, "Not implemented",
-            "This feature has not been implemented yet.It should be ready for "
-            "the next beta release.")
+        dlg = DlgPreferences(self)
+        dlg.exec_()
+        #QtGui.QMessageBox.information(
+        #    self, "Not implemented",
+        #    "This feature has not been implemented yet.It should be ready for "
+        #    "the next beta release.")
 
     @QtCore.pyqtSlot()
     def on_actionHelp_triggered(self):
