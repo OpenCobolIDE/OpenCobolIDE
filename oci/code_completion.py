@@ -24,9 +24,7 @@ from oci import constants
 
 
 class CobolDocumentWordsProvider(pyqode.core.DocumentWordCompletionProvider):
-    def parse(self, code, wordSeparators=pyqode.core.constants.WORD_SEPARATORS):
-        return pyqode.core.DocumentWordCompletionProvider.parse(self, code,
-                                                                wordSeparators)
+    pass
 
 
 class CobolAnalyserProvider(pyqode.core.CompletionProvider):
