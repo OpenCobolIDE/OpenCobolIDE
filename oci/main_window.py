@@ -340,6 +340,11 @@ class MainWindow(QtGui.QMainWindow):
             self.tb.setEnabled(False)
             self.actionRun.setEnabled(False)
             self.actionCompile.setEnabled(False)
+        self.menuEdit.clear()
+        if w:
+            self.menuEdit.addActions(w.actions())
+            self.menuEdit.addSeparator()
+        self.menuEdit.addAction(self.actionPreferences)
 
     def saveSettings(self):
         if self.stackedWidget.currentIndex() == 1:
