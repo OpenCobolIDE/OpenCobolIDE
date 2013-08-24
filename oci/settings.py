@@ -16,12 +16,53 @@
 """
 Gives an easy and safe access to the app settings
 """
-from PyQt4 import QtCore
 import os
 import sys
-
+import pyqode.core
+from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import QSettings
 
+
+DEFAULT_EDITOR_SETTINGS = """{
+    "General": {
+        "leftMarginPos": "7",
+        "rightMarginPos": "72",
+        "showWhiteSpaces": "False",
+        "tabLength": "4",
+        "useSpacesInsteadOfTab": "True"
+    },
+    "codeCompletion": {
+        "caseSensitive": "False",
+        "showTooltips": "True",
+        "triggerKey": "32",
+        "triggerKeys": "[46]",
+        "triggerLength": "1",
+        "triggerSymbols": "[]"
+    }
+}
+"""
+
+DEFAULT_EDITOR_STYLE = """{
+    "General": {
+        "background": "#f8f8f8",
+        "caretLineBackground": "#efefef",
+        "foldIndicatorBackground": "#c1d1b0",
+        "font": "monospace",
+        "fontSize": "10",
+        "foreground": "#000000",
+        "margin": "#FF0000",
+        "matchedBraceBackground": "#b4eeb4",
+        "matchedBraceForeground": "#ff0000",
+        "nativeFoldingIndicator": "True",
+        "pygmentsStyle": "default",
+        "searchOccurrenceBackground": "#ffff00",
+        "searchOccurrenceForeground": "#000000",
+        "selectionBackground": "#accd8a",
+        "selectionForeground": "#ffffff",
+        "whiteSpaceForeground": "#dddddd"
+    }
+}
+"""
 
 class Settings(object):
 
@@ -144,3 +185,80 @@ class Settings(object):
     @shellCommand.setter
     def shellCommand(self, cmd):
         self._settings.setValue("shell", cmd)
+
+    @property
+    def editorSettings(self):
+        json_data = self._settings.value("editorSettings",
+                                         DEFAULT_EDITOR_SETTINGS)
+        r = pyqode.core.PropertyRegistry()
+        r.load(json_data)
+        return r
+
+    @editorSettings.setter
+    def editorSettings(self, propertyRegistry):
+        self._settings.setValue("editorSettings", propertyRegistry.dump())
+
+    @property
+    def editorStyle(self):
+        json_data = self._settings.value("editorStyle",
+                                         DEFAULT_EDITOR_STYLE)
+        r = pyqode.core.PropertyRegistry()
+        r.load(json_data)
+        return r
+
+    @editorStyle.setter
+    def editorStyle(self, propertyRegistry):
+        self._settings.setValue("editorStyle", propertyRegistry.dump())
+
+    @property
+    def consoleBackground(self):
+        return QtGui.QColor(self._settings.value("consoleBackground",
+                                                 "#FFFFFF"))
+
+    @consoleBackground.setter
+    def consoleBackground(self, value):
+        if isinstance(value, QtGui.QColor):
+            value = value.name()
+        self._settings.setValue("consoleBackground", value)
+
+    @property
+    def consoleForeground(self):
+        return QtGui.QColor(self._settings.value("consoleForeground",
+                                                 "#404040"))
+
+    @consoleForeground.setter
+    def consoleForeground(self, value):
+        if isinstance(value, QtGui.QColor):
+            value = value.name()
+        self._settings.setValue("consoleForeground", value)
+
+    @property
+    def consoleUserInput(self):
+        return QtGui.QColor(self._settings.value("consoleUserInput",
+                                                 "#22AA22"))
+
+    @consoleUserInput.setter
+    def consoleUserInput(self, value):
+        if isinstance(value, QtGui.QColor):
+            value = value.name()
+        self._settings.setValue("consoleUserInput", value)
+
+    @property
+    def consoleAppOutput(self):
+        return QtGui.QColor(self._settings.value("consoleAppOutput",
+                                                 "#4040FF"))
+
+    @consoleAppOutput.setter
+    def consoleAppOutput(self, value):
+        if isinstance(value, QtGui.QColor):
+            value = value.name()
+        self._settings.setValue("consoleAppOutput", value)
+
+
+    @property
+    def homePageColorScheme(self):
+        return int(self._settings.value("homePageStyle", "0"))
+
+    @homePageColorScheme.setter
+    def homePageColorScheme(self, value):
+        self._settings.setValue("homePageStyle", str(value))

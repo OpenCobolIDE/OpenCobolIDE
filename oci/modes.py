@@ -159,6 +159,8 @@ class LeftMarginMode(RightMarginMode):
 def checkFile(queue, code, filePath, fileEncoding):
     tmp = os.path.join(constants.getAppTempDirectory(),
                        QFileInfo(filePath).fileName())
+    if os.path.isdir(tmp):
+        return
     with open(tmp, 'wb') as f:
         f.write(code.encode(fileEncoding))
     fileType = cobol.detectFileType(tmp)

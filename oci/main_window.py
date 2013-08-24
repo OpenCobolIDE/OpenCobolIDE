@@ -19,10 +19,11 @@ Contains the main window implementation
 import os
 from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem, QTreeWidgetItem, QInputDialog
 import pyqode.core
+import pyqode.widgets
 from PyQt4 import QtCore, QtGui
 import sys
 from oci import __version__, constants, cobol
-from oci.dialogs import DlgNewFile, DlgAbout
+from oci.dialogs import DlgNewFile, DlgAbout, DlgPreferences
 from oci.editor import QCobolCodeEdit
 from oci.settings import Settings
 from oci.ui import loadUi
@@ -48,9 +49,18 @@ class MainWindow(QtGui.QMainWindow):
         self.wasMaximised = s.maximised
         self.prevSize = s.size
         self.actionFullscreen.setChecked(s.fullscreen)
+
+        self.consoleOutput.backgroundColor = s.consoleBackground
+        self.consoleOutput.processOutputColor = s.consoleForeground
+        self.consoleOutput.usrInputColor = s.consoleUserInput
+        self.consoleOutput.appMessageColor = s.consoleAppOutput
+
+        self.setHomePageColorScheme(s.homePageColorScheme)
+
         self.setupIcons()
         self.QHomeWidget.setupRecentFiles(
             organization="OpenCobolIDE",
+            app="OpenCobolIDE",
             menuRecentFiles=self.menuRecent_files,
             actionClearMnuRecentFiles=self.actionClear)
         self.QHomeWidget.fileOpenRequested.connect(self.openFile)
@@ -157,6 +167,10 @@ class MainWindow(QtGui.QMainWindow):
         else:
             editor.programType = constants.ProgramType.Module
 
+    def setHomePageColorScheme(self, schemeNbr):
+        schemes = [pyqode.widgets.ColorScheme, pyqode.widgets.DarkColorScheme]
+        self.QHomeWidget.setColorScheme(schemes[schemeNbr]())
+
     @QtCore.pyqtSlot()
     def on_actionNew_triggered(self):
         dlg = DlgNewFile(self)
@@ -233,10 +247,31 @@ class MainWindow(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionPreferences_triggered(self):
-        QtGui.QMessageBox.information(
-            self, "Not implemented",
-            "This feature has not been implemented yet.It should be ready for "
-            "the next beta release.")
+        s = Settings()
+        dlg = DlgPreferences(self)
+        dlg.homePageColorScheme = s.homePageColorScheme
+        dlg.editorSettings = s.editorSettings
+        dlg.editorStyle = s.editorStyle
+        dlg.consoleBackground = s.consoleBackground
+        dlg.consoleUserInput = s.consoleUserInput
+        dlg.consoleForeground = s.consoleForeground
+        dlg.consoleAppOutput = s.consoleAppOutput
+        dlg.console.runProcess("python")
+        if dlg.exec_() == dlg.Accepted:
+            s.editorSettings = dlg.editorSettings
+            s.editorStyle = dlg.editorStyle
+            s.consoleBackground = dlg.consoleBackground
+            s.consoleForeground = dlg.consoleForeground
+            s.consoleUserInput = dlg.consoleUserInput
+            s.consoleAppOutput = dlg.consoleAppOutput
+            s.homePageColorScheme = dlg.homePageColorScheme
+            self.setHomePageColorScheme(s.homePageColorScheme)
+            self.tabWidgetEditors.resetSettings(dlg.editorSettings)
+            self.tabWidgetEditors.resetStyle(dlg.editorStyle)
+            self.consoleOutput.backgroundColor = dlg.consoleBackground
+            self.consoleOutput.processOutputColor = dlg.consoleForeground
+            self.consoleOutput.usrInputColor = dlg.consoleUserInput
+            self.consoleOutput.appMessageColor = dlg.consoleAppOutput
 
     @QtCore.pyqtSlot()
     def on_actionHelp_triggered(self):
@@ -359,10 +394,14 @@ class MainWindow(QtGui.QMainWindow):
                 else:
                     tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
                 Settings().lastFilePath = fn
+                tab.settings = Settings().editorSettings
+                tab.style = Settings().editorStyle
                 tab.openFile(fn, detectEncoding=True)
                 self.tabWidgetEditors.addEditorTab(tab, icon=icon)
                 self.showHomePage(False)
                 self.QHomeWidget.setCurrentFile(fn)
+                print(tab.style.dump())
+                print(tab.settings.dump())
         except IOError:
             QtGui.QMessageBox.warning(
                 self, "File does not exist",
@@ -423,7 +462,7 @@ class MainWindow(QtGui.QMainWindow):
         x = (screenGeometry.width() - self.width()) / 2
         y = (screenGeometry.height() - self.height()) / 2
         self.move(x, y)
-        self.show()
+        self.showNormal()
 
     def showHomePage(self, home=True):
         if home:

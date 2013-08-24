@@ -16,7 +16,7 @@
 """
 Contains an editor specialised for cobol source code editing.
 """
-from pygments.lexers.compiled import CobolFreeformatLexer
+from pygments.lexers.compiled import CobolFreeformatLexer, CobolLexer
 import pyqode.core
 from PyQt4 import QtCore
 from pygments.token import Comment
@@ -30,6 +30,8 @@ from oci.cobol import CobolFolder
 # make pygments hihlighter uses our custom cobol fold detector
 pyqode.core.PygmentsSyntaxHighlighter.LEXERS_FOLD_DETECTORS[
             CobolFreeformatLexer] = CobolFolder()
+pyqode.core.PygmentsSyntaxHighlighter.LEXERS_FOLD_DETECTORS[
+            CobolLexer] = CobolFolder()
 
 
 class QCobolCodeEdit(pyqode.core.QCodeEdit):
