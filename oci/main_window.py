@@ -461,6 +461,7 @@ class MainWindow(QtGui.QMainWindow):
         self.QHomeWidget.addAction(self.actionHelp)
         self.QHomeWidget.addAction(self.actionAbout)
         self.QHomeWidget.addAction(self.actionQuit)
+        self.addAction(self.actionFullscreen)
 
     def showCentered(self):
         screenGeometry = QtGui.QApplication.desktop().screenGeometry()
