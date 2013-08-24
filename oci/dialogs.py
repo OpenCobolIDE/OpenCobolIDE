@@ -157,8 +157,8 @@ class DlgAbout(QtGui.QDialog):
         loadUi("dlg_about.ui", self)
         self.labelMain.setText(self.labelMain.text() % __version__)
         versions = [cobol.get_cobc_version(),
-                    QtCore.PYQT_VERSION_STR,
                     QtCore.QT_VERSION_STR,
+                    QtCore.PYQT_VERSION_STR,
                     pyqode.core.__version__,
                     pyqode.widgets.__version__,
                     pygments.__version__]
@@ -168,12 +168,80 @@ class DlgAbout(QtGui.QDialog):
 
 
 class DlgPreferences(QtGui.QDialog):
-    def __init__(self, parent=None):
+
+    @property
+    def editorSettings(self):
+        return self.codeEdit.settings
+
+    @editorSettings.setter
+    def editorSettings(self, value):
+        self.codeEdit.settings = value
+        self.propGridSettings.setPropertyRegistry(self.codeEdit.settings)
+
+    @property
+    def homePageColorScheme(self):
+        return self.__homePageColorScheme
+
+    @homePageColorScheme.setter
+    def homePageColorScheme(self, value):
+        self.__homePageColorScheme = value
+        schemes = [pyqode.widgets.ColorScheme, pyqode.widgets.DarkColorScheme]
+        self.homeWidget.setColorScheme(schemes[value]())
+        self.radioButtonWhite.setChecked(value == 0)
+        self.radioButtonDark.setChecked(value == 1)
+
+    @property
+    def editorStyle(self):
+        return self.codeEdit.style
+
+    @editorStyle.setter
+    def editorStyle(self, value):
+        self.codeEdit.style = value
+        self.propGridStyle.setPropertyRegistry(self.codeEdit.style)
+
+    @property
+    def consoleBackground(self):
+        return self.console.backgroundColor
+
+    @consoleBackground.setter
+    def consoleBackground(self, value):
+        self.console.backgroundColor = value
+        self.colorButtonConsoleBck.color = value
+
+    @property
+    def consoleForeground(self):
+        return self.console.processOutputColor
+
+    @consoleForeground.setter
+    def consoleForeground(self, value):
+        self.console.processOutputColor = value
+        self.colorButtonConsoleFore.color = value
+
+    @property
+    def consoleUserInput(self):
+        return self.console.userInputOutputColor
+
+    @consoleUserInput.setter
+    def consoleUserInput(self, value):
+        self.console.userInputOutputColor = value
+        self.colorButtonConsoleUsr.color = value
+
+    @property
+    def consoleAppOutput(self):
+        return self.console.appMessageColor
+
+    @consoleAppOutput.setter
+    def consoleAppOutput(self, value):
+        self.console.appMessageColor = value
+        self.colorButtonConsoleApp.color = value
+
+    def __init__(self, parent=None,
+                 editorSettings=None, editorStyle=None):
         QtGui.QDialog.__init__(self, parent)
         loadUi("dlg_preferences.ui", self)
-        self.codeEdit.syntaxHighlighterMode.setLexerFromFilename("*.cbl")
+        self.__homePageColorScheme = 0
+        self.codeEdit.syntaxHighlighterMode.setLexerFromFilename("file.cbl")
         self.codeEdit.syntaxHighlighterMode.rehighlight()
-        self.console.runProcess("python")
         lw = self.lwMenu
         assert isinstance(lw, QtGui.QListWidget)
         lw.item(0).setIcon(QtGui.QIcon.fromTheme(
@@ -182,3 +250,36 @@ class DlgPreferences(QtGui.QDialog):
         lw.item(1).setIcon(QtGui.QIcon.fromTheme(
             "applications-graphics",
             QtGui.QIcon(":/ide-icons/rc/Mypaint-icon.png")))
+        self.stackedWidget.setCurrentIndex(0)
+        self.tabWidgetSettings.setCurrentIndex(0)
+        self.tabWidgetStyle.setCurrentIndex(0)
+        self.propGridStyle.rehighlightRequested.connect(
+            self.codeEdit.syntaxHighlighterMode.rehighlight)
+        self.radioButtonWhite.toggled.connect(self.onHomePageStyleChanged)
+
+    @QtCore.pyqtSlot(int)
+    def on_lwMenu_currentRowChanged(self, row):
+        self.stackedWidget.setCurrentIndex(row)
+
+    @QtCore.pyqtSlot(QtGui.QColor)
+    def on_colorButtonConsoleFore_valueChanged(self, color):
+        self.consoleForeground = color
+
+    @QtCore.pyqtSlot(QtGui.QColor)
+    def on_colorButtonConsoleBck_valueChanged(self, color):
+        self.consoleBackground = color
+
+    @QtCore.pyqtSlot(QtGui.QColor)
+    def on_colorButtonConsoleUsr_valueChanged(self, color):
+        self.consoleUserInput = color
+
+    @QtCore.pyqtSlot(QtGui.QColor)
+    def on_colorButtonConsoleApp_valueChanged(self, color):
+        self.consoleAppOutput = color
+
+    def keyPressEvent(self, QKeyEvent):
+        if QKeyEvent.key() == QtCore.Qt.Key_Return:
+            QKeyEvent.accept()
+
+    def onHomePageStyleChanged(self, whiteEnable):
+        self.homePageColorScheme = int(not whiteEnable)

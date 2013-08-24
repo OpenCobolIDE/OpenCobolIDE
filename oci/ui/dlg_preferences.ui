@@ -14,7 +14,9 @@
    <string>Preferences</string>
   </property>
   <property name="windowIcon">
-   <iconset theme="preferences-system"/>
+   <iconset theme="preferences-system">
+    <normaloff/>
+   </iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -69,14 +71,21 @@
       </widget>
      </item>
      <item>
+      <widget class="Line" name="line_3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="page_3">
         <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="0">
-          <widget class="QTabWidget" name="tabWidget">
+          <widget class="QTabWidget" name="tabWidgetSettings">
            <property name="currentIndex">
             <number>0</number>
            </property>
@@ -97,7 +106,7 @@
        <widget class="QWidget" name="page_4">
         <layout class="QGridLayout" name="gridLayout_3">
          <item row="0" column="0">
-          <widget class="QTabWidget" name="tabWidget_2">
+          <widget class="QTabWidget" name="tabWidgetStyle">
            <property name="currentIndex">
             <number>0</number>
            </property>
@@ -373,6 +382,16 @@
    <header>oci.editor</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>lwMenu</tabstop>
+  <tabstop>tabWidgetStyle</tabstop>
+  <tabstop>codeEdit</tabstop>
+  <tabstop>console</tabstop>
+  <tabstop>radioButtonWhite</tabstop>
+  <tabstop>radioButtonDark</tabstop>
+  <tabstop>tabWidgetSettings</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources>
   <include location="ide.qrc"/>
  </resources>
