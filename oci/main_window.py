@@ -497,15 +497,16 @@ class MainWindow(QtGui.QMainWindow):
                 self.dockWidgetNavPanel.show()
                 self.setMinimumWidth(900)
                 self.setMinimumHeight(700)
-                if self.wasMaximised:
-                    self.showMaximized()
-                else:
-                    if self.prevSize.width() < 900:
-                        self.prevSize.setWidth(900)
-                    if self.prevSize.height() < 700:
-                        self.prevSize.setHeight(700)
-                    self.resize(self.prevSize)
-                    self.showCentered()
+                if not self.isFullScreen():
+                    if self.wasMaximised:
+                        self.showMaximized()
+                    else:
+                        if self.prevSize.width() < 900:
+                            self.prevSize.setWidth(900)
+                        if self.prevSize.height() < 700:
+                            self.prevSize.setHeight(700)
+                        self.resize(self.prevSize)
+                        self.showCentered()
                 self.statusBar().clearMessage()
                 s = Settings()
                 self.dockWidgetNavPanel.setVisible(s.navigationPanelVisible)
