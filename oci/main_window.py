@@ -99,6 +99,15 @@ class MainWindow(QtGui.QMainWindow):
         self.aShowLogsWin.toggled.connect(
             self.dockWidgetLogs.setVisible)
 
+        # status bar
+        self.lblFilename = QtGui.QLabel()
+        self.lblEncoding = QtGui.QLabel()
+        self.lblCursorPos = QtGui.QLabel()
+        self.statusbar.addPermanentWidget(self.lblFilename, 200)
+        self.statusbar.addPermanentWidget(self.lblEncoding, 20)
+        self.statusbar.addPermanentWidget(self.lblCursorPos, 20)
+
+
     def updateViewToolbarMenu(self):
         """
         Updates the View>Toolbars menu
@@ -336,6 +345,7 @@ class MainWindow(QtGui.QMainWindow):
             if rn:
                 self.updateNavigationPanel(rn)
             self.tb.setEnabled(True)
+            self.updateStatusBar(w)
         except AttributeError:
             self.tb.setEnabled(False)
             self.actionRun.setEnabled(False)
@@ -345,6 +355,13 @@ class MainWindow(QtGui.QMainWindow):
             self.menuEdit.addActions(w.actions())
             self.menuEdit.addSeparator()
         self.menuEdit.addAction(self.actionPreferences)
+
+    def updateStatusBar(self, editor=None):
+        if editor is None:
+            editor = self.tabWidgetEditors.currentWidget()
+        self.lblEncoding.setText(editor.fileEncoding)
+        self.lblFilename.setText(editor.filePath)
+        self.lblCursorPos.setText("%d:%d" % editor.cursorPosition)
 
     def saveSettings(self):
         if self.stackedWidget.currentIndex() == 1:
@@ -408,6 +425,8 @@ class MainWindow(QtGui.QMainWindow):
                 self.tabWidgetEditors.addEditorTab(tab, icon=icon)
                 self.showHomePage(False)
                 self.QHomeWidget.setCurrentFile(fn)
+                self.updateStatusBar(tab)
+                tab.cursorPositionChanged.connect(self.updateStatusBar)
         except IOError:
             QtGui.QMessageBox.warning(
                 self, "File does not exist",
@@ -494,7 +513,6 @@ class MainWindow(QtGui.QMainWindow):
             self.toolBarCode.hide()
             self.dockWidgetLogs.hide()
             self.dockWidgetNavPanel.hide()
-            self.statusBar().showMessage("OpenCobolIDE v.%s" % __version__)
         else:
             if self.stackedWidget.currentIndex() == 0:
                 self.stackedWidget.setCurrentIndex(1)
@@ -514,7 +532,6 @@ class MainWindow(QtGui.QMainWindow):
                             self.prevSize.setHeight(700)
                         self.resize(self.prevSize)
                         self.showCentered()
-                self.statusBar().clearMessage()
                 s = Settings()
                 self.dockWidgetNavPanel.setVisible(s.navigationPanelVisible)
                 self.dockWidgetLogs.setVisible(s.logPanelVisible)
