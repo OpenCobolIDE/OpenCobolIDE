@@ -391,16 +391,19 @@ class MainWindow(QtGui.QMainWindow):
             if fn:
                 extension = os.path.splitext(fn)[1]
                 icon = None
+                Settings().lastFilePath = fn
                 if extension.lower() in [".cbl", ".cob"]:
                     tab = QCobolCodeEdit(self.tabWidgetEditors)
                     icon = QtGui.QIcon(tab.icon)
                     tab.analyserMode.documentLayoutChanged.connect(
                         self.updateNavigationPanel)
+                    tab.settings = Settings().editorSettings
+                    tab.style = Settings().editorStyle
                 else:
                     tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
-                Settings().lastFilePath = fn
-                tab.settings = Settings().editorSettings
-                tab.style = Settings().editorStyle
+                    tab.settings = Settings().editorSettings
+                    tab.settings.setValue("minIndentColumn", 0)
+                    tab.style = Settings().editorStyle
                 tab.openFile(fn, detectEncoding=True)
                 self.tabWidgetEditors.addEditorTab(tab, icon=icon)
                 self.showHomePage(False)
