@@ -58,6 +58,7 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.setLineWrapMode(self.NoWrap)
         self.setupPanels()
         self.setupModes()
+        self.settings.setValue("minIndentColumn", 7)
 
     def setupPanels(self):
         """
