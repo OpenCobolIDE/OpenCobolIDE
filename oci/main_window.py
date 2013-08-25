@@ -405,8 +405,6 @@ class MainWindow(QtGui.QMainWindow):
                 self.tabWidgetEditors.addEditorTab(tab, icon=icon)
                 self.showHomePage(False)
                 self.QHomeWidget.setCurrentFile(fn)
-                print(tab.style.dump())
-                print(tab.settings.dump())
         except IOError:
             QtGui.QMessageBox.warning(
                 self, "File does not exist",
