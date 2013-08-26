@@ -415,6 +415,8 @@ class MainWindow(QtGui.QMainWindow):
                     tab.analyserMode.documentLayoutChanged.connect(
                         self.updateNavigationPanel)
                     tab.settings = Settings().editorSettings
+                    tab.settings.setValue("triggerKeys", [],
+                                          section="codeCompletion")
                     tab.style = Settings().editorStyle
                 else:
                     tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)

@@ -106,6 +106,8 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.installMode(CobolCheckerMode())
         self.installMode(DocumentAnalyserMode())
 
+        self.settings.setValue("triggerSymbols", None, "codeCompletion")
+
     def openFile(self, filePath, replaceTabsBySpaces=True, encoding=None,
                  detectEncoding=False):
         pyqode.core.QCodeEdit.openFile(self, filePath, replaceTabsBySpaces,

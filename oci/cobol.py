@@ -165,7 +165,7 @@ class DocumentNode(QTreeWidgetItem):
         """
         Print the node tree in stdout
         """
-        print u" " * indent, self.name, self.line, u" - ", self.end_line
+        print(u" " * indent, self.name, self.line, u" - ", self.end_line)
         for c in self.children:
             c.print_tree(indent + 4)
 
@@ -345,8 +345,9 @@ def parse_document_layout(filename, code=None, createIcon=True,
     last_vars = {}
     last_par = None
     for i, line in enumerate(lines):
-        if not isinstance(line, unicode):
-            line = line.decode(encoding)
+        if sys.version_info[0] == 2:
+            if not isinstance(line, unicode):
+                line = line.decode(encoding)
         indentation = len(line) - len(line.lstrip())
         if indentation >= 7 and not line.isspace():
             line = line.strip().upper()
@@ -533,4 +534,8 @@ def get_cobc_version():
         p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
-    return stdout.splitlines()[0].split(" ")[2]
+    if sys.version_info[0] == 2:
+        return stdout.splitlines()[0].split(" ")[2]
+    else:
+        stdout = str(stdout)
+        return stdout.splitlines()[0].split(" ")[2].split("\\n")[0]

@@ -50,7 +50,7 @@ class ToUpperMode(Mode):
             pos = tc.position()
             anchor = tc.anchor()
             tc.movePosition(QTextCursor.StartOfLine, QTextCursor.KeepAnchor)
-            line_before_cursor = unicode(tc.selectedText())
+            line_before_cursor = tc.selectedText()
             tc.setPosition(pos)
             tc.setPosition(anchor, QTextCursor.KeepAnchor)
             # pas en comment (no start with *)

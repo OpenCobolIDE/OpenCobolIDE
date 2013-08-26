@@ -22,6 +22,7 @@ import os
 import pygments
 import pyqode.core
 import pyqode.widgets
+import sys
 from oci import cobol, __version__
 from oci.settings import Settings
 from oci.ui import loadUi
@@ -124,13 +125,22 @@ class DlgNewFile(QtGui.QDialog):
         self.lineEditPath.setCompleter(completer)
         self.lineEditPath.setText(os.path.expanduser("~"))
 
-    @QtCore.pyqtSlot(unicode)
-    def on_lineEditName_textChanged(self, txt):
-        self.enableOkButton()
+    if sys.version_info[0] == 2:
+        @QtCore.pyqtSlot(unicode)
+        def on_lineEditName_textChanged(self, txt):
+            self.enableOkButton()
 
-    @QtCore.pyqtSlot(unicode)
-    def on_lineEditPath_textChanged(self, txt):
-        self.enableOkButton()
+        @QtCore.pyqtSlot(unicode)
+        def on_lineEditPath_textChanged(self, txt):
+            self.enableOkButton()
+    else:
+        @QtCore.pyqtSlot(str)
+        def on_lineEditName_textChanged(self, txt):
+            self.enableOkButton()
+
+        @QtCore.pyqtSlot(str)
+        def on_lineEditPath_textChanged(self, txt):
+            self.enableOkButton()
 
     @QtCore.pyqtSlot()
     def on_toolButton_clicked(self):
