@@ -504,7 +504,8 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
                              QtCore.QFileInfo(filename).fileName())
     # run it using pexpect
     messages = []
-    output, status = pexpect.run(cmd,withexitstatus=True,cwd=os.path.dirname(filename),
+    output, status = pexpect.run(cmd, withexitstatus=True,
+                                 cwd=os.path.dirname(filename),
                                  env=os.environ.copy())
     nbTokensExpected = 4
     lines = output.splitlines()
@@ -521,9 +522,9 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
                 desc, status, lineNbr, filename=filename))
     return status, messages
 
+
 def get_cobc_version():
     """ Returns the OpenCobol compiler version as a string """
-    ret_val = "unknown"
     cmd = ["cobc", "--version"]
     if sys.platform == "win32":
         startupinfo = subprocess.STARTUPINFO()
