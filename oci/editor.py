@@ -88,7 +88,7 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
             CobolDocumentWordsProvider())
         self.textSaved.connect(self.codeCompletionMode.requestPreload)
         self.codeCompletionMode.addCompletionProvider(CobolAnalyserProvider())
-        self.settings.setValue("triggerSymbols", [], section="codeCompletion")
+        self.settings.setValue("triggerSymbols", [], section="Code completion")
 
         # auto indent
         self.installMode(pyqode.core.AutoIndentMode())
@@ -107,7 +107,7 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.installMode(CobolCheckerMode())
         self.installMode(DocumentAnalyserMode())
 
-        self.settings.setValue("triggerSymbols", None, "codeCompletion")
+        self.settings.setValue("triggerSymbols", None, "Code completion")
 
     def openFile(self, filePath, replaceTabsBySpaces=True, encoding=None,
                  detectEncoding=False):
