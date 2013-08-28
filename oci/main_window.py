@@ -329,31 +329,33 @@ class MainWindow(QtGui.QMainWindow):
 
     def onCurrentEditorChanged(self, index):
         w = self.tabWidgetEditors.widget(index)
-        try:
-            if w.programType[0] == constants.ProgramType.Executable[0]:
-                self.programActionGroup.triggered.emit(self.actionProgram)
-                self.actionProgram.setChecked(True)
-                self.actionRun.setEnabled(True)
-                self.actionCompile.setEnabled(True)
-            else:
-                self.programActionGroup.triggered.emit(self.actionSubprogram)
-                self.actionSubprogram.setChecked(True)
-                self.actionRun.setEnabled(False)
-                self.actionCompile.setEnabled(True)
-            w.analyserMode.parse()
-            rn = w.analyserMode.root_node
-            if rn:
-                self.updateNavigationPanel(rn)
-            self.tb.setEnabled(True)
-            self.updateStatusBar(w)
-        except AttributeError:
-            self.tb.setEnabled(False)
-            self.actionRun.setEnabled(False)
-            self.actionCompile.setEnabled(False)
-        self.menuEdit.clear()
         if w:
+            try:
+                if w.programType[0] == constants.ProgramType.Executable[0]:
+                    self.programActionGroup.triggered.emit(self.actionProgram)
+                    self.actionProgram.setChecked(True)
+                    self.actionRun.setEnabled(True)
+                    self.actionCompile.setEnabled(True)
+                else:
+                    self.programActionGroup.triggered.emit(self.actionSubprogram)
+                    self.actionSubprogram.setChecked(True)
+                    self.actionRun.setEnabled(False)
+                    self.actionCompile.setEnabled(True)
+                w.analyserMode.parse()
+                rn = w.analyserMode.root_node
+                if rn:
+                    self.updateNavigationPanel(rn)
+                self.tb.setEnabled(True)
+                self.updateStatusBar(w)
+            except AttributeError:
+                self.tb.setEnabled(False)
+                self.actionRun.setEnabled(False)
+                self.actionCompile.setEnabled(False)
+            self.menuEdit.clear()
             self.menuEdit.addActions(w.actions())
             self.menuEdit.addSeparator()
+        else:
+            self.showHomePage(True)
         self.menuEdit.addAction(self.actionPreferences)
 
     def updateStatusBar(self, editor=None):
@@ -416,7 +418,7 @@ class MainWindow(QtGui.QMainWindow):
                         self.updateNavigationPanel)
                     tab.settings = Settings().editorSettings
                     tab.settings.setValue("triggerKeys", [],
-                                          section="codeCompletion")
+                                          section="Code completion")
                     tab.style = Settings().editorStyle
                 else:
                     tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
