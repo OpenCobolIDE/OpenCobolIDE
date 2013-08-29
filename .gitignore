@@ -34,3 +34,5 @@ nosetests.xml
 .pydevproject
 
 /.idea
+/temp/
+/__pycache__/

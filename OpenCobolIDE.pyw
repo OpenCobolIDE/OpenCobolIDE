@@ -18,4 +18,8 @@
 This the application main script. It simply calls oci.main
 """
 from oci.main import main
-main()
+# from multiprocessing import freeze_support
+
+if __name__ == "__main__":
+    # freeze_support()
+    main()

@@ -16,6 +16,7 @@
 """
 Contains and functions to cobol source code analysis
 """
+import logging
 from PyQt4 import QtCore
 import os
 import subprocess
@@ -493,34 +494,38 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
     The output is a list of checker messages (those can be used to implements
     a cobol live checker mode)
     """
-    if customOptions is None:
-        customOptions = []
-    # prepare command
-    customOptionsStr = " ".join(customOptions)
-    if outputFilename is None:
-        outputFilename = makeOutputFilePath(filename, fileType)
-    cmd = fileType[1].format(customOptionsStr,
-                             QtCore.QFileInfo(outputFilename).fileName(),
-                             QtCore.QFileInfo(filename).fileName())
-    # run it using pexpect
-    messages = []
-    output, status = pexpect.run(cmd, withexitstatus=True,
-                                 cwd=os.path.dirname(filename),
-                                 env=os.environ.copy())
-    nbTokensExpected = 4
-    lines = output.splitlines()
-    for l in lines:
-        tokens = l.split(":")
-        if len(tokens) == nbTokensExpected:
-            desc = tokens[len(tokens) - 1]
-            errType = tokens[len(tokens) - 2]
-            lineNbr = int(tokens[len(tokens) - 3])
-            status = pyqode.core.MSG_STATUS_WARNING
-            if errType == "Error":
-                status = pyqode.core.MSG_STATUS_ERROR
-            messages.append(pyqode.core.CheckerMessage(
-                desc, status, lineNbr, filename=filename))
-    return status, messages
+    try:
+        if customOptions is None:
+            customOptions = []
+        # prepare command
+        customOptionsStr = " ".join(customOptions)
+        if outputFilename is None:
+            outputFilename = makeOutputFilePath(filename, fileType)
+        cmd = fileType[1].format(customOptionsStr,
+                                 QtCore.QFileInfo(outputFilename).fileName(),
+                                 QtCore.QFileInfo(filename).fileName())
+        # run it using pexpect
+        messages = []
+        output, status = pexpect.run(cmd, withexitstatus=True,
+                                     cwd=os.path.dirname(filename),
+                                     env=os.environ.copy())
+        nbTokensExpected = 4
+        lines = output.splitlines()
+        for l in lines:
+            tokens = l.split(":")
+            if len(tokens) == nbTokensExpected:
+                desc = tokens[len(tokens) - 1]
+                errType = tokens[len(tokens) - 2]
+                lineNbr = int(tokens[len(tokens) - 3])
+                status = pyqode.core.MSG_STATUS_WARNING
+                if errType == "Error":
+                    status = pyqode.core.MSG_STATUS_ERROR
+                messages.append(pyqode.core.CheckerMessage(
+                    desc, status, lineNbr, filename=filename))
+        return status, messages
+    except pexpect.ExceptionPexpect as e:
+        logging.warning(e)
+        return -1, []
 
 
 def get_cobc_version():
