@@ -3,6 +3,9 @@
 # C extensions
 *.so
 
+# Inno setup scrip
+*.iss
+
 # Packages
 *.egg
 *.egg-info
