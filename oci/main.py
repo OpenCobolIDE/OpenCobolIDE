@@ -47,11 +47,6 @@ def windows_init():
 
 
 def main():
-    try:
-        import faulthandler
-        faulthandler.enable()
-    except ImportError:
-        pass
     app = QtGui.QApplication(sys.argv)
     if sys.platform == "win32":
         windows_init()
