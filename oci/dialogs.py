@@ -25,7 +25,7 @@ import pyqode.widgets
 import sys
 from oci import cobol, __version__
 from oci.settings import Settings
-from oci.ui import loadUi
+from oci.ui import dlg_about_ui, dlg_file_type_ui, dlg_preferences_ui
 
 EXE_TEMPLATE = """      ******************************************************************
       * Author:
@@ -106,7 +106,7 @@ MODULE_TEMPLATE = """      *****************************************************
 TEMPLATES = [EXE_TEMPLATE, MODULE_TEMPLATE, ""]
 
 
-class DlgNewFile(QtGui.QDialog):
+class DlgNewFile(QtGui.QDialog, dlg_file_type_ui.Ui_Dialog):
     def path(self):
         return os.path.join(
             self.lineEditPath.text(),
@@ -118,7 +118,8 @@ class DlgNewFile(QtGui.QDialog):
 
     def __init__(self, parent):
         QtGui.QDialog.__init__(self, parent)
-        loadUi("dlg_file_type.ui", self)
+        dlg_file_type_ui.Ui_Dialog.__init__(self)
+        self.setupUi(self)
         self.enableOkButton()
         completer = QtGui.QCompleter(self)
         completer.setModel(QtGui.QDirModel(completer))
@@ -167,13 +168,14 @@ class DlgNewFile(QtGui.QDialog):
         self.prev_pth = pth
 
 
-class DlgAbout(QtGui.QDialog):
+class DlgAbout(QtGui.QDialog, dlg_about_ui.Ui_Dialog):
     """
     About dialog. Shows the about text and the 3rd party libraries versions.
     """
     def __init__(self, parent=None):
         QtGui.QDialog.__init__(self, parent)
-        loadUi("dlg_about.ui", self)
+        dlg_about_ui.Ui_Dialog.__init__(self)
+        self.setupUi(self)
         self.labelMain.setText(self.labelMain.text() % __version__)
         versions = [cobol.get_cobc_version(),
                     QtCore.QT_VERSION_STR,
@@ -186,7 +188,7 @@ class DlgAbout(QtGui.QDialog):
             self.tbwVersions.setItem(i, 0, item)
 
 
-class DlgPreferences(QtGui.QDialog):
+class DlgPreferences(QtGui.QDialog, dlg_preferences_ui.Ui_Dialog):
 
     @property
     def editorSettings(self):
@@ -257,7 +259,8 @@ class DlgPreferences(QtGui.QDialog):
     def __init__(self, parent=None,
                  editorSettings=None, editorStyle=None):
         QtGui.QDialog.__init__(self, parent)
-        loadUi("dlg_preferences.ui", self)
+        dlg_preferences_ui.Ui_Dialog.__init__(self)
+        self.setupUi(self)
         self.__homePageColorScheme = 0
         self.codeEdit.syntaxHighlighterMode.setLexerFromFilename("file.cbl")
         self.codeEdit.syntaxHighlighterMode.rehighlight()
@@ -275,6 +278,8 @@ class DlgPreferences(QtGui.QDialog):
         self.propGridStyle.rehighlightRequested.connect(
             self.codeEdit.syntaxHighlighterMode.rehighlight)
         self.radioButtonWhite.toggled.connect(self.onHomePageStyleChanged)
+        if sys.platform == "win32":
+            self.tabWidgetStyle.removeTab(1)
 
     @QtCore.pyqtSlot(int)
     def on_lwMenu_currentRowChanged(self, row):
