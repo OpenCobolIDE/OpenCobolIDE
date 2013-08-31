@@ -546,8 +546,9 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
             stdout = str(stdout)
             stderr = str(stderr)
             lines = stdout.splitlines() + stderr.splitlines()
-        #print(stdout, stderr)
         nbTokensExpected = 4
+        if sys.platform == "win32":
+            nbTokensExpected += 1
         for l in lines:
             tokens = l.split(":")
             if len(tokens) == nbTokensExpected:
