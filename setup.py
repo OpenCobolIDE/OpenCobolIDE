@@ -20,14 +20,24 @@ This is the setup script, install it as any python package.
 
 .. note:: You will need to install PySide and OpenCobol on your own
 """
+import sys
 from setuptools import setup, find_packages
 
-# properly get pcef version
+# get version
 execfile('oci/__init__.py')
+
 
 # get long description
 with open('README.rst', 'r') as readme:
     long_desc = readme.read()
+
+
+# install requirements
+requirements = ['pygments>=1.6', 'pyqode.core', 'pyqode.widgets']
+if sys.platform == "win32" and sys.version_info[0] == 3:
+    requirements += ['chardet2']
+else:
+    requirements += ['chardet']
 
 
 setup(
@@ -44,8 +54,7 @@ setup(
     description='A simple cobol IDE',
     long_description=long_desc,
     zip_safe=False,
-    install_requires=['pygments>=1.6', 'pyqode-core', 'pyqode-widgets',
-                      'chardet'],
+    install_requires=requirements,
     entry_points={'gui_scripts': ['OpenCobolIDE = oci.main:main'],
                   'pyqode_plugins': [
                       'oci_widgets = oci_designer_plugins.cobol_plugin']}
