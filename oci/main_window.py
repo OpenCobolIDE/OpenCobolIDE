@@ -16,7 +16,9 @@
 """
 Contains the main window implementation
 """
+import multiprocessing
 import os
+import subprocess
 from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem, QTreeWidgetItem, QInputDialog
 import pyqode.core
 import pyqode.widgets
@@ -27,18 +29,19 @@ from oci.dialogs import DlgNewFile, DlgAbout, DlgPreferences
 from oci.editor import QCobolCodeEdit
 from oci import settings
 from oci.settings import Settings
-from oci.ui import loadUi
+from oci.ui import ide_ui
 
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
 
     compilerMsgReady = QtCore.pyqtSignal(pyqode.core.CheckerMessage)
     compilationFinished = QtCore.pyqtSignal(bool)
 
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
+        ide_ui.Ui_MainWindow.__init__(self)
+        self.setupUi(self)
         self.initDefaultSettings()
-        loadUi("ide.ui", self, "ide.qrc")
         self.stackedWidget.setCurrentIndex(0)
         self.__prevRootNode = None
         s = Settings()
@@ -108,6 +111,9 @@ class MainWindow(QtGui.QMainWindow):
         self.statusbar.addPermanentWidget(self.lblFilename, 200)
         self.statusbar.addPermanentWidget(self.lblEncoding, 20)
         self.statusbar.addPermanentWidget(self.lblCursorPos, 20)
+
+        if sys.platform == "win32":
+            self.tabWidgetLogs.removeTab(1)
 
     @staticmethod
     def initDefaultSettings():
@@ -253,7 +259,6 @@ class MainWindow(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionRun_triggered(self):
-        self.actionRun.setEnabled(False)
         self.tabWidgetLogs.setCurrentIndex(1)
         self.dockWidgetLogs.show()
         self.consoleOutput.setFocus(True)
@@ -263,8 +268,18 @@ class MainWindow(QtGui.QMainWindow):
         target = cobol.makeOutputFilePath(
             source_fn, self.tabWidgetEditors.currentWidget().programType)
         cwd = os.path.join(os.path.dirname(target))
-        self.consoleOutput.processFinished.connect(self.onProgramFinished)
-        self.consoleOutput.runProcess(target, cwd=cwd)
+        if sys.platform == "win32":
+            if hasattr(sys, "frozen"):
+                win_console = os.path.join(os.getcwd(), "win_console.exe")
+                cmd = "{} {} {}".format(win_console, target, cwd)
+            else:
+                win_console = os.path.join(os.getcwd(), "win_console.py")
+                cmd = "python {} {} {}".format(win_console, target, cwd)
+            subprocess.Popen(cmd, creationflags=subprocess.CREATE_NEW_CONSOLE)
+        else:
+            self.actionRun.setEnabled(False)
+            self.consoleOutput.processFinished.connect(self.onProgramFinished)
+            self.consoleOutput.runProcess(target, cwd=cwd)
 
     @QtCore.pyqtSlot()
     def on_actionPreferences_triggered(self):

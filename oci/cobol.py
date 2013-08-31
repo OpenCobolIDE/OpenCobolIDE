@@ -525,11 +525,25 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
                 QtCore.QFileInfo(filename).fileName())
         # run it using pexpect
         messages = []
-        output, status = pexpect.run(cmd, withexitstatus=True,
-                                     cwd=os.path.dirname(filename),
-                                     env=os.environ.copy())
+        if sys.platform == "win32":
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            p = subprocess.Popen(cmd, shell=False, startupinfo=startupinfo,
+                                 env=os.environ.copy(),
+                                 cwd=os.path.dirname(filename),
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        else:
+            p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE)
+        stdout, stderr = p.communicate()
+        status = p.returncode
+        if sys.version_info[0] == 2:
+            lines = stdout.splitlines() + stderr.splitlines()
+        else:
+            stdout = str(stdout)
+            stderr = str(stderr)
+            lines = stdout.splitlines() + stderr.splitlines()
         nbTokensExpected = 4
-        lines = output.splitlines()
         for l in lines:
             tokens = l.split(":")
             if len(tokens) == nbTokensExpected:
