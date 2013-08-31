@@ -19,13 +19,13 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\{#MyAppName}
+DefaultDirName=c:\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 LicenseFile=COPYING
 OutputDir=dist
 OutputBaseFilename=OpenCobolIDE-{#MyAppVersion}_Setup
-SetupIconFile=cobcide\ui\rc\silex-icon.ico
+SetupIconFile=oci\ui\rc\silex-icon.ico
 Compression=lzma
 SolidCompression=yes
 
@@ -37,28 +37,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "build\exe.win32-2.7\OpenCobolIDE.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\_ctypes.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\_hashlib.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\_socket.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\_ssl.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\bz2.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\library.zip"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\OpenCobolIDE.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\pyexpat.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\PySide.QtCore.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\PySide.QtGui.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\pyside-python2.7.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\python27.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\pywintypes27.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\select.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\shiboken-python2.7.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\unicodedata.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\win32api.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\win32pipe.pyd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\exe.win32-2.7\OpenCobol\*"; DestDir: "{app}\OpenCobol"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "@BUILD_DIR@\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
