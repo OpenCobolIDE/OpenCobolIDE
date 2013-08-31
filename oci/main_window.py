@@ -257,11 +257,12 @@ class MainWindow(QtGui.QMainWindow):
         self.tabWidgetLogs.setCurrentIndex(1)
         self.dockWidgetLogs.show()
         self.consoleOutput.setFocus(True)
+        source_fn = self.tabWidgetEditors.currentWidget().filePath
+        source_fn = os.path.join(os.path.dirname(source_fn), "bin",
+                                 os.path.basename(source_fn))
         target = cobol.makeOutputFilePath(
-            self.tabWidgetEditors.currentWidget().filePath,
-            self.tabWidgetEditors.currentWidget().programType)
-        cwd = os.path.dirname(target)
-        # todo check if the cwd contains the open cobol libraries, if not copy them!
+            source_fn, self.tabWidgetEditors.currentWidget().programType)
+        cwd = os.path.join(os.path.dirname(target))
         self.consoleOutput.processFinished.connect(self.onProgramFinished)
         self.consoleOutput.runProcess(target, cwd=cwd)
 

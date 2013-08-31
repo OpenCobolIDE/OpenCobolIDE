@@ -16,7 +16,9 @@
 """
 Contains and functions to cobol source code analysis
 """
+import glob
 import logging
+import shutil
 from PyQt4 import QtCore
 import os
 import subprocess
@@ -485,7 +487,7 @@ def parseDependencies(filename):
 
 
 def makeOutputFilePath(filename, fileType):
-    return os.path.splitext(filename)[0] + fileType[2]
+    return os.path.normpath(os.path.splitext(filename)[0] + fileType[2])
 
 
 def compile(filename, fileType, customOptions=None, outputFilename=None):
@@ -500,10 +502,27 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
         # prepare command
         customOptionsStr = " ".join(customOptions)
         if outputFilename is None:
-            outputFilename = makeOutputFilePath(filename, fileType)
-        cmd = fileType[1].format(customOptionsStr,
-                                 QtCore.QFileInfo(outputFilename).fileName(),
-                                 QtCore.QFileInfo(filename).fileName())
+            # create a binary dir next to the source
+            dirname = os.path.join(os.path.dirname(filename), "bin")
+            if not os.path.exists(dirname):
+                os.mkdir(dirname)
+                if sys.platform == "win32":
+                    # copy the dll
+                    files = glob.glob(
+                        os.path.join(os.environ["COB_LIBRARY_PATH"], "*.dll"))
+                    for f in files:
+                        shutil.copy(f, dirname)
+            fn = os.path.join(dirname, os.path.basename(filename))
+            outputFilename = makeOutputFilePath(fn, fileType)
+            cmd = fileType[1].format(
+                customOptionsStr,
+                os.path.join(
+                    "bin", QtCore.QFileInfo(outputFilename).fileName()),
+                QtCore.QFileInfo(filename).fileName())
+        else:
+            cmd = fileType[1].format(
+                customOptionsStr, QtCore.QFileInfo(outputFilename).fileName(),
+                QtCore.QFileInfo(filename).fileName())
         # run it using pexpect
         messages = []
         output, status = pexpect.run(cmd, withexitstatus=True,

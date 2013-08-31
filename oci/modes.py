@@ -19,6 +19,7 @@ Contains cobol specific modes
 import os
 from PyQt4.QtCore import Qt, QFileInfo, QObject, pyqtSignal
 from PyQt4.QtGui import QTextCursor, QAction
+import sys
 from pyqode.core import Mode, RightMarginMode
 from pyqode.core import CheckerMode, CHECK_TRIGGER_TXT_SAVED
 from oci import cobol, constants
@@ -162,7 +163,12 @@ def checkFile(queue, code, filePath, fileEncoding):
     if os.path.isdir(tmp):
         return
     with open(tmp, 'wb') as f:
-        f.write(code.encode(fileEncoding))
+        if sys.version_info[0] == 3:
+            code = bytes(code, fileEncoding)
+        else:
+            code = code.encode(fileEncoding)
+        f.write(code)
+
     fileType = cobol.detectFileType(tmp)
     output = os.path.join(constants.getAppTempDirectory(),
                           QFileInfo(tmp).baseName() + fileType[2])
