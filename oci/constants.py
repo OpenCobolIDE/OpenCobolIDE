@@ -49,7 +49,10 @@ def getAppTempDirectory():
     Returns a platform dependant temp fold
     """
     if sys.platform == "win32":
-        pth = os.path.join(os.getcwd(), "temp")
+        pth = os.path.join(os.path.expanduser("~"), "OpenCobolIDE")
+        if not os.path.exists(pth):
+            os.mkdir(pth)
+        pth = os.path.join(pth, "temp")
         if not os.path.exists(pth):
             os.mkdir(pth)
         return pth
