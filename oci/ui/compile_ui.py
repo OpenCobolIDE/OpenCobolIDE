@@ -3,21 +3,19 @@
 #
 # Copyright 2013 Colin Duquesnoy
 #
-# This file is part of pyQode.
+# This file is part of OpenCobolIDE.
 #
-# pyQode is free software: you can redistribute it and/or modify it under
-# the terms of the GNU Lesser General Public License as published by the Free
-# Software Foundation, either version 3 of the License, or (at your option) any
-# later version.
+# OpenCobolIDE is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
 #
-# pyQode is distributed in the hope that it will be useful, but WITHOUT
+# OpenCobolIDE is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
-# details.
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 #
-# You should have received a copy of the GNU Lesser General Public License along
-# with pyQode. If not, see http://www.gnu.org/licenses/.
-#
+# You should have received a copy of the GNU General Public License along with
+# OpenCobolIDE. If not, see http://www.gnu.org/licenses/.
 """
 This scripts compile the ui and qrc files using pyside dev tools then modify
 them to use pyqode.qt instead of PySide. It also adapts the rc imports so that
