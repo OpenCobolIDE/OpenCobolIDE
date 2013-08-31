@@ -25,6 +25,7 @@ import sys
 from oci import __version__, constants, cobol
 from oci.dialogs import DlgNewFile, DlgAbout, DlgPreferences
 from oci.editor import QCobolCodeEdit
+from oci import settings
 from oci.settings import Settings
 from oci.ui import loadUi
 
@@ -36,6 +37,7 @@ class MainWindow(QtGui.QMainWindow):
 
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
+        self.initDefaultSettings()
         loadUi("ide.ui", self, "ide.qrc")
         self.stackedWidget.setCurrentIndex(0)
         self.__prevRootNode = None
@@ -107,6 +109,12 @@ class MainWindow(QtGui.QMainWindow):
         self.statusbar.addPermanentWidget(self.lblEncoding, 20)
         self.statusbar.addPermanentWidget(self.lblCursorPos, 20)
 
+    @staticmethod
+    def initDefaultSettings():
+        e = QCobolCodeEdit()
+        settings.DEFAULT_EDITOR_STYLE = e.style.dump()
+        settings.DEFAULT_EDITOR_SETTINGS = e.settings.dump()
+        del e
 
     def updateViewToolbarMenu(self):
         """
@@ -187,6 +195,8 @@ class MainWindow(QtGui.QMainWindow):
             pth = dlg.path()
             content = dlg.template()
             with open(pth, 'wb') as f:
+                if sys.version_info[0] == 3:
+                    content = bytes(content, "utf-8")
                 f.write(content)
             self.openFile(pth)
 
@@ -251,6 +261,7 @@ class MainWindow(QtGui.QMainWindow):
             self.tabWidgetEditors.currentWidget().filePath,
             self.tabWidgetEditors.currentWidget().programType)
         cwd = os.path.dirname(target)
+        # todo check if the cwd contains the open cobol libraries, if not copy them!
         self.consoleOutput.processFinished.connect(self.onProgramFinished)
         self.consoleOutput.runProcess(target, cwd=cwd)
 
