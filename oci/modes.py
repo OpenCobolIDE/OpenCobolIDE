@@ -17,6 +17,8 @@
 Contains cobol specific modes
 """
 import os
+os.environ["QT_API"] = "PyQt"
+import pyqode.qt
 from PyQt4.QtCore import Qt, QFileInfo, QObject, pyqtSignal
 from PyQt4.QtGui import QTextCursor, QAction
 import sys
