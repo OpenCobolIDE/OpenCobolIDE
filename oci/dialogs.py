@@ -124,6 +124,7 @@ class DlgNewFile(QtGui.QDialog):
         completer.setModel(QtGui.QDirModel(completer))
         self.lineEditPath.setCompleter(completer)
         self.lineEditPath.setText(os.path.expanduser("~"))
+        self.prev_pth = ""
 
     if sys.version_info[0] == 2:
         @QtCore.pyqtSlot(unicode)
@@ -151,11 +152,19 @@ class DlgNewFile(QtGui.QDialog):
             self.lineEditPath.setText(ret)
 
     def enableOkButton(self):
-        pth = self.lineEditPath.text()
-        name = self.lineEditName.text()
-        enable =  name != "" and os.path.exists(pth) and os.path.isdir(pth)
+        pth = str(self.lineEditPath.text())
         bt = self.buttonBox.button(QtGui.QDialogButtonBox.Ok)
+        name = self.lineEditName.text()
+        enable = name != "" and os.path.exists(pth) and os.path.isdir(pth)
+        if sys.platform == "win32":
+            if " " in pth and pth != self.prev_pth:
+                QtGui.QMessageBox.warning(
+                    self, "Warning",
+                    "Cannot create a new file in a path that contains spaces, "
+                    "please choose another directory.")
+                enable = False
         bt.setEnabled(enable)
+        self.prev_pth = pth
 
 
 class DlgAbout(QtGui.QDialog):
