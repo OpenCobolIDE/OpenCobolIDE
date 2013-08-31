@@ -514,15 +514,17 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
                         shutil.copy(f, dirname)
             fn = os.path.join(dirname, os.path.basename(filename))
             outputFilename = makeOutputFilePath(fn, fileType)
-            cmd = fileType[1].format(
-                customOptionsStr,
-                os.path.join(
-                    "bin", QtCore.QFileInfo(outputFilename).fileName()),
-                QtCore.QFileInfo(filename).fileName())
+            output = os.path.join(
+                os.path.dirname(outputFilename),
+                os.path.splitext(os.path.basename(filename))[0] + fileType[2])
+            input = filename
+            cmd = constants.ProgramType.cmd(fileType, input, output,
+                                            customOptions)
         else:
-            cmd = fileType[1].format(
-                customOptionsStr, QtCore.QFileInfo(outputFilename).fileName(),
-                QtCore.QFileInfo(filename).fileName())
+            input = filename
+            output = outputFilename
+            cmd = constants.ProgramType.cmd(fileType, input, output,
+                                            customOptions)
         # run it using pexpect
         messages = []
         if sys.platform == "win32":
@@ -533,7 +535,8 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
                                  cwd=os.path.dirname(filename),
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         else:
-            p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+            p = subprocess.Popen(cmd, shell=False,
+                                 stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE)
         stdout, stderr = p.communicate()
         status = p.returncode
@@ -543,6 +546,7 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
             stdout = str(stdout)
             stderr = str(stderr)
             lines = stdout.splitlines() + stderr.splitlines()
+        #print(stdout, stderr)
         nbTokensExpected = 4
         for l in lines:
             tokens = l.split(":")
