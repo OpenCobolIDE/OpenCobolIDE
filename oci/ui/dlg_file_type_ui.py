@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_file_type.ui'
 #
-# Created: Sun Sep  1 15:45:49 2013
+# Created: Sun Sep  1 15:56:40 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -29,9 +29,9 @@ class Ui_Dialog(object):
         self.comboBoxType.addItem("")
         self.comboBoxType.addItem("")
         self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.comboBoxType)
-        self.label_2 = QtGui.QLabel(Dialog)
-        self.label_2.setObjectName("label_2")
-        self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.label_2)
+        self.labelDir = QtGui.QLabel(Dialog)
+        self.labelDir.setObjectName("labelDir")
+        self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.labelDir)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.lineEditPath = QtGui.QLineEdit(Dialog)
@@ -41,9 +41,9 @@ class Ui_Dialog(object):
         self.toolButton.setObjectName("toolButton")
         self.horizontalLayout.addWidget(self.toolButton)
         self.formLayout.setLayout(2, QtGui.QFormLayout.FieldRole, self.horizontalLayout)
-        self.label_3 = QtGui.QLabel(Dialog)
-        self.label_3.setObjectName("label_3")
-        self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.label_3)
+        self.labelName = QtGui.QLabel(Dialog)
+        self.labelName.setObjectName("labelName")
+        self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.labelName)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.lineEditName = QtGui.QLineEdit(Dialog)
@@ -81,9 +81,9 @@ class Ui_Dialog(object):
         self.comboBoxType.setItemText(0, QtGui.QApplication.translate("Dialog", "Program", None, QtGui.QApplication.UnicodeUTF8))
         self.comboBoxType.setItemText(1, QtGui.QApplication.translate("Dialog", "Module", None, QtGui.QApplication.UnicodeUTF8))
         self.comboBoxType.setItemText(2, QtGui.QApplication.translate("Dialog", "Empty", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("Dialog", "Directory", None, QtGui.QApplication.UnicodeUTF8))
+        self.labelDir.setText(QtGui.QApplication.translate("Dialog", "Directory", None, QtGui.QApplication.UnicodeUTF8))
         self.toolButton.setText(QtGui.QApplication.translate("Dialog", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_3.setText(QtGui.QApplication.translate("Dialog", "Name", None, QtGui.QApplication.UnicodeUTF8))
+        self.labelName.setText(QtGui.QApplication.translate("Dialog", "Name", None, QtGui.QApplication.UnicodeUTF8))
         self.comboBoxExtension.setItemText(0, QtGui.QApplication.translate("Dialog", ".cbl", None, QtGui.QApplication.UnicodeUTF8))
         self.comboBoxExtension.setItemText(1, QtGui.QApplication.translate("Dialog", ".cob", None, QtGui.QApplication.UnicodeUTF8))
         self.comboBoxExtension.setItemText(2, QtGui.QApplication.translate("Dialog", ".CBL", None, QtGui.QApplication.UnicodeUTF8))

@@ -107,6 +107,7 @@ TEMPLATES = [EXE_TEMPLATE, MODULE_TEMPLATE, ""]
 
 
 class DlgNewFile(QtGui.QDialog, dlg_file_type_ui.Ui_Dialog):
+
     def path(self):
         return os.path.join(
             self.lineEditPath.text(),
@@ -164,6 +165,9 @@ class DlgNewFile(QtGui.QDialog, dlg_file_type_ui.Ui_Dialog):
                     "Cannot create a new file in a path that contains spaces, "
                     "please choose another directory.")
                 enable = False
+                self.labelDir.setStyleSheet("color: #FF0000;")
+            else:
+                self.labelDir.setStyleSheet("color: #000000;")
         bt.setEnabled(enable)
         self.prev_pth = pth
 
