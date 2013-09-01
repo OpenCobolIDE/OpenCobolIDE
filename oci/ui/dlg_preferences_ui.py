@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_preferences.ui'
 #
-# Created: Sun Sep  1 15:43:14 2013
+# Created: Sun Sep  1 15:45:49 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -23,9 +23,12 @@ class Ui_Dialog(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.lwMenu = QtGui.QListWidget(Dialog)
         self.lwMenu.setMaximumSize(QtCore.QSize(72, 16777215))
+        self.lwMenu.setDragDropMode(QtGui.QAbstractItemView.NoDragDrop)
         self.lwMenu.setIconSize(QtCore.QSize(64, 64))
         self.lwMenu.setTextElideMode(QtCore.Qt.ElideMiddle)
+        self.lwMenu.setMovement(QtGui.QListView.Static)
         self.lwMenu.setViewMode(QtGui.QListView.IconMode)
+        self.lwMenu.setUniformItemSizes(False)
         self.lwMenu.setObjectName("lwMenu")
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(":/ide-icons/rc/Preferences-system-64.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
