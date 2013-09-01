@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Sat Aug 31 18:56:10 2013
-#      by: pyside-uic 0.2.14 running on PySide 1.2.0
+# Created: Sun Sep  1 15:43:14 2013
+#      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -72,6 +72,7 @@ class Ui_MainWindow(object):
         self.gridLayout_4.setContentsMargins(6, 6, 6, 6)
         self.gridLayout_4.setObjectName("gridLayout_4")
         self.errorsTable = QErrorsTable(self.tabCompiler)
+        self.errorsTable.setMinimumSize(QtCore.QSize(0, 0))
         self.errorsTable.setObjectName("errorsTable")
         self.errorsTable.setColumnCount(5)
         self.errorsTable.setRowCount(0)
@@ -332,5 +333,5 @@ class Ui_MainWindow(object):
         self.actionProgram.setText(QtGui.QApplication.translate("MainWindow", "Executable", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSubprogram.setText(QtGui.QApplication.translate("MainWindow", "Module", None, QtGui.QApplication.UnicodeUTF8))
 
-from pyqode.widgets import QHomeWidget, QErrorsTable, QCodeEditTabWidget, QInteractiveConsole
+from pyqode.widgets import QErrorsTable, QInteractiveConsole, QCodeEditTabWidget, QHomeWidget
 from . import ide_rc

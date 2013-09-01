@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'dlg_preferences.ui'
 #
-# Created: Sat Aug 31 18:56:09 2013
-#      by: pyside-uic 0.2.14 running on PySide 1.2.0
+# Created: Sun Sep  1 15:43:14 2013
+#      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -231,6 +231,6 @@ class Ui_Dialog(object):
         self.homeWidget.setProperty("title", QtGui.QApplication.translate("Dialog", "Welcome to OpenCoblIDE", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidgetStyle.setTabText(self.tabWidgetStyle.indexOf(self.tab_3), QtGui.QApplication.translate("Dialog", "Home page", None, QtGui.QApplication.UnicodeUTF8))
 
-from pyqode.widgets import QHomeWidget, QPropertyGrid, QInteractiveConsole, QColorButton
 from oci.editor import QCobolCodeEdit
+from pyqode.widgets import QHomeWidget, QColorButton, QPropertyGrid, QInteractiveConsole
 from . import ide_rc

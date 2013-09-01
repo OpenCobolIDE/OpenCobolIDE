@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'dlg_file_type.ui'
 #
-# Created: Sat Aug 31 18:56:09 2013
-#      by: pyside-uic 0.2.14 running on PySide 1.2.0
+# Created: Sun Sep  1 15:43:14 2013
+#      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
 
