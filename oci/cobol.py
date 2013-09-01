@@ -582,4 +582,5 @@ def get_cobc_version():
         return stdout.splitlines()[0].split(" ")[2]
     else:
         stdout = str(stdout)
-        return stdout.splitlines()[0].split(" ")[2].split("\\n")[0]
+        return stdout.splitlines()[0].split(" ")[2].split("\\n")[0].split(
+            "\\r")[0]
