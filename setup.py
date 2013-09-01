@@ -23,9 +23,6 @@ This is the setup script, install it as any python package.
 import sys
 from setuptools import setup, find_packages
 
-# get version
-execfile('oci/__init__.py')
-
 
 # get long description
 with open('README.rst', 'r') as readme:
@@ -42,7 +39,7 @@ else:
 
 setup(
     name='OpenCobolIDE',
-    version=__version__,
+    version="2.0b1",
     packages=find_packages(),
     keywords=["Cobol; OpenCobol; IDE"],
     package_data={'oci.ui': ['*.ui', 'rc/*']},
