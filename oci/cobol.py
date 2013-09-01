@@ -16,6 +16,9 @@
 """
 Contains and functions to cobol source code analysis
 """
+import glob
+import logging
+import shutil
 from PyQt4 import QtCore
 import os
 import subprocess
@@ -165,7 +168,7 @@ class DocumentNode(QTreeWidgetItem):
         """
         Print the node tree in stdout
         """
-        print u" " * indent, self.name, self.line, u" - ", self.end_line
+        print(u" " * indent, self.name, self.line, u" - ", self.end_line)
         for c in self.children:
             c.print_tree(indent + 4)
 
@@ -345,8 +348,9 @@ def parse_document_layout(filename, code=None, createIcon=True,
     last_vars = {}
     last_par = None
     for i, line in enumerate(lines):
-        if not isinstance(line, unicode):
-            line = line.decode(encoding)
+        if sys.version_info[0] == 2:
+            if not isinstance(line, unicode):
+                line = line.decode(encoding)
         indentation = len(line) - len(line.lstrip())
         if indentation >= 7 and not line.isspace():
             line = line.strip().upper()
@@ -483,7 +487,7 @@ def parseDependencies(filename):
 
 
 def makeOutputFilePath(filename, fileType):
-    return os.path.splitext(filename)[0] + fileType[2]
+    return os.path.normpath(os.path.splitext(filename)[0] + fileType[2])
 
 
 def compile(filename, fileType, customOptions=None, outputFilename=None):
@@ -492,37 +496,78 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
     The output is a list of checker messages (those can be used to implements
     a cobol live checker mode)
     """
-    if customOptions is None:
-        customOptions = []
-    # prepare command
-    customOptionsStr = " ".join(customOptions)
-    if outputFilename is None:
-        outputFilename = makeOutputFilePath(filename, fileType)
-    cmd = fileType[1].format(customOptionsStr,
-                             QtCore.QFileInfo(outputFilename).fileName(),
-                             QtCore.QFileInfo(filename).fileName())
-    # run it using pexpect
-    messages = []
-    output, status = pexpect.run(cmd,withexitstatus=True,cwd=os.path.dirname(filename),
-                                 env=os.environ.copy())
-    nbTokensExpected = 4
-    lines = output.splitlines()
-    for l in lines:
-        tokens = l.split(":")
-        if len(tokens) == nbTokensExpected:
-            desc = tokens[len(tokens) - 1]
-            errType = tokens[len(tokens) - 2]
-            lineNbr = int(tokens[len(tokens) - 3])
-            status = pyqode.core.MSG_STATUS_WARNING
-            if errType == "Error":
-                status = pyqode.core.MSG_STATUS_ERROR
-            messages.append(pyqode.core.CheckerMessage(
-                desc, status, lineNbr, filename=filename))
-    return status, messages
+    try:
+        if customOptions is None:
+            customOptions = []
+        # prepare command
+        customOptionsStr = " ".join(customOptions)
+        if outputFilename is None:
+            # create a binary dir next to the source
+            dirname = os.path.join(os.path.dirname(filename), "bin")
+            if not os.path.exists(dirname):
+                os.mkdir(dirname)
+                if sys.platform == "win32":
+                    # copy the dll
+                    files = glob.glob(
+                        os.path.join(os.environ["COB_LIBRARY_PATH"], "*.dll"))
+                    for f in files:
+                        shutil.copy(f, dirname)
+            fn = os.path.join(dirname, os.path.basename(filename))
+            outputFilename = makeOutputFilePath(fn, fileType)
+            output = os.path.join(
+                os.path.dirname(outputFilename),
+                os.path.splitext(os.path.basename(filename))[0] + fileType[2])
+            input = filename
+            cmd = constants.ProgramType.cmd(fileType, input, output,
+                                            customOptions)
+        else:
+            input = filename
+            output = outputFilename
+            cmd = constants.ProgramType.cmd(fileType, input, output,
+                                            customOptions)
+        # run it using pexpect
+        messages = []
+        if sys.platform == "win32":
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            p = subprocess.Popen(cmd, shell=False, startupinfo=startupinfo,
+                                 env=os.environ.copy(),
+                                 cwd=os.path.dirname(filename),
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        else:
+            p = subprocess.Popen(cmd, shell=False,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE)
+        stdout, stderr = p.communicate()
+        status = p.returncode
+        if sys.version_info[0] == 2:
+            lines = stdout.splitlines() + stderr.splitlines()
+        else:
+            stdout = str(stdout)
+            stderr = str(stderr)
+            lines = stdout.splitlines() + stderr.splitlines()
+        nbTokensExpected = 4
+        if sys.platform == "win32":
+            nbTokensExpected += 1
+        for l in lines:
+            tokens = l.split(":")
+            if len(tokens) == nbTokensExpected:
+                desc = tokens[len(tokens) - 1]
+                errType = tokens[len(tokens) - 2]
+                lineNbr = int(tokens[len(tokens) - 3])
+                status = pyqode.core.MSG_STATUS_WARNING
+                if errType == "Error":
+                    status = pyqode.core.MSG_STATUS_ERROR
+                messages.append(pyqode.core.CheckerMessage(
+                    desc, status, lineNbr, filename=filename))
+        return status, messages
+    except pexpect.ExceptionPexpect as e:
+        logging.warning(e)
+        return -1, []
+
 
 def get_cobc_version():
     """ Returns the OpenCobol compiler version as a string """
-    ret_val = "unknown"
     cmd = ["cobc", "--version"]
     if sys.platform == "win32":
         startupinfo = subprocess.STARTUPINFO()
@@ -533,4 +578,8 @@ def get_cobc_version():
         p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
-    return stdout.splitlines()[0].split(" ")[2]
+    if sys.version_info[0] == 2:
+        return stdout.splitlines()[0].split(" ")[2]
+    else:
+        stdout = str(stdout)
+        return stdout.splitlines()[0].split(" ")[2].split("\\n")[0]

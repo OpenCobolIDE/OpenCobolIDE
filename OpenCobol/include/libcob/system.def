@@ -1,0 +1,63 @@
+/*							-*- c -*-
+ * Copyright (C) 2006-2009 Roger While
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1,
+ * or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; see the file COPYING.LIB.  If
+ * not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor
+ * Boston, MA 02110-1301 USA
+ */
+
+/* COB_SYSTEM_GEN (external name, number of parameters, internal name) */
+
+COB_SYSTEM_GEN ("SYSTEM", 1, SYSTEM)
+COB_SYSTEM_GEN ("CBL_ERROR_PROC", 2, CBL_ERROR_PROC)
+COB_SYSTEM_GEN ("CBL_EXIT_PROC", 2, CBL_EXIT_PROC)
+COB_SYSTEM_GEN ("CBL_OPEN_FILE", 5, CBL_OPEN_FILE)
+COB_SYSTEM_GEN ("CBL_CREATE_FILE", 5, CBL_CREATE_FILE)
+COB_SYSTEM_GEN ("CBL_READ_FILE", 5, CBL_READ_FILE)
+COB_SYSTEM_GEN ("CBL_WRITE_FILE", 5, CBL_WRITE_FILE)
+COB_SYSTEM_GEN ("CBL_CLOSE_FILE", 1, CBL_CLOSE_FILE)
+COB_SYSTEM_GEN ("CBL_FLUSH_FILE", 1, CBL_FLUSH_FILE)
+COB_SYSTEM_GEN ("CBL_DELETE_FILE", 1, CBL_DELETE_FILE)
+COB_SYSTEM_GEN ("CBL_COPY_FILE", 2, CBL_COPY_FILE)
+COB_SYSTEM_GEN ("CBL_CHECK_FILE_EXIST", 2, CBL_CHECK_FILE_EXIST)
+COB_SYSTEM_GEN ("CBL_RENAME_FILE", 2, CBL_RENAME_FILE)
+COB_SYSTEM_GEN ("CBL_GET_CURRENT_DIR", 3, CBL_GET_CURRENT_DIR)
+COB_SYSTEM_GEN ("CBL_CHANGE_DIR", 1, CBL_CHANGE_DIR)
+COB_SYSTEM_GEN ("CBL_CREATE_DIR", 1, CBL_CREATE_DIR)
+COB_SYSTEM_GEN ("CBL_DELETE_DIR", 1, CBL_DELETE_DIR)
+COB_SYSTEM_GEN ("CBL_AND", 3, CBL_AND)
+COB_SYSTEM_GEN ("CBL_OR", 3, CBL_OR)
+COB_SYSTEM_GEN ("CBL_NOR", 3, CBL_NOR)
+COB_SYSTEM_GEN ("CBL_XOR", 3, CBL_XOR)
+COB_SYSTEM_GEN ("CBL_IMP", 3, CBL_IMP)
+COB_SYSTEM_GEN ("CBL_NIMP", 3, CBL_NIMP)
+COB_SYSTEM_GEN ("CBL_EQ", 3, CBL_EQ)
+COB_SYSTEM_GEN ("CBL_NOT", 2, CBL_NOT)
+COB_SYSTEM_GEN ("CBL_TOUPPER", 2, CBL_TOUPPER)
+COB_SYSTEM_GEN ("CBL_TOLOWER", 2, CBL_TOLOWER)
+COB_SYSTEM_GEN ("\364", 2, CBL_XF4)
+COB_SYSTEM_GEN ("\365", 2, CBL_XF5)
+COB_SYSTEM_GEN ("\221", 2, CBL_X91)
+COB_SYSTEM_GEN ("C$NARG", 1, cob_return_args)
+COB_SYSTEM_GEN ("C$PARAMSIZE", 1, cob_parameter_size)
+COB_SYSTEM_GEN ("C$MAKEDIR", 1, cob_acuw_mkdir)
+COB_SYSTEM_GEN ("C$CHDIR", 2, cob_acuw_chdir)
+COB_SYSTEM_GEN ("C$SLEEP", 1, cob_acuw_sleep)
+COB_SYSTEM_GEN ("C$COPY", 3, cob_acuw_copyfile)
+COB_SYSTEM_GEN ("C$FILEINFO", 2, cob_acuw_file_info)
+COB_SYSTEM_GEN ("C$DELETE", 2, cob_acuw_file_delete)
+COB_SYSTEM_GEN ("C$TOUPPER", 2, CBL_TOUPPER)
+COB_SYSTEM_GEN ("C$TOLOWER", 2, CBL_TOLOWER)
+COB_SYSTEM_GEN ("C$JUSTIFY", 1, cob_acuw_justify)
+COB_SYSTEM_GEN ("CBL_OC_NANOSLEEP", 1, CBL_OC_NANOSLEEP)

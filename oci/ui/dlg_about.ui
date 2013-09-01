@@ -185,12 +185,12 @@ p, li { white-space: pre-wrap; }
            </row>
            <row>
             <property name="text">
-             <string>pyqode-core</string>
+             <string>pyqode.core</string>
             </property>
            </row>
            <row>
             <property name="text">
-             <string>pyqode-widgets</string>
+             <string>pyqode.widgets</string>
             </property>
            </row>
            <row>

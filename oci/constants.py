@@ -33,15 +33,31 @@ MODULE_EXTENSION = ".so"
 if sys.platform == "win32":
     MODULE_EXTENSION = ".dll"
 
+
 class ProgramType:
     """
     Enumerates the supported file types along with their base compile command
     format
     """
     #: Cobol program (executable compiled with -x switch)
-    Executable = (0, 'cobc -x {0} -o {1} {2}', EXECUTABLE_EXTENSION)
+    Executable = (0, ['cobc', "-x", "-o %s", "%s"],
+                  EXECUTABLE_EXTENSION)
     #: Cobol subprogram (shared object/dll compiled without the -x switch)
-    Module = (1, 'cobc {0} -o {1} {2}', MODULE_EXTENSION)
+    Module = (1, ['cobc', "-o %s", "%s"],
+              MODULE_EXTENSION)
+
+    @staticmethod
+    def cmd(programType, input, output, customOptions=None):
+        baseCmdArgs = programType[1]
+        if programType[0] == 0:
+            args = [baseCmdArgs[0], baseCmdArgs[1],
+                    baseCmdArgs[2] % output, baseCmdArgs[3] % input]
+        else:
+            args = [baseCmdArgs[0], baseCmdArgs[1] % output,
+                    baseCmdArgs[2] % input]
+        if customOptions:
+            args += customOptions
+        return args
 
 
 def getAppTempDirectory():
@@ -49,7 +65,10 @@ def getAppTempDirectory():
     Returns a platform dependant temp fold
     """
     if sys.platform == "win32":
-        pth = os.path.join(os.getcwd(), "temp")
+        pth = os.path.join(os.path.expanduser("~"), "OpenCobolIDE")
+        if not os.path.exists(pth):
+            os.mkdir(pth)
+        pth = os.path.join(pth, "temp")
         if not os.path.exists(pth):
             os.mkdir(pth)
         return pth

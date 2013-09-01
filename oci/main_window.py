@@ -16,7 +16,9 @@
 """
 Contains the main window implementation
 """
+import multiprocessing
 import os
+import subprocess
 from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem, QTreeWidgetItem, QInputDialog
 import pyqode.core
 import pyqode.widgets
@@ -25,18 +27,21 @@ import sys
 from oci import __version__, constants, cobol
 from oci.dialogs import DlgNewFile, DlgAbout, DlgPreferences
 from oci.editor import QCobolCodeEdit
+from oci import settings
 from oci.settings import Settings
-from oci.ui import loadUi
+from oci.ui import ide_ui
 
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
 
     compilerMsgReady = QtCore.pyqtSignal(pyqode.core.CheckerMessage)
     compilationFinished = QtCore.pyqtSignal(bool)
 
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
-        loadUi("ide.ui", self, "ide.qrc")
+        ide_ui.Ui_MainWindow.__init__(self)
+        self.setupUi(self)
+        self.initDefaultSettings()
         self.stackedWidget.setCurrentIndex(0)
         self.__prevRootNode = None
         s = Settings()
@@ -98,6 +103,24 @@ class MainWindow(QtGui.QMainWindow):
             self.dockWidgetNavPanel.setVisible)
         self.aShowLogsWin.toggled.connect(
             self.dockWidgetLogs.setVisible)
+
+        # status bar
+        self.lblFilename = QtGui.QLabel()
+        self.lblEncoding = QtGui.QLabel()
+        self.lblCursorPos = QtGui.QLabel()
+        self.statusbar.addPermanentWidget(self.lblFilename, 200)
+        self.statusbar.addPermanentWidget(self.lblEncoding, 20)
+        self.statusbar.addPermanentWidget(self.lblCursorPos, 20)
+
+        if sys.platform == "win32":
+            self.tabWidgetLogs.removeTab(1)
+
+    @staticmethod
+    def initDefaultSettings():
+        e = QCobolCodeEdit()
+        settings.DEFAULT_EDITOR_STYLE = e.style.dump()
+        settings.DEFAULT_EDITOR_SETTINGS = e.settings.dump()
+        del e
 
     def updateViewToolbarMenu(self):
         """
@@ -178,6 +201,8 @@ class MainWindow(QtGui.QMainWindow):
             pth = dlg.path()
             content = dlg.template()
             with open(pth, 'wb') as f:
+                if sys.version_info[0] == 3:
+                    content = bytes(content, "utf-8")
                 f.write(content)
             self.openFile(pth)
 
@@ -234,16 +259,27 @@ class MainWindow(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionRun_triggered(self):
-        self.actionRun.setEnabled(False)
         self.tabWidgetLogs.setCurrentIndex(1)
         self.dockWidgetLogs.show()
         self.consoleOutput.setFocus(True)
+        source_fn = self.tabWidgetEditors.currentWidget().filePath
+        source_fn = os.path.join(os.path.dirname(source_fn), "bin",
+                                 os.path.basename(source_fn))
         target = cobol.makeOutputFilePath(
-            self.tabWidgetEditors.currentWidget().filePath,
-            self.tabWidgetEditors.currentWidget().programType)
-        cwd = os.path.dirname(target)
-        self.consoleOutput.processFinished.connect(self.onProgramFinished)
-        self.consoleOutput.runProcess(target, cwd=cwd)
+            source_fn, self.tabWidgetEditors.currentWidget().programType)
+        cwd = os.path.join(os.path.dirname(target))
+        if sys.platform == "win32":
+            if hasattr(sys, "frozen"):
+                win_console = os.path.join(os.getcwd(), "win_console.exe")
+                cmd = "{} {} {}".format(win_console, target, cwd)
+            else:
+                win_console = os.path.join(os.getcwd(), "win_console.py")
+                cmd = "python {} {} {}".format(win_console, target, cwd)
+            subprocess.Popen(cmd, creationflags=subprocess.CREATE_NEW_CONSOLE)
+        else:
+            self.actionRun.setEnabled(False)
+            self.consoleOutput.processFinished.connect(self.onProgramFinished)
+            self.consoleOutput.runProcess(target, cwd=cwd)
 
     @QtCore.pyqtSlot()
     def on_actionPreferences_triggered(self):
@@ -320,26 +356,41 @@ class MainWindow(QtGui.QMainWindow):
 
     def onCurrentEditorChanged(self, index):
         w = self.tabWidgetEditors.widget(index)
-        try:
-            if w.programType[0] == constants.ProgramType.Executable[0]:
-                self.programActionGroup.triggered.emit(self.actionProgram)
-                self.actionProgram.setChecked(True)
-                self.actionRun.setEnabled(True)
-                self.actionCompile.setEnabled(True)
-            else:
-                self.programActionGroup.triggered.emit(self.actionSubprogram)
-                self.actionSubprogram.setChecked(True)
+        if w:
+            try:
+                if w.programType[0] == constants.ProgramType.Executable[0]:
+                    self.programActionGroup.triggered.emit(self.actionProgram)
+                    self.actionProgram.setChecked(True)
+                    self.actionRun.setEnabled(True)
+                    self.actionCompile.setEnabled(True)
+                else:
+                    self.programActionGroup.triggered.emit(self.actionSubprogram)
+                    self.actionSubprogram.setChecked(True)
+                    self.actionRun.setEnabled(False)
+                    self.actionCompile.setEnabled(True)
+                w.analyserMode.parse()
+                rn = w.analyserMode.root_node
+                if rn:
+                    self.updateNavigationPanel(rn)
+                self.tb.setEnabled(True)
+                self.updateStatusBar(w)
+            except AttributeError:
+                self.tb.setEnabled(False)
                 self.actionRun.setEnabled(False)
-                self.actionCompile.setEnabled(True)
-            w.analyserMode.parse()
-            rn = w.analyserMode.root_node
-            if rn:
-                self.updateNavigationPanel(rn)
-            self.tb.setEnabled(True)
-        except AttributeError:
-            self.tb.setEnabled(False)
-            self.actionRun.setEnabled(False)
-            self.actionCompile.setEnabled(False)
+                self.actionCompile.setEnabled(False)
+            self.menuEdit.clear()
+            self.menuEdit.addActions(w.actions())
+            self.menuEdit.addSeparator()
+        else:
+            self.showHomePage(True)
+        self.menuEdit.addAction(self.actionPreferences)
+
+    def updateStatusBar(self, editor=None):
+        if editor is None:
+            editor = self.tabWidgetEditors.currentWidget()
+        self.lblEncoding.setText(editor.fileEncoding)
+        self.lblFilename.setText(editor.filePath)
+        self.lblCursorPos.setText("%d:%d" % editor.cursorPosition)
 
     def saveSettings(self):
         if self.stackedWidget.currentIndex() == 1:
@@ -386,22 +437,27 @@ class MainWindow(QtGui.QMainWindow):
             if fn:
                 extension = os.path.splitext(fn)[1]
                 icon = None
+                Settings().lastFilePath = fn
                 if extension.lower() in [".cbl", ".cob"]:
                     tab = QCobolCodeEdit(self.tabWidgetEditors)
                     icon = QtGui.QIcon(tab.icon)
                     tab.analyserMode.documentLayoutChanged.connect(
                         self.updateNavigationPanel)
+                    tab.settings = Settings().editorSettings
+                    tab.settings.setValue("triggerKeys", [],
+                                          section="Code completion")
+                    tab.style = Settings().editorStyle
                 else:
                     tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
-                Settings().lastFilePath = fn
-                tab.settings = Settings().editorSettings
-                tab.style = Settings().editorStyle
+                    tab.settings = Settings().editorSettings
+                    tab.settings.setValue("minIndentColumn", 0)
+                    tab.style = Settings().editorStyle
                 tab.openFile(fn, detectEncoding=True)
                 self.tabWidgetEditors.addEditorTab(tab, icon=icon)
                 self.showHomePage(False)
                 self.QHomeWidget.setCurrentFile(fn)
-                print(tab.style.dump())
-                print(tab.settings.dump())
+                self.updateStatusBar(tab)
+                tab.cursorPositionChanged.connect(self.updateStatusBar)
         except IOError:
             QtGui.QMessageBox.warning(
                 self, "File does not exist",
@@ -456,6 +512,7 @@ class MainWindow(QtGui.QMainWindow):
         self.QHomeWidget.addAction(self.actionHelp)
         self.QHomeWidget.addAction(self.actionAbout)
         self.QHomeWidget.addAction(self.actionQuit)
+        self.addAction(self.actionFullscreen)
 
     def showCentered(self):
         screenGeometry = QtGui.QApplication.desktop().screenGeometry()
@@ -487,7 +544,6 @@ class MainWindow(QtGui.QMainWindow):
             self.toolBarCode.hide()
             self.dockWidgetLogs.hide()
             self.dockWidgetNavPanel.hide()
-            self.statusBar().showMessage("OpenCobolIDE v.%s" % __version__)
         else:
             if self.stackedWidget.currentIndex() == 0:
                 self.stackedWidget.setCurrentIndex(1)
@@ -497,16 +553,16 @@ class MainWindow(QtGui.QMainWindow):
                 self.dockWidgetNavPanel.show()
                 self.setMinimumWidth(900)
                 self.setMinimumHeight(700)
-                if self.wasMaximised:
-                    self.showMaximized()
-                else:
-                    if self.prevSize.width() < 900:
-                        self.prevSize.setWidth(900)
-                    if self.prevSize.height() < 700:
-                        self.prevSize.setHeight(700)
-                    self.resize(self.prevSize)
-                    self.showCentered()
-                self.statusBar().clearMessage()
+                if not self.isFullScreen():
+                    if self.wasMaximised:
+                        self.showMaximized()
+                    else:
+                        if self.prevSize.width() < 900:
+                            self.prevSize.setWidth(900)
+                        if self.prevSize.height() < 700:
+                            self.prevSize.setHeight(700)
+                        self.resize(self.prevSize)
+                        self.showCentered()
                 s = Settings()
                 self.dockWidgetNavPanel.setVisible(s.navigationPanelVisible)
                 self.dockWidgetLogs.setVisible(s.logPanelVisible)

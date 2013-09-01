@@ -71,7 +71,10 @@ class Settings(object):
 
     @property
     def geometry(self):
-        return bytes(self._settings.value("mainWindowGeometry"))
+        v = self._settings.value("mainWindowGeometry")
+        if v:
+            return bytes(v)
+        return None
 
     @geometry.setter
     def geometry(self, geometry):
@@ -79,7 +82,10 @@ class Settings(object):
 
     @property
     def state(self):
-        return bytes(self._settings.value("mainWindowState"))
+        v = self._settings.value("mainWindowState")
+        if v:
+            return bytes(v)
+        return None
 
     @state.setter
     def state(self, state):

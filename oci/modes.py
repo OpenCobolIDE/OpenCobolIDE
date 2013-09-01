@@ -17,8 +17,11 @@
 Contains cobol specific modes
 """
 import os
+os.environ["QT_API"] = "PyQt"
+import pyqode.qt
 from PyQt4.QtCore import Qt, QFileInfo, QObject, pyqtSignal
 from PyQt4.QtGui import QTextCursor, QAction
+import sys
 from pyqode.core import Mode, RightMarginMode
 from pyqode.core import CheckerMode, CHECK_TRIGGER_TXT_SAVED
 from oci import cobol, constants
@@ -50,7 +53,7 @@ class ToUpperMode(Mode):
             pos = tc.position()
             anchor = tc.anchor()
             tc.movePosition(QTextCursor.StartOfLine, QTextCursor.KeepAnchor)
-            line_before_cursor = unicode(tc.selectedText())
+            line_before_cursor = tc.selectedText()
             tc.setPosition(pos)
             tc.setPosition(anchor, QTextCursor.KeepAnchor)
             # pas en comment (no start with *)
@@ -162,7 +165,12 @@ def checkFile(queue, code, filePath, fileEncoding):
     if os.path.isdir(tmp):
         return
     with open(tmp, 'wb') as f:
-        f.write(code.encode(fileEncoding))
+        if sys.version_info[0] == 3:
+            code = bytes(code, fileEncoding)
+        else:
+            code = code.encode(fileEncoding)
+        f.write(code)
+
     fileType = cobol.detectFileType(tmp)
     output = os.path.join(constants.getAppTempDirectory(),
                           QFileInfo(tmp).baseName() + fileType[2])
