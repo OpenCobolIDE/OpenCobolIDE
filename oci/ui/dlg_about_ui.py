@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_about.ui'
 #
-# Created: Sun Sep  1 15:56:40 2013
+# Created: Sun Sep  1 16:00:17 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -133,8 +133,8 @@ class Ui_Dialog(object):
         self.tbwVersions.verticalHeaderItem(0).setText(QtGui.QApplication.translate("Dialog", "OpenCobol", None, QtGui.QApplication.UnicodeUTF8))
         self.tbwVersions.verticalHeaderItem(1).setText(QtGui.QApplication.translate("Dialog", "Qt", None, QtGui.QApplication.UnicodeUTF8))
         self.tbwVersions.verticalHeaderItem(2).setText(QtGui.QApplication.translate("Dialog", "PyQt", None, QtGui.QApplication.UnicodeUTF8))
-        self.tbwVersions.verticalHeaderItem(3).setText(QtGui.QApplication.translate("Dialog", "pyqode-core", None, QtGui.QApplication.UnicodeUTF8))
-        self.tbwVersions.verticalHeaderItem(4).setText(QtGui.QApplication.translate("Dialog", "pyqode-widgets", None, QtGui.QApplication.UnicodeUTF8))
+        self.tbwVersions.verticalHeaderItem(3).setText(QtGui.QApplication.translate("Dialog", "pyqode.core", None, QtGui.QApplication.UnicodeUTF8))
+        self.tbwVersions.verticalHeaderItem(4).setText(QtGui.QApplication.translate("Dialog", "pyqode.widgets", None, QtGui.QApplication.UnicodeUTF8))
         self.tbwVersions.verticalHeaderItem(5).setText(QtGui.QApplication.translate("Dialog", "Pygments", None, QtGui.QApplication.UnicodeUTF8))
         self.tbwVersions.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("Dialog", "Version", None, QtGui.QApplication.UnicodeUTF8))
 
