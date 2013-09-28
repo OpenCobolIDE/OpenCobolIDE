@@ -112,9 +112,6 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.statusbar.addPermanentWidget(self.lblEncoding, 20)
         self.statusbar.addPermanentWidget(self.lblCursorPos, 20)
 
-        if sys.platform == "win32":
-            self.tabWidgetLogs.removeTab(1)
-
     @staticmethod
     def initDefaultSettings():
         e = QCobolCodeEdit()
@@ -268,18 +265,9 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         target = cobol.makeOutputFilePath(
             source_fn, self.tabWidgetEditors.currentWidget().programType)
         cwd = os.path.join(os.path.dirname(target))
-        if sys.platform == "win32":
-            if hasattr(sys, "frozen"):
-                win_console = os.path.join(os.getcwd(), "win_console.exe")
-                cmd = "{} {} {}".format(win_console, target, cwd)
-            else:
-                win_console = os.path.join(os.getcwd(), "win_console.py")
-                cmd = "python {} {} {}".format(win_console, target, cwd)
-            subprocess.Popen(cmd, creationflags=subprocess.CREATE_NEW_CONSOLE)
-        else:
-            self.actionRun.setEnabled(False)
-            self.consoleOutput.processFinished.connect(self.onProgramFinished)
-            self.consoleOutput.runProcess(target, cwd=cwd)
+        self.actionRun.setEnabled(False)
+        self.consoleOutput.processFinished.connect(self.onProgramFinished)
+        self.consoleOutput.runProcess(target, cwd=cwd)
 
     @QtCore.pyqtSlot()
     def on_actionPreferences_triggered(self):
