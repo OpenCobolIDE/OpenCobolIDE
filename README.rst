@@ -1,6 +1,12 @@
 OpenCobolIDE
 --------------------
-*version 2.0b1*
+.. image:: https://pypip.in/d/OpenCobolIDE/badge.png
+    :target: https://crate.io/packages/OpenCobolIDE/
+    :alt: Number of PyPI downloads
+
+.. image:: https://pypip.in/v/OpenCobolIDE/badge.png
+    :target: https://crate.io/packages/OpenCobolIDE/
+    :alt: Latest PyPI version
 
 OpenCobolIDE is a simple and lightweight cobol IDE based on the OpenCobol
 compiler.
