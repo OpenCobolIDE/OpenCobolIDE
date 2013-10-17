@@ -36,6 +36,11 @@ if sys.platform == "win32" and sys.version_info[0] == 3:
 else:
     requirements += ['chardet']
 
+data_files = []
+if sys.platform == "linux":
+    data_files.append(('/usr/share/applications', ['share/OpenCobolIDE.desktop']))
+    data_files.append(('/usr/share/pixmaps', ['share/OpenCobolIDE.png']))
+
 
 setup(
     name='OpenCobolIDE',
@@ -44,6 +49,7 @@ setup(
     keywords=["Cobol; OpenCobol; IDE"],
     package_data={'oci.ui': ['*.ui', 'rc/*']},
     package_dir={'oci': 'oci', "oci_designer_plugins": "oci_designer_plugins"},
+    data_files=data_files,
     url='https://github.com/ColinDuquesnoy/OpenCobolIDE',
     license='GPL v3',
     author='Colin Duquesnoy',

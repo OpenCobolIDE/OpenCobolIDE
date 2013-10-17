@@ -7,5 +7,6 @@ include MANIFEST.in
 include setup.py
 include COPYING
 include README.rst
+include share/*
 include cobcide/ui/*
 include cobcide/ui/rc/*
