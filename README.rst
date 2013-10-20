@@ -53,6 +53,7 @@ Requirements
 The project depends on the following packages:
 
     - Python 2.7 or Python 3
+    - setuptools
     - PyQt4
     - OpenCobol
     - pyqode.core
