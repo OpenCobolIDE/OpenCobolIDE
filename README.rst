@@ -35,7 +35,7 @@ Installation
 GNU/Linux
 ############
 
-Run the following commands:
+Run the following commands::
 
     sudo apt-get install python-qt open-cobol
     sudo easy_install OpenCobolIDE
@@ -52,13 +52,13 @@ Requirements
 
 The project depends on the following packages:
 
-    - **Python 2.7** or **Python 3.3**
-    - **PyQt4**
-    - **OpenCobol**
-    - **pyqode.core**
-    - **pyqode.widgets**
-    - **Pygments >= 1.6**
-    - **chardet** (chardet2 if you are using python3)
+    - Python 2.7 or Python 3
+    - PyQt4
+    - OpenCobol
+    - pyqode.core
+    - pyqode.widgets
+    - Pygments >= 1.6
+    - chardet (chardet2 if you are using python3)
 
 
 Resources
