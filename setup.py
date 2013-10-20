@@ -21,7 +21,12 @@ This is the setup script, install it as any python package.
 .. note:: You will need to install PySide and OpenCobol on your own
 """
 import sys
-from setuptools import setup, find_packages
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    import ez_setup
+    ez_setup.use_setuptools()
+    from setuptools import setup, find_packages
 
 
 # get long description
@@ -36,14 +41,20 @@ if sys.platform == "win32" and sys.version_info[0] == 3:
 else:
     requirements += ['chardet']
 
+data_files = []
+if sys.platform == "linux":
+    data_files.append(('/usr/share/applications', ['share/OpenCobolIDE.desktop']))
+    data_files.append(('/usr/share/pixmaps', ['share/OpenCobolIDE.png']))
+
 
 setup(
     name='OpenCobolIDE',
-    version="2.0b1",
+    version="2.0",
     packages=find_packages(),
     keywords=["Cobol; OpenCobol; IDE"],
     package_data={'oci.ui': ['*.ui', 'rc/*']},
     package_dir={'oci': 'oci', "oci_designer_plugins": "oci_designer_plugins"},
+    data_files=data_files,
     url='https://github.com/ColinDuquesnoy/OpenCobolIDE',
     license='GPL v3',
     author='Colin Duquesnoy',

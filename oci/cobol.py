@@ -353,7 +353,7 @@ def parse_document_layout(filename, code=None, createIcon=True,
                 line = line.decode(encoding)
         indentation = len(line) - len(line.lstrip())
         if indentation >= 7 and not line.isspace():
-            line = line.strip().upper()
+            line = line.strip()
             # DIVISIONS
             if u"DIVISION" in line.upper():
                 # remember
@@ -582,4 +582,5 @@ def get_cobc_version():
         return stdout.splitlines()[0].split(" ")[2]
     else:
         stdout = str(stdout)
-        return stdout.splitlines()[0].split(" ")[2].split("\\n")[0]
+        return stdout.splitlines()[0].split(" ")[2].split("\\n")[0].split(
+            "\\r")[0]

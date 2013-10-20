@@ -1,6 +1,12 @@
 OpenCobolIDE
 --------------------
-*version 2.0b1*
+.. image:: https://pypip.in/d/OpenCobolIDE/badge.png
+    :target: https://crate.io/packages/OpenCobolIDE/
+    :alt: Number of PyPI downloads
+
+.. image:: https://pypip.in/v/OpenCobolIDE/badge.png
+    :target: https://crate.io/packages/OpenCobolIDE/
+    :alt: Latest PyPI version
 
 OpenCobolIDE is a simple and lightweight cobol IDE based on the OpenCobol
 compiler.
@@ -29,14 +35,11 @@ Installation
 GNU/Linux
 ############
 
-The package can be installed from pypi::
-
-    pip install OpenCobolIDE
-
-
-You will still have to install PyQt4 and OpenCobol on your own::
+Run the following commands::
 
     sudo apt-get install python-qt open-cobol
+    sudo easy_install OpenCobolIDE
+
 
 Windows
 ############
@@ -44,23 +47,32 @@ Windows
 There is a windows installer available here: https://launchpad.net/cobcide/+download
 
 
-
 Requirements
 --------------------
 
-The project depend on the following library:
-    - **Python 2.7** or **Python 3.3**
-    - **PyQt4**
-    - **OpenCobol**
-    - **pyqode0core**
-    - **pyqode.widgets**
-    - **Pygments >= 1.6**
-    - **chardet** (chardet2 if you are using python3)
+The project depends on the following packages:
 
-Here are the instructions to install the dependencies manually::
+    - Python 2.7 or Python 3
+    - PyQt4
+    - OpenCobol
+    - pyqode.core
+    - pyqode.widgets
+    - Pygments >= 1.6
+    - chardet (chardet2 if you are using python3)
 
-   sudo apt-get install python2.7 python-qt open-cobol python-setuptools
-   sudo easy_install pcef
+
+Resources
+---------
+
+-  `Downloads`_
+-  `Source repository`_
+-  `Issue tracker`_
+-  `Documentation`_
+
+.. _Downloads: https://github.com/ColinDuquesnoy/OpenCobolIDE/releases
+.. _Source repository: https://github.com/ColinDuquesnoy/OpenCobolIDE/
+.. _Issue tracker: https://github.com/ColinDuquesnoy/OpenCobolIDE/issues?state=open
+.. _`Documentation`: http://opencobolide.readthedocs.org/en/latest/
 
 
 Disclaimer
@@ -68,9 +80,29 @@ Disclaimer
 
 I am by no way a cobol expert, I just had to work on a cobol project at school
 with an awful IDE (NetExpress on a Windows Xp virtual machine). As I was writing
-PCEF (a code editor widget for PySide), I thought it would be nice to use it
-to make a simple cobol editor for Ubuntu.
+pyqode, I thought it would be nice to use it to make a simple cobol editor for
+GNU/Linux.
 
-I will only cover the needs for my project so it might miss a lots of
-things for the expert. Don't hesitate to collaborate on the project, report bugs
-and post blueprints on launchpad.
+I've only learnt COBOL 74 and the IDE has been thought with this standard in
+mind. I have personally no plan on working with cobol at the moment nor to learn
+a new standard but if you found a missing feature, feel free to open a feature
+request. I'm always looking forward to make OpenCobolIDE better for the experts.
+
+Your advice will be very appreciated!
+
+
+Screenshots
+-------------
+
+* Home page:
+
+.. image:: https://raw.github.com/ColinDuquesnoy/OpenCobolIDE/develop/doc/source/_static/Home.png
+    :align: center
+
+* Editor:
+
+.. image:: https://raw.github.com/ColinDuquesnoy/OpenCobolIDE/develop/doc/source/_static/CompilerOutput.png
+    :align: center
+
+
+

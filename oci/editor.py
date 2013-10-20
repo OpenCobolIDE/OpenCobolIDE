@@ -102,7 +102,7 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         # cobol specific modes
         self.installMode(pyqode.core.RightMarginMode())
         self.installMode(LeftMarginMode())
-        self.installMode(ToUpperMode())
+        #self.installMode(ToUpperMode())
         self.installMode(CommentsMode())
         self.installMode(CobolCheckerMode())
         self.installMode(DocumentAnalyserMode())

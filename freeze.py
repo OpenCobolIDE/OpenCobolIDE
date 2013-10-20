@@ -66,10 +66,7 @@ setup(name="OpenCobolIDE",
       options={"build_exe": options},
       executables=[
           Executable("OpenCobolIDE.pyw", targetName="OpenCobolIDE.exe",
-                     icon="oci/ui/rc/silex-icon.ico", base="Win32GUI"),
-          # build the expectsub executable to have a working interactive console
-          Executable('win_console.py', targetName='win_console.exe',
-                     base="Console", appendScriptToExe=True)])
+                     icon="oci/ui/rc/silex-icon.ico", base="Win32GUI")])
 
 print("### Copying OpenCobol distribution\n"
       "#####################################################################\n")
