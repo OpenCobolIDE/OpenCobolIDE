@@ -53,7 +53,7 @@ There is a windows installer available here: https://launchpad.net/cobcide/+down
 Requirements
 --------------------
 
-The project depend on the following library:
+The project depends on the following packages:
     - **Python 2.7** or **Python 3.3**
     - **PyQt4**
     - **OpenCobol**
@@ -62,10 +62,26 @@ The project depend on the following library:
     - **Pygments >= 1.6**
     - **chardet** (chardet2 if you are using python3)
 
-Here are the instructions to install the dependencies manually::
+Here are the instructions to install the OpenCobolIDE on GNU/Linux for python 2:
 
-   sudo apt-get install python2.7 python-qt open-cobol python-setuptools
-   sudo easy_install pcef
+   sudo apt-get install python-qt open-cobol
+   sudo pip install OpenCobolIDE
+
+This will install OpenCobolIDE and add a desktop entry. You will find
+OpenCobolIDE in the programming/development category.
+
+Resources
+---------
+
+-  `Downloads`_
+-  `Source repository`_
+-  `Issue tracker`_
+-  `Documentation`_
+
+.. _Downloads: https://github.com/ColinDuquesnoy/OpenCobolIDE/releases
+.. _Source repository: https://github.com/ColinDuquesnoy/OpenCobolIDE/
+.. _Issue tracker: https://github.com/ColinDuquesnoy/OpenCobolIDE/issues?state=open
+.. _`Documentation`: http://opencobolide.readthedocs.org/en/latest/
 
 
 Disclaimer
