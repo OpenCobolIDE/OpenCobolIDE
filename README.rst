@@ -56,7 +56,7 @@ Requirements
 
 The project depend on the following library:
     - **Python 2.7** or **Python 3.3**
-    - **PySide**
+    - **PyQt4**
     - **OpenCobol**
     - **pyqode0core**
     - **pyqode.widgets**
