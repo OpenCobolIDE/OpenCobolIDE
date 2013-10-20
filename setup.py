@@ -21,7 +21,12 @@ This is the setup script, install it as any python package.
 .. note:: You will need to install PySide and OpenCobol on your own
 """
 import sys
-from setuptools import setup, find_packages
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    import ez_setup
+    ez_setup.use_setuptools()
+    from setuptools import setup, find_packages
 
 
 # get long description
@@ -44,7 +49,7 @@ if sys.platform == "linux":
 
 setup(
     name='OpenCobolIDE',
-    version="2.0b1",
+    version="2.0",
     packages=find_packages(),
     keywords=["Cobol; OpenCobol; IDE"],
     package_data={'oci.ui': ['*.ui', 'rc/*']},

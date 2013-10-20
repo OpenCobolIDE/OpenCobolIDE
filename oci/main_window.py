@@ -299,10 +299,8 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionHelp_triggered(self):
-        QtGui.QMessageBox.information(
-            self, "Not implemented",
-            "This feature has not been implemented yet.It should be ready for "
-            "the final release.")
+        QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl("http://opencobolide.readthedocs.org/en/latest/"))
 
     def onProgramFinished(self, status):
         self.actionRun.setEnabled(True)

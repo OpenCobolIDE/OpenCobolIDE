@@ -16,4 +16,4 @@
 """
 Application package (OpenCobolIde => oci)
 """
-__version__ = "2.0b1"
+__version__ = "2.0"
