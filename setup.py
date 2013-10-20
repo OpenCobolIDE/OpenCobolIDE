@@ -49,7 +49,7 @@ if sys.platform == "linux":
 
 setup(
     name='OpenCobolIDE',
-    version="2.0",
+    version="2.0.1",
     packages=find_packages(),
     keywords=["Cobol; OpenCobol; IDE"],
     package_data={'oci.ui': ['*.ui', 'rc/*']},
