@@ -13,6 +13,12 @@ your thoughts to make OpenCobolIDE better.
 Milestones
 -------------
 
+2.0.1
+++++++++++
+
+    - bug fixe: removed uneeded import of pexpect which caused some issue on
+                clean system which does not have pexepect.
+
 2.0
 ++++++++++
 
