@@ -35,14 +35,11 @@ Installation
 GNU/Linux
 ############
 
-The package can be installed from pypi::
-
-    pip install OpenCobolIDE
-
-
-You will still have to install PyQt4 and OpenCobol on your own::
+Run the following commands:
 
     sudo apt-get install python-qt open-cobol
+    sudo easy_install OpenCobolIDE
+
 
 Windows
 ############
@@ -54,6 +51,7 @@ Requirements
 --------------------
 
 The project depends on the following packages:
+
     - **Python 2.7** or **Python 3.3**
     - **PyQt4**
     - **OpenCobol**
@@ -62,13 +60,6 @@ The project depends on the following packages:
     - **Pygments >= 1.6**
     - **chardet** (chardet2 if you are using python3)
 
-Here are the instructions to install the OpenCobolIDE on GNU/Linux for python 2:
-
-   sudo apt-get install python-qt open-cobol
-   sudo pip install OpenCobolIDE
-
-This will install OpenCobolIDE and add a desktop entry. You will find
-OpenCobolIDE in the programming/development category.
 
 Resources
 ---------
