@@ -21,11 +21,13 @@ pyqode. Most of the application has been rewritten from scratch.
 
 Here are the major changes:
 
-    - port to pyqode 1.0
+    - port to *pyqode 1.0*
     - new compiler errors panel
-    - interactive console for program output
-    - uses PyQt4 in place of PySide
+    - interactive output console for program output
+    - uses *PyQt4* in place of *PySide*
     - support for both python 2 and python 3
+    - *on the fly* syntax check, OpenCobolIDE compile your code in the
+      background to quickly warn you about wrong syntax.
     - better integration with most linux desktop environments (use icons and
       colors from theme, desktop entry). Tested with KDE, Gnome, Unity and
       Cinnamon.

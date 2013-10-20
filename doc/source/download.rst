@@ -1,7 +1,7 @@
 Download & Install
 =========================
 
-Here you'll find all the necessary explanations for installing pyqode.python.
+Here you'll find all the necessary explanations for installing OpenCobolIDE.
 
 
 Requirements:
@@ -43,6 +43,13 @@ From source::
     sudo python setup.py install
 
 .. note:: Replace *python* by *python3* to install OpenCobolIDE for Python 3.
+
+
+Both methods will install a desktop entry on your system.
+
+An **OpenCobolIDE** entry should appear in the development category. If the
+entry does not appear, you can always open a terminal and type *OpenCobolIDE* to run the IDE.
+
 
 Windows
 ++++++++++++
