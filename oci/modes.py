@@ -96,7 +96,20 @@ class CommentsMode(Mode):
             has_selection = False
         lines = cursor.selection().toPlainText().splitlines()
         nb_lines = len(lines)
-        cursor.setPosition(cursor.selectionStart())
+        start = cursor.selectionStart()
+        cursor.setPosition(start)
+        comment = False
+        for i in range(nb_lines):
+            cursor.movePosition(QTextCursor.StartOfLine)
+            cursor.movePosition(QTextCursor.EndOfLine, cursor.KeepAnchor)
+            line = cursor.selectedText().lstrip()
+            if not line.startswith("*"):
+                comment = True
+                break
+            # next line
+            cursor.movePosition(QTextCursor.EndOfLine)
+            cursor.setPosition(cursor.position() + 1)
+        cursor.setPosition(start)
         for i in range(nb_lines):
             cursor.movePosition(QTextCursor.StartOfLine)
             cursor.movePosition(QTextCursor.EndOfLine, cursor.KeepAnchor)
@@ -104,7 +117,7 @@ class CommentsMode(Mode):
             if line != "":
                 cursor.movePosition(QTextCursor.StartOfLine)
                 # Uncomment
-                if line.startswith("*"):
+                if not comment:
                     cursor.setPosition(cursor.position() + 6)
                     cursor.movePosition(cursor.Right, cursor.KeepAnchor, 1)
                     cursor.insertText("")
