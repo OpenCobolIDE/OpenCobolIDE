@@ -90,14 +90,14 @@ class CommentsMode(Mode):
         cursor.beginEditBlock()
         sel_start = cursor.selectionStart()
         sel_end = cursor.selectionEnd()
+        reversed_selection = cursor.position() == sel_start
         has_selection = True
         if not cursor.hasSelection():
             cursor.select(QTextCursor.LineUnderCursor)
             has_selection = False
         lines = cursor.selection().toPlainText().splitlines()
         nb_lines = len(lines)
-        start = cursor.selectionStart()
-        cursor.setPosition(start)
+        cursor.setPosition(sel_start)
         comment = False
         for i in range(nb_lines):
             cursor.movePosition(QTextCursor.StartOfLine)
@@ -109,7 +109,7 @@ class CommentsMode(Mode):
             # next line
             cursor.movePosition(QTextCursor.EndOfLine)
             cursor.setPosition(cursor.position() + 1)
-        cursor.setPosition(start)
+        cursor.setPosition(sel_start)
         for i in range(nb_lines):
             cursor.movePosition(QTextCursor.StartOfLine)
             cursor.movePosition(QTextCursor.EndOfLine, cursor.KeepAnchor)
@@ -139,11 +139,13 @@ class CommentsMode(Mode):
             # next line
             cursor.movePosition(QTextCursor.EndOfLine)
             cursor.setPosition(cursor.position() + 1)
-        cursor.setPosition(sel_start)
-        if has_selection:
-            cursor.setPosition(sel_end,
-                               QTextCursor.KeepAnchor)
+        cursor.setPosition(sel_start + (1 if not comment else -1))
         cursor.endEditBlock()
+        if has_selection:
+            pos = sel_end if not reversed_selection else sel_start
+            cursor.setPosition(pos, QTextCursor.MoveAnchor)
+        else:
+            cursor.movePosition(cursor.Down, cursor.MoveAnchor, 1)
         self.editor.setTextCursor(cursor)
 
     def __on_keyPressed(self, event):
