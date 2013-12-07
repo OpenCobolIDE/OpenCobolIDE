@@ -553,8 +553,9 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
             status = pyqode.core.MSG_STATUS_WARNING
             if errType == "Error":
                 status = pyqode.core.MSG_STATUS_ERROR
-            messages.append(pyqode.core.CheckerMessage(
-                desc, status, lineNbr, filename=filename))
+            msg = pyqode.core.CheckerMessage(desc, status, lineNbr, filename=filename)
+            msg.filename = filename
+            messages.append(msg)
     return status, messages
 
 
