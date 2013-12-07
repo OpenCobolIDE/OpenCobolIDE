@@ -11,8 +11,10 @@ if __name__ == '__main__':
     dest_dir = sys.argv[2]
 
     def ignorefiles(src, names):
-        return ["build", ".git", "pyqode.core.egg-info",
-                "CMakeLists.txt.user", ".gitignore", ".gitbugtraq",
+        return ["build", ".git", ".gitignore", ".gitbugtraq",
                 "travis.yml", "test.py" ".idea", "ez_setup.pyc",
-                "examples", "doc", "tools", "screenshots"]
+                "ez_setup.py", "freez.py", "dlg_about.ui", "dlg_file_type.ui",
+                "dlg_preferences.ui", "ide.ui", "ide.qrc", "OpenCobol", "doc",
+                "oci_designer_plugins", "__pycache__",
+                "examples", "doc", "tools", "rc"]
     shutil.copytree(src_dir, dest_dir, ignore=ignorefiles)

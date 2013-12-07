@@ -1,0 +1,5 @@
+open-cobol-ide (@RELEASE_PACKAGE_VERSION@) @RELEASE@; urgency=medium
+
+  * First upstream release 2.0.1
+
+ -- Colin Duquesnoy <colin.duquesnoy@gmail.com>  Sat, 07 Dec 2013 22:15:00 +1000
