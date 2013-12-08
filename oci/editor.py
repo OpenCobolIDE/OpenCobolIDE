@@ -125,9 +125,11 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         """
         expression = QtCore.QRegExp('\*.*')
         index = expression.indexIn(text, 0)
+        usd = highlighter.currentBlock().userData()
         while index >= 0:
             index = expression.pos(0)
             length = len(expression.cap(0))
             highlighter.setFormat(index, length,
                                   highlighter._get_format(Comment))
             index = expression.indexIn(text, index + length)
+            usd.cc_disabled_zones.append((index, pow(2, 32)))
