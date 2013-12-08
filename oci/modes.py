@@ -18,9 +18,9 @@ Contains cobol specific modes
 """
 import os
 os.environ["QT_API"] = "PyQt"
-import pyqode.qt
-from PyQt4.QtCore import Qt, QFileInfo, QObject, pyqtSignal
-from PyQt4.QtGui import QTextCursor, QAction
+import pyqode.core
+from PyQt4.QtCore import Qt, QFileInfo, QObject, pyqtSignal, QTimer
+from PyQt4.QtGui import QTextCursor, QAction, QInputDialog
 import sys
 from pyqode.core import Mode, RightMarginMode
 from pyqode.core import CheckerMode, CHECK_TRIGGER_TXT_SAVED
@@ -90,13 +90,26 @@ class CommentsMode(Mode):
         cursor.beginEditBlock()
         sel_start = cursor.selectionStart()
         sel_end = cursor.selectionEnd()
+        reversed_selection = cursor.position() == sel_start
         has_selection = True
         if not cursor.hasSelection():
             cursor.select(QTextCursor.LineUnderCursor)
             has_selection = False
         lines = cursor.selection().toPlainText().splitlines()
         nb_lines = len(lines)
-        cursor.setPosition(cursor.selectionStart())
+        cursor.setPosition(sel_start)
+        comment = False
+        for i in range(nb_lines):
+            cursor.movePosition(QTextCursor.StartOfLine)
+            cursor.movePosition(QTextCursor.EndOfLine, cursor.KeepAnchor)
+            line = cursor.selectedText().lstrip()
+            if not line.startswith("*"):
+                comment = True
+                break
+            # next line
+            cursor.movePosition(QTextCursor.EndOfLine)
+            cursor.setPosition(cursor.position() + 1)
+        cursor.setPosition(sel_start)
         for i in range(nb_lines):
             cursor.movePosition(QTextCursor.StartOfLine)
             cursor.movePosition(QTextCursor.EndOfLine, cursor.KeepAnchor)
@@ -104,7 +117,7 @@ class CommentsMode(Mode):
             if line != "":
                 cursor.movePosition(QTextCursor.StartOfLine)
                 # Uncomment
-                if line.startswith("*"):
+                if not comment:
                     cursor.setPosition(cursor.position() + 6)
                     cursor.movePosition(cursor.Right, cursor.KeepAnchor, 1)
                     cursor.insertText("")
@@ -126,11 +139,13 @@ class CommentsMode(Mode):
             # next line
             cursor.movePosition(QTextCursor.EndOfLine)
             cursor.setPosition(cursor.position() + 1)
-        cursor.setPosition(sel_start)
-        if has_selection:
-            cursor.setPosition(sel_end,
-                               QTextCursor.KeepAnchor)
+        cursor.setPosition(sel_start + (1 if not comment else -1))
         cursor.endEditBlock()
+        if has_selection:
+            pos = sel_end if not reversed_selection else sel_start
+            cursor.setPosition(pos, QTextCursor.MoveAnchor)
+        else:
+            cursor.movePosition(cursor.Down, cursor.MoveAnchor, 1)
         self.editor.setTextCursor(cursor)
 
     def __on_keyPressed(self, event):
@@ -258,3 +273,115 @@ class DocumentAnalyserMode(Mode, QObject):
                 self.documentLayoutChanged.emit(self.root_node)
         except TypeError or IOError:
             pass
+
+
+class Definition(object):
+    """
+    Symbol definition: name, line and column
+    """
+    def __init__(self, line, column, name):
+        #: Line number
+        self.line = line
+        #: Column number
+        self.column = column
+        self.name = name
+
+    def __str__(self):
+        if self.line and self.column:
+            return "%s (%s, %s)" % (self.name, self.line, self.column)
+        return self.name
+
+    def __repr__(self):
+        return "Definition(%r, %r, %r)" % (self.line, self.column, self.name)
+
+
+class GoToDefinitionMode(Mode, QObject):
+    """
+    Goes to the assignments (using jedi.Script.goto_assignments). If there are
+    more than one assignments, an input dialog is used to ask the user to
+    choose the desired assignment.
+
+    This mode will emit :attr:`pyqode.python.GoToAssignmentsMode.outOfDocument`
+    if the definition can not be reached in the current document. IDEs will
+    typically open a new editor tab and go to the definition.
+    """
+    IDENTIFIER = "gotoAssignmentsMode"
+    DESCRIPTION = "Move the text cursor to the symbol assignments/definitions"
+
+    def __init__(self):
+        Mode.__init__(self)
+        QObject.__init__(self)
+        self._pending = False
+        self.aGotToDef = QAction("Go to assignments", self)
+        self.aGotToDef.setShortcut("F2")
+        self.aGotToDef.triggered.connect(self.requestGoTo)
+
+    def _onInstall(self, editor):
+        Mode._onInstall(self, editor)
+
+    def _onStateChanged(self, state):
+        if state:
+            assert hasattr(self.editor, "wordClickMode")
+            self.editor.wordClickMode.wordClicked.connect(self.requestGoTo)
+            self.sep = self.editor.addSeparator()
+            self.editor.addAction(self.aGotToDef)
+            if hasattr(self.editor, "codeCompletionMode"):
+                self.editor.codeCompletionMode.preLoadStarted.connect(
+                    self._onPreloadStarted)
+                self.editor.codeCompletionMode.preLoadCompleted.connect(
+                    self._onPreloadCompleted)
+        else:
+            self.editor.wordClickMode.wordClicked.disconnect(self.requestGoTo)
+            self.editor.removeAction(self.aGotToDef)
+            self.editor.removeAction(self.sep)
+            if hasattr(self.editor, "codeCompletionMode"):
+                self.editor.codeCompletionMode.preLoadStarted.disconnect(
+                    self._onPreloadStarted)
+                self.editor.codeCompletionMode.preLoadCompleted.disconnect(
+                    self._onPreloadCompleted)
+
+    def _onPreloadStarted(self):
+        self.aGotToDef.setDisabled(True)
+
+    def _onPreloadCompleted(self):
+        self.aGotToDef.setEnabled(True)
+
+    def requestGoTo(self, tc=None):
+        """
+        Request a go to assignment.
+
+        :param tc: Text cursor which contains the text that we must look for
+                   its assignment. Can be None to go to the text that is under
+                   the text cursor.
+        :type tc: QtGui.QTextCursor
+        """
+        if not tc:
+            tc = self.editor.selectWordUnderCursor()
+        symbol = tc.selectedText()
+        analyser = getattr(self.editor, "analyserMode")
+        if analyser:
+            node = analyser.root_node.find(symbol)
+            if node:
+                self._definition = node
+                QTimer.singleShot(100, self._goToDefinition)
+
+    def _goToDefinition(self):
+        line = self._definition.line
+        col = self._definition.column
+        self.editor.gotoLine(line, move=True, column=col)
+
+    def _makeUnique(self, seq):
+        """
+        Not performant but works.
+        """
+        # order preserving
+        checked = []
+        for e in seq:
+            present = False
+            for c in checked:
+                if str(c) == str(e):
+                    present = True
+                    break
+            if not present:
+                checked.append(e)
+        return checked

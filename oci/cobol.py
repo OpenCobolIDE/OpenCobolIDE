@@ -136,10 +136,11 @@ class DocumentNode(QTreeWidgetItem):
         2:  ":/ide-icons/rc/var",
         3:  ":/ide-icons/rc/paragraph"}
 
-    def __init__(self, node_type, line, name, description=None, createIcon=True):
+    def __init__(self, node_type, line, column, name, description=None, createIcon=True):
         QTreeWidgetItem.__init__(self)
         self.node_type = node_type
         self.line = line
+        self.column = column
         self.end_line = -1
         self.name = name
         if description is None:
@@ -168,6 +169,22 @@ class DocumentNode(QTreeWidgetItem):
         for c in self.children:
             c.print_tree(indent + 4)
 
+    def find(self, name):
+        """
+        Finds a possible child whose name match the name parameter.
+
+        :param name: name of the child node to look up
+        :type name: str
+
+        :return: DocumentNode or None
+        """
+        for c in self.children:
+            if c.name == name:
+                return c
+            result = c.find(name)
+            if result:
+                return result
+
 
 def cmp_doc_node(first_node, second_node):
     """
@@ -194,11 +211,11 @@ def cmp_doc_node(first_node, second_node):
     return ret_val
 
 
-def _extract_div_node(i, line, root_node, last_section_node, createIcon):
+def _extract_div_node(l, c, line, root_node, last_section_node, createIcon):
     """
     Extracts a division node from a line
 
-    :param i: The line number (starting from 0)
+    :param l: The line number (starting from 0)
 
     :param line: The line string (without indentation)
 
@@ -208,22 +225,22 @@ def _extract_div_node(i, line, root_node, last_section_node, createIcon):
     """
     name = line
     name = name.replace(u".", u"")
-    node = DocumentNode(DocumentNode.Type.Division, i + 1, name,
+    node = DocumentNode(DocumentNode.Type.Division, l + 1, c, name,
                         createIcon=createIcon)
     root_node.add_child(node)
     last_div_node = node
     # do not take previous sections into account
     if last_section_node:
-        last_section_node.end_line = i
+        last_section_node.end_line = l
     last_section_node = None
     return last_div_node, last_section_node
 
 
-def _extract_section_node(i, last_div_node, last_vars, line, createIcon):
+def _extract_section_node(l, c, last_div_node, last_vars, line, createIcon):
     """
     Extracts a section node from a line.
 
-    :param i: The line number (starting from 0)
+    :param l: The line number (starting from 0)
 
     :param last_div_node: The last div node found
 
@@ -235,8 +252,8 @@ def _extract_section_node(i, last_div_node, last_vars, line, createIcon):
     """
     name = line
     name = name.replace(u".", u"")
-    description = u"{0}: {1}".format(i + 1, line)
-    node = DocumentNode(DocumentNode.Type.Section, i + 1, name,
+    description = u"{0}: {1}".format(l + 1, line)
+    node = DocumentNode(DocumentNode.Type.Section, l + 1, c, name,
                         createIcon=createIcon)
     last_div_node.add_child(node)
     last_section_node = node
@@ -245,12 +262,12 @@ def _extract_section_node(i, last_div_node, last_vars, line, createIcon):
     return last_section_node
 
 
-def _extract_var_node(i, indentation, last_section_node, last_vars, line,
+def _extract_var_node(i, c, indentation, last_section_node, last_vars, line,
                       createIcon):
     """
     Extract a variable node.
 
-    :param i: The line number (starting from 0)
+    :param l: The line number (starting from 0)
 
     :param indentation: The current indentation (counted in spaces)
 
@@ -287,19 +304,19 @@ def _extract_var_node(i, indentation, last_section_node, last_vars, line,
             if l < lvl:
                 parent_node = last_vars[l]
                 break
-    node = DocumentNode(DocumentNode.Type.Variable, i + 1, name,
+    node = DocumentNode(DocumentNode.Type.Variable, i + 1, c, name,
                         description, createIcon=createIcon)
     parent_node.add_child(node)
     last_vars[lvl] = node
     return node
 
 
-def _extract_paragraph_node(i, last_div_node, last_section_node, line,
+def _extract_paragraph_node(l, c, last_div_node, last_section_node, line,
                             createIcon):
     """
     Extracts a paragraph node
 
-    :param i: The line number (starting from 0)
+    :param l: The line number (starting from 0)
     :param last_div_node: The last div node found
     :param last_section_node: The last section node found
     :param line: The line string (without indentation)
@@ -309,7 +326,7 @@ def _extract_paragraph_node(i, last_div_node, last_section_node, line,
     parent_node = last_div_node
     if last_section_node is not None:
         parent_node = last_section_node
-    node = DocumentNode(DocumentNode.Type.Paragraph, i + 1, name,
+    node = DocumentNode(DocumentNode.Type.Paragraph, l + 1, c, name,
                         createIcon=createIcon)
     parent_node.add_child(node)
     return node
@@ -327,7 +344,7 @@ def parse_document_layout(filename, code=None, createIcon=True,
     :return: The root node, the list of variables, the list of paragraphes
     :rtype: DocumentNode, list of DocumentNode, list of DocumentNode
     """
-    root_node = DocumentNode(DocumentNode.Type.Root, 0,
+    root_node = DocumentNode(DocumentNode.Type.Root, 0, 0,
                              QFileInfo(filename).fileName(),
                              createIcon=createIcon)
     variables = []
@@ -356,18 +373,18 @@ def parse_document_layout(filename, code=None, createIcon=True,
                 if last_div_node is not None:
                     last_div_node.end_line = i
                 last_div_node, last_section_node = _extract_div_node(
-                    i, line, root_node, last_section_node, createIcon)
+                    i, indentation, line, root_node, last_section_node, createIcon)
             # SECTIONS
             elif u"SECTION" in line:
                 if last_section_node:
                     last_section_node.end_line = i
                 last_section_node = _extract_section_node(
-                    i, last_div_node, last_vars, line, createIcon)
+                    i, indentation, last_div_node, last_vars, line, createIcon)
             # VARIABLES
             elif (last_div_node is not None and
                     u"DATA DIVISION" in last_div_node.name):
                 v = _extract_var_node(
-                    i, indentation, last_section_node, last_vars, line,
+                    i, indentation, indentation, last_section_node, last_vars, line,
                     createIcon)
                 if v:
                     variables.append(v)
@@ -380,7 +397,7 @@ def parse_document_layout(filename, code=None, createIcon=True,
                 if last_par:
                     last_par.end_line = i
                 p = _extract_paragraph_node(
-                    i, last_div_node, last_section_node, line, createIcon)
+                    i, indentation, last_div_node, last_section_node, line, createIcon)
                 if p:
                     paragraphs.append(p)
                 last_par = p
@@ -553,8 +570,9 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
             status = pyqode.core.MSG_STATUS_WARNING
             if errType == "Error":
                 status = pyqode.core.MSG_STATUS_ERROR
-            messages.append(pyqode.core.CheckerMessage(
-                desc, status, lineNbr, filename=filename))
+            msg = pyqode.core.CheckerMessage(desc, status, lineNbr, filename=filename)
+            msg.filename = filename
+            messages.append(msg)
     return status, messages
 
 

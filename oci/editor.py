@@ -22,7 +22,7 @@ from PyQt4 import QtCore
 from pygments.token import Comment
 from oci import cobol
 from oci.code_completion import CobolDocumentWordsProvider, CobolAnalyserProvider
-from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode
+from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode, GoToDefinitionMode
 from oci.modes import CobolCheckerMode, DocumentAnalyserMode
 from oci.cobol import CobolFolder
 
@@ -99,6 +99,10 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.syntaxHighlighterMode.blockHighlightFinished.connect(
             self._highlighComments)
 
+        # word click and go to definition
+        self.installMode(pyqode.core.WordClickMode())
+        self.installMode(GoToDefinitionMode())
+
         # cobol specific modes
         self.installMode(pyqode.core.RightMarginMode())
         self.installMode(LeftMarginMode())
@@ -125,9 +129,11 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         """
         expression = QtCore.QRegExp('\*.*')
         index = expression.indexIn(text, 0)
+        usd = highlighter.currentBlock().userData()
         while index >= 0:
             index = expression.pos(0)
             length = len(expression.cap(0))
             highlighter.setFormat(index, length,
                                   highlighter._get_format(Comment))
             index = expression.indexIn(text, index + length)
+            usd.cc_disabled_zones.append((index, pow(2, 32)))

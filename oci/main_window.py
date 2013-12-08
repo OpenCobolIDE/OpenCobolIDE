@@ -318,26 +318,28 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             for msg in messags:
                 self.compilerMsgReady.emit(msg)
             if status == 0:
-                self.compilerMsgReady.emit(pyqode.core.CheckerMessage(
-                    "Compilation succeeded", pyqode.core.MSG_STATUS_INFO, -1,
-                    icon=":/ide-icons/rc/accept.png",
-                    filename=path))
+                msg = pyqode.core.CheckerMessage(
+                        "Compilation succeeded", pyqode.core.MSG_STATUS_INFO, -1,
+                        icon=":/ide-icons/rc/accept.png", filename=path)
+                msg.filename =path
             else:
-                self.compilerMsgReady.emit(pyqode.core.CheckerMessage(
-                    "Compilation failed", pyqode.core.MSG_STATUS_ERROR, -1,
-                    filename=path))
+                msg = pyqode.core.CheckerMessage(
+                    "Compilation failed", pyqode.core.MSG_STATUS_ERROR, -1, filename=path)
+            msg.filename = path
+            self.compilerMsgReady.emit(msg)
         status, messages = cobol.compile(filePath, programType)
         for msg in messages:
             self.compilerMsgReady.emit(msg)
         if status == 0:
-                self.compilerMsgReady.emit(pyqode.core.CheckerMessage(
-                    "Compilation succeeded", pyqode.core.MSG_STATUS_INFO, -1,
-                    icon=":/ide-icons/rc/accept.png",
-                    filename=filePath))
+            msg = pyqode.core.CheckerMessage(
+                "Compilation succeeded", pyqode.core.MSG_STATUS_INFO, -1,
+                icon=":/ide-icons/rc/accept.png", filename=filePath)
         else:
-            self.compilerMsgReady.emit(pyqode.core.CheckerMessage(
+            msg = pyqode.core.CheckerMessage(
                 "Compilation failed", pyqode.core.MSG_STATUS_ERROR, -1,
-                filename=filePath))
+                filename=filePath)
+        msg.filename = filePath
+        self.compilerMsgReady.emit(msg)
         self.compilationFinished.emit(globalStatus)
 
     def onCurrentEditorChanged(self, index):
@@ -416,7 +418,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         :param item: oci.cobol.DocumentNode
         """
         w = self.tabWidgetEditors.currentWidget()
-        w.gotoLine(item.line, move=True)
+        w.gotoLine(item.line, move=True, column=item.column)
 
     def openFile(self, fn):
         try:

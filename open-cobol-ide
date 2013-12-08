@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Copyright 2013 Colin Duquesnoy
 #
 # This file is part of OpenCobolIDE.
@@ -14,6 +15,15 @@
 # You should have received a copy of the GNU General Public License along with
 # OpenCobolIDE. If not, see http://www.gnu.org/licenses/.
 """
-Application package (OpenCobolIde => oci)
+Launcher script for linux, uses python3 explicitly.
 """
-__version__ = "2.1.0"
+import sys
+import logging
+# find private modules
+sys.path.insert(0, "/usr/lib/")
+logging.basicConfig()
+from oci.main import main
+
+
+if __name__ == "__main__":
+    main()
