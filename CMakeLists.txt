@@ -47,7 +47,7 @@ configure_file(
   )
 execute_process(COMMAND gzip -f -9 ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.1)
 
-
+# ##############################################################
 if(CPACK_GENERATOR STREQUAL "DEB")
     set(CHANGELOG_NAME "changelog")
 else()
