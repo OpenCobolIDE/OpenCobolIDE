@@ -22,7 +22,7 @@ from PyQt4 import QtCore
 from pygments.token import Comment
 from oci import cobol
 from oci.code_completion import CobolDocumentWordsProvider, CobolAnalyserProvider
-from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode
+from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode, GoToDefinitionMode
 from oci.modes import CobolCheckerMode, DocumentAnalyserMode
 from oci.cobol import CobolFolder
 
@@ -98,6 +98,10 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.installMode(pyqode.core.PygmentsSyntaxHighlighter(self.document()))
         self.syntaxHighlighterMode.blockHighlightFinished.connect(
             self._highlighComments)
+
+        # word click and go to definition
+        self.installMode(pyqode.core.WordClickMode())
+        self.installMode(GoToDefinitionMode())
 
         # cobol specific modes
         self.installMode(pyqode.core.RightMarginMode())

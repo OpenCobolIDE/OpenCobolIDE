@@ -169,6 +169,22 @@ class DocumentNode(QTreeWidgetItem):
         for c in self.children:
             c.print_tree(indent + 4)
 
+    def find(self, name):
+        """
+        Finds a possible child whose name match the name parameter.
+
+        :param name: name of the child node to look up
+        :type name: str
+
+        :return: DocumentNode or None
+        """
+        for c in self.children:
+            if c.name == name:
+                return c
+            result = c.find(name)
+            if result:
+                return result
+
 
 def cmp_doc_node(first_node, second_node):
     """
