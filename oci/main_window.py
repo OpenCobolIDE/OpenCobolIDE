@@ -418,7 +418,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         :param item: oci.cobol.DocumentNode
         """
         w = self.tabWidgetEditors.currentWidget()
-        w.gotoLine(item.line, move=True)
+        w.gotoLine(item.line, move=True, column=item.column)
 
     def openFile(self, fn):
         try:
