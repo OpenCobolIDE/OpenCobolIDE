@@ -13,12 +13,16 @@ if __name__ == '__main__':
     def ignorefiles(src, names):
         ret_val = []
         for n in names:
-            if ".pyc" in n:
+            if ".pyc" in n or ".ui" in n or ".qrc" in n:
                 ret_val.append(n)
-        ret_val += ["build", "__pycache__", ".git", "pyqode.core.egg-info",
-                    "CMakeLists.txt.user", ".gitignore", ".gitbugtraq",
-                    "travis.yml", "test.py" ".idea", "ez_setup.pyc",
-                    "examples", "doc", "tools", "screenshots", "rc",
-                    "pyqode_core.qrc", "search_panel.ui"]
+            if ".qrc" in n:
+                ret_val.append(n)
+        ret_val += ["build", "dist", "__pycache__", ".git", "oci_designer_plugins",
+                    ".gitignore", ".gitbugtraq", "travis.yml", "test.py",
+                    ".idea", "ez_setup.py", "examples", "doc",
+                    "OpenCobolIDE.egg-info", "freeze.py", "OpenCobolIDE.pyw",
+                    "setup.iss.in", "setup.py", "README.rst", "MANIFEST.in",
+                    "tools", "screenshots", "rc", "search_panel.ui",
+                    "OpenCobol", ".idea"]
         return ret_val
     shutil.copytree(src_dir, dest_dir, ignore=ignorefiles)
