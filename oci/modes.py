@@ -364,13 +364,10 @@ class GoToDefinitionMode(Mode, QObject):
             if node:
                 self._definition = node
                 QTimer.singleShot(100, self._goToDefinition)
-            else:
-                print("No results found")
 
     def _goToDefinition(self):
         line = self._definition.line
         col = self._definition.column
-        print("Goto %d-%d" % (line, col))
         self.editor.gotoLine(line, move=True, column=col)
 
     def _makeUnique(self, seq):
