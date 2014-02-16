@@ -35,7 +35,7 @@ with open('README.rst', 'r') as readme:
 
 
 # install requirements
-requirements = ['pygments>=1.6', 'pyqode.core', 'pyqode.widgets']
+requirements = ['pygments>=1.6', 'pyqode.core>=1.3.0-alpha1', 'pyqode.widgets>=1.2.0-alpha1']
 if sys.platform == "win32" and sys.version_info[0] == 3:
     requirements += ['chardet2']
 else:
