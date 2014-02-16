@@ -158,16 +158,6 @@ class DlgNewFile(QtGui.QDialog, dlg_file_type_ui.Ui_Dialog):
         bt = self.buttonBox.button(QtGui.QDialogButtonBox.Ok)
         name = self.lineEditName.text()
         enable = name != "" and os.path.exists(pth) and os.path.isdir(pth)
-        if sys.platform == "win32":
-            if " " in pth and pth != self.prev_pth:
-                QtGui.QMessageBox.warning(
-                    self, "Warning",
-                    "Cannot create a new file in a path that contains spaces, "
-                    "please choose another directory.")
-                enable = False
-                self.labelDir.setStyleSheet("color: #FF0000;")
-            else:
-                self.labelDir.setStyleSheet("color: #000000;")
         bt.setEnabled(enable)
         self.prev_pth = pth
 
