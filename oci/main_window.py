@@ -226,6 +226,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             if filter == constants.COBOL_FILES_FILTER:
                 fn += ".cob"
         if fn:
+            self.tabWidgetEditors.currentEditor.dirty = True
             self.tabWidgetEditors.saveCurrent(filePath=fn)
             self.QHomeWidget.setCurrentFile(fn)
 
