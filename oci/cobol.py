@@ -503,6 +503,18 @@ def makeOutputFilePath(filename, fileType):
     return os.path.normpath(os.path.splitext(filename)[0] + fileType[2])
 
 
+def make_bin_dir(filename):
+    dirname = os.path.join(os.path.dirname(filename), "bin")
+    if not os.path.exists(dirname):
+        os.mkdir(dirname)
+        if sys.platform == "win32":
+            # copy the dll
+            files = glob.glob(
+                os.path.join(os.environ["COB_LIBRARY_PATH"], "*.dll"))
+            for f in files:
+                shutil.copy(f, dirname)
+
+
 def compile(filename, fileType, customOptions=None, outputFilename=None):
     """
     Compile a single cobol file, return the compiler exit status and output.
@@ -512,42 +524,30 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
     if customOptions is None:
         customOptions = []
     # prepare command
-    customOptionsStr = " ".join(customOptions)
-    if outputFilename is None:
+    dirname = os.path.dirname(filename)
+    if outputFilename is None:  # user request
         # create a binary dir next to the source
-        dirname = os.path.join(os.path.dirname(filename), "bin")
-        if not os.path.exists(dirname):
-            os.mkdir(dirname)
-            if sys.platform == "win32":
-                # copy the dll
-                files = glob.glob(
-                    os.path.join(os.environ["COB_LIBRARY_PATH"], "*.dll"))
-                for f in files:
-                    shutil.copy(f, dirname)
-        fn = os.path.join(dirname, os.path.basename(filename))
-        outputFilename = makeOutputFilePath(fn, fileType)
-        output = os.path.join(
-            os.path.dirname(outputFilename),
-            os.path.splitext(os.path.basename(filename))[0] + fileType[2])
-        input = filename
-        cmd = constants.ProgramType.cmd(fileType, input, output,
-                                        customOptions)
-    else:
-        input = filename
+        make_bin_dir(filename)
+        output = os.path.join("bin", os.path.splitext(
+                              os.path.basename(filename))[0] + fileType[2])
+        input = os.path.split(filename)[1]
+        cmd = constants.ProgramType.cmd(fileType, input, output, customOptions)
+    else:  # from check mode
+        input = os.path.split(filename)[1]
         output = outputFilename
         cmd = constants.ProgramType.cmd(fileType, input, output,
                                         customOptions)
-    # run it using pexpect
     messages = []
     if sys.platform == "win32":
         startupinfo = subprocess.STARTUPINFO()
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
         p = subprocess.Popen(cmd, shell=False, startupinfo=startupinfo,
                              env=os.environ.copy(),
-                             cwd=os.path.dirname(filename),
+                             cwd=dirname,
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     else:
         p = subprocess.Popen(cmd, shell=False,
+                             cwd=os.path.dirname(filename),
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
@@ -564,9 +564,16 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
     for l in lines:
         tokens = l.split(":")
         if len(tokens) == nbTokensExpected:
-            desc = tokens[len(tokens) - 1]
-            errType = tokens[len(tokens) - 2]
-            lineNbr = int(tokens[len(tokens) - 3])
+            try:
+                desc = tokens[len(tokens) - 1]
+                errType = tokens[len(tokens) - 2]
+                lineNbr = int(tokens[len(tokens) - 3])
+            except ValueError:
+                # not a compilation message, usually this is a file not found error.
+                desc = l
+                errType = "Error"
+                lineNbr = -1
+                # not a compilation error
             status = pyqode.core.MSG_STATUS_WARNING
             if errType == "Error":
                 status = pyqode.core.MSG_STATUS_ERROR
