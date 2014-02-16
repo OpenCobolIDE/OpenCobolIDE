@@ -534,9 +534,11 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
         cmd = constants.ProgramType.cmd(fileType, input, output, customOptions)
     else:  # from check mode
         input = os.path.split(filename)[1]
-        output = outputFilename
+        output = os.path.split(filename)[1]
         cmd = constants.ProgramType.cmd(fileType, input, output,
                                         customOptions)
+
+    # run the compiler process
     messages = []
     if sys.platform == "win32":
         startupinfo = subprocess.STARTUPINFO()
@@ -550,6 +552,8 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
                              cwd=os.path.dirname(filename),
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
+
+    # get compilation results
     stdout, stderr = p.communicate()
     status = p.returncode
     if sys.version_info[0] == 2:
@@ -558,6 +562,8 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
         stdout = str(stdout)
         stderr = str(stderr)
         lines = stdout.splitlines() + stderr.splitlines()
+
+    # parse compilation results
     nbTokensExpected = 4
     if sys.platform == "win32":
         nbTokensExpected += 1
