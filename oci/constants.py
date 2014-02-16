@@ -24,6 +24,12 @@ import sys
 pyqode.core.constants.WORD_SEPARATORS.remove("-")
 
 
+COBOL_EXTENSIONS = [".COB", ".CBL", ".PCO", ".CPY"]
+ALL_COBOL_EXTENSIONS = COBOL_EXTENSIONS + [ext.lower() for ext in COBOL_EXTENSIONS]
+COBOL_FILES_FILTER = "Cobol files (%s)" % " ".join(ALL_COBOL_EXTENSIONS).replace(".", "*.")
+OTHER_FILES_FILTER = "Other text files (*)"
+FILTER_SEPARATOR = ";;"
+
 ICON_PARAGRAPH = ":/ide-icons/rc/paragraph"
 ICON_VAR = ":/ide-icons/rc/var"
 ICON_KEYWORD = ":/ide-icons/rc/keyword"

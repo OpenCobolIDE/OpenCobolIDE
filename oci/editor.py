@@ -26,7 +26,8 @@ from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode, GoToDefinitionM
 from oci.modes import CobolCheckerMode, DocumentAnalyserMode
 from oci.cobol import CobolFolder
 
-
+CobolLexer.filenames.append(".PCO")
+CobolLexer.filenames.append(".pco")
 # make pygments hihlighter uses our custom cobol fold detector
 pyqode.core.PygmentsSyntaxHighlighter.LEXERS_FOLD_DETECTORS[
             CobolFreeformatLexer] = CobolFolder()
@@ -95,7 +96,9 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.autoIndentMode.minIndent = 7 * " "
 
         # syntax highlighter
-        self.installMode(pyqode.core.PygmentsSyntaxHighlighter(self.document()))
+        sh = pyqode.core.PygmentsSyntaxHighlighter(self.document())
+        sh.setLexerFromFilename = self.setLexerFromFilename
+        self.installMode(sh)
         self.syntaxHighlighterMode.blockHighlightFinished.connect(
             self._highlighComments)
 
@@ -118,6 +121,9 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         pyqode.core.QCodeEdit.openFile(self, filePath, replaceTabsBySpaces,
                                        encoding, detectEncoding)
         self.__fileType = cobol.detectFileType(filePath)
+
+    def setLexerFromFilename(self, *args):
+        self.syntaxHighlighterMode._lexer = CobolFreeformatLexer()
 
     def _highlighComments(self, highlighter, text):
         """

@@ -458,7 +458,7 @@ def detectFileType(filename):
     """
     ext = os.path.splitext(filename)[1].lower()
     type = constants.ProgramType.Executable
-    if ext == ".cbl" or ext == ".cob":
+    if ext in constants.ALL_COBOL_EXTENSIONS:
         try:
             with open(filename, 'r') as f:
                 lines = f.readlines()

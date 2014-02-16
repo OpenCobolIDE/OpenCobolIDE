@@ -205,9 +205,11 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionOpen_triggered(self):
+        filter = "%s%s%s" % (constants.COBOL_FILES_FILTER,
+                            constants.FILTER_SEPARATOR,
+                            constants.OTHER_FILES_FILTER)
         self.openFile(QtGui.QFileDialog.getOpenFileName(
-            self, "Open a file", Settings().lastFilePath,
-            "Cobol files (*.cbl *.CBL *.cob *.COB);; Other text files (*)"))
+            self, "Open a file", Settings().lastFilePath, filter))
 
     @QtCore.pyqtSlot()
     def on_actionSave_triggered(self):
@@ -215,11 +217,13 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionSaveAs_triggered(self):
-        filter = "Cobol files (*.cbl *.CBL *.cob *.COB);; Other text files (*)"
+        filter = "%s%s%s" % (constants.COBOL_FILES_FILTER,
+                            constants.FILTER_SEPARATOR,
+                            constants.OTHER_FILES_FILTER)
         fn, filter = QtGui.QFileDialog.getSaveFileNameAndFilter(
             self, "Save file as...", Settings().lastFilePath, filter)
         if os.path.splitext(fn)[1] == "":
-            if filter == "Cobol files (*.cbl *.CBL *.cob *.COB)":
+            if filter == constants.COBOL_FILES_FILTER:
                 fn += ".cob"
         if fn:
             self.tabWidgetEditors.saveCurrent(filePath=fn)
@@ -426,7 +430,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                 extension = os.path.splitext(fn)[1]
                 icon = None
                 Settings().lastFilePath = fn
-                if extension.lower() in [".cbl", ".cob"]:
+                if extension.lower() in constants.ALL_COBOL_EXTENSIONS:
                     tab = QCobolCodeEdit(self.tabWidgetEditors)
                     icon = QtGui.QIcon(tab.icon)
                     tab.analyserMode.documentLayoutChanged.connect(

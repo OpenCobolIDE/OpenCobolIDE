@@ -68,7 +68,7 @@ When you create a new file you have can choose one of the 3 following options:
 Name
 ++++++++++
 
-Choose the file name and extension (.cbl/.CBL, .cob/.COB)
+Choose the file name and extension (.cbl/.CBL, .cob/.COB, .pco/.PCO, .cpy/.CPY)
 
 Directory
 ++++++++++++++
