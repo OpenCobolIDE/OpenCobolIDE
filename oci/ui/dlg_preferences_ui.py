@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_preferences.ui'
 #
-# Created: Thu Feb 20 15:56:27 2014
+# Created: Thu Feb 20 16:00:45 2014
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!

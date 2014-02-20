@@ -182,10 +182,12 @@ class DlgAbout(QtGui.QDialog, dlg_about_ui.Ui_Dialog):
                     QtCore.PYQT_VERSION_STR,
                     pyqode.core.__version__,
                     pyqode.widgets.__version__,
-                    pygments.__version__]
+                    pygments.__version__,
+                    qdarkstyle.__version__]
         for i, version in enumerate(versions):
             item = QtGui.QTableWidgetItem(version)
             self.tbwVersions.setItem(i, 0, item)
+        self.textBrowser.setStyleSheet("color: red")
 
 
 class DlgPreferences(QtGui.QDialog, dlg_preferences_ui.Ui_Dialog):
