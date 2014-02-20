@@ -16,6 +16,7 @@
 """
 Contains cobol specific modes
 """
+import logging
 import os
 os.environ["QT_API"] = "PyQt"
 import pyqode.core
@@ -259,20 +260,29 @@ class DocumentAnalyserMode(Mode, QObject):
             - variables
             - paragraphs
         """
+        root_node = None
+        variables = []
+        paragraphs = []
         try:
             root_node, variables, paragraphs = cobol.parse_document_layout(
                 self.editor.filePath, encoding=self.editor.fileEncoding)
-            changed = False
-            if(self.__root_node is None or
-               cobol.cmp_doc_node(root_node, self.__root_node)):
-                changed = True
-            self.__root_node = root_node
-            self.__vars = variables
-            self.__paragraphs = paragraphs
-            if changed:
-                self.documentLayoutChanged.emit(self.root_node)
-        except TypeError or IOError:
+        except (TypeError, IOError):
+            # file does not exists
             pass
+        except AttributeError:
+            # this should never happen but we must exit gracefully
+            logging.exception("Failed to parse document, probably due to "
+                              "a malformed syntax.")
+        changed = False
+        if(self.__root_node is None or
+           cobol.cmp_doc_node(root_node, self.__root_node)):
+            changed = True
+        self.__root_node = root_node
+        self.__vars = variables
+        self.__paragraphs = paragraphs
+        if changed:
+            self.documentLayoutChanged.emit(self.root_node)
+
 
 
 class Definition(object):
