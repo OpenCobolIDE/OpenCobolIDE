@@ -525,11 +525,11 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.tabWidgetLogs.setTabIcon(0, compileIcon)
         self.tabWidgetLogs.setTabIcon(1, runIcon)
 
-        self.QHomeWidget.setActionIcon(self.actionNew, docNewIcon)
-        self.QHomeWidget.setActionIcon(self.actionOpen, docOpenIcon)
-        self.QHomeWidget.setActionIcon(self.actionPreferences, preferencesIcon)
-        self.QHomeWidget.setActionIcon(self.actionHelp, helpIcon)
-        self.QHomeWidget.setActionIcon(self.actionQuit, quitIcon)
+        # self.QHomeWidget.setActionIcon(self.actionNew, docNewIcon)
+        # self.QHomeWidget.setActionIcon(self.actionOpen, docOpenIcon)
+        # self.QHomeWidget.setActionIcon(self.actionPreferences, preferencesIcon)
+        # self.QHomeWidget.setActionIcon(self.actionHelp, helpIcon)
+        # self.QHomeWidget.setActionIcon(self.actionQuit, quitIcon)
 
     def setupQuickStartActions(self):
         self.QHomeWidget.addAction(self.actionNew)
