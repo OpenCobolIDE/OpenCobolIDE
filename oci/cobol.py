@@ -599,14 +599,17 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
 def get_cobc_version():
     """ Returns the OpenCobol compiler version as a string """
     cmd = ["cobc", "--version"]
-    if sys.platform == "win32":
-        startupinfo = subprocess.STARTUPINFO()
-        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        p = subprocess.Popen(cmd, shell=False, startupinfo=startupinfo,
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    else:
-        p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE)
+    try:
+        if sys.platform == "win32":
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            p = subprocess.Popen(cmd, shell=False, startupinfo=startupinfo,
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        else:
+            p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE)
+    except FileNotFoundError:
+        return "Not installed"
     stdout, stderr = p.communicate()
     if sys.version_info[0] == 2:
         return stdout.splitlines()[0].split(" ")[2]
