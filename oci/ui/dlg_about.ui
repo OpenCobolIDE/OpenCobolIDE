@@ -6,14 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
-    <height>800</height>
+    <width>650</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>850</width>
-    <height>800</height>
+    <width>650</width>
+    <height>700</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>700</width>
+    <height>16777215</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -94,22 +100,17 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu';&quot;&gt;OpenCobol IDE is a simple cobol IDE written in python based on OpenCobol and pyQode.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-weight:600; color:#000000;&quot;&gt;Authors:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; color:#000000;&quot;&gt;Colin Duquesnoy  &amp;lt;&lt;/span&gt;&lt;a href=&quot;mailto:colin.duquesnoy@gmail&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#0000ff;&quot;&gt;colin.duquesnoy@gmail&lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;mailto:colin.duquesnoy@gmail&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#000000;&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-weight:600;&quot;&gt;Web:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/ColinDuquesnoy/OpenCobolIDE&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Github repository&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-weight:600;&quot;&gt;Contributors: &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu';&quot;&gt;- &lt;/span&gt;&lt;a href=&quot;mailto:thiry.celi@gmail.com&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#0000ff;&quot;&gt;Céline Thiry&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Ubuntu';&quot;&gt; : application icon designer&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-weight:600;&quot;&gt;Credits: &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu';&quot;&gt;- &lt;/span&gt;&lt;a href=&quot;http://python.org/&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#0000ff;&quot;&gt;Python&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu';&quot;&gt;- &lt;/span&gt;&lt;a href=&quot;http://qt-project.org/&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#0000ff;&quot;&gt;Qt&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Ubuntu';&quot;&gt;/&lt;/span&gt;&lt;a href=&quot;http://www.riverbankcomputing.com/software/pyqt/intro&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;PyQt4&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu';&quot;&gt;- &lt;/span&gt;&lt;a href=&quot;https://github.com/ColinDuquesnoy/pyqode-core&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;PyQode&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu';&quot;&gt;- &lt;/span&gt;&lt;a href=&quot;https://pypi.python.org/pypi/chardet&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#0000ff;&quot;&gt;chardet&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu';&quot;&gt;- &lt;/span&gt;&lt;a href=&quot;http://tango.freedesktop.org/&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#0000ff;&quot;&gt;Tango Desktop Project&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-style:italic;&quot;&gt;- &lt;/span&gt;&lt;a href=&quot;http://www.opencobol.org/&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#0000ff;&quot;&gt;OpenCobol&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-weight:600;&quot;&gt;License:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu';&quot;&gt;This software is licensed under the &lt;/span&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-weight:600;&quot;&gt;GPL v3.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; color:#414141;&quot;&gt;OpenCobol IDE is a simple cobol IDE written in python based on OpenCobol and pyQode.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-weight:600; color:#414141;&quot;&gt;Authors:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; color:#414141;&quot;&gt;Colin Duquesnoy  &amp;lt;&lt;/span&gt;&lt;a href=&quot;mailto:colin.duquesnoy@gmail&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#2768ff;&quot;&gt;colin.duquesnoy@gmail&lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;mailto:colin.duquesnoy@gmail&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#414141;&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-weight:600; color:#414141;&quot;&gt;License:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; color:#414141;&quot;&gt;This software is licensed under the &lt;/span&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-weight:600; color:#414141;&quot;&gt;GPL v3.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-weight:600; color:#414141;&quot;&gt;Web:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/ColinDuquesnoy/OpenCobolIDE&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2768ff;&quot;&gt;Github repository&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-weight:600; color:#414141;&quot;&gt;Contributors: &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; color:#414141;&quot;&gt;- &lt;/span&gt;&lt;a href=&quot;mailto:thiry.celi@gmail.com&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#2768ff;&quot;&gt;Céline Thiry&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Ubuntu'; color:#414141;&quot;&gt; : application icon designer&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-weight:600; color:#414141;&quot;&gt;Credits: &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://python.org/&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#2768ff;&quot;&gt;Python&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Ubuntu'; color:#414141;&quot;&gt; , &lt;/span&gt;&lt;a href=&quot;http://qt-project.org/&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#2768ff;&quot;&gt;Qt&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Ubuntu'; color:#2768ff;&quot;&gt;/&lt;/span&gt;&lt;a href=&quot;http://www.riverbankcomputing.com/software/pyqt/intro&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2768ff;&quot;&gt;PyQt4&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Ubuntu'; color:#414141;&quot;&gt; , &lt;/span&gt;&lt;a href=&quot;https://github.com/ColinDuquesnoy/pyqode-core&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2768ff;&quot;&gt;PyQode&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Ubuntu'; color:#414141;&quot;&gt; , &lt;/span&gt;&lt;a href=&quot;https://pypi.python.org/pypi/chardet&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#2768ff;&quot;&gt;chardet&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Ubuntu'; color:#414141;&quot;&gt; , &lt;/span&gt;&lt;a href=&quot;http://tango.freedesktop.org/&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#2768ff;&quot;&gt;Tango Desktop Project &lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-style:italic; color:#414141;&quot;&gt; , &lt;/span&gt;&lt;a href=&quot;http://www.opencobol.org/&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; text-decoration: underline; color:#2768ff;&quot;&gt;OpenCobol&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; color:#414141;&quot;&gt; , &lt;/span&gt;&lt;a href=&quot;https://github.com/ColinDuquesnoy/QDarkStyleSheet&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2768ff;&quot;&gt;QDarkStyle&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="textInteractionFlags">
             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
@@ -141,7 +142,7 @@ p, li { white-space: pre-wrap; }
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>205</height>
+             <height>240</height>
             </size>
            </property>
            <property name="focusPolicy">
@@ -196,6 +197,11 @@ p, li { white-space: pre-wrap; }
            <row>
             <property name="text">
              <string>Pygments</string>
+            </property>
+           </row>
+           <row>
+            <property name="text">
+             <string>QDarkStyle</string>
             </property>
            </row>
            <column>

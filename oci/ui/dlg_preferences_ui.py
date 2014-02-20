@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_preferences.ui'
 #
-# Created: Sun Feb 16 14:57:30 2014
+# Created: Thu Feb 20 15:56:27 2014
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -57,10 +57,15 @@ class Ui_Dialog(object):
         self.gridLayout_2 = QtGui.QGridLayout(self.tabEditorsettings)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.propGridSettings = QPropertyGrid(self.tabEditorsettings)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.propGridSettings.sizePolicy().hasHeightForWidth())
+        self.propGridSettings.setSizePolicy(sizePolicy)
         self.propGridSettings.setObjectName("propGridSettings")
-        self.gridLayout_2.addWidget(self.propGridSettings, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.propGridSettings, 1, 0, 1, 1)
         self.tabWidgetSettings.addTab(self.tabEditorsettings, "")
-        self.gridLayout.addWidget(self.tabWidgetSettings, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.tabWidgetSettings, 1, 0, 1, 1)
         self.stackedWidget.addWidget(self.page_3)
         self.page_4 = QtGui.QWidget()
         self.page_4.setObjectName("page_4")
@@ -72,6 +77,20 @@ class Ui_Dialog(object):
         self.tab.setObjectName("tab")
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.tab)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.horizontalLayout_3 = QtGui.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem)
+        self.rbLightStyle = QtGui.QRadioButton(self.tab)
+        self.rbLightStyle.setChecked(True)
+        self.rbLightStyle.setObjectName("rbLightStyle")
+        self.horizontalLayout_3.addWidget(self.rbLightStyle)
+        self.rbDarkStyle = QtGui.QRadioButton(self.tab)
+        self.rbDarkStyle.setObjectName("rbDarkStyle")
+        self.horizontalLayout_3.addWidget(self.rbDarkStyle)
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem1)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_3)
         self.propGridStyle = QPropertyGrid(self.tab)
         self.propGridStyle.setObjectName("propGridStyle")
         self.verticalLayout_2.addWidget(self.propGridStyle)
@@ -135,8 +154,8 @@ class Ui_Dialog(object):
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setContentsMargins(-1, 0, -1, -1)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
+        spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem2)
         self.radioButtonWhite = QtGui.QRadioButton(self.tab_3)
         self.radioButtonWhite.setChecked(True)
         self.radioButtonWhite.setObjectName("radioButtonWhite")
@@ -144,8 +163,8 @@ class Ui_Dialog(object):
         self.radioButtonDark = QtGui.QRadioButton(self.tab_3)
         self.radioButtonDark.setObjectName("radioButtonDark")
         self.horizontalLayout.addWidget(self.radioButtonDark)
-        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem1)
+        spacerItem3 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem3)
         self.verticalLayout_4.addLayout(self.horizontalLayout)
         self.homeWidget = QHomeWidget(self.tab_3)
         icon3 = QtGui.QIcon()
@@ -165,7 +184,7 @@ class Ui_Dialog(object):
         self.verticalLayout.addWidget(self.buttonBox)
 
         self.retranslateUi(Dialog)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         self.tabWidgetSettings.setCurrentIndex(0)
         self.tabWidgetStyle.setCurrentIndex(0)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), Dialog.accept)
@@ -187,6 +206,8 @@ class Ui_Dialog(object):
         self.lwMenu.item(1).setText(QtGui.QApplication.translate("Dialog", "Style", None, QtGui.QApplication.UnicodeUTF8))
         self.lwMenu.setSortingEnabled(__sortingEnabled)
         self.tabWidgetSettings.setTabText(self.tabWidgetSettings.indexOf(self.tabEditorsettings), QtGui.QApplication.translate("Dialog", "Editor settings", None, QtGui.QApplication.UnicodeUTF8))
+        self.rbLightStyle.setText(QtGui.QApplication.translate("Dialog", "White style", None, QtGui.QApplication.UnicodeUTF8))
+        self.rbDarkStyle.setText(QtGui.QApplication.translate("Dialog", "Dark style", None, QtGui.QApplication.UnicodeUTF8))
         self.codeEdit.setPlainText(QtGui.QApplication.translate("Dialog", "      *******************************************************************\n"
 "      ** Example taken from http://progopedia.com/version/opencobol-1.0/*\n"
 "      *******************************************************************\n"

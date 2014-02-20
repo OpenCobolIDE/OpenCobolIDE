@@ -260,7 +260,6 @@ class Settings(object):
             value = value.name()
         self._settings.setValue("consoleAppOutput", value)
 
-
     @property
     def homePageColorScheme(self):
         return int(self._settings.value("homePageStyle", "0"))
@@ -268,3 +267,11 @@ class Settings(object):
     @homePageColorScheme.setter
     def homePageColorScheme(self, value):
         self._settings.setValue("homePageStyle", str(value))
+
+    @property
+    def appStyle(self):
+        return int(self._settings.value("style", "0"))
+
+    @appStyle.setter
+    def appStyle(self, value):
+        self._settings.setValue("style", value)

@@ -18,6 +18,7 @@ Contains application constants
 """
 import os
 import pyqode.core
+import pyqode.widgets
 # cobol use - extensively for complex identifier, don't break them!
 import sys
 
@@ -38,6 +39,26 @@ EXECUTABLE_EXTENSION = ".exe"
 MODULE_EXTENSION = ".so"
 if sys.platform == "win32":
     MODULE_EXTENSION = ".dll"
+
+
+WHITE_STYLE = 0
+DARK_STYLE = 1
+
+
+class DarkColorScheme(pyqode.widgets.ColorScheme):
+    """
+    Define a dark color scheme for easy customization of the stylesheet.
+    """
+
+    def __init__(self):
+        super(DarkColorScheme, self).__init__()
+        self.background_color = "#302F2F"
+        self.title_background_color = "#4b4b4b"
+        self.text_color = "#C5C5C5"
+        self.border_color = "#555555"
+        self.selection_bck_color = "#343434"
+        self.selection_color = "#C5C5C5"
+        self.hover_color = "#343434"
 
 
 class ProgramType:

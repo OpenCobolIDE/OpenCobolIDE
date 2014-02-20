@@ -16,14 +16,17 @@
 """
 Contains the main window implementation
 """
-import multiprocessing
 import os
-import subprocess
-from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem, QTreeWidgetItem, QInputDialog
+import sys
+
+import qdarkstyle
+
 import pyqode.core
 import pyqode.widgets
+
 from PyQt4 import QtCore, QtGui
-import sys
+from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem, QTreeWidgetItem, QInputDialog
+
 from oci import __version__, constants, cobol
 from oci.dialogs import DlgNewFile, DlgAbout, DlgPreferences
 from oci.editor import QCobolCodeEdit
@@ -61,6 +64,10 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.consoleOutput.appMessageColor = s.consoleAppOutput
 
         self.setHomePageColorScheme(s.homePageColorScheme)
+
+        if s.appStyle == constants.DARK_STYLE:
+            QtGui.QApplication.instance().setStyleSheet(
+                qdarkstyle.load_stylesheet(pyside=False))
 
         self.setupIcons()
         self.QHomeWidget.setupRecentFiles(
@@ -111,6 +118,8 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.statusbar.addPermanentWidget(self.lblFilename, 200)
         self.statusbar.addPermanentWidget(self.lblEncoding, 20)
         self.statusbar.addPermanentWidget(self.lblCursorPos, 20)
+
+
 
     @staticmethod
     def initDefaultSettings():
@@ -188,7 +197,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             editor.programType = constants.ProgramType.Module
 
     def setHomePageColorScheme(self, schemeNbr):
-        schemes = [pyqode.widgets.ColorScheme, pyqode.widgets.DarkColorScheme]
+        schemes = [pyqode.widgets.ColorScheme, constants.DarkColorScheme]
         self.QHomeWidget.setColorScheme(schemes[schemeNbr]())
 
     @QtCore.pyqtSlot()
@@ -301,6 +310,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             self.consoleOutput.processOutputColor = dlg.consoleForeground
             self.consoleOutput.usrInputColor = dlg.consoleUserInput
             self.consoleOutput.appMessageColor = dlg.consoleAppOutput
+            self.setupIcons()
 
     @QtCore.pyqtSlot()
     def on_actionHelp_triggered(self):
@@ -457,33 +467,50 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                 "Cannot open file %s, the file does not exists." % fn)
 
     def setupIcons(self):
-        docOpenIcon = QtGui.QIcon.fromTheme(
-            "document-open", QtGui.QIcon(":/ide-icons/rc/document-open.png"))
-        docSaveIcon = QtGui.QIcon.fromTheme(
-            "document-save", QtGui.QIcon(":/ide-icons/rc/document-save.png"))
-        docSaveAsIcon = QtGui.QIcon.fromTheme(
-            "document-save-as", QtGui.QIcon(":/ide-icons/rc/document-save-as.png"))
-        docNewIcon = QtGui.QIcon.fromTheme(
-            "document-new",
-            QtGui.QIcon(":/ide-icons/rc/document-new.png"))
-        compileIcon = QtGui.QIcon.fromTheme(
-            "application-x-executable", QtGui.QIcon(
-                ":/ide-icons/rc/application-x-executable.png"))
-        runIcon = QtGui.QIcon.fromTheme(
-            "media-playback-start", QtGui.QIcon(
-                ":/ide-icons/rc/media-playback-start.png"))
-        fullscreenIcon = QtGui.QIcon.fromTheme(
-            "view-fullscreen", QtGui.QIcon(
-                ":/ide-icons/rc/view-fullscreen.png"))
-        quitIcon = QtGui.QIcon.fromTheme(
-            "window-close", QtGui.QIcon(":/ide-icons/rc/system-log-out.png"))
-        clearIcon = QtGui.QIcon.fromTheme(
-            "edit-clear", QtGui.QIcon(":/ide-icons/rc/edit-clear.png"))
-        helpIcon = QtGui.QIcon.fromTheme(
-            "help", QtGui.QIcon(":/ide-icons/rc/help.png"))
-        preferencesIcon = QtGui.QIcon.fromTheme(
-            "preferences-system",
-            QtGui.QIcon(":/ide-icons/rc/Preferences-system.png"))
+        if Settings().appStyle == constants.WHITE_STYLE:
+            docOpenIcon = QtGui.QIcon.fromTheme(
+                "document-open", QtGui.QIcon(":/ide-icons/rc/document-open.png"))
+            docSaveIcon = QtGui.QIcon.fromTheme(
+                "document-save", QtGui.QIcon(":/ide-icons/rc/document-save.png"))
+            docSaveAsIcon = QtGui.QIcon.fromTheme(
+                "document-save-as", QtGui.QIcon(":/ide-icons/rc/document-save-as.png"))
+            docNewIcon = QtGui.QIcon.fromTheme(
+                "document-new",
+                QtGui.QIcon(":/ide-icons/rc/document-new.png"))
+            compileIcon = QtGui.QIcon.fromTheme(
+                "application-x-executable", QtGui.QIcon(
+                    ":/ide-icons/rc/application-x-executable.png"))
+            runIcon = QtGui.QIcon.fromTheme(
+                "media-playback-start", QtGui.QIcon(
+                    ":/ide-icons/rc/media-playback-start.png"))
+            fullscreenIcon = QtGui.QIcon.fromTheme(
+                "view-fullscreen", QtGui.QIcon(
+                    ":/ide-icons/rc/view-fullscreen.png"))
+            quitIcon = QtGui.QIcon.fromTheme(
+                "window-close", QtGui.QIcon(":/ide-icons/rc/system-log-out.png"))
+            clearIcon = QtGui.QIcon.fromTheme(
+                "edit-clear", QtGui.QIcon(":/ide-icons/rc/edit-clear.png"))
+            helpIcon = QtGui.QIcon.fromTheme(
+                "help", QtGui.QIcon(":/ide-icons/rc/help.png"))
+            preferencesIcon = QtGui.QIcon.fromTheme(
+                "preferences-system",
+                QtGui.QIcon(":/ide-icons/rc/Preferences-system.png"))
+        else:
+            docOpenIcon = QtGui.QIcon(":/ide-icons/rc/document-open.png")
+            docSaveIcon = QtGui.QIcon(":/ide-icons/rc/document-save.png")
+            docSaveAsIcon = QtGui.QIcon(":/ide-icons/rc/document-save-as.png")
+            docNewIcon = QtGui.QIcon(":/ide-icons/rc/document-new.png")
+            compileIcon = QtGui.QIcon(
+                ":/ide-icons/rc/application-x-executable.png")
+            runIcon = QtGui.QIcon(
+                ":/ide-icons/rc/media-playback-start.png")
+            fullscreenIcon = QtGui.QIcon(
+                ":/ide-icons/rc/view-fullscreen.png")
+            quitIcon = QtGui.QIcon(":/ide-icons/rc/system-log-out.png")
+            clearIcon = QtGui.QIcon(":/ide-icons/rc/edit-clear.png")
+            helpIcon = QtGui.QIcon(":/ide-icons/rc/help.png")
+            preferencesIcon = QtGui.QIcon(
+                ":/ide-icons/rc/Preferences-system.png")
         self.actionPreferences.setIcon(preferencesIcon)
         self.actionHelp.setIcon(helpIcon)
         self.actionClear.setIcon(clearIcon)
@@ -497,6 +524,12 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.actionCompile.setIcon(compileIcon)
         self.tabWidgetLogs.setTabIcon(0, compileIcon)
         self.tabWidgetLogs.setTabIcon(1, runIcon)
+
+        self.QHomeWidget.setActionIcon(self.actionNew, docNewIcon)
+        self.QHomeWidget.setActionIcon(self.actionOpen, docOpenIcon)
+        self.QHomeWidget.setActionIcon(self.actionPreferences, preferencesIcon)
+        self.QHomeWidget.setActionIcon(self.actionHelp, helpIcon)
+        self.QHomeWidget.setActionIcon(self.actionQuit, quitIcon)
 
     def setupQuickStartActions(self):
         self.QHomeWidget.addAction(self.actionNew)

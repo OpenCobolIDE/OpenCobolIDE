@@ -16,14 +16,20 @@
 """
 Contains the application dialogs
 """
-from PyQt4 import QtGui
-from PyQt4 import QtCore
 import os
 import pygments
+import sys
+
+from PyQt4 import QtGui
+from PyQt4 import QtCore
+
+import qdarkstyle
+
 import pyqode.core
 import pyqode.widgets
-import sys
-from oci import cobol, __version__
+
+
+from oci import cobol, __version__, constants
 from oci.settings import Settings
 from oci.ui import dlg_about_ui, dlg_file_type_ui, dlg_preferences_ui
 
@@ -200,7 +206,7 @@ class DlgPreferences(QtGui.QDialog, dlg_preferences_ui.Ui_Dialog):
     @homePageColorScheme.setter
     def homePageColorScheme(self, value):
         self.__homePageColorScheme = value
-        schemes = [pyqode.widgets.ColorScheme, pyqode.widgets.DarkColorScheme]
+        schemes = [pyqode.widgets.ColorScheme, constants.DarkColorScheme]
         self.homeWidget.setColorScheme(schemes[value]())
         self.radioButtonWhite.setChecked(value == 0)
         self.radioButtonDark.setChecked(value == 1)
@@ -274,6 +280,43 @@ class DlgPreferences(QtGui.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.radioButtonWhite.toggled.connect(self.onHomePageStyleChanged)
         if sys.platform == "win32":
             self.tabWidgetStyle.removeTab(1)
+        if Settings().appStyle == constants.DARK_STYLE:
+            self.rbDarkStyle.setChecked(True)
+
+    @QtCore.pyqtSlot(bool)
+    def on_rbDarkStyle_clicked(self, checked):
+        app = QtGui.QApplication.instance()
+        if checked:
+            app.setStyleSheet(qdarkstyle.load_stylesheet(pyside=False))
+            style = self.editorStyle
+            style.setValue("pygmentsStyle", "monokai")
+            style.setValue("selectionBackground", "monokai")
+            style.setValue("background",
+                                      QtGui.QColor("#272822"))
+            style.setValue("caretLineBackground",
+                                      QtGui.QColor("#272822"))
+            style.setValue("selectionBackground",
+                                 QtGui.QColor("#353d44"))
+            style.setValue("whiteSpaceForeground",
+                                 QtGui.QColor("#393939"))
+            style.setValue("nativeFoldingIndicator", False)
+            self.homePageColorScheme = 1
+            # force grid refresh
+            self.editorStyle = style
+
+            s = Settings()
+            s.appStyle = constants.DARK_STYLE
+
+    @QtCore.pyqtSlot(bool)
+    def on_rbLightStyle_clicked(self, checked):
+        app = QtGui.QApplication.instance()
+        if checked:
+            app.setStyleSheet("")
+            self.editorStyle = pyqode.core.QGenericCodeEdit().style
+            self.homePageColorScheme = 0
+            s = Settings()
+            s.appStyle = constants.WHITE_STYLE
+
 
     @QtCore.pyqtSlot(int)
     def on_lwMenu_currentRowChanged(self, row):
