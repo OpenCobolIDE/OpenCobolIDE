@@ -304,6 +304,9 @@ def _extract_var_node(i, c, indentation, last_section_node, last_vars, line,
             if l < lvl:
                 parent_node = last_vars[l]
                 break
+    if not parent_node:
+        # malformed code
+        return None
     node = DocumentNode(DocumentNode.Type.Variable, i + 1, c, name,
                         description, createIcon=createIcon)
     parent_node.add_child(node)
