@@ -7,7 +7,6 @@ Integration test:
 """
 import os
 import sys
-import time
 from pyqode.qt import QtGui, QtCore
 from oci import main_window, constants
 
@@ -30,13 +29,15 @@ def teardown_module(module):
 
 
 def test_integration():
+    """
+    Does what a typical user expect from an IDE: open a file, compile it
+    and finally run the program.
+    """
     app = QtGui.QApplication(sys.argv)
     window = main_window.MainWindow()
     window.show()
     window.openFile(os.path.abspath("hello.cbl"))
-    QtCore.QTimer.singleShot(
-        1000, window.on_actionCompile_triggered)
-    QtCore.QTimer.singleShot(
-        3000, window.on_actionRun_triggered)
+    QtCore.QTimer.singleShot(1000, window.on_actionCompile_triggered)
+    QtCore.QTimer.singleShot(3000, window.on_actionRun_triggered)
     QtCore.QTimer.singleShot(5000, app.quit)
     app.exec_()
