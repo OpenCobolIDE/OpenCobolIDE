@@ -38,5 +38,7 @@ before_install:
  - if [[ $PYVER == '3.x' ]]; then
     - sudo apt-get install $PYTHON-pyqt4;
  - fi
+# tox
+ - pip install --quiet --use-mirrors tox
 script:
   - tox
