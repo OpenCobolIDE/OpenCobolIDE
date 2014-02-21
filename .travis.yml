@@ -1,0 +1,45 @@
+language: python
+python:
+  - "2.7"
+  - "3.3"
+matrix:
+    include:
+        - python: 2.7
+          env:
+            - PYTHON=python
+            - PYVER=2.x
+        - python: 3.3
+          env:
+            - PYTHON=python3
+            - PYVER=3.x
+virtualenv:
+  system_site_packages: true
+before_install:
+ - "export DISPLAY=:99.0"
+ - "sh -e /etc/init.d/xvfb start"
+ - sudo apt-get update
+# OpenCobolIDE grow with pyQode, we need the latest dev branch to test the
+# latest features.
+# pyqode.core
+ - git clone https://github.com/ColinDuquesnoy/pyqode.core.git
+ - cd pyqode.core
+ - git checkout origin/develop
+ - python setup.py install
+ - cd ..
+# pyqode.widgets
+ - git clone https://github.com/ColinDuquesnoy/pyqode.widgets.git
+ - cd pyqode.widgets
+ - git checkout origin/develop
+ - python setup.py install
+ - cd ..
+# open-cobol
+ - sudo apt-get install open-cobol
+# PyQt4
+ - if [[ $PYVER == '2.x' ]]; then
+    - sudo apt-get install $PYTHON-qt4;
+ - fi
+ - if [[ $PYVER == '3.x' ]]; then
+    - sudo apt-get install $PYTHON-pyqt4;
+ - fi
+script:
+  - tox
