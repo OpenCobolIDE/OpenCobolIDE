@@ -145,7 +145,7 @@ class DocumentNode(QTreeWidgetItem):
         self.name = name
         if description is None:
             description = name
-        self.description = description.replace(u".", u"")
+        self.description = description.replace(".", "")
         self.children = []
         self.setText(0, name)
         if createIcon:
@@ -165,7 +165,7 @@ class DocumentNode(QTreeWidgetItem):
         """
         Print the node tree in stdout
         """
-        print(u" " * indent, self.name, self.line, u" - ", self.end_line)
+        print(" " * indent, self.name, self.line, " - ", self.end_line)
         for c in self.children:
             c.print_tree(indent + 4)
 
@@ -224,7 +224,7 @@ def _extract_div_node(l, c, line, root_node, last_section_node, createIcon):
     :return: tuple(last_div_node, last_section_node)
     """
     name = line
-    name = name.replace(u".", u"")
+    name = name.replace(".", "")
     node = DocumentNode(DocumentNode.Type.Division, l + 1, c, name,
                         createIcon=createIcon)
     root_node.add_child(node)
@@ -251,8 +251,7 @@ def _extract_section_node(l, c, last_div_node, last_vars, line, createIcon):
     :return: last_section_node
     """
     name = line
-    name = name.replace(u".", u"")
-    description = u"{0}: {1}".format(l + 1, line)
+    name = name.replace(".", "")
     node = DocumentNode(DocumentNode.Type.Section, l + 1, c, name,
                         createIcon=createIcon)
     last_div_node.add_child(node)
@@ -280,10 +279,10 @@ def _extract_var_node(i, c, indentation, last_section_node, last_vars, line,
     :return: The extracted variable node
     """
     parent_node = None
-    raw_tokens = line.split(u" ")
+    raw_tokens = line.split(" ")
     tokens = []
     for t in raw_tokens:
-        if not t.isspace() and t != u"":
+        if not t.isspace() and t != "":
             tokens.append(t)
     try:
         lvl = int(tokens[0], 16)
@@ -291,8 +290,8 @@ def _extract_var_node(i, c, indentation, last_section_node, last_vars, line,
     except ValueError:
         lvl = 0
         name = tokens[0]
-    name = name.replace(u".", u"")
-    description = u"{1}".format(i + 1, line)
+    name = name.replace(".", "")
+    description = "{1}".format(i + 1, line)
     # if indentation == 7:
     #     lvl = 0
     if lvl == 1:
@@ -325,7 +324,7 @@ def _extract_paragraph_node(l, c, last_div_node, last_section_node, line,
     :param line: The line string (without indentation)
     :return: The extracted paragraph node
     """
-    name = line.replace(u".", u"")
+    name = line.replace(".", "")
     parent_node = last_div_node
     if last_section_node is not None:
         parent_node = last_section_node
@@ -371,21 +370,21 @@ def parse_document_layout(filename, code=None, createIcon=True,
         if not line.isspace():
             line = line.strip()
             # DIVISIONS
-            if u"DIVISION" in line.upper():
+            if "DIVISION" in line.upper():
                 # remember
                 if last_div_node is not None:
                     last_div_node.end_line = i
                 last_div_node, last_section_node = _extract_div_node(
                     i, indentation, line, root_node, last_section_node, createIcon)
             # SECTIONS
-            elif u"SECTION" in line:
+            elif "SECTION" in line:
                 if last_section_node:
                     last_section_node.end_line = i
                 last_section_node = _extract_section_node(
                     i, indentation, last_div_node, last_vars, line, createIcon)
             # VARIABLES
             elif (last_div_node is not None and
-                    u"DATA DIVISION" in last_div_node.name):
+                    "DATA DIVISION" in last_div_node.name):
                 v = _extract_var_node(
                     i, indentation, indentation, last_section_node, last_vars, line,
                     createIcon)
@@ -393,9 +392,9 @@ def parse_document_layout(filename, code=None, createIcon=True,
                     variables.append(v)
             # PARAGRAPHS
             elif (last_div_node is not None and
-                  u"PROCEDURE DIVISION" in last_div_node.name and
-                      not "*" in line and not u"EXIT" in line and
-                      not u"END" in line and not u"STOP" in line):
+                  "PROCEDURE DIVISION" in last_div_node.name and
+                      not "*" in line and not "EXIT" in line and
+                      not "END" in line and not "STOP" in line):
                 if last_par:
                     last_par.end_line = i
                 p = _extract_paragraph_node(
