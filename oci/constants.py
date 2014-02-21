@@ -107,3 +107,82 @@ def getAppTempDirectory():
         if not os.path.exists(pth):
             os.mkdir(pth)
         return pth
+
+
+EXE_TEMPLATE = """      ******************************************************************
+      * Author:
+      * Date:
+      * Purpose:
+      * Tectonics: cobc
+      ******************************************************************
+       IDENTIFICATION DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+       PROGRAM-ID. YOUR-PROGRAM-NAME.
+       ENVIRONMENT DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+       CONFIGURATION SECTION.
+      *-----------------------
+       INPUT-OUTPUT SECTION.
+      *-----------------------
+       DATA DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+       FILE SECTION.
+      *-----------------------
+       WORKING-STORAGE SECTION.
+      *-----------------------
+       PROCEDURE DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+       MAIN-PROCEDURE.
+      **
+      * The main procedure of the program
+      **
+            DISPLAY "Hello world"
+            STOP RUN.
+      ** add other procedures here
+       END PROGRAM YOUR-PROGRAM-NAME.
+
+"""
+
+MODULE_TEMPLATE = """      ******************************************************************
+      * Author:
+      * Date:
+      * Purpose:
+      * Tectonics: cobc
+      ******************************************************************
+       IDENTIFICATION DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+       PROGRAM-ID. YOUR-PROGRAM.
+       ENVIRONMENT DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+       CONFIGURATION SECTION.
+      *-----------------------
+       INPUT-OUTPUT SECTION.
+      *-----------------------
+       DATA DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+       FILE SECTION.
+      *-----------------------
+       WORKING-STORAGE SECTION.
+      *-----------------------
+       LINKAGE SECTION.
+      **-*-*-*-*-*-*-*-*-*-*-*-*-*
+       01 PARAMETRES.
+      **
+      * Input/Output parameters from/to the calling PROGRAM
+      **
+           02 PA-RETURN-CODE PIC 99 VALUE 0.
+       PROCEDURE DIVISION USING PARAMETRES.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+       MAIN-PROCEDURE.
+      **
+      * The main procedure of the program
+      **
+        DISPLAY "Hello world"
+        MOVE 0 TO PA-RETURN-CODE
+        STOP RUN.
+      ** add other procedures here
+       END PROGRAM YOUR-PROGRAM.
+
+"""
+
+TEMPLATES = [EXE_TEMPLATE, MODULE_TEMPLATE, ""]
