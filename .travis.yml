@@ -31,10 +31,10 @@ before_install:
  - sudo apt-get install open-cobol
 # PyQt4
  - if [[ $PYVER == '2.x' ]]; then
-    - sudo apt-get install python-qt4;
+ -   sudo apt-get install python-qt4;
  - fi
  - if [[ $PYVER == '3.x' ]]; then
-    - sudo apt-get install python3-pyqt4;
+ -   sudo apt-get install python3-pyqt4;
  - fi
 # tox
  - pip install --quiet --use-mirrors tox
