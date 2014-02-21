@@ -13,20 +13,6 @@ before_install:
  - "export DISPLAY=:99.0"
  - "sh -e /etc/init.d/xvfb start"
  - sudo apt-get update
-# OpenCobolIDE grow with pyQode, we need the latest dev branch to test the
-# latest features.
-# pyqode.core
- - git clone https://github.com/ColinDuquesnoy/pyqode.core.git
- - cd pyqode.core
- - git checkout origin/develop
- - python setup.py install
- - cd ..
-# pyqode.widgets
- - git clone https://github.com/ColinDuquesnoy/pyqode.widgets.git
- - cd pyqode.widgets
- - git checkout origin/develop
- - python setup.py install
- - cd ..
 # open-cobol
  - sudo apt-get install open-cobol
 # PyQt4
