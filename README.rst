@@ -1,5 +1,9 @@
 OpenCobolIDE
 --------------------
+.. image:: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE.png?branch=master
+    :target: https://travis-ci.org/ColinDuquesnoy/pyqode.python
+    :alt: Travis-CI build status
+    
 .. image:: https://pypip.in/d/OpenCobolIDE/badge.png
     :target: https://crate.io/packages/OpenCobolIDE/
     :alt: Number of PyPI downloads
