@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright 2013 Colin Duquesnoy
+# Copyright (c) <2013-2014> Colin Duquesnoy
 #
 # This file is part of OpenCobolIDE.
 #

@@ -1,4 +1,4 @@
-# Copyright 2013 Colin Duquesnoy
+# Copyright (c) <2013-2014> Colin Duquesnoy
 #
 # This file is part of OpenCobolIDE.
 #
@@ -293,9 +293,9 @@ def _extract_var_node(i, c, indentation, last_section_node, last_vars, line,
         name = tokens[0]
     name = name.replace(u".", u"")
     description = u"{1}".format(i + 1, line)
-    if indentation == 7:
-        lvl = 0
-    if lvl == 0:
+    # if indentation == 7:
+    #     lvl = 0
+    if lvl == 1:
         parent_node = last_section_node
     else:
         # trouver les premier niveau inferieur
@@ -368,7 +368,7 @@ def parse_document_layout(filename, code=None, createIcon=True,
             if not isinstance(line, unicode):
                 line = line.decode(encoding)
         indentation = len(line) - len(line.lstrip())
-        if indentation >= 7 and not line.isspace():
+        if not line.isspace():
             line = line.strip()
             # DIVISIONS
             if u"DIVISION" in line.upper():
@@ -394,9 +394,8 @@ def parse_document_layout(filename, code=None, createIcon=True,
             # PARAGRAPHS
             elif (last_div_node is not None and
                   u"PROCEDURE DIVISION" in last_div_node.name and
-                  indentation == 7 and not "*" in line and
-                  not u"EXIT" in line and not u"END" in line and not u"STOP"
-                  in line):
+                      not "*" in line and not u"EXIT" in line and
+                      not u"END" in line and not u"STOP" in line):
                 if last_par:
                     last_par.end_line = i
                 p = _extract_paragraph_node(
