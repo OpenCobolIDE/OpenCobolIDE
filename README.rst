@@ -1,5 +1,9 @@
 OpenCobolIDE
 --------------------
+.. image:: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE.png?branch=master
+    :target: https://travis-ci.org/ColinDuquesnoy/pyqode.python
+    :alt: Travis-CI build status
+    
 .. image:: https://pypip.in/d/OpenCobolIDE/badge.png
     :target: https://crate.io/packages/OpenCobolIDE/
     :alt: Number of PyPI downloads
@@ -35,6 +39,17 @@ Installation
 GNU/Linux
 ############
 
+From PPA
+++++++++++++++++
+
+There is now a PPA for Ubuntu and derivatives::
+
+    $ sudo apt-add-repositiory ppa:open-cobol-ide/stable
+    $ sudo apt-get update
+    $ sudo apt-get install open-cobol-ide
+
+From pip
+++++++++++++
 Run the following commands::
 
     sudo apt-get install python-qt open-cobol
@@ -106,4 +121,10 @@ Screenshots
     :align: center
 
 
+
+
+
+.. image:: https://d2weczhvl823v0.cloudfront.net/ColinDuquesnoy/opencobolide/trend.png
+   :alt: Bitdeli badge
+   :target: https://bitdeli.com/free
 
