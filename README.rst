@@ -1,6 +1,6 @@
 OpenCobolIDE
 --------------------
-.. image:: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE.png?branch=feature/test-suite
+.. image:: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE.png?branch=develop
     :target: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE
     :alt: Travis-CI build status
     
