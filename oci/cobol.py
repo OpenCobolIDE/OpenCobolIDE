@@ -551,11 +551,10 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
                                  cwd=dirname,
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         else:
-            p = subprocess.Popen(cmd, shell=False,
-                                 cwd=os.path.dirname(filename),
+            p = subprocess.Popen(cmd, shell=False, cwd=os.path.dirname(filename),
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE)
-    except FileNotFoundError as e:
+    except OSError:
         msg = pyqode.core.CheckerMessage("cobc compiler not found",
                                          pyqode.core.MSG_STATUS_ERROR, -1,
                                          filename=filename)
@@ -610,7 +609,7 @@ def get_cobc_version():
         else:
             p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE)
-    except FileNotFoundError:
+    except OSError:
         return "Not installed"
     stdout, stderr = p.communicate()
     if sys.version_info[0] == 2:
