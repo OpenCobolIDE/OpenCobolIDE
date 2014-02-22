@@ -44,6 +44,15 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         QtGui.QMainWindow.__init__(self)
         ide_ui.Ui_MainWindow.__init__(self)
         self.setupUi(self)
+
+        # status bar
+        self.lblFilename = QtGui.QLabel()
+        self.lblEncoding = QtGui.QLabel()
+        self.lblCursorPos = QtGui.QLabel()
+        self.statusbar.addPermanentWidget(self.lblFilename, 200)
+        self.statusbar.addPermanentWidget(self.lblEncoding, 20)
+        self.statusbar.addPermanentWidget(self.lblCursorPos, 20)
+
         self.initDefaultSettings()
         self.stackedWidget.setCurrentIndex(0)
         self.__prevRootNode = None
@@ -110,16 +119,6 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             self.dockWidgetNavPanel.setVisible)
         self.aShowLogsWin.toggled.connect(
             self.dockWidgetLogs.setVisible)
-
-        # status bar
-        self.lblFilename = QtGui.QLabel()
-        self.lblEncoding = QtGui.QLabel()
-        self.lblCursorPos = QtGui.QLabel()
-        self.statusbar.addPermanentWidget(self.lblFilename, 200)
-        self.statusbar.addPermanentWidget(self.lblEncoding, 20)
-        self.statusbar.addPermanentWidget(self.lblCursorPos, 20)
-
-
 
     @staticmethod
     def initDefaultSettings():
@@ -572,6 +571,9 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             self.toolBarCode.hide()
             self.dockWidgetLogs.hide()
             self.dockWidgetNavPanel.hide()
+            self.lblEncoding.setText("")
+            self.lblFilename.setText("OpenCobolIDE v.%s" % __version__)
+            self.lblCursorPos.setText("")
         else:
             if self.stackedWidget.currentIndex() == 0:
                 self.stackedWidget.setCurrentIndex(1)
