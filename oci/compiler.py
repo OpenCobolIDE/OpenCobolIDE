@@ -77,7 +77,7 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
                                  cwd=dirname,
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         else:
-            p = subprocess.Popen(cmd, shell=False, cwd=os.path.dirname(filename),
+            p = subprocess.Popen(cmd, shell=False, cwd=dirname,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE)
     except OSError:
@@ -90,31 +90,34 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
         # get compilation results
         stdout, stderr = p.communicate()
         status = p.returncode
-        if sys.version_info[0] == 2:
-            lines = stdout.splitlines() + stderr.splitlines()
-        else:
-            stdout = str(stdout)
-            stderr = str(stderr)
-            lines = stdout.splitlines() + stderr.splitlines()
+        if status != 0:
+            if sys.version_info[0] == 2:
+                lines = stdout.splitlines() + stderr.splitlines()
+            else:
+                stdout = str(stdout)
+                stderr = str(stderr)
+                lines = stdout.splitlines() + stderr.splitlines()
 
-        # parse compilation results
-        for l in lines:
-            tokens = l.split(":")
-            try:
-                desc = tokens[len(tokens) - 1]
-                errType = tokens[len(tokens) - 2]
-                lineNbr = int(tokens[len(tokens) - 3])
-            except (ValueError, IndexError):
-                # not a compilation message, usually this is a file not found error.
-                desc = l
-                errType = "Error"
-                lineNbr = -1
-                status = pyqode.core.MSG_STATUS_WARNING
-            if errType == "Error":
-                status = pyqode.core.MSG_STATUS_ERROR
-            msg = pyqode.core.CheckerMessage(desc, status, lineNbr, filename=filename)
-            msg.filename = filename
-            messages.append(msg)
+            # parse compilation results
+            for l in lines:
+                if l == "":
+                    continue
+                tokens = l.split(":")
+                try:
+                    desc = tokens[len(tokens) - 1]
+                    errType = tokens[len(tokens) - 2]
+                    lineNbr = int(tokens[len(tokens) - 3])
+                except (ValueError, IndexError):
+                    # not a compilation message, usually this is a file not found error.
+                    desc = l
+                    errType = "Error"
+                    lineNbr = -1
+                    status = pyqode.core.MSG_STATUS_WARNING
+                if errType == "Error":
+                    status = pyqode.core.MSG_STATUS_ERROR
+                msg = pyqode.core.CheckerMessage(desc, status, lineNbr, filename=filename)
+                msg.filename = filename
+                messages.append(msg)
         return status, messages
 
 
