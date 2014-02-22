@@ -345,7 +345,7 @@ def detectFileType(filename):
     return type
 
 
-def parseDependencies(filename):
+def parse_dependencies(filename):
     directory = QFileInfo(filename).dir().path()
     dependencies = []
     with open(filename, 'r') as f:
@@ -360,7 +360,7 @@ def parseDependencies(filename):
                 if os.path.exists(dependency):
                     file_type = detectFileType(dependency)
                     dependencies.append((dependency, file_type))
-                    dependencies += parseDependencies(dependency)
+                    dependencies += parse_dependencies(dependency)
 
     def make_unique_sorted(seq):
         # order preserving

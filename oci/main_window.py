@@ -31,7 +31,7 @@ from oci import __version__, constants, compiler
 from oci.dialogs import DlgNewFile, DlgAbout, DlgPreferences
 from oci.editor import QCobolCodeEdit
 from oci import settings
-from oci.parser import parseDependencies
+from oci.parser import parse_dependencies
 from oci.settings import Settings
 from oci.ui import ide_ui
 
@@ -326,7 +326,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         Compiles the current file and its dependencies (executed in a background
         thread
         """
-        dependencies = parseDependencies(filePath)
+        dependencies = parse_dependencies(filePath)
         globalStatus = True
         for path, pgmType in dependencies:
             status, messags = compiler.compile(path, pgmType)
