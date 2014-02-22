@@ -50,6 +50,7 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
     """
     if customOptions is None:
         customOptions = []
+
     # prepare command
     dirname = os.path.dirname(filename)
     if outputFilename is None:  # user request
@@ -97,28 +98,23 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
             lines = stdout.splitlines() + stderr.splitlines()
 
         # parse compilation results
-        nbTokensExpected = 4
-        if sys.platform == "win32":
-            nbTokensExpected += 1
         for l in lines:
             tokens = l.split(":")
-            if len(tokens) == nbTokensExpected:
-                try:
-                    desc = tokens[len(tokens) - 1]
-                    errType = tokens[len(tokens) - 2]
-                    lineNbr = int(tokens[len(tokens) - 3])
-                except ValueError:
-                    # not a compilation message, usually this is a file not found error.
-                    desc = l
-                    errType = "Error"
-                    lineNbr = -1
-                    # not a compilation error
+            try:
+                desc = tokens[len(tokens) - 1]
+                errType = tokens[len(tokens) - 2]
+                lineNbr = int(tokens[len(tokens) - 3])
+            except (ValueError, IndexError):
+                # not a compilation message, usually this is a file not found error.
+                desc = l
+                errType = "Error"
+                lineNbr = -1
                 status = pyqode.core.MSG_STATUS_WARNING
-                if errType == "Error":
-                    status = pyqode.core.MSG_STATUS_ERROR
-                msg = pyqode.core.CheckerMessage(desc, status, lineNbr, filename=filename)
-                msg.filename = filename
-                messages.append(msg)
+            if errType == "Error":
+                status = pyqode.core.MSG_STATUS_ERROR
+            msg = pyqode.core.CheckerMessage(desc, status, lineNbr, filename=filename)
+            msg.filename = filename
+            messages.append(msg)
         return status, messages
 
 
