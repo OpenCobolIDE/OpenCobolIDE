@@ -25,7 +25,7 @@ def setup_module(module):
                  FN_SRC_EXE_WITH_ERRORS]
     sources = [constants.EXE_TEMPLATE, constants.MODULE_TEMPLATE,
                constants.EXE_TEMPLATE,
-               constants.EXECUTABLE_EXTENSION.replace(
+               constants.EXE_TEMPLATE.replace(
                    "DIVISION.", "DIVISION")]
 
     for fn, src in zip(filenames, sources):
@@ -72,5 +72,5 @@ def test_compile_path_with_errors():
     Compiles a file located in path that contains spaces (see bug #5)
     """
     status, messages = compiler.compile(FN_SRC_EXE_WITH_ERRORS, constants.ProgramType.Executable)
-    assert status == 1
-    assert len(messages) == 1
+    assert status != 0
+    assert len(messages)
