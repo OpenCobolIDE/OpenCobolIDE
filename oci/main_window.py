@@ -306,6 +306,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             self.setHomePageColorScheme(s.homePageColorScheme)
             self.tabWidgetEditors.resetSettings(dlg.editorSettings)
             self.tabWidgetEditors.resetStyle(dlg.editorStyle)
+            self.tabWidgetEditors.refreshIcons(useTheme=dlg.rbLightStyle.isChecked())
             self.consoleOutput.backgroundColor = dlg.consoleBackground
             self.consoleOutput.processOutputColor = dlg.consoleForeground
             self.consoleOutput.usrInputColor = dlg.consoleUserInput
@@ -456,6 +457,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                     tab.settings.setValue("minIndentColumn", 0)
                     tab.style = Settings().editorStyle
                 tab.openFile(fn, detectEncoding=True)
+                tab.refreshIcons(useTheme=Settings().appStyle == constants.WHITE_STYLE)
                 self.tabWidgetEditors.addEditorTab(tab, icon=icon)
                 self.showHomePage(False)
                 self.QHomeWidget.setCurrentFile(fn)
@@ -525,11 +527,11 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.tabWidgetLogs.setTabIcon(0, compileIcon)
         self.tabWidgetLogs.setTabIcon(1, runIcon)
 
-        # self.QHomeWidget.setActionIcon(self.actionNew, docNewIcon)
-        # self.QHomeWidget.setActionIcon(self.actionOpen, docOpenIcon)
-        # self.QHomeWidget.setActionIcon(self.actionPreferences, preferencesIcon)
-        # self.QHomeWidget.setActionIcon(self.actionHelp, helpIcon)
-        # self.QHomeWidget.setActionIcon(self.actionQuit, quitIcon)
+        self.QHomeWidget.setActionIcon(self.actionNew, docNewIcon)
+        self.QHomeWidget.setActionIcon(self.actionOpen, docOpenIcon)
+        self.QHomeWidget.setActionIcon(self.actionPreferences, preferencesIcon)
+        self.QHomeWidget.setActionIcon(self.actionHelp, helpIcon)
+        self.QHomeWidget.setActionIcon(self.actionQuit, quitIcon)
 
     def setupQuickStartActions(self):
         self.QHomeWidget.addAction(self.actionNew)
