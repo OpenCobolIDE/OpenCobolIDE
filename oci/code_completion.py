@@ -19,8 +19,8 @@ Contains the code completions providers:
   - one based on the document analyser
 """
 import pyqode.core
-from oci import cobol
 from oci import constants
+from oci.parser import parse_document_layout
 
 
 class CobolDocumentWordsProvider(pyqode.core.DocumentWordCompletionProvider):
@@ -33,7 +33,7 @@ class CobolAnalyserProvider(pyqode.core.CompletionProvider):
         pyqode.core.CompletionProvider.__init__(self)
         self.PRIORITY = 2
         self.__keywordsCompletions = []
-        for keyword in cobol.KEYWORDS:
+        for keyword in constants.COBOL_KEYWORDS:
             self.__keywordsCompletions.append(pyqode.core.Completion(
                 keyword, icon=constants.ICON_KEYWORD))
 
@@ -44,7 +44,7 @@ class CobolAnalyserProvider(pyqode.core.CompletionProvider):
                  filePath, fileEncoding):
         completions = []
         try:
-            root, vars, functions = cobol.parse_document_layout(
+            root, vars, functions = parse_document_layout(
                 filePath, code=code, createIcon=False, encoding=fileEncoding)
         except AttributeError as e:
             root = None

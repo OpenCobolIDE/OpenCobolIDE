@@ -29,7 +29,7 @@ import pyqode.core
 import pyqode.widgets
 
 
-from oci import cobol, __version__, constants
+from oci import compiler, __version__, constants
 from oci.constants import TEMPLATES
 from oci.settings import Settings
 from oci.ui import dlg_about_ui, dlg_file_type_ui, dlg_preferences_ui
@@ -101,7 +101,7 @@ class DlgAbout(QtGui.QDialog, dlg_about_ui.Ui_Dialog):
         dlg_about_ui.Ui_Dialog.__init__(self)
         self.setupUi(self)
         self.labelMain.setText(self.labelMain.text() % __version__)
-        versions = [cobol.get_cobc_version(),
+        versions = [compiler.get_cobc_version(),
                     QtCore.QT_VERSION_STR,
                     QtCore.PYQT_VERSION_STR,
                     pyqode.core.__version__,

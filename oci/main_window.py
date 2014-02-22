@@ -27,10 +27,11 @@ import pyqode.widgets
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem, QTreeWidgetItem, QInputDialog
 
-from oci import __version__, constants, cobol
+from oci import __version__, constants, compiler
 from oci.dialogs import DlgNewFile, DlgAbout, DlgPreferences
 from oci.editor import QCobolCodeEdit
 from oci import settings
+from oci.parser import parseDependencies
 from oci.settings import Settings
 from oci.ui import ide_ui
 
@@ -180,7 +181,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         ag.triggered.connect(self.on_programType_triggered)
         self.programActionGroup = ag
         self.tb = QToolButton()
-        self.tb.setToolTip("Select the cobol program type to make")
+        self.tb.setToolTip("Select the compiler program type to make")
         self.tb.setMenu(self.menuProgramType)
         self.tb.setPopupMode(QToolButton.InstantPopup)
         self.tb.setText("Executable")
@@ -275,7 +276,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         source_fn = self.tabWidgetEditors.currentWidget().filePath
         source_fn = os.path.join(os.path.dirname(source_fn), "bin",
                                  os.path.basename(source_fn))
-        target = cobol.makeOutputFilePath(
+        target = compiler.makeOutputFilePath(
             source_fn, self.tabWidgetEditors.currentWidget().programType)
         cwd = os.path.join(os.path.dirname(target))
         self.actionRun.setEnabled(False)
@@ -325,10 +326,10 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         Compiles the current file and its dependencies (executed in a background
         thread
         """
-        dependencies = cobol.parseDependencies(filePath)
+        dependencies = parseDependencies(filePath)
         globalStatus = True
         for path, pgmType in dependencies:
-            status, messags = cobol.compile(path, pgmType)
+            status, messags = compiler.compile(path, pgmType)
             globalStatus &= status
             for msg in messags:
                 self.compilerMsgReady.emit(msg)
@@ -342,7 +343,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                     "Compilation failed", pyqode.core.MSG_STATUS_ERROR, -1, filename=path)
             msg.filename = path
             self.compilerMsgReady.emit(msg)
-        status, messages = cobol.compile(filePath, programType)
+        status, messages = compiler.compile(filePath, programType)
         for msg in messages:
             self.compilerMsgReady.emit(msg)
         if status == 0:
@@ -430,7 +431,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         """
         Moves the text cursor on the selected document node position
 
-        :param item: oci.cobol.DocumentNode
+        :param item: oci.parser.DocumentNode
         """
         w = self.tabWidgetEditors.currentWidget()
         w.gotoLine(item.line, move=True, column=item.column)
