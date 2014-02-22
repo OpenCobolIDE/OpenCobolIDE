@@ -20,7 +20,13 @@ This is the setup script, install it as any python package.
 
 .. note:: You will need to install PySide and OpenCobol on your own
 """
+import os
 import sys
+
+def run_as_root():
+    return os.getuid() == 0
+
+
 try:
     from setuptools import setup, find_packages
 except ImportError:
@@ -43,7 +49,7 @@ else:
     requirements += ['chardet']
 
 data_files = []
-if sys.platform == "linux":
+if sys.platform == "linux" and run_as_root():
     data_files.append(('/usr/share/applications', ['share/OpenCobolIDE.desktop']))
     data_files.append(('/usr/share/pixmaps', ['share/OpenCobolIDE.png']))
 
