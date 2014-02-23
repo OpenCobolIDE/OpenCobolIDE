@@ -173,6 +173,8 @@ def parse_pic_field(l, c, last_section_node, last_vars, line):
     :param line: The line string (without indentation)
     :return: The extracted variable node
     """
+    if "FD " in line:
+        pass
     parent_node = None
     raw_tokens = line.split(" ")
     tokens = []
@@ -180,7 +182,10 @@ def parse_pic_field(l, c, last_section_node, last_vars, line):
         if not t.isspace() and t != "":
             tokens.append(t)
     try:
-        lvl = int(tokens[0], 16)
+        if tokens[0] == "FD":
+            lvl = 1
+        else:
+            lvl = int(tokens[0], 16)
         name = tokens[1]
     except ValueError:
         lvl = 1
@@ -188,25 +193,24 @@ def parse_pic_field(l, c, last_section_node, last_vars, line):
     except IndexError:
         # line not complete
         return None
+    name = name.replace(".", "")
+    description = line
+    if lvl == 1:
+        parent_node = last_section_node
     else:
-        name = name.replace(".", "")
-        description = "{1}".format(l + 1, line)
-        if lvl == 1:
-            parent_node = last_section_node
-        else:
-            # find parent level
-            levels = sorted(last_vars.keys(), reverse=True)
-            for lv in levels:
-                if lv < lvl:
-                    parent_node = last_vars[lv]
-                    break
-        if not parent_node:
-            # malformed code
-            return None
-        node = Statement(Statement.Type.Variable, l + 1, c, name, description)
-        parent_node.add_child(node)
-        last_vars[lvl] = node
-        return node
+        # find parent level
+        levels = sorted(last_vars.keys(), reverse=True)
+        for lv in levels:
+            if lv < lvl:
+                parent_node = last_vars[lv]
+                break
+    if not parent_node:
+        # malformed code
+        return None
+    node = Statement(Statement.Type.Variable, l + 1, c, name, description)
+    parent_node.add_child(node)
+    last_vars[lvl] = node
+    return node
 
 
 def parse_paragraph(l, c, last_div_node, last_section_node, line):
