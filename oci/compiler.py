@@ -149,6 +149,3 @@ def get_cobc_version():
         stdout = str(stdout)
         return stdout.splitlines()[0].split(" ")[2].split("\\n")[0].split(
             "\\r")[0]
-
-
-print(compile("/home/colin/Test.cbl", constants.ProgramType.Executable))
