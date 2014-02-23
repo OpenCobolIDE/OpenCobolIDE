@@ -23,31 +23,22 @@ from PyQt4.QtGui import QTreeWidgetItem, QIcon
 from oci import constants
 
 
-class DocumentNode(QTreeWidgetItem):
+class Statement(object):
     """
-    Data structure used to hold a document node data:
-        - type (div, section, var, ...)
-        - line number
-        - name or identifier
-        - a list of child nodes
+    A statement is a node in the simplified abstract syntax tree.
     """
 
     class Type:
+        """
+        Enumerates the possible statement types (div, section, paragraph,...)
+        """
         Root = -1
         Division = 0
         Section = 1
         Variable = 2
         Paragraph = 3
 
-    ICONS = {
-        -1: ":/ide-icons/rc/silex-32x32.png",
-        0:  ":/ide-icons/rc/division",
-        1:  ":/ide-icons/rc/section",
-        2:  ":/ide-icons/rc/var",
-        3:  ":/ide-icons/rc/paragraph"}
-
-    def __init__(self, node_type, line, column, name, description=None, createIcon=True):
-        QTreeWidgetItem.__init__(self)
+    def __init__(self, node_type, line, column, name, description=None):
         self.node_type = node_type
         self.line = line
         self.column = column
@@ -57,10 +48,10 @@ class DocumentNode(QTreeWidgetItem):
             description = name
         self.description = description.replace(".", "")
         self.children = []
-        self.setText(0, name)
-        if createIcon:
-            self.setIcon(0, QIcon(self.ICONS[node_type]))
-        self.setToolTip(0, self.description)
+        #self.setText(0, name)
+        #if createIcon:
+        #    self.setIcon(0, QIcon(self.ICONS[node_type]))
+        #self.setToolTip(0, self.description)
 
     def add_child(self, child):
         """
@@ -69,7 +60,7 @@ class DocumentNode(QTreeWidgetItem):
         :param child: The child node to add
         """
         self.children.append(child)
-        self.addChild(child)
+        #self.addChild(child)
 
     def print_tree(self, indent=0):
         """
@@ -121,7 +112,7 @@ def cmp_doc_node(first_node, second_node):
     return ret_val
 
 
-def parse_division(l, c, line, root_node, last_section_node, createIcon):
+def parse_division(l, c, line, root_node, last_section_node):
     """
     Extracts a division node from a line
 
@@ -137,8 +128,7 @@ def parse_division(l, c, line, root_node, last_section_node, createIcon):
     """
     name = line
     name = name.replace(".", "")
-    node = DocumentNode(DocumentNode.Type.Division, l + 1, c, name,
-                        createIcon=createIcon)
+    node = Statement(Statement.Type.Division, l + 1, c, name)
     root_node.add_child(node)
     last_div_node = node
     # do not take previous sections into account
@@ -148,7 +138,7 @@ def parse_division(l, c, line, root_node, last_section_node, createIcon):
     return last_div_node, last_section_node
 
 
-def parse_section(l, c, last_div_node, last_vars, line, createIcon):
+def parse_section(l, c, last_div_node, last_vars, line):
     """
     Extracts a section node from a line.
 
@@ -164,8 +154,7 @@ def parse_section(l, c, last_div_node, last_vars, line, createIcon):
     """
     name = line
     name = name.replace(".", "")
-    node = DocumentNode(DocumentNode.Type.Section, l + 1, c, name,
-                        createIcon=createIcon)
+    node = Statement(Statement.Type.Section, l + 1, c, name)
     last_div_node.add_child(node)
     last_section_node = node
     # do not take previous var into account
@@ -173,7 +162,7 @@ def parse_section(l, c, last_div_node, last_vars, line, createIcon):
     return last_section_node
 
 
-def parse_pic_field(l, c, last_section_node, last_vars, line, createIcon):
+def parse_pic_field(l, c, last_section_node, last_vars, line):
     """
     Parse a pic field line. Return A VariableNode or None in case of malformed code.
 
@@ -196,29 +185,31 @@ def parse_pic_field(l, c, last_section_node, last_vars, line, createIcon):
     except ValueError:
         lvl = 1
         name = tokens[0]
-    name = name.replace(".", "")
-    description = "{1}".format(l + 1, line)
-    if lvl == 1:
-        parent_node = last_section_node
-    else:
-        # find parent level
-        levels = sorted(last_vars.keys(), reverse=True)
-        for l in levels:
-            if l < lvl:
-                parent_node = last_vars[l]
-                break
-    if not parent_node:
-        # malformed code
+    except IndexError:
+        # line not complete
         return None
-    node = DocumentNode(DocumentNode.Type.Variable, l + 1, c, name,
-                        description, createIcon=createIcon)
-    parent_node.add_child(node)
-    last_vars[lvl] = node
-    return node
+    else:
+        name = name.replace(".", "")
+        description = "{1}".format(l + 1, line)
+        if lvl == 1:
+            parent_node = last_section_node
+        else:
+            # find parent level
+            levels = sorted(last_vars.keys(), reverse=True)
+            for lv in levels:
+                if lv < lvl:
+                    parent_node = last_vars[lv]
+                    break
+        if not parent_node:
+            # malformed code
+            return None
+        node = Statement(Statement.Type.Variable, l + 1, c, name, description)
+        parent_node.add_child(node)
+        last_vars[lvl] = node
+        return node
 
 
-def parse_paragraph(l, c, last_div_node, last_section_node, line,
-                            createIcon):
+def parse_paragraph(l, c, last_div_node, last_section_node, line):
     """
     Extracts a paragraph node
 
@@ -232,28 +223,25 @@ def parse_paragraph(l, c, last_div_node, last_section_node, line,
     parent_node = last_div_node
     if last_section_node is not None:
         parent_node = last_section_node
-    node = DocumentNode(DocumentNode.Type.Paragraph, l + 1, c, name,
-                        createIcon=createIcon)
+    node = Statement(Statement.Type.Paragraph, l + 1, c, name)
     parent_node.add_child(node)
     return node
 
 
-def parse(filename, code=None, createIcon=True,
-          encoding="utf-8"):
+def parse(filename, code=None, encoding="utf-8"):
     """
-    Parses a cobol file and return a root DocumentNode that describes the
-    layout of the file (sections, divisions,...), a list of paragraph
-    nodes and variable nodes.
+    Parse a cobol document and build as simple syntax tree. For convenience, it also
+    returns the list of variables (PIC) and procedures (paragraphs).
 
     :param filename: The cobol file path to open in case code is None.
     :param code: cobol code to parse. Default is None.
+    :type encoding: file encoding
 
-    :return: The root node, the list of variables, the list of paragraphes
-    :rtype: DocumentNode, list of DocumentNode, list of DocumentNode
+    :return: A tuple made up of the AST root node, the list of variables, the list of paragraphes.
+    :rtype: Statement, list of Statement, list of Statement
     """
-    root_node = DocumentNode(DocumentNode.Type.Root, 0, 0,
-                             QFileInfo(filename).fileName(),
-                             createIcon=createIcon)
+    root_node = Statement(Statement.Type.Root, 0, 0,
+                             QFileInfo(filename).fileName())
     variables = []
     paragraphs = []
     if code is None:
@@ -272,7 +260,7 @@ def parse(filename, code=None, createIcon=True,
             if not isinstance(line, unicode):
                 line = line.decode(encoding)
         column = len(line) - len(line.lstrip())
-        if not line.isspace():
+        if not line.isspace() and not line.strip().startswith("*"):
             line = line.strip()
             # DIVISIONS
             if "DIVISION" in line.upper():
@@ -280,30 +268,29 @@ def parse(filename, code=None, createIcon=True,
                 if last_div_node is not None:
                     last_div_node.end_line = i
                 last_div_node, last_section_node = parse_division(
-                    i, column, line, root_node, last_section_node, createIcon)
+                    i, column, line, root_node, last_section_node)
             # SECTIONS
             elif "SECTION" in line:
                 if last_section_node:
                     last_section_node.end_line = i
                 last_section_node = parse_section(
-                    i, column, last_div_node, last_vars, line, createIcon)
+                    i, column, last_div_node, last_vars, line)
             # VARIABLES
             elif (last_div_node is not None and
                     "DATA DIVISION" in last_div_node.name):
                 v = parse_pic_field(
-                    i, column, last_section_node, last_vars, line,
-                    createIcon)
+                    i, column, last_section_node, last_vars, line)
                 if v:
                     variables.append(v)
             # PARAGRAPHS
-            elif (last_div_node is not None and "PROCEDURE DIVISION" in last_div_node.name and
-                      not line.startswith("*")):
+            elif (last_div_node is not None and
+                          "PROCEDURE DIVISION" in last_div_node.name):
                 tokens = line.split(" ")
                 if len(tokens) == 1 and not tokens[0] in constants.COBOL_KEYWORDS:
                     if last_par:
                         last_par.end_line = i
                     p = parse_paragraph(
-                        i, column, last_div_node, last_section_node, line, createIcon)
+                        i, column, last_div_node, last_section_node, line)
                     if p:
                         paragraphs.append(p)
                     last_par = p

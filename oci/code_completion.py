@@ -45,14 +45,13 @@ class CobolAnalyserProvider(pyqode.core.CompletionProvider):
         completions = []
         try:
             root, vars, functions = parse(
-                filePath, code=code, createIcon=False, encoding=fileEncoding)
-        except AttributeError as e:
-            root = None
+                filePath, code=code, encoding=fileEncoding)
+        except AttributeError:
             vars = []
             functions = []
         for var in vars:
             completions.append(pyqode.core.Completion(
-                var.name, icon=constants.ICON_VAR))
+                var.name, icon=constants.ICON_VAR, tooltip=var.description))
         for func in functions:
             completions.append(pyqode.core.Completion(
                 func.name, icon=constants.ICON_PARAGRAPH))
