@@ -56,4 +56,6 @@
 
            DISPLAY "End"
            STOP RUN.
+       HELLO-WORLD.
+           DISPLAY "Hello World!!".
        END PROGRAM TEST-PRINTER.

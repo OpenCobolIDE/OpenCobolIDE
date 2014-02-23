@@ -27,7 +27,7 @@ import pyqode.widgets
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem, QTreeWidgetItem, QInputDialog
 
-from oci import __version__, constants, compiler
+from oci import __version__, constants, compiler, utils
 from oci.dialogs import DlgNewFile, DlgAbout, DlgPreferences
 from oci.editor import QCobolCodeEdit
 from oci import settings
@@ -161,11 +161,11 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         """
         if self.__prevRootNode != rootNode:
             self.twNavigation.clear()
-            #rootNode.setExpanded(True)
-            self.twNavigation.addTopLevelItem(rootNode)
-            self.twNavigation.expandItem(rootNode)
-            for i in range(rootNode.childCount()):
-                self.twNavigation.expandItem(rootNode.child(i))
+            tiRoot = utils.ast_to_qtree(rootNode)
+            self.twNavigation.addTopLevelItem(tiRoot)
+            self.twNavigation.expandItem(tiRoot)
+            for i in range(tiRoot.childCount()):
+                self.twNavigation.expandItem(tiRoot.child(i))
             #self.twNavigation.expandAll()
             #self.twNavigation.expandChildren()
             self.__prevRootNode = rootNode
@@ -434,7 +434,8 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         :param item: oci.parser.DocumentNode
         """
         w = self.tabWidgetEditors.currentWidget()
-        w.gotoLine(item.line, move=True, column=item.column)
+        statement = item.data(0, QtCore.Qt.UserRole)
+        w.gotoLine(statement.line, move=True, column=statement.column)
 
     def openFile(self, fn):
         try:

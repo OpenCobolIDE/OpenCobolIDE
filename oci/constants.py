@@ -17,11 +17,11 @@
 Contains application constants
 """
 import os
+import sys
 import pyqode.core
 import pyqode.widgets
-# cobol use - extensively for complex identifier, don't break them!
-import sys
 
+# cobol use - extensively for complex identifier, don't break them!
 pyqode.core.constants.WORD_SEPARATORS.remove("-")
 
 

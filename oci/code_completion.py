@@ -20,7 +20,7 @@ Contains the code completions providers:
 """
 import pyqode.core
 from oci import constants
-from oci.parser import parse_document_layout
+from oci.parser import parse_ast
 
 
 class CobolDocumentWordsProvider(pyqode.core.DocumentWordCompletionProvider):
@@ -44,15 +44,14 @@ class CobolAnalyserProvider(pyqode.core.CompletionProvider):
                  filePath, fileEncoding):
         completions = []
         try:
-            root, vars, functions = parse_document_layout(
-                filePath, code=code, createIcon=False, encoding=fileEncoding)
-        except AttributeError as e:
-            root = None
+            root, vars, functions = parse_ast(
+                filePath, code=code, encoding=fileEncoding)
+        except AttributeError:
             vars = []
             functions = []
         for var in vars:
             completions.append(pyqode.core.Completion(
-                var.name, icon=constants.ICON_VAR))
+                var.name, icon=constants.ICON_VAR, tooltip=var.description))
         for func in functions:
             completions.append(pyqode.core.Completion(
                 func.name, icon=constants.ICON_PARAGRAPH))
