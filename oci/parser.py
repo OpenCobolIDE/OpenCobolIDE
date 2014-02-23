@@ -18,8 +18,6 @@ Contains and functions to cobol source code analysis
 """
 import os
 import sys
-from PyQt4.QtCore import QFileInfo
-from PyQt4.QtGui import QTreeWidgetItem, QIcon
 from oci import constants
 
 
@@ -66,7 +64,7 @@ class Statement(object):
         """
         Print the node tree in stdout
         """
-        print(" " * indent, self.name, self.line, " - ", self.end_line)
+        print(repr(self))
         for c in self.children:
             c.print_tree(indent + 4)
 
@@ -86,16 +84,22 @@ class Statement(object):
             if result:
                 return result
 
+    def __repr__(self):
+        type_names = {self.Type.Root: "Root", self.Type.Division: "Division",
+                      self.Type.Paragraph: "Paragraph", self.Type.Section: "Section",
+                      self.Type.Variable: "Variable"}
+        return "%s(name=%s, line=%s, end_line=%s)" % (type_names[self.node_type], self.name, self.line, self.end_line)
+
 
 def cmp_doc_node(first_node, second_node):
     """
-    Compare two nodes recursively.
+    Compare two statements recursively.
 
     :param first_node: First node
 
-    :param second_node:
+    :param second_node: Second state
 
-    :return:
+    :return: 0 if same statement, 1 if statements are differents.
     """
     ret_val = 0
     if len(first_node.children) == len(second_node.children):
@@ -232,7 +236,7 @@ def parse_paragraph(l, c, last_div_node, last_section_node, line):
     return node
 
 
-def parse(filename, code=None, encoding="utf-8"):
+def parse_ast(filename, code=None, encoding="utf-8"):
     """
     Parse a cobol document and build as simple syntax tree. For convenience, it also
     returns the list of variables (PIC) and procedures (paragraphs).
@@ -244,8 +248,7 @@ def parse(filename, code=None, encoding="utf-8"):
     :return: A tuple made up of the AST root node, the list of variables, the list of paragraphes.
     :rtype: Statement, list of Statement, list of Statement
     """
-    root_node = Statement(Statement.Type.Root, 0, 0,
-                             QFileInfo(filename).fileName())
+    root_node = Statement(Statement.Type.Root, 0, 0, os.path.split(filename)[1])
     variables = []
     paragraphs = []
     if code is None:
@@ -303,6 +306,7 @@ def parse(filename, code=None, encoding="utf-8"):
         last_par.end_line = len(lines) - 1
     if last_div_node:
         last_div_node.end_line = len(lines)
+    root_node.end_line = last_div_node.end_line
     return root_node, variables, paragraphs
 
 
@@ -332,7 +336,7 @@ def detect_file_type(filename):
 
 
 def parse_dependencies(filename):
-    directory = QFileInfo(filename).dir().path()
+    directory = os.path.dirname(filename)
     dependencies = []
     with open(filename, 'r') as f:
         for l in f.readlines():

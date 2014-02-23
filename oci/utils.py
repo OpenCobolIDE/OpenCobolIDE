@@ -18,8 +18,7 @@ def convert_statement(statement):
     ti.setIcon(0, QtGui.QIcon(AST_ICONS[statement.node_type]))
     ti.setToolTip(0, statement.description)
     ti.setData(0, QtCore.Qt.UserRole, statement)
-    print(statement.name, statement.line)
-
+    
     for child in statement.children:
         ti_ch = convert_statement(child)
         ti.addChild(ti_ch)

@@ -18,7 +18,7 @@ Contains cobol specific modes
 """
 import logging
 import os
-from oci.parser import cmp_doc_node, parse, detect_file_type
+from oci.parser import cmp_doc_node, parse_ast, detect_file_type
 
 os.environ["QT_API"] = "PyQt"
 import pyqode.core
@@ -266,7 +266,7 @@ class DocumentAnalyserMode(Mode, QObject):
         variables = []
         paragraphs = []
         try:
-            root_node, variables, paragraphs = parse(
+            root_node, variables, paragraphs = parse_ast(
                 self.editor.filePath, encoding=self.editor.fileEncoding)
         except (TypeError, IOError):
             # file does not exists
