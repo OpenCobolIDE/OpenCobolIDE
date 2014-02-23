@@ -121,11 +121,13 @@ def cmp_doc_node(first_node, second_node):
     return ret_val
 
 
-def _extract_div_node(l, c, line, root_node, last_section_node, createIcon):
+def parse_division(l, c, line, root_node, last_section_node, createIcon):
     """
     Extracts a division node from a line
 
     :param l: The line number (starting from 0)
+
+    :param c: The column number
 
     :param line: The line string (without indentation)
 
@@ -146,7 +148,7 @@ def _extract_div_node(l, c, line, root_node, last_section_node, createIcon):
     return last_div_node, last_section_node
 
 
-def _extract_section_node(l, c, last_div_node, last_vars, line, createIcon):
+def parse_section(l, c, last_div_node, last_vars, line, createIcon):
     """
     Extracts a section node from a line.
 
@@ -171,21 +173,15 @@ def _extract_section_node(l, c, last_div_node, last_vars, line, createIcon):
     return last_section_node
 
 
-def _extract_var_node(i, c, indentation, last_section_node, last_vars, line,
-                      createIcon):
+def parse_pic_field(l, c, last_section_node, last_vars, line, createIcon):
     """
-    Extract a variable node.
+    Parse a pic field line. Return A VariableNode or None in case of malformed code.
 
     :param l: The line number (starting from 0)
-
-    :param indentation: The current indentation (counted in spaces)
-
+    :param c: The column number (starting from 0)
     :param last_section_node: The last section node found
-
     :param last_vars: The last vars dict
-
     :param line: The line string (without indentation)
-
     :return: The extracted variable node
     """
     parent_node = None
@@ -198,16 +194,14 @@ def _extract_var_node(i, c, indentation, last_section_node, last_vars, line,
         lvl = int(tokens[0], 16)
         name = tokens[1]
     except ValueError:
-        lvl = 0
+        lvl = 1
         name = tokens[0]
     name = name.replace(".", "")
-    description = "{1}".format(i + 1, line)
-    # if indentation == 7:
-    #     lvl = 0
+    description = "{1}".format(l + 1, line)
     if lvl == 1:
         parent_node = last_section_node
     else:
-        # trouver les premier niveau inferieur
+        # find parent level
         levels = sorted(last_vars.keys(), reverse=True)
         for l in levels:
             if l < lvl:
@@ -216,14 +210,14 @@ def _extract_var_node(i, c, indentation, last_section_node, last_vars, line,
     if not parent_node:
         # malformed code
         return None
-    node = DocumentNode(DocumentNode.Type.Variable, i + 1, c, name,
+    node = DocumentNode(DocumentNode.Type.Variable, l + 1, c, name,
                         description, createIcon=createIcon)
     parent_node.add_child(node)
     last_vars[lvl] = node
     return node
 
 
-def _extract_paragraph_node(l, c, last_div_node, last_section_node, line,
+def parse_paragraph(l, c, last_div_node, last_section_node, line,
                             createIcon):
     """
     Extracts a paragraph node
@@ -244,14 +238,15 @@ def _extract_paragraph_node(l, c, last_div_node, last_section_node, line,
     return node
 
 
-def parse_document_layout(filename, code=None, createIcon=True,
-                          encoding="utf-8"):
+def parse(filename, code=None, createIcon=True,
+          encoding="utf-8"):
     """
-    Parses a cobol file and return  a root DocumentNode that describes the
-    layout of the file (sections, divisions, vars,...), a list of paragraphes
+    Parses a cobol file and return a root DocumentNode that describes the
+    layout of the file (sections, divisions,...), a list of paragraph
     nodes and variable nodes.
 
-    :param filename: The cobol file path
+    :param filename: The cobol file path to open in case code is None.
+    :param code: cobol code to parse. Default is None.
 
     :return: The root node, the list of variables, the list of paragraphes
     :rtype: DocumentNode, list of DocumentNode, list of DocumentNode
@@ -269,14 +264,14 @@ def parse_document_layout(filename, code=None, createIcon=True,
 
     last_div_node = None
     last_section_node = None
-
     last_vars = {}
     last_par = None
+
     for i, line in enumerate(lines):
         if sys.version_info[0] == 2:
             if not isinstance(line, unicode):
                 line = line.decode(encoding)
-        indentation = len(line) - len(line.lstrip())
+        column = len(line) - len(line.lstrip())
         if not line.isspace():
             line = line.strip()
             # DIVISIONS
@@ -284,34 +279,34 @@ def parse_document_layout(filename, code=None, createIcon=True,
                 # remember
                 if last_div_node is not None:
                     last_div_node.end_line = i
-                last_div_node, last_section_node = _extract_div_node(
-                    i, indentation, line, root_node, last_section_node, createIcon)
+                last_div_node, last_section_node = parse_division(
+                    i, column, line, root_node, last_section_node, createIcon)
             # SECTIONS
             elif "SECTION" in line:
                 if last_section_node:
                     last_section_node.end_line = i
-                last_section_node = _extract_section_node(
-                    i, indentation, last_div_node, last_vars, line, createIcon)
+                last_section_node = parse_section(
+                    i, column, last_div_node, last_vars, line, createIcon)
             # VARIABLES
             elif (last_div_node is not None and
                     "DATA DIVISION" in last_div_node.name):
-                v = _extract_var_node(
-                    i, indentation, indentation, last_section_node, last_vars, line,
+                v = parse_pic_field(
+                    i, column, last_section_node, last_vars, line,
                     createIcon)
                 if v:
                     variables.append(v)
             # PARAGRAPHS
-            elif (last_div_node is not None and
-                  "PROCEDURE DIVISION" in last_div_node.name and
-                      not "*" in line and not "EXIT" in line and
-                      not "END" in line and not "STOP" in line):
-                if last_par:
-                    last_par.end_line = i
-                p = _extract_paragraph_node(
-                    i, indentation, last_div_node, last_section_node, line, createIcon)
-                if p:
-                    paragraphs.append(p)
-                last_par = p
+            elif (last_div_node is not None and "PROCEDURE DIVISION" in last_div_node.name and
+                      not line.startswith("*")):
+                tokens = line.split(" ")
+                if len(tokens) == 1 and not tokens[0] in constants.COBOL_KEYWORDS:
+                    if last_par:
+                        last_par.end_line = i
+                    p = parse_paragraph(
+                        i, column, last_div_node, last_section_node, line, createIcon)
+                    if p:
+                        paragraphs.append(p)
+                    last_par = p
     # close last div
     if last_par:
         last_par.end_line = len(lines) - 1
@@ -320,7 +315,7 @@ def parse_document_layout(filename, code=None, createIcon=True,
     return root_node, variables, paragraphs
 
 
-def detectFileType(filename):
+def detect_file_type(filename):
     """
     Detect file type:
         - cobol program
@@ -358,7 +353,7 @@ def parse_dependencies(filename):
                         tokens.append(t)
                 dependency = os.path.join(directory, tokens[1].replace('"', "") + ".cbl")
                 if os.path.exists(dependency):
-                    file_type = detectFileType(dependency)
+                    file_type = detect_file_type(dependency)
                     dependencies.append((dependency, file_type))
                     dependencies += parse_dependencies(dependency)
 
