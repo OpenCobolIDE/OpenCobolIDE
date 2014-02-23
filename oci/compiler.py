@@ -94,13 +94,15 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
             if sys.version_info[0] == 2:
                 lines = stdout.splitlines() + stderr.splitlines()
             else:
-                stdout = str(stdout)
-                stderr = str(stderr)
-                lines = stdout.splitlines() + stderr.splitlines()
+                lines = []
+                if stdout:
+                    lines += str(stdout).splitlines()
+                if stderr:
+                    lines += str(stderr).splitlines()
 
             # parse compilation results
             for l in lines:
-                if l == "":
+                if not l or l == "":
                     continue
                 tokens = l.split(":")
                 try:
@@ -142,3 +144,6 @@ def get_cobc_version():
         stdout = str(stdout)
         return stdout.splitlines()[0].split(" ")[2].split("\\n")[0].split(
             "\\r")[0]
+
+
+print(compile("/home/colin/Test.cbl", constants.ProgramType.Executable))
