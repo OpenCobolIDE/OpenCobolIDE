@@ -92,8 +92,13 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
         status = p.returncode
         if status != 0:
             if sys.version_info[0] == 2:
-                lines = stdout.splitlines() + stderr.splitlines()
+                lines = []
+                if stdout:
+                    lines += stdout.splitlines()
+                if stderr:
+                    lines += stderr.splitlines()
             else:
+                # we have bytes in python 3
                 lines = []
                 if stdout:
                     lines += str(stdout).splitlines()
