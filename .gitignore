@@ -18,6 +18,8 @@ sdist
 develop-eggs
 .installed.cfg
 
+bin
+
 # Installer logs
 pip-log.txt
 
