@@ -18,6 +18,8 @@ Contains cobol specific modes
 """
 import logging
 import os
+from oci.parser import cmp_doc_node, parse_ast, detect_file_type
+
 os.environ["QT_API"] = "PyQt"
 import pyqode.core
 from PyQt4.QtCore import Qt, QFileInfo, QObject, pyqtSignal, QTimer
@@ -25,7 +27,7 @@ from PyQt4.QtGui import QTextCursor, QAction, QInputDialog
 import sys
 from pyqode.core import Mode, RightMarginMode
 from pyqode.core import CheckerMode, CHECK_TRIGGER_TXT_SAVED
-from oci import cobol, constants
+from oci import compiler, constants
 
 
 class ToUpperMode(Mode):
@@ -187,10 +189,10 @@ def checkFile(queue, code, filePath, fileEncoding):
             code = code.encode(fileEncoding)
         f.write(code)
 
-    fileType = cobol.detectFileType(tmp)
+    fileType = detect_file_type(tmp)
     output = os.path.join(constants.getAppTempDirectory(),
                           QFileInfo(tmp).baseName() + fileType[2])
-    status, messages = cobol.compile(tmp, fileType, outputFilename=output)
+    status, messages = compiler.compile(tmp, fileType, outputFilename=output)
     queue.put(messages)
 
 
@@ -264,7 +266,7 @@ class DocumentAnalyserMode(Mode, QObject):
         variables = []
         paragraphs = []
         try:
-            root_node, variables, paragraphs = cobol.parse_document_layout(
+            root_node, variables, paragraphs = parse_ast(
                 self.editor.filePath, encoding=self.editor.fileEncoding)
         except (TypeError, IOError):
             # file does not exists
@@ -275,7 +277,7 @@ class DocumentAnalyserMode(Mode, QObject):
                               "a malformed syntax.")
         changed = False
         if(self.__root_node is None or
-           cobol.cmp_doc_node(root_node, self.__root_node)):
+           cmp_doc_node(root_node, self.__root_node)):
             changed = True
         self.__root_node = root_node
         self.__vars = variables
@@ -395,3 +397,41 @@ class GoToDefinitionMode(Mode, QObject):
             if not present:
                 checked.append(e)
         return checked
+
+
+class CobolFolder(pyqode.core.IndentBasedFoldDetector):
+    def getFoldIndent(self, highlighter, block, text):
+        text = text.upper()
+        indent = int((len(text) - len(text.lstrip())))
+        prev = block.previous()
+        while prev.isValid() and not len(prev.text().strip()):
+            prev = prev.previous()
+        pusd = block.previous().userData()
+        pb = prev
+        if len(text.strip()) == 0:
+            while not len(pb.text().strip()) and pb.isValid():
+                pb = pb.previous()
+            pbIndent = (len(pb.text()) - len(pb.text().lstrip()))
+            # check next blocks to see if their indent is >= then the last block
+            nb = block.next()
+            while not len(nb.text().strip()) and nb.isValid():
+                nb = nb.next()
+            nbIndent = (len(nb.text()) - len(nb.text().lstrip()))
+            # print(pb.userState())
+            if nbIndent >= pbIndent or pb.userState() & 0x7F:
+                if pb.userData():
+                    return pb.userData().foldIndent
+            return -1
+        if indent == 6:
+            if pusd:
+                return pusd.foldIndent
+            return 0
+        if indent == 7:
+            if "DIVISION" in text:
+                return 0
+            if "SECTION" in text:
+                return 2
+            if "END" in text or  "STOP" in text:
+                return pusd.foldIndent
+            return 3
+        return indent

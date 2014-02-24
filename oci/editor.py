@@ -20,11 +20,10 @@ from pygments.lexers.compiled import CobolFreeformatLexer, CobolLexer
 import pyqode.core
 from PyQt4 import QtCore
 from pygments.token import Comment
-from oci import cobol
 from oci.code_completion import CobolDocumentWordsProvider, CobolAnalyserProvider
-from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode, GoToDefinitionMode
+from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode, GoToDefinitionMode, CobolFolder
 from oci.modes import CobolCheckerMode, DocumentAnalyserMode
-from oci.cobol import CobolFolder
+from oci.parser import detect_file_type
 
 CobolLexer.filenames.append(".PCO")
 CobolLexer.filenames.append(".pco")
@@ -121,7 +120,7 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
                  detectEncoding=False):
         pyqode.core.QCodeEdit.openFile(self, filePath, replaceTabsBySpaces,
                                        encoding, detectEncoding)
-        self.__fileType = cobol.detectFileType(filePath)
+        self.__fileType = detect_file_type(filePath)
 
     def setLexerFromFilename(self, *args):
         self.syntaxHighlighterMode._lexer = CobolFreeformatLexer()

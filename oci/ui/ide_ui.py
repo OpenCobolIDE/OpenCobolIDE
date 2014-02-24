@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Thu Feb 20 16:00:45 2014
+# Created: Mon Feb 24 18:15:44 2014
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -120,6 +120,7 @@ class Ui_MainWindow(object):
         self.menu.setObjectName("menu")
         MainWindow.setMenuBar(self.menuBar)
         self.dockWidgetNavPanel = QtGui.QDockWidget(MainWindow)
+        self.dockWidgetNavPanel.setMinimumSize(QtCore.QSize(300, 121))
         self.dockWidgetNavPanel.setObjectName("dockWidgetNavPanel")
         self.dockWidgetContents_2 = QtGui.QWidget()
         self.dockWidgetContents_2.setObjectName("dockWidgetContents_2")
@@ -327,7 +328,6 @@ class Ui_MainWindow(object):
         self.aShowNavWin.setShortcut(QtGui.QApplication.translate("MainWindow", "F10", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setToolTip(QtGui.QApplication.translate("MainWindow", "Edit the application settings", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionPreferences.setShortcut(QtGui.QApplication.translate("MainWindow", "F2", None, QtGui.QApplication.UnicodeUTF8))
         self.actionHelp.setText(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.actionHelp.setShortcut(QtGui.QApplication.translate("MainWindow", "F1", None, QtGui.QApplication.UnicodeUTF8))
         self.actionProgram.setText(QtGui.QApplication.translate("MainWindow", "Executable", None, QtGui.QApplication.UnicodeUTF8))
