@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Thu Feb 20 16:00:45 2014
+# Created: Mon Feb 24 18:08:48 2014
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -327,7 +327,6 @@ class Ui_MainWindow(object):
         self.aShowNavWin.setShortcut(QtGui.QApplication.translate("MainWindow", "F10", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPreferences.setToolTip(QtGui.QApplication.translate("MainWindow", "Edit the application settings", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionPreferences.setShortcut(QtGui.QApplication.translate("MainWindow", "F2", None, QtGui.QApplication.UnicodeUTF8))
         self.actionHelp.setText(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.actionHelp.setShortcut(QtGui.QApplication.translate("MainWindow", "F1", None, QtGui.QApplication.UnicodeUTF8))
         self.actionProgram.setText(QtGui.QApplication.translate("MainWindow", "Executable", None, QtGui.QApplication.UnicodeUTF8))

@@ -45,7 +45,7 @@
          <number>0</number>
         </property>
         <item row="0" column="0">
-         <widget class="QHomeWidget" name="QHomeWidget">
+         <widget class="QHomeWidget" name="QHomeWidget" native="true">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -541,9 +541,6 @@
    </property>
    <property name="toolTip">
     <string>Edit the application settings</string>
-   </property>
-   <property name="shortcut">
-    <string>F2</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
