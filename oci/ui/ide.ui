@@ -278,6 +278,12 @@
    <addaction name="menu"/>
   </widget>
   <widget class="QDockWidget" name="dockWidgetNavPanel">
+   <property name="minimumSize">
+    <size>
+     <width>300</width>
+     <height>121</height>
+    </size>
+   </property>
    <property name="windowTitle">
     <string>Navigation</string>
    </property>
