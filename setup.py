@@ -62,7 +62,7 @@ setup(
     package_data={'oci.ui': ['*.ui', 'rc/*']},
     package_dir={'oci': 'oci', "oci_designer_plugins": "oci_designer_plugins"},
     data_files=data_files,
-    url='https://github.com/ColinDuquesnoy/OpenCobolIDE',
+    url='https://github.com/OpenCobolIDE/OpenCobolIDE',
     license='GPL v3',
     author='Colin Duquesnoy',
     author_email='colin.duquesnoy@gmail.com',
