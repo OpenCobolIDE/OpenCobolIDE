@@ -44,19 +44,26 @@ def main():
     for ui_file in glob.glob("*.ui"):
         base_name = os.path.splitext(ui_file)[0]
         dst = "%s_ui.py" % base_name
-        cmd = "pyside-uic %s -o %s" % (ui_file, dst)
-        print(cmd)
-        os.system(cmd)
-        fix_script(dst)
+        if os.path.getmtime(ui_file) > os.path.getmtime(dst):
+            cmd = "pyside-uic %s -o %s" % (ui_file, dst)
+            print(cmd)
+            os.system(cmd)
+            fix_script(dst)
+        else:
+            print("%s up to date" % ui_file)
 
     # rc scripts
     for rc_file in glob.glob("*.qrc"):
         base_name = os.path.splitext(rc_file)[0]
         dst = "%s_rc.py" % base_name
         cmd = "pyside-rcc -py3 %s -o %s" % (rc_file, dst)
-        print(cmd)
-        os.system(cmd)
-        fix_script(dst)
+        if os.path.getmtime(rc_file) > os.path.getmtime(dst):
+            print(cmd)
+            os.system(cmd)
+            fix_script(dst)
+        else:
+            print("%s up to date" % rc_file)
+
 
 if __name__ == "__main__":
     main()
