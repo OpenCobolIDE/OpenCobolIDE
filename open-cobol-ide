@@ -19,9 +19,6 @@ Launcher script for linux, uses python3 explicitly.
 """
 import sys
 import logging
-# find private modules
-sys.path.insert(0, "/usr/lib/")
-logging.basicConfig()
 from oci.main import main
 
 
