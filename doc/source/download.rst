@@ -56,7 +56,7 @@ Windows
 
 Please use the Windows Installer available `here`_.
 
-.. _`here`: https://github.com/ColinDuquesnoy/OpenCobolIDE/releases
+.. _`here`: https://github.com/OpenCobolIDE/OpenCobolIDE/releases
 
 This will let you install OpenCobolIDE easily and have a shortcut on your
 desktop.

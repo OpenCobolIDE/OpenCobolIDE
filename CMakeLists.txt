@@ -90,7 +90,7 @@ if(CMAKE_CPACK_COMMAND AND UNIX)
             DESTINATION share/doc/${CPACK_PACKAGE_NAME}/)
 
     set(CPACK_PACKAGE_CONTACT "Colin Duquesnoy <colin.duquesnoy@gmail.com>" CACHE STRING "Package maintainer and PGP signer.")
-    set(CPACK_PACKAGE_VENDOR "https://github.com/ColinDuquesnoy/OpenCobolIDE")
+    set(CPACK_PACKAGE_VENDOR "https://github.com/OpenCobolIDE/OpenCobolIDE")
     set(CPACK_PACKAGE_DISPLAY_NAME "${PROJECT_NAME} ${VERSION}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Simple and lightweight Cobol IDE")
     set(CPACK_PACKAGE_VERSION "${VERSION}")

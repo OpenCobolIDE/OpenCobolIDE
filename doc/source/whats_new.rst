@@ -37,7 +37,7 @@ Here are the major changes:
     - better integration with most linux desktop environments (use icons and
       colors from theme, desktop entry). Tested with KDE, Gnome, Unity and
       Cinnamon.
-    - allow user to type in lower case (https://github.com/ColinDuquesnoy/OpenCobolIDE/issues/1)
+    - allow user to type in lower case (https://github.com/OpenCobolIDE/OpenCobolIDE/issues/1)
 
 
 1.4.2
@@ -117,4 +117,4 @@ Bug fixes:
 
     - Initial development
 
-.. _`issues page on github`: https://github.com/ColinDuquesnoy/OpenCobolIDE
+.. _`issues page on github`: https://github.com/OpenCobolIDE/OpenCobolIDE

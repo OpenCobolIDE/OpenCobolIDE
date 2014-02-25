@@ -85,9 +85,9 @@ Resources
 -  `Issue tracker`_
 -  `Documentation`_
 
-.. _Downloads: https://github.com/ColinDuquesnoy/OpenCobolIDE/releases
-.. _Source repository: https://github.com/ColinDuquesnoy/OpenCobolIDE/
-.. _Issue tracker: https://github.com/ColinDuquesnoy/OpenCobolIDE/issues?state=open
+.. _Downloads: https://github.com/OpenCobolIDE/OpenCobolIDE/releases
+.. _Source repository: https://github.com/OpenCobolIDE/OpenCobolIDE/
+.. _Issue tracker: https://github.com/OpenCobolIDE/OpenCobolIDE/issues?state=open
 .. _`Documentation`: http://opencobolide.readthedocs.org/en/latest/
 
 
