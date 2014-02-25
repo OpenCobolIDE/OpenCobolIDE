@@ -22,17 +22,11 @@ This is the setup script, install it as any python package.
 """
 import os
 import sys
+from setuptools import setup, find_packages
+
 
 def run_as_root():
     return os.getuid() == 0
-
-
-try:
-    from setuptools import setup, find_packages
-except ImportError:
-    import ez_setup
-    ez_setup.use_setuptools()
-    from setuptools import setup, find_packages
 
 
 # get long description
