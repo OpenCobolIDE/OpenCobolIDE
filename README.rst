@@ -131,7 +131,7 @@ Screenshots
 
 * Dark style support (based on `qdarkstyle`_ style sheet)
 
-.. image:: doc/source/_static/DarkStyle.png
+.. image:: doc/source/_static/Dark style.png
     :align: center
 
 
