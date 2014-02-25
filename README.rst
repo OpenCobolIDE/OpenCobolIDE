@@ -1,5 +1,5 @@
 OpenCobolIDE
---------------------
+------------
 .. image:: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE.png?branch=develop
     :target: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE
     :alt: Travis-CI build status
@@ -16,31 +16,34 @@ OpenCobolIDE is a simple and lightweight cobol IDE based on the OpenCobol
 compiler.
 
 
-The software is written in Python using PyQt4 and pyQode
+The software is written in Python using `PyQt4`_ and `pyQode`_
 
 Features:
+---------
     - syntax highlighting
     - code completion
     - code folding
+    - navigable tree view of division, sections, paragraphs etc.
+    - calculates the offsets of selected record definitions
     - compile as program (.exe) or as subprogram (.so)
     - run the program from the editor
     - also open text files
 
 
 License
---------------------
+-------
 
 OpenCobolIDE is released under the **GPL** version 3
 
 
 Installation
---------------------
+------------
 
 GNU/Linux
-############
+#########
 
 From PPA
-++++++++++++++++
+++++++++
 
 There is now a PPA for Ubuntu and derivatives::
 
@@ -49,7 +52,7 @@ There is now a PPA for Ubuntu and derivatives::
     $ sudo apt-get install open-cobol-ide
 
 From pip
-++++++++++++
+++++++++
 Run the following commands::
 
     sudo apt-get install python-qt open-cobol
@@ -57,13 +60,13 @@ Run the following commands::
 
 
 Windows
-############
+#######
 
 There is a windows installer available here: https://launchpad.net/cobcide/+download
 
 
 Requirements
---------------------
+------------
 
 The project depends on the following packages:
 
@@ -85,14 +88,9 @@ Resources
 -  `Issue tracker`_
 -  `Documentation`_
 
-.. _Downloads: https://github.com/OpenCobolIDE/OpenCobolIDE/releases
-.. _Source repository: https://github.com/OpenCobolIDE/OpenCobolIDE/
-.. _Issue tracker: https://github.com/OpenCobolIDE/OpenCobolIDE/issues?state=open
-.. _`Documentation`: http://opencobolide.readthedocs.org/en/latest/
-
 
 Disclaimer
---------------------
+----------
 
 I am by no way a cobol expert, I just had to work on a cobol project at school
 with an awful IDE (NetExpress on a Windows Xp virtual machine). As I was writing
@@ -108,23 +106,28 @@ Your advice will be very appreciated!
 
 
 Screenshots
--------------
+-----------
 
 * Home page:
 
-.. image:: https://raw.github.com/ColinDuquesnoy/OpenCobolIDE/develop/doc/source/_static/Home.png
+.. image:: doc/source/_static/Home.png
     :align: center
 
 * Editor:
 
-.. image:: https://raw.github.com/ColinDuquesnoy/OpenCobolIDE/develop/doc/source/_static/CompilerOutput.png
+.. image:: doc/source/_static/CompilerOutput.png
     :align: center
 
 
+* Offset calculator
+
+.. image:: doc/source/_static/OffsetCalculator.png
+    :align: center
 
 
-
-.. image:: https://d2weczhvl823v0.cloudfront.net/ColinDuquesnoy/opencobolide/trend.png
-   :alt: Bitdeli badge
-   :target: https://bitdeli.com/free
-
+.. _pyQode: https://github.com/pyQode/
+.. _PyQt4: http://www.riverbankcomputing.co.uk/software/pyqt/download
+.. _Downloads: https://github.com/OpenCobolIDE/OpenCobolIDE/releases
+.. _Source repository: https://github.com/OpenCobolIDE/OpenCobolIDE/
+.. _Issue tracker: https://github.com/OpenCobolIDE/OpenCobolIDE/issues?state=open
+.. _`Documentation`: http://opencobolide.readthedocs.org/en/latest/
