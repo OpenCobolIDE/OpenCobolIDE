@@ -22,12 +22,13 @@ from oci.parser import cmp_doc_node, parse_ast, detect_file_type
 
 os.environ["QT_API"] = "PyQt"
 import pyqode.core
-from PyQt4.QtCore import Qt, QFileInfo, QObject, pyqtSignal, QTimer
-from PyQt4.QtGui import QTextCursor, QAction, QInputDialog
+from PyQt4.QtCore import Qt, QFileInfo, QObject, pyqtSignal, QTimer, pyqtSlot
+from PyQt4.QtGui import QTextCursor, QAction, QInputDialog, QIcon
 import sys
 from pyqode.core import Mode, RightMarginMode
 from pyqode.core import CheckerMode, CHECK_TRIGGER_TXT_SAVED
 from oci import compiler, constants
+from oci.pic_parser import get_field_infos
 
 
 class ToUpperMode(Mode):
@@ -435,3 +436,46 @@ class CobolFolder(pyqode.core.IndentBasedFoldDetector):
                 return pusd.foldIndent
             return 3
         return indent
+
+
+class OffsetCalculatorMode(pyqode.core.Mode, QObject):
+    """
+    This modes computes the selected PIC fields offsets.
+
+    It adds a "Calculate PIC offsets" action to the editor context menu and
+    emits the signal |picInfosAvailable| when the the user triggered the action
+    and the pic infos have been computed.
+    """
+    picInfosAvailable = pyqtSignal(list)
+
+    def __init__(self):
+        QObject.__init__(self)
+        pyqode.core.Mode.__init__(self)
+
+    def _onInstall(self, editor):
+        pyqode.core.Mode._onInstall(self, editor)
+        self.action = QAction(editor)
+        self.action.setText("Calculate PIC offsets")
+        self.action.setIcon(QIcon.fromTheme(
+            "accessories-calculator",
+            QIcon(":/ide-icons/rc/accessories-calculator.png")))
+        editor.addSeparator()
+        editor.addAction(self.action)
+        self.action.triggered.connect(self._computeOffsets)
+
+    @pyqtSlot()
+    def _computeOffsets(self):
+        original_tc = self.editor.textCursor()
+        tc = self.editor.textCursor()
+        assert isinstance(tc, QTextCursor)
+        start = tc.selectionStart()
+        end = tc.selectionEnd()
+        tc.setPosition(start)
+        start_line = tc.blockNumber() + 1
+        tc.setPosition(end)
+        end_line = tc.blockNumber() + 1
+
+        self.editor.selectFullLines(start_line, end_line, True)
+        source = self.editor.selectedText()
+        self.picInfosAvailable.emit(get_field_infos(source))
+        self.editor.setTextCursor(original_tc)

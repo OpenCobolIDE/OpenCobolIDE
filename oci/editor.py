@@ -23,6 +23,7 @@ from pygments.token import Comment
 from oci.code_completion import CobolDocumentWordsProvider, CobolAnalyserProvider
 from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode, GoToDefinitionMode, CobolFolder
 from oci.modes import CobolCheckerMode, DocumentAnalyserMode
+from oci.modes import OffsetCalculatorMode
 from oci.parser import detect_file_type
 
 CobolLexer.filenames.append(".PCO")
@@ -39,6 +40,8 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
     Extends QCodeEdit with a hardcoded set of modes and panels specifics to
     a cobol code editor widget
     """
+
+    picInfosAvailable = QtCore.pyqtSignal(list)
 
     @property
     def programType(self):
@@ -113,6 +116,10 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.installMode(CommentsMode())
         self.installMode(CobolCheckerMode())
         self.installMode(DocumentAnalyserMode())
+
+        o = OffsetCalculatorMode()
+        o.picInfosAvailable.connect(self.picInfosAvailable.emit)
+        self.installMode(o)
 
         self.settings.setValue("triggerSymbols", None, "Code completion")
 
