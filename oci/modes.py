@@ -263,6 +263,9 @@ class DocumentAnalyserMode(Mode, QObject):
             - variables
             - paragraphs
         """
+        # preview in preferences dialog have no file path
+        if not self.editor.filePath:
+            return
         root_node = None
         variables = []
         paragraphs = []
