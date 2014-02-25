@@ -32,6 +32,7 @@ from oci.dialogs import DlgNewFile, DlgAbout, DlgPreferences
 from oci.editor import QCobolCodeEdit
 from oci import settings
 from oci.parser import parse_dependencies
+from oci.pic_parser import PicFieldInfo
 from oci.settings import Settings
 from oci.ui import ide_ui
 
@@ -452,6 +453,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                     tab.settings.setValue("triggerKeys", [],
                                           section="Code completion")
                     tab.style = Settings().editorStyle
+                    tab.picInfosAvailable.connect(self.displayPICInfos)
                 else:
                     tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
                     tab.settings = Settings().editorSettings
@@ -573,6 +575,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             self.toolBarCode.hide()
             self.dockWidgetLogs.hide()
             self.dockWidgetNavPanel.hide()
+            self.dockWidgetOffsets.hide()
             self.lblEncoding.setText("")
             self.lblFilename.setText("OpenCobolIDE v.%s" % __version__)
             self.lblCursorPos.setText("")
@@ -598,3 +601,26 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                 s = Settings()
                 self.dockWidgetNavPanel.setVisible(s.navigationPanelVisible)
                 self.dockWidgetLogs.setVisible(s.logPanelVisible)
+
+    def displayPICInfos(self, infos):
+        self.tableWidgetOffsets.clear()
+        self.tableWidgetOffsets.setRowCount(len(infos))
+        self.tableWidgetOffsets.setHorizontalHeaderLabels(
+            ['Level', 'Name', 'Offset', 'PIC'])
+        self.tableWidgetOffsets.horizontalHeader().setResizeMode(
+            QtGui.QHeaderView.ResizeToContents)
+        self.tableWidgetOffsets.horizontalHeader().setResizeMode(
+            1, QtGui.QHeaderView.Stretch)
+
+        for i, info in enumerate(infos):
+            assert isinstance(info, PicFieldInfo)
+            self.tableWidgetOffsets.setItem(
+                i, 0, QtGui.QTableWidgetItem("%s" % info.level))
+            self.tableWidgetOffsets.setItem(
+                i, 1, QtGui.QTableWidgetItem(info.name))
+            self.tableWidgetOffsets.setItem(
+                i, 2, QtGui.QTableWidgetItem("%s" % info.offset))
+            self.tableWidgetOffsets.setItem(
+                i, 3, QtGui.QTableWidgetItem(info.pic))
+        self.dockWidgetOffsets.show()
+        self.dockWidgetOffsets.adjustSize()
