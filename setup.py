@@ -66,5 +66,18 @@ setup(
     install_requires=requirements,
     entry_points={'gui_scripts': ['OpenCobolIDE = oci.main:main'],
                   'pyqode_plugins': [
-                      'oci_widgets = oci_designer_plugins.cobol_plugin']}
+                      'oci_widgets = oci_designer_plugins.cobol_plugin']},
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: X11 Applications :: Qt',
+        'Environment :: Win32 (MS Windows)',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: GNU General Public License v3 or later '
+        '(GPLv3+)',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: POSIX :: Linux',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3',
+        'Topic :: Text Editors :: Integrated Development Environments (IDE)']
 )
