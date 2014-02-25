@@ -25,6 +25,17 @@ import sys
 from setuptools import setup, find_packages
 
 
+def read_version():
+    """
+    Reads the version without self importing
+    """
+    with open("oci/__init__.py") as f:
+        lines = f.read().splitlines()
+        for l in lines:
+            if "__version__" in l:
+                return l.split("=")[1].strip().replace('"', "")
+
+
 def run_as_root():
     return os.getuid() == 0
 
@@ -44,16 +55,15 @@ else:
 
 data_files = []
 if sys.platform == "linux" and run_as_root():
-    data_files.append(('/usr/share/applications', ['share/OpenCobolIDE.desktop']))
+    data_files.append(('/usr/share/applications', ['share/open-cobol-ide.desktop']))
     data_files.append(('/usr/share/pixmaps', ['share/OpenCobolIDE.png']))
 
 
 setup(
     name='OpenCobolIDE',
-    version="2.1.0",
+    version=read_version(),
     packages=find_packages(),
     keywords=["Cobol; OpenCobol; IDE"],
-    package_data={'oci.ui': ['*.ui', 'rc/*']},
     package_dir={'oci': 'oci', "oci_designer_plugins": "oci_designer_plugins"},
     data_files=data_files,
     url='https://github.com/OpenCobolIDE/OpenCobolIDE',
@@ -64,7 +74,7 @@ setup(
     long_description=long_desc,
     zip_safe=False,
     install_requires=requirements,
-    entry_points={'gui_scripts': ['OpenCobolIDE = oci.main:main'],
+    entry_points={'gui_scripts': ['open-cobol-ide = oci.main:main'],
                   'pyqode_plugins': [
                       'oci_widgets = oci_designer_plugins.cobol_plugin']},
     classifiers=[
