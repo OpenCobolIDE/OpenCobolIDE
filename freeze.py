@@ -24,7 +24,19 @@ import shutil
 import sys
 from cx_Freeze import setup, Executable
 
-__version__ = "2.0"
+
+def read_version():
+    """
+    Reads the version without self importing
+    """
+    with open("oci/__init__.py") as f:
+        lines = f.read().splitlines()
+        for l in lines:
+            if "__version__" in l:
+                return l.split("=")[1].strip().replace('"', "")
+
+
+__version__ = read_version()
 
 
 def get_build_dir():
