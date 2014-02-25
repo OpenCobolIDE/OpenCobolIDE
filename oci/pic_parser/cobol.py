@@ -102,7 +102,7 @@ def parse_cobol(lines):
         match = CobolPatterns.row_pattern.match(row.strip())
 
         if not match:
-            __logger__.warning("Found unmatched row", row.strip())
+            __logger__.warning("Found unmatched row %s" % row.strip())
             continue
 
         match = match.groupdict()

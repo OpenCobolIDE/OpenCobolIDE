@@ -30,6 +30,9 @@ from oci.pic_parser.cobol import parse_cobol
 
 
 class PicFieldInfo(object):
+    """
+    This structure holds the information about a PIC field.
+    """
     offset = 0
     name = ""
     level = 0
@@ -37,6 +40,35 @@ class PicFieldInfo(object):
     occurs = None
     redefines = None
     indexed_by = None
+
+
+def _clean_code(code):
+    """
+    Cleans the received code (the parser does not like extra spaces not a VALUE
+    statement). Returns the cleaned code as a list of lines.
+
+    :param code: The COBOL code to clean
+
+    :return The list of code lines (cleaned)
+    """
+    lines = []
+    # cleanup lines, the parser is very sensitive to extra spaces,...
+    for l in code.splitlines():
+        # remove last .
+        l = l[:-1]
+        # the parser doe not like VALUE xxx.
+        if "VALUE" in l:
+            l = l[:l.find("VALUE")]
+        # the parser does not like extra spaces between "PIC X(xxx)" and "."
+        indent = len(l) - len(l.lstrip())
+        tokens = l.split(" ")
+        while "" in tokens:
+            tokens.remove("")
+        if not tokens[-1].endswith("."):
+            tokens[-1] += "."
+        lines.append(" " * indent + " ".join(tokens))
+
+    return lines
 
 
 def get_field_infos(code):
@@ -48,13 +80,9 @@ def get_field_infos(code):
     :returns: the list of pic fields info found in the specified text.
     """
     offset = 0
-    lines = []
     field_infos = []
-    for l in code.splitlines():
-        # the parser doe not like VALUE xxx.
-        if "VALUE" in l:
-            l = l[:l.find("VALUE")]
-        lines.append(l)
+    lines = _clean_code(code)
+
     for row in cobol.process_cobol(lines):
         fi = PicFieldInfo()
         fi.offset = offset
@@ -66,8 +94,10 @@ def get_field_infos(code):
         fi.indexed_by = row["indexed_by"]
         field_infos.append(fi)
 
+        # compute offset of next PIC field.
         if row['pic']:
             offset += row['pic_info']['length']
         else:
             offset += 1
+
     return field_infos
