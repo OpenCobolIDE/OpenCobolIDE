@@ -236,14 +236,15 @@ def parse_paragraph(l, c, last_div_node, last_section_node, line):
     return node
 
 
-def parse_ast(filename, code=None, encoding="utf-8"):
+def parse_ast(filename, code=None, encoding="utf-8",free=False):
     """
     Parse a cobol document and build as simple syntax tree. For convenience, it also
     returns the list of variables (PIC) and procedures (paragraphs).
 
     :param filename: The cobol file path to open in case code is None.
     :param code: cobol code to parse. Default is None.
-    :type encoding: file encoding
+    :param encoding: file encoding
+    :param free: True to parse cobol as free cobol. Default is True.
 
     :return: A tuple made up of the AST root node, the list of variables, the list of paragraphes.
     :rtype: Statement, list of Statement, list of Statement
@@ -266,6 +267,9 @@ def parse_ast(filename, code=None, encoding="utf-8"):
         if sys.version_info[0] == 2:
             if not isinstance(line, unicode):
                 line = line.decode(encoding)
+        if not free:
+            if len(line) >= 6:
+                line = 6 * " " + line[6:]
         column = len(line) - len(line.lstrip())
         if not line.isspace() and not line.strip().startswith("*"):
             line = line.strip()
