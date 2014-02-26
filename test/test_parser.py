@@ -33,8 +33,10 @@ def test_free_parser():
     """
     HelloWorld.cbl and HelloWorldFree.cbl must have the same ast.
     """
-    non_free_ast, non_free_vars, non_free_procs = parser.parse_ast("test/testfiles/HelloWorld.cbl")
-    free_ast, free_vars, free_procs = parser.parse_ast("test/testfiles/HelloWorldFree.cbl")
+    non_free_ast, non_free_vars, non_free_procs = parser.parse_ast(
+        "test/testfiles/HelloWorld.cbl")
+    free_ast, free_vars, free_procs = parser.parse_ast("test/testfiles/HelloWorldFree.cbl",
+                                                       free=True)
     result = parser.cmp_doc_node(non_free_ast, free_ast)
     assert result == 0  # 0 means same statement.
 
@@ -68,5 +70,20 @@ def test_malformed():
     assert len(ast.children[0].children) == 2
     # 2 sections in data div
     assert len(ast.children[1].children) == 2
+    assert len(vars) == 0
+    assert len(procs) == 1
+
+
+def test_parse_pco():
+    """
+    Parses a pco file, which contains characters in column 1-6 (see bug #23)
+    """
+    ast, vars, procs = parser.parse_ast("test/testfiles/HelloWorld.pco")
+    # 4 divs
+    assert len(ast.children) == 4
+    # 2 sections in env div
+    assert len(ast.children[1].children) == 2
+    # 2 sections in data div
+    assert len(ast.children[2].children) == 2
     assert len(vars) == 0
     assert len(procs) == 1
