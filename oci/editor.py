@@ -85,6 +85,7 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.installMode(pyqode.core.SymbolMatcherMode())
         self.installMode(pyqode.core.IndenterMode())
         self.installMode(pyqode.core.CaseConverterMode())
+        self.installMode(pyqode.core.FileWatcherMode())
 
         # code completion
         self.installMode(pyqode.core.CodeCompletionMode())
