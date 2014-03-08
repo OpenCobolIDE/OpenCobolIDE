@@ -1,4 +1,4 @@
-# Copyright 2013 Colin Duquesnoy
+# Copyright (c) <2013-2014> Colin Duquesnoy
 #
 # This file is part of OpenCobolIDE.
 #
@@ -16,15 +16,19 @@
 """
 Contains cobol specific modes
 """
+import logging
 import os
+from oci.parser import cmp_doc_node, parse_ast, detect_file_type
+
 os.environ["QT_API"] = "PyQt"
 import pyqode.core
-from PyQt4.QtCore import Qt, QFileInfo, QObject, pyqtSignal, QTimer
-from PyQt4.QtGui import QTextCursor, QAction, QInputDialog
+from PyQt4.QtCore import Qt, QFileInfo, QObject, pyqtSignal, QTimer, pyqtSlot
+from PyQt4.QtGui import QTextCursor, QAction, QInputDialog, QIcon
 import sys
 from pyqode.core import Mode, RightMarginMode
 from pyqode.core import CheckerMode, CHECK_TRIGGER_TXT_SAVED
-from oci import cobol, constants
+from oci import compiler, constants
+from oci.pic_parser import get_field_infos
 
 
 class ToUpperMode(Mode):
@@ -186,10 +190,10 @@ def checkFile(queue, code, filePath, fileEncoding):
             code = code.encode(fileEncoding)
         f.write(code)
 
-    fileType = cobol.detectFileType(tmp)
+    fileType = detect_file_type(tmp)
     output = os.path.join(constants.getAppTempDirectory(),
                           QFileInfo(tmp).baseName() + fileType[2])
-    status, messages = cobol.compile(tmp, fileType, outputFilename=output)
+    status, messages = compiler.compile(tmp, fileType, outputFilename=output)
     queue.put(messages)
 
 
@@ -259,20 +263,32 @@ class DocumentAnalyserMode(Mode, QObject):
             - variables
             - paragraphs
         """
+        # preview in preferences dialog have no file path
+        if not self.editor.filePath:
+            return
+        root_node = None
+        variables = []
+        paragraphs = []
         try:
-            root_node, variables, paragraphs = cobol.parse_document_layout(
+            root_node, variables, paragraphs = parse_ast(
                 self.editor.filePath, encoding=self.editor.fileEncoding)
-            changed = False
-            if(self.__root_node is None or
-               cobol.cmp_doc_node(root_node, self.__root_node)):
-                changed = True
-            self.__root_node = root_node
-            self.__vars = variables
-            self.__paragraphs = paragraphs
-            if changed:
-                self.documentLayoutChanged.emit(self.root_node)
-        except TypeError or IOError:
+        except (TypeError, IOError):
+            # file does not exists
             pass
+        except AttributeError:
+            # this should never happen but we must exit gracefully
+            logging.exception("Failed to parse document, probably due to "
+                              "a malformed syntax.")
+        changed = False
+        if(self.__root_node is None or
+           cmp_doc_node(root_node, self.__root_node)):
+            changed = True
+        self.__root_node = root_node
+        self.__vars = variables
+        self.__paragraphs = paragraphs
+        if changed:
+            self.documentLayoutChanged.emit(self.root_node)
+
 
 
 class Definition(object):
@@ -385,3 +401,84 @@ class GoToDefinitionMode(Mode, QObject):
             if not present:
                 checked.append(e)
         return checked
+
+
+class CobolFolder(pyqode.core.IndentBasedFoldDetector):
+    def getFoldIndent(self, highlighter, block, text):
+        text = text.upper()
+        indent = int((len(text) - len(text.lstrip())))
+        prev = block.previous()
+        while prev.isValid() and not len(prev.text().strip()):
+            prev = prev.previous()
+        pusd = block.previous().userData()
+        pb = prev
+        if len(text.strip()) == 0:
+            while not len(pb.text().strip()) and pb.isValid():
+                pb = pb.previous()
+            pbIndent = (len(pb.text()) - len(pb.text().lstrip()))
+            # check next blocks to see if their indent is >= then the last block
+            nb = block.next()
+            while not len(nb.text().strip()) and nb.isValid():
+                nb = nb.next()
+            nbIndent = (len(nb.text()) - len(nb.text().lstrip()))
+            # print(pb.userState())
+            if nbIndent >= pbIndent or pb.userState() & 0x7F:
+                if pb.userData():
+                    return pb.userData().foldIndent
+            return -1
+        if indent == 6:
+            if pusd:
+                return pusd.foldIndent
+            return 0
+        if indent == 7:
+            if "DIVISION" in text:
+                return 0
+            if "SECTION" in text:
+                return 2
+            if "END" in text or  "STOP" in text:
+                return pusd.foldIndent
+            return 3
+        return indent
+
+
+class OffsetCalculatorMode(pyqode.core.Mode, QObject):
+    """
+    This modes computes the selected PIC fields offsets.
+
+    It adds a "Calculate PIC offsets" action to the editor context menu and
+    emits the signal |picInfosAvailable| when the the user triggered the action
+    and the pic infos have been computed.
+    """
+    picInfosAvailable = pyqtSignal(list)
+
+    def __init__(self):
+        QObject.__init__(self)
+        pyqode.core.Mode.__init__(self)
+
+    def _onInstall(self, editor):
+        pyqode.core.Mode._onInstall(self, editor)
+        self.action = QAction(editor)
+        self.action.setText("Calculate PIC offsets")
+        self.action.setIcon(QIcon.fromTheme(
+            "accessories-calculator",
+            QIcon(":/ide-icons/rc/accessories-calculator.png")))
+        editor.addSeparator()
+        editor.addAction(self.action)
+        self.action.triggered.connect(self._computeOffsets)
+
+    @pyqtSlot()
+    def _computeOffsets(self):
+        original_tc = self.editor.textCursor()
+        tc = self.editor.textCursor()
+        assert isinstance(tc, QTextCursor)
+        start = tc.selectionStart()
+        end = tc.selectionEnd()
+        tc.setPosition(start)
+        start_line = tc.blockNumber() + 1
+        tc.setPosition(end)
+        end_line = tc.blockNumber() + 1
+
+        self.editor.selectFullLines(start_line, end_line, True)
+        source = self.editor.selectedText()
+        self.picInfosAvailable.emit(get_field_infos(source))
+        self.editor.setTextCursor(original_tc)

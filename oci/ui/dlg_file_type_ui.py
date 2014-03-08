@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_file_type.ui'
 #
-# Created: Sun Sep  1 16:00:17 2013
+# Created: Mon Feb 24 18:15:44 2014
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -55,6 +55,10 @@ class Ui_Dialog(object):
         self.comboBoxExtension.addItem("")
         self.comboBoxExtension.addItem("")
         self.comboBoxExtension.addItem("")
+        self.comboBoxExtension.addItem("")
+        self.comboBoxExtension.addItem("")
+        self.comboBoxExtension.addItem("")
+        self.comboBoxExtension.addItem("")
         self.horizontalLayout_2.addWidget(self.comboBoxExtension)
         self.formLayout.setLayout(1, QtGui.QFormLayout.FieldRole, self.horizontalLayout_2)
         self.verticalLayout.addLayout(self.formLayout)
@@ -86,7 +90,11 @@ class Ui_Dialog(object):
         self.labelName.setText(QtGui.QApplication.translate("Dialog", "Name", None, QtGui.QApplication.UnicodeUTF8))
         self.comboBoxExtension.setItemText(0, QtGui.QApplication.translate("Dialog", ".cbl", None, QtGui.QApplication.UnicodeUTF8))
         self.comboBoxExtension.setItemText(1, QtGui.QApplication.translate("Dialog", ".cob", None, QtGui.QApplication.UnicodeUTF8))
-        self.comboBoxExtension.setItemText(2, QtGui.QApplication.translate("Dialog", ".CBL", None, QtGui.QApplication.UnicodeUTF8))
-        self.comboBoxExtension.setItemText(3, QtGui.QApplication.translate("Dialog", ".COB", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxExtension.setItemText(2, QtGui.QApplication.translate("Dialog", ".pco", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxExtension.setItemText(3, QtGui.QApplication.translate("Dialog", ".cpy", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxExtension.setItemText(4, QtGui.QApplication.translate("Dialog", ".CBL", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxExtension.setItemText(5, QtGui.QApplication.translate("Dialog", ".COB", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxExtension.setItemText(6, QtGui.QApplication.translate("Dialog", ".PCO", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxExtension.setItemText(7, QtGui.QApplication.translate("Dialog", ".CPY", None, QtGui.QApplication.UnicodeUTF8))
 
 from . import ide_rc

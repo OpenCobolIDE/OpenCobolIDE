@@ -1,8 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=OpenCobolIDE
+Name=open-cobol-ide
 Comment=A simple lightweight cobol IDE based on OpenCobol
-Exec=OpenCobolIDE
+Exec=open-cobol-ide
 Terminal=false
 Type=Application
 Icon=/usr/share/pixmaps/OpenCobolIDE.png

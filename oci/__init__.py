@@ -1,4 +1,4 @@
-# Copyright 2013 Colin Duquesnoy
+# Copyright (c) <2013-2014> Colin Duquesnoy
 #
 # This file is part of OpenCobolIDE.
 #
@@ -16,4 +16,4 @@
 """
 Application package (OpenCobolIde => oci)
 """
-__version__ = "2.1.0"
+__version__ = "2.2.0"

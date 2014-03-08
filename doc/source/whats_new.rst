@@ -11,16 +11,46 @@ We don't have any plans for the next release. Please report bugs and share
 your thoughts to make OpenCobolIDE better.
 
 Milestones
--------------
+----------
+2.2.0
++++++
+New features:
+    - pic fields offsets calculator
+    - case converter, you can convert selected text to lower or TO UPPER using the
+      editor context menu.
+    - full dark style using `qdarkstyle`_
+    - new test suite for compiler and parser modules
+    - improved go to line dialog
+    - add support for _*.pco_ and _*.cpy_ files
+
+Fixed bugs:
+    - fix compilation for file if path contains spaces (Linux and Windows)
+    - fix parser crash that prevents from compiling
+    - improve cobol parser to support malformed syntax
+    - fix ambiguous shortcut overload: F2
+    - fix outline not informative for cobol files that have data in column 1-6
+
+2.1.0
++++++
+
+New features:
+    - Go to definition for variables and procedures (ctrl + click on symbol)
+    - New debian package on ppa:open-cobol-ide/stable and ppa:open-cobol-ide/unstable
+
+Fixed Bugs:
+    - code completion should not occur in comments and strings
+    - fix column number for navigation panel
+
 
 2.0.1
-++++++++++
++++++
 
-    - bug fixe: removed uneeded import of pexpect which caused some issue on
-                clean system which does not have pexepect.
+Fixed Bugs:
+    - removed un-needed import of pexpect which caused some issue on clean
+      system which does not have pexepect.
 
-2.0
-++++++++++
+2.0.0
++++++
 
 This new release is a major update which makes the transition from PCEF to
 pyqode. Most of the application has been rewritten from scratch.
@@ -37,20 +67,20 @@ Here are the major changes:
     - better integration with most linux desktop environments (use icons and
       colors from theme, desktop entry). Tested with KDE, Gnome, Unity and
       Cinnamon.
-    - allow user to type in lower case (https://github.com/ColinDuquesnoy/OpenCobolIDE/issues/1)
+    - allow user to type in lower case (https://github.com/OpenCobolIDE/OpenCobolIDE/issues/1)
 
 
 1.4.2
-+++++++++
++++++
 
   - Update code so support pcef 0.2.2
 
 1.4.1
-+++++++++++
-Bug fixed:
++++++
+Fixed Bugs:
   - slow in large files: https://bugs.launchpad.net/cobcide/+bug/1179228
 
-1.4
+1.4.0
 +++++
 
 New features:
@@ -58,12 +88,12 @@ New features:
   - show fullscreen shortcut change from F12 to F11
   - the application will restore its geometry and state (maximised, dock window positions)
 
-Bug fixed in cobcide:
+Fixed Bugs:
   - dock panel shown when switching tab: now the panel is only show when coming from the homepage or when compiling
   - crash when editing/compiling files who have unicode characters in their path
   - focus lost when opening recent files from the menu or the homepage on ubuntu 12.04 -> 13.04
 
-Enhancements and bugs fixed in PCEF 0.2.0:
+Enhancements and fixed bugs in PCEF 0.2.0:
   - improve performances in general
   - support for custom word separator, allow OpenCobolIDE to remove the '-' character from word separators which brings a better
     code completion for cobol
@@ -72,8 +102,8 @@ Enhancements and bugs fixed in PCEF 0.2.0:
 
 
 
-1.3
-+++++++
+1.3.0
++++++
 This release improves usability with a focus on the run and compile actions:
   - detect source dependencies and compile them (if a program P requires a subprogram A who requires a subprogram B than the IDE will compile A, B and P)
   - Automatically compile file when the run action is triggered
@@ -81,12 +111,12 @@ This release improves usability with a focus on the run and compile actions:
   - Avoid compiling a file that is already compiled and up to date
 
 1.2.1
-+++++++++++
++++++
 
   - Fix bug: https://launchpad.net/cobcide/+milestone/1.2.1
 
-1.2
-+++++++++
+1.2.0
++++++
 
 Added:
   - Home page with list of recent files
@@ -100,21 +130,22 @@ Bug fixes:
   - fix bug with mingw when path contains spaces on windows
   - fix bug where no extension was proposed when creating a new file
 
-1.1
-+++++++
+1.1.0
++++++
    - better encoding detection using chardet
    - cobol specific code completion model
    - status bar infos (filename, encoding, cursor position)
    - windows port (a windows installer is available in the download section)
 
 1.0.1
-+++++++++
++++++
 
     - fix packaging issues
 
-1.0
-++++++++
+1.0.0
++++++
 
     - Initial development
 
-.. _`issues page on github`: https://github.com/ColinDuquesnoy/OpenCobolIDE
+.. _issues page on github: https://github.com/OpenCobolIDE/OpenCobolIDE
+.. _qdarkstyle: https://github.com/ColinDuquesnoy/QDarkStyleSheet

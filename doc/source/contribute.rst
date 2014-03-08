@@ -11,7 +11,7 @@ You can contribute in many different ways:
 
 If you have any question, just open an issue on the issue tracker.
 
-.. _`issue tracker`: https://github.com/ColinDuquesnoy/OpenCobolIDE/issues
+.. _`issue tracker`: https://github.com/OpenCobolIDE/OpenCobolIDE/issues
 
 Recommendation for submitting a post request:
 -------------------------------------------------

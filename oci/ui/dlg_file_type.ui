@@ -93,12 +93,32 @@
          </item>
          <item>
           <property name="text">
+           <string>.pco</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>.cpy</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>.CBL</string>
           </property>
          </item>
          <item>
           <property name="text">
            <string>.COB</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>.PCO</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>.CPY</string>
           </property>
          </item>
         </widget>

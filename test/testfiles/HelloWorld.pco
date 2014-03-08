@@ -1,0 +1,32 @@
+130214******************************************************************
+130214* Author: Colin Duquesnoy
+130214* Date: 23/02/2014
+130214* Purpose: Hello world world example mean to test parser with a
+130214* non free syntax.
+130214* Tectonics: cobc
+130214******************************************************************
+130214 IDENTIFICATION DIVISION.
+130214*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+130214 PROGRAM-ID. YOUR-PROGRAM-NAME.
+130214 ENVIRONMENT DIVISION.
+130214*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+130214 CONFIGURATION SECTION.
+130214*-----------------------
+130214 INPUT-OUTPUT SECTION.
+130214*-----------------------
+130214 DATA DIVISION.
+130214*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+130214 FILE SECTION.
+130214*-----------------------
+130214 WORKING-STORAGE SECTION.
+130214*-----------------------
+130214 PROCEDURE DIVISION.
+130214*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+130214 MAIN-PROCEDURE.
+130214**
+130214* The main procedure of the program
+130214**
+130214      DISPLAY "Hello world"
+130214      STOP RUN.
+130214** add other procedures here
+130214 END PROGRAM YOUR-PROGRAM-NAME.

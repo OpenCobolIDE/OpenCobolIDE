@@ -1,5 +1,5 @@
 Getting started
---------------------
+===============
 .. note:: All the screenshots were taken on Linux Mint 15. You will have a
           different look and feel on other OS/DE.
 
@@ -16,8 +16,10 @@ i.e. it has no concept of project):
 
     You **create/open** a file, **compile** it then **run** it.
 
+.. contents:: :local:
+
 Create a new file
----------------------
+-----------------
 
 Click on *New* in the *Quick start Actions* list:
 
@@ -32,7 +34,7 @@ The following Dialog should appear:
 Fill up the following information:
 
 Type
-+++++++++
+++++
 
 OpenCobolIDE makes the distinction between a Program and a
 subprogram, called a Module.
@@ -66,19 +68,19 @@ When you create a new file you have can choose one of the 3 following options:
              program source code.
 
 Name
-++++++++++
+++++
 
-Choose the file name and extension (.cbl/.CBL, .cob/.COB)
+Choose the file name and extension (.cbl/.CBL, .cob/.COB, .pco/.PCO, .cpy/.CPY)
 
 Directory
-++++++++++++++
++++++++++
 
 Choose the location of the new file.
 
 
 
 Open a file
--------------
+-----------
 
 You can browse the file system to open a new file, for that click on *Open* in
 the *Quick start Actions* list:
@@ -99,7 +101,7 @@ Or open a file you've recently worked on in the *Recents* list:
 
 
 The main window
---------------------
+---------------
 
 Here is the main window of OpenCobolIDE:
 
@@ -127,7 +129,7 @@ It is made up of 3 important parts (omitting the menubar and the toolbar):
         - Program output: An interactive output console.
 
 Compile a file
--------------------
+--------------
 
 To compile a file, press **F8**. This will compile the current file but also the
 referenced modules.
@@ -142,8 +144,8 @@ code editor. (if the file hasn't been open, OpenCobolIDE will gently open it for
 you).
 
 
-Running a program
---------------------
+Run a compiled program
+----------------------
 
 Press **F5** to run the last compiled program.
 
@@ -156,3 +158,35 @@ stdin has been tested and works with the **ACCEPT** keyword).
 
 .. note:: It will not recompile the program. If you really need it, open a feature
           request on the issue tracker on github.
+
+
+Calculate the offset of a selected record
+-----------------------------------------
+
+Since version 2.2, you can now calculate the offset of a selected record.
+
+- select the text that contains the record you're interested in,
+- right click on the editor to open the context menu
+- click *Calculate PIC offsets*.
+- a new side panel will open and will show you a table with the offset of
+  each selected record:
+
+.. image:: _static/OffsetCalculator.png
+    :align: center
+
+Switching to a full dark style
+------------------------------
+
+Since version 2.2, OpenCobolIDE comes with a dark style sheet.
+
+To activate it, open the preferences dialog (edit->preferences). Then go to the
+style page and click on the *Dark style* radio button.
+
+.. image:: _static/StyleSettings.png
+    :align: center
+
+
+Your IDE shoul look like that:
+
+.. image:: _static/DarkStyle.png
+    :align: center

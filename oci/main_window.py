@@ -1,4 +1,4 @@
-# Copyright 2013 Colin Duquesnoy
+# Copyright (c) <2013-2014> Colin Duquesnoy
 #
 # This file is part of OpenCobolIDE.
 #
@@ -16,18 +16,23 @@
 """
 Contains the main window implementation
 """
-import multiprocessing
 import os
-import subprocess
-from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem, QTreeWidgetItem, QInputDialog
+import sys
+
+import qdarkstyle
+
 import pyqode.core
 import pyqode.widgets
+
 from PyQt4 import QtCore, QtGui
-import sys
-from oci import __version__, constants, cobol
+from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem, QTreeWidgetItem, QInputDialog
+
+from oci import __version__, constants, compiler, utils
 from oci.dialogs import DlgNewFile, DlgAbout, DlgPreferences
 from oci.editor import QCobolCodeEdit
 from oci import settings
+from oci.parser import parse_dependencies
+from oci.pic_parser import PicFieldInfo
 from oci.settings import Settings
 from oci.ui import ide_ui
 
@@ -41,6 +46,15 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         QtGui.QMainWindow.__init__(self)
         ide_ui.Ui_MainWindow.__init__(self)
         self.setupUi(self)
+
+        # status bar
+        self.lblFilename = QtGui.QLabel()
+        self.lblEncoding = QtGui.QLabel()
+        self.lblCursorPos = QtGui.QLabel()
+        self.statusbar.addPermanentWidget(self.lblFilename, 200)
+        self.statusbar.addPermanentWidget(self.lblEncoding, 20)
+        self.statusbar.addPermanentWidget(self.lblCursorPos, 20)
+
         self.initDefaultSettings()
         self.stackedWidget.setCurrentIndex(0)
         self.__prevRootNode = None
@@ -61,6 +75,10 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.consoleOutput.appMessageColor = s.consoleAppOutput
 
         self.setHomePageColorScheme(s.homePageColorScheme)
+
+        if s.appStyle == constants.DARK_STYLE:
+            QtGui.QApplication.instance().setStyleSheet(
+                qdarkstyle.load_stylesheet(pyside=False))
 
         self.setupIcons()
         self.QHomeWidget.setupRecentFiles(
@@ -104,14 +122,6 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.aShowLogsWin.toggled.connect(
             self.dockWidgetLogs.setVisible)
 
-        # status bar
-        self.lblFilename = QtGui.QLabel()
-        self.lblEncoding = QtGui.QLabel()
-        self.lblCursorPos = QtGui.QLabel()
-        self.statusbar.addPermanentWidget(self.lblFilename, 200)
-        self.statusbar.addPermanentWidget(self.lblEncoding, 20)
-        self.statusbar.addPermanentWidget(self.lblCursorPos, 20)
-
     @staticmethod
     def initDefaultSettings():
         e = QCobolCodeEdit()
@@ -152,11 +162,11 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         """
         if self.__prevRootNode != rootNode:
             self.twNavigation.clear()
-            #rootNode.setExpanded(True)
-            self.twNavigation.addTopLevelItem(rootNode)
-            self.twNavigation.expandItem(rootNode)
-            for i in range(rootNode.childCount()):
-                self.twNavigation.expandItem(rootNode.child(i))
+            tiRoot = utils.ast_to_qtree(rootNode)
+            self.twNavigation.addTopLevelItem(tiRoot)
+            self.twNavigation.expandItem(tiRoot)
+            for i in range(tiRoot.childCount()):
+                self.twNavigation.expandItem(tiRoot.child(i))
             #self.twNavigation.expandAll()
             #self.twNavigation.expandChildren()
             self.__prevRootNode = rootNode
@@ -172,7 +182,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         ag.triggered.connect(self.on_programType_triggered)
         self.programActionGroup = ag
         self.tb = QToolButton()
-        self.tb.setToolTip("Select the cobol program type to make")
+        self.tb.setToolTip("Select the compiler program type to make")
         self.tb.setMenu(self.menuProgramType)
         self.tb.setPopupMode(QToolButton.InstantPopup)
         self.tb.setText("Executable")
@@ -188,7 +198,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             editor.programType = constants.ProgramType.Module
 
     def setHomePageColorScheme(self, schemeNbr):
-        schemes = [pyqode.widgets.ColorScheme, pyqode.widgets.DarkColorScheme]
+        schemes = [pyqode.widgets.ColorScheme, constants.DarkColorScheme]
         self.QHomeWidget.setColorScheme(schemes[schemeNbr]())
 
     @QtCore.pyqtSlot()
@@ -205,9 +215,11 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionOpen_triggered(self):
+        filter = "%s%s%s" % (constants.COBOL_FILES_FILTER,
+                            constants.FILTER_SEPARATOR,
+                            constants.OTHER_FILES_FILTER)
         self.openFile(QtGui.QFileDialog.getOpenFileName(
-            self, "Open a file", Settings().lastFilePath,
-            "Cobol files (*.cbl *.CBL *.cob *.COB);; Other text files (*)"))
+            self, "Open a file", Settings().lastFilePath, filter))
 
     @QtCore.pyqtSlot()
     def on_actionSave_triggered(self):
@@ -215,13 +227,16 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionSaveAs_triggered(self):
-        filter = "Cobol files (*.cbl *.CBL *.cob *.COB);; Other text files (*)"
+        filter = "%s%s%s" % (constants.COBOL_FILES_FILTER,
+                            constants.FILTER_SEPARATOR,
+                            constants.OTHER_FILES_FILTER)
         fn, filter = QtGui.QFileDialog.getSaveFileNameAndFilter(
             self, "Save file as...", Settings().lastFilePath, filter)
         if os.path.splitext(fn)[1] == "":
-            if filter == "Cobol files (*.cbl *.CBL *.cob *.COB)":
+            if filter == constants.COBOL_FILES_FILTER:
                 fn += ".cob"
         if fn:
+            self.tabWidgetEditors.currentEditor.dirty = True
             self.tabWidgetEditors.saveCurrent(filePath=fn)
             self.QHomeWidget.setCurrentFile(fn)
 
@@ -262,7 +277,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         source_fn = self.tabWidgetEditors.currentWidget().filePath
         source_fn = os.path.join(os.path.dirname(source_fn), "bin",
                                  os.path.basename(source_fn))
-        target = cobol.makeOutputFilePath(
+        target = compiler.makeOutputFilePath(
             source_fn, self.tabWidgetEditors.currentWidget().programType)
         cwd = os.path.join(os.path.dirname(target))
         self.actionRun.setEnabled(False)
@@ -292,10 +307,12 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             self.setHomePageColorScheme(s.homePageColorScheme)
             self.tabWidgetEditors.resetSettings(dlg.editorSettings)
             self.tabWidgetEditors.resetStyle(dlg.editorStyle)
+            self.tabWidgetEditors.refreshIcons(useTheme=dlg.rbLightStyle.isChecked())
             self.consoleOutput.backgroundColor = dlg.consoleBackground
             self.consoleOutput.processOutputColor = dlg.consoleForeground
             self.consoleOutput.usrInputColor = dlg.consoleUserInput
             self.consoleOutput.appMessageColor = dlg.consoleAppOutput
+            self.setupIcons()
 
     @QtCore.pyqtSlot()
     def on_actionHelp_triggered(self):
@@ -310,10 +327,10 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         Compiles the current file and its dependencies (executed in a background
         thread
         """
-        dependencies = cobol.parseDependencies(filePath)
+        dependencies = parse_dependencies(filePath)
         globalStatus = True
         for path, pgmType in dependencies:
-            status, messags = cobol.compile(path, pgmType)
+            status, messags = compiler.compile(path, pgmType)
             globalStatus &= status
             for msg in messags:
                 self.compilerMsgReady.emit(msg)
@@ -327,7 +344,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                     "Compilation failed", pyqode.core.MSG_STATUS_ERROR, -1, filename=path)
             msg.filename = path
             self.compilerMsgReady.emit(msg)
-        status, messages = cobol.compile(filePath, programType)
+        status, messages = compiler.compile(filePath, programType)
         for msg in messages:
             self.compilerMsgReady.emit(msg)
         if status == 0:
@@ -415,10 +432,11 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         """
         Moves the text cursor on the selected document node position
 
-        :param item: oci.cobol.DocumentNode
+        :param item: oci.parser.DocumentNode
         """
         w = self.tabWidgetEditors.currentWidget()
-        w.gotoLine(item.line, move=True, column=item.column)
+        statement = item.data(0, QtCore.Qt.UserRole)
+        w.gotoLine(statement.line, move=True, column=statement.column)
 
     def openFile(self, fn):
         try:
@@ -426,7 +444,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                 extension = os.path.splitext(fn)[1]
                 icon = None
                 Settings().lastFilePath = fn
-                if extension.lower() in [".cbl", ".cob"]:
+                if extension.lower() in constants.ALL_COBOL_EXTENSIONS:
                     tab = QCobolCodeEdit(self.tabWidgetEditors)
                     icon = QtGui.QIcon(tab.icon)
                     tab.analyserMode.documentLayoutChanged.connect(
@@ -435,12 +453,14 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                     tab.settings.setValue("triggerKeys", [],
                                           section="Code completion")
                     tab.style = Settings().editorStyle
+                    tab.picInfosAvailable.connect(self.displayPICInfos)
                 else:
                     tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
                     tab.settings = Settings().editorSettings
                     tab.settings.setValue("minIndentColumn", 0)
                     tab.style = Settings().editorStyle
                 tab.openFile(fn, detectEncoding=True)
+                tab.refreshIcons(useTheme=Settings().appStyle == constants.WHITE_STYLE)
                 self.tabWidgetEditors.addEditorTab(tab, icon=icon)
                 self.showHomePage(False)
                 self.QHomeWidget.setCurrentFile(fn)
@@ -452,33 +472,50 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                 "Cannot open file %s, the file does not exists." % fn)
 
     def setupIcons(self):
-        docOpenIcon = QtGui.QIcon.fromTheme(
-            "document-open", QtGui.QIcon(":/ide-icons/rc/document-open.png"))
-        docSaveIcon = QtGui.QIcon.fromTheme(
-            "document-save", QtGui.QIcon(":/ide-icons/rc/document-save.png"))
-        docSaveAsIcon = QtGui.QIcon.fromTheme(
-            "document-save-as", QtGui.QIcon(":/ide-icons/rc/document-save-as.png"))
-        docNewIcon = QtGui.QIcon.fromTheme(
-            "document-new",
-            QtGui.QIcon(":/ide-icons/rc/document-new.png"))
-        compileIcon = QtGui.QIcon.fromTheme(
-            "application-x-executable", QtGui.QIcon(
-                ":/ide-icons/rc/application-x-executable.png"))
-        runIcon = QtGui.QIcon.fromTheme(
-            "media-playback-start", QtGui.QIcon(
-                ":/ide-icons/rc/media-playback-start.png"))
-        fullscreenIcon = QtGui.QIcon.fromTheme(
-            "view-fullscreen", QtGui.QIcon(
-                ":/ide-icons/rc/view-fullscreen.png"))
-        quitIcon = QtGui.QIcon.fromTheme(
-            "window-close", QtGui.QIcon(":/ide-icons/rc/system-log-out.png"))
-        clearIcon = QtGui.QIcon.fromTheme(
-            "edit-clear", QtGui.QIcon(":/ide-icons/rc/edit-clear.png"))
-        helpIcon = QtGui.QIcon.fromTheme(
-            "help", QtGui.QIcon(":/ide-icons/rc/help.png"))
-        preferencesIcon = QtGui.QIcon.fromTheme(
-            "preferences-system",
-            QtGui.QIcon(":/ide-icons/rc/Preferences-system.png"))
+        if Settings().appStyle == constants.WHITE_STYLE:
+            docOpenIcon = QtGui.QIcon.fromTheme(
+                "document-open", QtGui.QIcon(":/ide-icons/rc/document-open.png"))
+            docSaveIcon = QtGui.QIcon.fromTheme(
+                "document-save", QtGui.QIcon(":/ide-icons/rc/document-save.png"))
+            docSaveAsIcon = QtGui.QIcon.fromTheme(
+                "document-save-as", QtGui.QIcon(":/ide-icons/rc/document-save-as.png"))
+            docNewIcon = QtGui.QIcon.fromTheme(
+                "document-new",
+                QtGui.QIcon(":/ide-icons/rc/document-new.png"))
+            compileIcon = QtGui.QIcon.fromTheme(
+                "application-x-executable", QtGui.QIcon(
+                    ":/ide-icons/rc/application-x-executable.png"))
+            runIcon = QtGui.QIcon.fromTheme(
+                "media-playback-start", QtGui.QIcon(
+                    ":/ide-icons/rc/media-playback-start.png"))
+            fullscreenIcon = QtGui.QIcon.fromTheme(
+                "view-fullscreen", QtGui.QIcon(
+                    ":/ide-icons/rc/view-fullscreen.png"))
+            quitIcon = QtGui.QIcon.fromTheme(
+                "window-close", QtGui.QIcon(":/ide-icons/rc/system-log-out.png"))
+            clearIcon = QtGui.QIcon.fromTheme(
+                "edit-clear", QtGui.QIcon(":/ide-icons/rc/edit-clear.png"))
+            helpIcon = QtGui.QIcon.fromTheme(
+                "help", QtGui.QIcon(":/ide-icons/rc/help.png"))
+            preferencesIcon = QtGui.QIcon.fromTheme(
+                "preferences-system",
+                QtGui.QIcon(":/ide-icons/rc/Preferences-system.png"))
+        else:
+            docOpenIcon = QtGui.QIcon(":/ide-icons/rc/document-open.png")
+            docSaveIcon = QtGui.QIcon(":/ide-icons/rc/document-save.png")
+            docSaveAsIcon = QtGui.QIcon(":/ide-icons/rc/document-save-as.png")
+            docNewIcon = QtGui.QIcon(":/ide-icons/rc/document-new.png")
+            compileIcon = QtGui.QIcon(
+                ":/ide-icons/rc/application-x-executable.png")
+            runIcon = QtGui.QIcon(
+                ":/ide-icons/rc/media-playback-start.png")
+            fullscreenIcon = QtGui.QIcon(
+                ":/ide-icons/rc/view-fullscreen.png")
+            quitIcon = QtGui.QIcon(":/ide-icons/rc/system-log-out.png")
+            clearIcon = QtGui.QIcon(":/ide-icons/rc/edit-clear.png")
+            helpIcon = QtGui.QIcon(":/ide-icons/rc/help.png")
+            preferencesIcon = QtGui.QIcon(
+                ":/ide-icons/rc/Preferences-system.png")
         self.actionPreferences.setIcon(preferencesIcon)
         self.actionHelp.setIcon(helpIcon)
         self.actionClear.setIcon(clearIcon)
@@ -492,6 +529,12 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.actionCompile.setIcon(compileIcon)
         self.tabWidgetLogs.setTabIcon(0, compileIcon)
         self.tabWidgetLogs.setTabIcon(1, runIcon)
+
+        self.QHomeWidget.setActionIcon(self.actionNew, docNewIcon)
+        self.QHomeWidget.setActionIcon(self.actionOpen, docOpenIcon)
+        self.QHomeWidget.setActionIcon(self.actionPreferences, preferencesIcon)
+        self.QHomeWidget.setActionIcon(self.actionHelp, helpIcon)
+        self.QHomeWidget.setActionIcon(self.actionQuit, quitIcon)
 
     def setupQuickStartActions(self):
         self.QHomeWidget.addAction(self.actionNew)
@@ -532,6 +575,10 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             self.toolBarCode.hide()
             self.dockWidgetLogs.hide()
             self.dockWidgetNavPanel.hide()
+            self.dockWidgetOffsets.hide()
+            self.lblEncoding.setText("")
+            self.lblFilename.setText("OpenCobolIDE v.%s" % __version__)
+            self.lblCursorPos.setText("")
         else:
             if self.stackedWidget.currentIndex() == 0:
                 self.stackedWidget.setCurrentIndex(1)
@@ -554,3 +601,26 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                 s = Settings()
                 self.dockWidgetNavPanel.setVisible(s.navigationPanelVisible)
                 self.dockWidgetLogs.setVisible(s.logPanelVisible)
+
+    def displayPICInfos(self, infos):
+        self.tableWidgetOffsets.clear()
+        self.tableWidgetOffsets.setRowCount(len(infos))
+        self.tableWidgetOffsets.setHorizontalHeaderLabels(
+            ['Level', 'Name', 'Offset', 'PIC'])
+        self.tableWidgetOffsets.horizontalHeader().setResizeMode(
+            QtGui.QHeaderView.ResizeToContents)
+        self.tableWidgetOffsets.horizontalHeader().setResizeMode(
+            1, QtGui.QHeaderView.Stretch)
+
+        for i, info in enumerate(infos):
+            assert isinstance(info, PicFieldInfo)
+            self.tableWidgetOffsets.setItem(
+                i, 0, QtGui.QTableWidgetItem("%s" % info.level))
+            self.tableWidgetOffsets.setItem(
+                i, 1, QtGui.QTableWidgetItem(info.name))
+            self.tableWidgetOffsets.setItem(
+                i, 2, QtGui.QTableWidgetItem("%s" % info.offset))
+            self.tableWidgetOffsets.setItem(
+                i, 3, QtGui.QTableWidgetItem(info.pic))
+        self.dockWidgetOffsets.show()
+        self.dockWidgetOffsets.adjustSize()

@@ -1,4 +1,4 @@
-# Copyright 2013 Colin Duquesnoy
+# Copyright (c) <2013-2014> Colin Duquesnoy
 #
 # This file is part of OpenCobolIDE.
 #
@@ -16,94 +16,24 @@
 """
 Contains the application dialogs
 """
-from PyQt4 import QtGui
-from PyQt4 import QtCore
 import os
 import pygments
+import sys
+
+from PyQt4 import QtGui
+from PyQt4 import QtCore
+
+import qdarkstyle
+
 import pyqode.core
 import pyqode.widgets
-import sys
-from oci import cobol, __version__
+
+
+from oci import compiler, __version__, constants
+from oci.constants import TEMPLATES
 from oci.settings import Settings
 from oci.ui import dlg_about_ui, dlg_file_type_ui, dlg_preferences_ui
 
-EXE_TEMPLATE = """      ******************************************************************
-      * Author:
-      * Date:
-      * Purpose:
-      * Tectonics: cobc
-      ******************************************************************
-       IDENTIFICATION DIVISION.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       PROGRAM-ID. YOUR-PROGRAM-NAME.
-       ENVIRONMENT DIVISION.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       CONFIGURATION SECTION.
-      *-----------------------
-       INPUT-OUTPUT SECTION.
-      *-----------------------
-       DATA DIVISION.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       FILE SECTION.
-      *-----------------------
-       WORKING-STORAGE SECTION.
-      *-----------------------
-       PROCEDURE DIVISION.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       MAIN-PROCEDURE.
-      **
-      * The main procedure of the program
-      **
-            DISPLAY "Hello world"
-            STOP RUN.
-      ** add other procedures here
-       END PROGRAM YOUR-PROGRAM-NAME.
-
-"""
-
-MODULE_TEMPLATE = """      ******************************************************************
-      * Author:
-      * Date:
-      * Purpose:
-      * Tectonics: cobc
-      ******************************************************************
-       IDENTIFICATION DIVISION.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       PROGRAM-ID. YOUR-PROGRAM.
-       ENVIRONMENT DIVISION.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       CONFIGURATION SECTION.
-      *-----------------------
-       INPUT-OUTPUT SECTION.
-      *-----------------------
-       DATA DIVISION.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       FILE SECTION.
-      *-----------------------
-       WORKING-STORAGE SECTION.
-      *-----------------------
-       LINKAGE SECTION.
-      **-*-*-*-*-*-*-*-*-*-*-*-*-*
-       01 PARAMETRES.
-      **
-      * Input/Output parameters from/to the calling PROGRAM
-      **
-           02 PA-RETURN-CODE PIC 99 VALUE 0.
-       PROCEDURE DIVISION USING PARAMETRES.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       MAIN-PROCEDURE.
-      **
-      * The main procedure of the program
-      **
-        DISPLAY "Hello world"
-        MOVE 0 TO PA-RETURN-CODE
-        STOP RUN.
-      ** add other procedures here
-       END PROGRAM YOUR-PROGRAM.
-
-"""
-
-TEMPLATES = [EXE_TEMPLATE, MODULE_TEMPLATE, ""]
 
 
 class DlgNewFile(QtGui.QDialog, dlg_file_type_ui.Ui_Dialog):
@@ -158,16 +88,6 @@ class DlgNewFile(QtGui.QDialog, dlg_file_type_ui.Ui_Dialog):
         bt = self.buttonBox.button(QtGui.QDialogButtonBox.Ok)
         name = self.lineEditName.text()
         enable = name != "" and os.path.exists(pth) and os.path.isdir(pth)
-        if sys.platform == "win32":
-            if " " in pth and pth != self.prev_pth:
-                QtGui.QMessageBox.warning(
-                    self, "Warning",
-                    "Cannot create a new file in a path that contains spaces, "
-                    "please choose another directory.")
-                enable = False
-                self.labelDir.setStyleSheet("color: #FF0000;")
-            else:
-                self.labelDir.setStyleSheet("color: #000000;")
         bt.setEnabled(enable)
         self.prev_pth = pth
 
@@ -181,15 +101,17 @@ class DlgAbout(QtGui.QDialog, dlg_about_ui.Ui_Dialog):
         dlg_about_ui.Ui_Dialog.__init__(self)
         self.setupUi(self)
         self.labelMain.setText(self.labelMain.text() % __version__)
-        versions = [cobol.get_cobc_version(),
+        versions = [compiler.get_cobc_version(),
                     QtCore.QT_VERSION_STR,
                     QtCore.PYQT_VERSION_STR,
                     pyqode.core.__version__,
                     pyqode.widgets.__version__,
-                    pygments.__version__]
+                    pygments.__version__,
+                    qdarkstyle.__version__]
         for i, version in enumerate(versions):
             item = QtGui.QTableWidgetItem(version)
             self.tbwVersions.setItem(i, 0, item)
+        self.textBrowser.setStyleSheet("color: red")
 
 
 class DlgPreferences(QtGui.QDialog, dlg_preferences_ui.Ui_Dialog):
@@ -210,7 +132,7 @@ class DlgPreferences(QtGui.QDialog, dlg_preferences_ui.Ui_Dialog):
     @homePageColorScheme.setter
     def homePageColorScheme(self, value):
         self.__homePageColorScheme = value
-        schemes = [pyqode.widgets.ColorScheme, pyqode.widgets.DarkColorScheme]
+        schemes = [pyqode.widgets.ColorScheme, constants.DarkColorScheme]
         self.homeWidget.setColorScheme(schemes[value]())
         self.radioButtonWhite.setChecked(value == 0)
         self.radioButtonDark.setChecked(value == 1)
@@ -284,6 +206,43 @@ class DlgPreferences(QtGui.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.radioButtonWhite.toggled.connect(self.onHomePageStyleChanged)
         if sys.platform == "win32":
             self.tabWidgetStyle.removeTab(1)
+        if Settings().appStyle == constants.DARK_STYLE:
+            self.rbDarkStyle.setChecked(True)
+
+    @QtCore.pyqtSlot(bool)
+    def on_rbDarkStyle_clicked(self, checked):
+        app = QtGui.QApplication.instance()
+        if checked:
+            app.setStyleSheet(qdarkstyle.load_stylesheet(pyside=False))
+            style = self.editorStyle
+            style.setValue("pygmentsStyle", "monokai")
+            style.setValue("selectionBackground", "monokai")
+            style.setValue("background",
+                                      QtGui.QColor("#272822"))
+            style.setValue("caretLineBackground",
+                                      QtGui.QColor("#272822"))
+            style.setValue("selectionBackground",
+                                 QtGui.QColor("#353d44"))
+            style.setValue("whiteSpaceForeground",
+                                 QtGui.QColor("#393939"))
+            style.setValue("nativeFoldingIndicator", False)
+            self.homePageColorScheme = 1
+            # force grid refresh
+            self.editorStyle = style
+
+            s = Settings()
+            s.appStyle = constants.DARK_STYLE
+
+    @QtCore.pyqtSlot(bool)
+    def on_rbLightStyle_clicked(self, checked):
+        app = QtGui.QApplication.instance()
+        if checked:
+            app.setStyleSheet("")
+            self.editorStyle = pyqode.core.QGenericCodeEdit().style
+            self.homePageColorScheme = 0
+            s = Settings()
+            s.appStyle = constants.WHITE_STYLE
+
 
     @QtCore.pyqtSlot(int)
     def on_lwMenu_currentRowChanged(self, row):

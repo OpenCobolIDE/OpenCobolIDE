@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2013 Colin Duquesnoy
+# Copyright (c) <2013-2014> Colin Duquesnoy
 #
 # This file is part of OpenCobolIDE.
 #
@@ -24,7 +24,19 @@ import shutil
 import sys
 from cx_Freeze import setup, Executable
 
-__version__ = "2.0"
+
+def read_version():
+    """
+    Reads the version without self importing
+    """
+    with open("oci/__init__.py") as f:
+        lines = f.read().splitlines()
+        for l in lines:
+            if "__version__" in l:
+                return l.split("=")[1].strip().replace('"', "")
+
+
+__version__ = read_version()
 
 
 def get_build_dir():
@@ -49,11 +61,16 @@ def configure_iss_script():
 if len(sys.argv) == 1:
     sys.argv.append("build")
 
+# note: if you have troubles with pkg_resources import, ensure you
+# have a recent version of setuptools and that you did not install it
+# using ez_setup.py or setup.py, cx_Freeze does not seem to be able to parse
+# eggs (at least, it fails on the setuptools egg)
 options = {"excludes": ["PyQt4.uic.port_v3"],
            # add the namespace packages that you uses
            "namespace_packages": ["pyqode.core", "pyqode.widgets"],
            # freeze the pygments default style along with our executable
-           "includes": ["pygments.styles.default", "PyQt4"]}
+           "includes": ["pygments.styles.default", "pygments.styles.monokai",
+                        "pkg_resources"]}
 
 print("### Freezing application\n"
       "#####################################################################\n")

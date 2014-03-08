@@ -22,6 +22,15 @@ Installation
 GNU/Linux
 ++++++++++
 
+If you are on Ubuntu 13.10 or drivatives, you can use the ppa to easily
+install OpenCobolIDE::
+
+    sudo apt-add-repository ppa:open-cobol-ide/stable
+    sudo apt-get update
+    sudo apt-get install open-cobol-ide
+
+Otherwise you will have to install from source:
+
 1) Install OpenCobol and PyQt4
 
 .. code-block:: bash
@@ -47,8 +56,8 @@ From source::
 
 Both methods will install a desktop entry on your system.
 
-An **OpenCobolIDE** entry should appear in the development category. If the
-entry does not appear, you can always open a terminal and type *OpenCobolIDE* to run the IDE.
+An **open-cobol-ide** entry should appear in the development category. If the
+entry does not appear, you can always open a terminal and type *open-cobol-ide* to run the IDE.
 
 
 Windows
@@ -56,10 +65,8 @@ Windows
 
 Please use the Windows Installer available `here`_.
 
-.. _`here`: https://github.com/ColinDuquesnoy/OpenCobolIDE/releases
+.. _`here`: https://github.com/OpenCobolIDE/OpenCobolIDE/releases
 
-This will let you install OpenCobolIDE easily and have a shortcut on your
-desktop.
 
 .. note:: Installation from source is possible but you need to install all
           requirements yourself and run the OpenCobolIDE.pyw from the *extracted

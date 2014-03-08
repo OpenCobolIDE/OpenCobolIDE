@@ -1,4 +1,4 @@
-# Copyright 2013 Colin Duquesnoy
+# Copyright (c) <2013-2014> Colin Duquesnoy
 #
 # This file is part of OpenCobolIDE.
 #
@@ -20,13 +20,14 @@ from pygments.lexers.compiled import CobolFreeformatLexer, CobolLexer
 import pyqode.core
 from PyQt4 import QtCore
 from pygments.token import Comment
-from oci import cobol
 from oci.code_completion import CobolDocumentWordsProvider, CobolAnalyserProvider
-from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode, GoToDefinitionMode
+from oci.modes import ToUpperMode, CommentsMode, LeftMarginMode, GoToDefinitionMode, CobolFolder
 from oci.modes import CobolCheckerMode, DocumentAnalyserMode
-from oci.cobol import CobolFolder
+from oci.modes import OffsetCalculatorMode
+from oci.parser import detect_file_type
 
-
+CobolLexer.filenames.append(".PCO")
+CobolLexer.filenames.append(".pco")
 # make pygments hihlighter uses our custom cobol fold detector
 pyqode.core.PygmentsSyntaxHighlighter.LEXERS_FOLD_DETECTORS[
             CobolFreeformatLexer] = CobolFolder()
@@ -39,6 +40,8 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
     Extends QCodeEdit with a hardcoded set of modes and panels specifics to
     a cobol code editor widget
     """
+
+    picInfosAvailable = QtCore.pyqtSignal(list)
 
     @property
     def programType(self):
@@ -81,6 +84,8 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.installMode(pyqode.core.ZoomMode())
         self.installMode(pyqode.core.SymbolMatcherMode())
         self.installMode(pyqode.core.IndenterMode())
+        self.installMode(pyqode.core.CaseConverterMode())
+        self.installMode(pyqode.core.FileWatcherMode())
 
         # code completion
         self.installMode(pyqode.core.CodeCompletionMode())
@@ -95,7 +100,9 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.autoIndentMode.minIndent = 7 * " "
 
         # syntax highlighter
-        self.installMode(pyqode.core.PygmentsSyntaxHighlighter(self.document()))
+        sh = pyqode.core.PygmentsSyntaxHighlighter(self.document())
+        sh.setLexerFromFilename = self.setLexerFromFilename
+        self.installMode(sh)
         self.syntaxHighlighterMode.blockHighlightFinished.connect(
             self._highlighComments)
 
@@ -111,13 +118,20 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
         self.installMode(CobolCheckerMode())
         self.installMode(DocumentAnalyserMode())
 
+        o = OffsetCalculatorMode()
+        o.picInfosAvailable.connect(self.picInfosAvailable.emit)
+        self.installMode(o)
+
         self.settings.setValue("triggerSymbols", None, "Code completion")
 
     def openFile(self, filePath, replaceTabsBySpaces=True, encoding=None,
                  detectEncoding=False):
         pyqode.core.QCodeEdit.openFile(self, filePath, replaceTabsBySpaces,
                                        encoding, detectEncoding)
-        self.__fileType = cobol.detectFileType(filePath)
+        self.__fileType = detect_file_type(filePath)
+
+    def setLexerFromFilename(self, *args):
+        self.syntaxHighlighterMode._lexer = CobolFreeformatLexer()
 
     def _highlighComments(self, highlighter, text):
         """

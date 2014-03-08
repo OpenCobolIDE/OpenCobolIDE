@@ -89,11 +89,11 @@
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="page_3">
         <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="0">
+         <item row="1" column="0">
           <widget class="QTabWidget" name="tabWidgetSettings">
            <property name="currentIndex">
             <number>0</number>
@@ -103,8 +103,15 @@
              <string>Editor settings</string>
             </attribute>
             <layout class="QGridLayout" name="gridLayout_2">
-             <item row="0" column="0">
-              <widget class="QPropertyGrid" name="propGridSettings"/>
+             <item row="1" column="0">
+              <widget class="QPropertyGrid" name="propGridSettings" native="true">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -125,7 +132,54 @@
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout_2">
              <item>
-              <widget class="QPropertyGrid" name="propGridStyle"/>
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item>
+                <spacer name="horizontalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="rbLightStyle">
+                 <property name="text">
+                  <string>White style</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="rbDarkStyle">
+                 <property name="text">
+                  <string>Dark style</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_4">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QPropertyGrid" name="propGridStyle" native="true"/>
              </item>
              <item>
               <widget class="Line" name="line">
@@ -193,7 +247,7 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QColorButton" name="colorButtonConsoleBck">
+                <widget class="QColorButton" name="colorButtonConsoleBck" native="true">
                  <property name="color" stdset="0">
                   <color>
                    <red>255</red>
@@ -211,7 +265,7 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QColorButton" name="colorButtonConsoleFore">
+                <widget class="QColorButton" name="colorButtonConsoleFore" native="true">
                  <property name="color" stdset="0">
                   <color>
                    <red>64</red>
@@ -236,7 +290,7 @@
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QColorButton" name="colorButtonConsoleApp">
+                <widget class="QColorButton" name="colorButtonConsoleApp" native="true">
                  <property name="color" stdset="0">
                   <color>
                    <red>64</red>
@@ -247,7 +301,7 @@
                 </widget>
                </item>
                <item row="2" column="1">
-                <widget class="QColorButton" name="colorButtonConsoleUsr">
+                <widget class="QColorButton" name="colorButtonConsoleUsr" native="true">
                  <property name="color" stdset="0">
                   <color>
                    <red>34</red>
@@ -327,7 +381,7 @@
               </layout>
              </item>
              <item>
-              <widget class="QHomeWidget" name="homeWidget">
+              <widget class="QHomeWidget" name="homeWidget" native="true">
                <property name="title" stdset="0">
                 <string>Welcome to OpenCoblIDE</string>
                </property>
