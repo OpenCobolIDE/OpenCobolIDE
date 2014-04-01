@@ -50,7 +50,7 @@ From PPA
 
 There is now a PPA for Ubuntu and derivatives::
 
-    $ sudo apt-add-repositiory ppa:open-cobol-ide/stable
+    $ sudo apt-add-repository ppa:open-cobol-ide/stable
     $ sudo apt-get update
     $ sudo apt-get install open-cobol-ide
 
