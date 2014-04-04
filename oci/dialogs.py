@@ -190,14 +190,6 @@ class DlgPreferences(QtGui.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.__homePageColorScheme = 0
         self.codeEdit.syntaxHighlighterMode.setLexerFromFilename("file.cbl")
         self.codeEdit.syntaxHighlighterMode.rehighlight()
-        lw = self.lwMenu
-        assert isinstance(lw, QtGui.QListWidget)
-        lw.item(0).setIcon(QtGui.QIcon.fromTheme(
-            "preferences-system",
-            QtGui.QIcon(":/ide-icons/rc/Preferences-system.png")))
-        lw.item(1).setIcon(QtGui.QIcon.fromTheme(
-            "applications-graphics",
-            QtGui.QIcon(":/ide-icons/rc/Mypaint-icon.png")))
         self.stackedWidget.setCurrentIndex(0)
         self.tabWidgetSettings.setCurrentIndex(0)
         self.tabWidgetStyle.setCurrentIndex(0)
