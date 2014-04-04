@@ -287,8 +287,8 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             self.consoleOutput.runProcess(target, cwd=wd)
         else:
             if sys.platform == "win32":
-                subprocess.Popen(target, cwd=wd,
-                                 creationflags=subprocess.CREATE_NEW_CONSOLE)
+                subprocess.Popen(
+                    target, cwd=wd, creationflags=subprocess.CREATE_NEW_CONSOLE)
             else:
                 subprocess.Popen(Settings().shellCommand.split(' ') + [target],
                                  cwd=wd)
