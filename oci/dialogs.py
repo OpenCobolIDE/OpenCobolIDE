@@ -208,6 +208,15 @@ class DlgPreferences(QtGui.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.tabWidgetStyle.removeTab(1)
         if Settings().appStyle == constants.DARK_STYLE:
             self.rbDarkStyle.setChecked(True)
+        self.checkBoxExtTerm.stateChanged.connect(
+            self.lineEditShellCmd.setEnabled)
+        self.checkBoxExtTerm.setChecked(Settings().runInExternalTerminal)
+        self.lineEditShellCmd.setEnabled(Settings().runInExternalTerminal)
+        if sys.platform == 'win32':
+            self.labelShellCmd.hide()
+            self.lineEditShellCmd.hide()
+        else:
+            self.lineEditShellCmd.setText(Settings().shellCommand)
 
     @QtCore.pyqtSlot(bool)
     def on_rbDarkStyle_clicked(self, checked):
@@ -242,7 +251,6 @@ class DlgPreferences(QtGui.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.homePageColorScheme = 0
             s = Settings()
             s.appStyle = constants.WHITE_STYLE
-
 
     @QtCore.pyqtSlot(int)
     def on_lwMenu_currentRowChanged(self, row):

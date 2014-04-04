@@ -186,7 +186,11 @@ class Settings(object):
 
     @property
     def shellCommand(self):
-        return str(self._settings.value("shell", "gnome-terminal -e"))
+        # works on gnome, what about KDE and how do I detect that?
+        # at the moment just go with gnome, user can change that in the settings
+        # dialog anyway
+        default_shell_cmd = "gnome-terminal -e"
+        return str(self._settings.value("shell", default_shell_cmd))
 
     @shellCommand.setter
     def shellCommand(self, cmd):
@@ -275,3 +279,11 @@ class Settings(object):
     @appStyle.setter
     def appStyle(self, value):
         self._settings.setValue("style", value)
+
+    @property
+    def runInExternalTerminal(self):
+        return bool(int(self._settings.value('runInExternalTerminal', "0")))
+
+    @runInExternalTerminal.setter
+    def runInExternalTerminal(self, value):
+        self._settings.setValue('runInExternalTerminal', int(value))

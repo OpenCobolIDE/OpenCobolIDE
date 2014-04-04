@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>843</width>
-    <height>761</height>
+    <width>739</width>
+    <height>594</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,7 +28,7 @@
       <widget class="QListWidget" name="lwMenu">
        <property name="maximumSize">
         <size>
-         <width>72</width>
+         <width>78</width>
          <height>16777215</height>
         </size>
        </property>
@@ -77,6 +77,15 @@
           <normaloff>:/ide-icons/rc/Mypaint-icon.png</normaloff>:/ide-icons/rc/Mypaint-icon.png</iconset>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Build &amp; Run</string>
+        </property>
+        <property name="icon">
+         <iconset resource="ide.qrc">
+          <normaloff>:/ide-icons/rc/Preferences-system.png</normaloff>:/ide-icons/rc/Preferences-system.png</iconset>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
@@ -89,9 +98,9 @@
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>1</number>
+        <number>2</number>
        </property>
-       <widget class="QWidget" name="page_3">
+       <widget class="QWidget" name="pageSettings">
         <layout class="QGridLayout" name="gridLayout">
          <item row="1" column="0">
           <widget class="QTabWidget" name="tabWidgetSettings">
@@ -119,7 +128,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="page_4">
+       <widget class="QWidget" name="pageStyle">
         <layout class="QGridLayout" name="gridLayout_3">
          <item row="0" column="0">
           <widget class="QTabWidget" name="tabWidgetStyle">
@@ -393,6 +402,54 @@
              </item>
             </layout>
            </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="pageBuildAndRun">
+        <layout class="QFormLayout" name="formLayout_2">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+         </property>
+         <item row="2" column="0">
+          <widget class="QLabel" name="labelShellCmd">
+           <property name="text">
+            <string>External terminal:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QLineEdit" name="lineEditShellCmd"/>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="1">
+          <widget class="QCheckBox" name="checkBoxExtTerm">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Run program in external terminal:</string>
+           </property>
           </widget>
          </item>
         </layout>
