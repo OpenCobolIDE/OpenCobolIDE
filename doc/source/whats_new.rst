@@ -12,6 +12,19 @@ your thoughts to make OpenCobolIDE better.
 
 Milestones
 ----------
+
+2.3.0
++++++
+
+New features:
+    - add ability to run the compiled programe in an external terminal. This is
+      useful if you are using the SCREEN SECTION as the embedded terminal does
+      not support redirection.
+
+Fixed bugs:
+    - fix bug with detection of submodules call if they are enclosed with single quotes
+      instead of double quotes
+
 2.2.0
 +++++
 New features:
