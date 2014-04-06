@@ -249,7 +249,10 @@ def parse_ast(filename, code=None, encoding="utf-8",free=False):
     :return: A tuple made up of the AST root node, the list of variables, the list of paragraphes.
     :rtype: Statement, list of Statement, list of Statement
     """
-    root_node = Statement(Statement.Type.Root, 0, 0, os.path.split(filename)[1])
+    if not filename:
+        root_node = Statement(Statement.Type.Root, 0, 0, 'unknown')
+    else:
+        root_node = Statement(Statement.Type.Root, 0, 0, os.path.split(filename)[1])
     variables = []
     paragraphs = []
     if code is None:
