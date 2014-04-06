@@ -14,6 +14,14 @@ def test_parse_dependencies():
     assert len(deps)
 
 
+def test_parse_dependencies_single_quotes():
+    """
+    See github #29
+    """
+    deps = parser.parse_dependencies("test/testfiles/TEST-SINGLE-QUOTES.cbl")
+    assert len(deps)
+
+
 def test_parse_ast():
     """
     Parses the hello world example

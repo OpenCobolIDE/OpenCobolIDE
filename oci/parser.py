@@ -249,7 +249,10 @@ def parse_ast(filename, code=None, encoding="utf-8",free=False):
     :return: A tuple made up of the AST root node, the list of variables, the list of paragraphes.
     :rtype: Statement, list of Statement, list of Statement
     """
-    root_node = Statement(Statement.Type.Root, 0, 0, os.path.split(filename)[1])
+    if not filename:
+        root_node = Statement(Statement.Type.Root, 0, 0, 'unknown')
+    else:
+        root_node = Statement(Statement.Type.Root, 0, 0, os.path.split(filename)[1])
     variables = []
     paragraphs = []
     if code is None:
@@ -344,13 +347,14 @@ def parse_dependencies(filename):
     dependencies = []
     with open(filename, 'r') as f:
         for l in f.readlines():
-            if 'CALL' in l:
+            if 'CALL' in l.upper():
                 raw_tokens = l.split(" ")
                 tokens = []
                 for t in raw_tokens:
                     if not t.isspace() and t != "":
                         tokens.append(t)
-                dependency = os.path.join(directory, tokens[1].replace('"', "") + ".cbl")
+                dependency = os.path.join(directory, tokens[1].replace(
+                    '"', "").replace("'", "") + ".cbl")
                 if os.path.exists(dependency):
                     file_type = detect_file_type(dependency)
                     dependencies.append((dependency, file_type))

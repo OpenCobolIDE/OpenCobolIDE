@@ -26,6 +26,7 @@ import pyqode.widgets
 
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem, QTreeWidgetItem, QInputDialog
+import subprocess
 
 from oci import __version__, constants, compiler, utils
 from oci.dialogs import DlgNewFile, DlgAbout, DlgPreferences
@@ -271,18 +272,26 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
 
     @QtCore.pyqtSlot()
     def on_actionRun_triggered(self):
-        self.tabWidgetLogs.setCurrentIndex(1)
-        self.dockWidgetLogs.show()
-        self.consoleOutput.setFocus(True)
         source_fn = self.tabWidgetEditors.currentWidget().filePath
         source_fn = os.path.join(os.path.dirname(source_fn), "bin",
                                  os.path.basename(source_fn))
         target = compiler.makeOutputFilePath(
             source_fn, self.tabWidgetEditors.currentWidget().programType)
-        cwd = os.path.join(os.path.dirname(target))
-        self.actionRun.setEnabled(False)
-        self.consoleOutput.processFinished.connect(self.onProgramFinished)
-        self.consoleOutput.runProcess(target, cwd=cwd)
+        wd = os.path.join(os.path.dirname(target))
+        if not Settings().runInExternalTerminal:
+            self.tabWidgetLogs.setCurrentIndex(1)
+            self.dockWidgetLogs.show()
+            self.consoleOutput.setFocus(True)
+            self.actionRun.setEnabled(False)
+            self.consoleOutput.processFinished.connect(self.onProgramFinished)
+            self.consoleOutput.runProcess(target, cwd=wd)
+        else:
+            if sys.platform == "win32":
+                subprocess.Popen(
+                    target, cwd=wd, creationflags=subprocess.CREATE_NEW_CONSOLE)
+            else:
+                subprocess.Popen(Settings().shellCommand.split(' ') + [target],
+                                 cwd=wd)
 
     @QtCore.pyqtSlot()
     def on_actionPreferences_triggered(self):
@@ -304,6 +313,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             s.consoleUserInput = dlg.consoleUserInput
             s.consoleAppOutput = dlg.consoleAppOutput
             s.homePageColorScheme = dlg.homePageColorScheme
+            s.runInExternalTerminal = dlg.checkBoxExtTerm.isChecked()
             self.setHomePageColorScheme(s.homePageColorScheme)
             self.tabWidgetEditors.resetSettings(dlg.editorSettings)
             self.tabWidgetEditors.resetStyle(dlg.editorStyle)

@@ -190,14 +190,6 @@ class DlgPreferences(QtGui.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.__homePageColorScheme = 0
         self.codeEdit.syntaxHighlighterMode.setLexerFromFilename("file.cbl")
         self.codeEdit.syntaxHighlighterMode.rehighlight()
-        lw = self.lwMenu
-        assert isinstance(lw, QtGui.QListWidget)
-        lw.item(0).setIcon(QtGui.QIcon.fromTheme(
-            "preferences-system",
-            QtGui.QIcon(":/ide-icons/rc/Preferences-system.png")))
-        lw.item(1).setIcon(QtGui.QIcon.fromTheme(
-            "applications-graphics",
-            QtGui.QIcon(":/ide-icons/rc/Mypaint-icon.png")))
         self.stackedWidget.setCurrentIndex(0)
         self.tabWidgetSettings.setCurrentIndex(0)
         self.tabWidgetStyle.setCurrentIndex(0)
@@ -206,8 +198,18 @@ class DlgPreferences(QtGui.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.radioButtonWhite.toggled.connect(self.onHomePageStyleChanged)
         if sys.platform == "win32":
             self.tabWidgetStyle.removeTab(1)
+            self.lwMenu.setMaximumWidth(74)
         if Settings().appStyle == constants.DARK_STYLE:
             self.rbDarkStyle.setChecked(True)
+        self.checkBoxExtTerm.stateChanged.connect(
+            self.lineEditShellCmd.setEnabled)
+        self.checkBoxExtTerm.setChecked(Settings().runInExternalTerminal)
+        self.lineEditShellCmd.setEnabled(Settings().runInExternalTerminal)
+        if sys.platform == 'win32':
+            self.labelShellCmd.hide()
+            self.lineEditShellCmd.hide()
+        else:
+            self.lineEditShellCmd.setText(Settings().shellCommand)
 
     @QtCore.pyqtSlot(bool)
     def on_rbDarkStyle_clicked(self, checked):
@@ -242,7 +244,6 @@ class DlgPreferences(QtGui.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.homePageColorScheme = 0
             s = Settings()
             s.appStyle = constants.WHITE_STYLE
-
 
     @QtCore.pyqtSlot(int)
     def on_lwMenu_currentRowChanged(self, row):
