@@ -198,6 +198,7 @@ class DlgPreferences(QtGui.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.radioButtonWhite.toggled.connect(self.onHomePageStyleChanged)
         if sys.platform == "win32":
             self.tabWidgetStyle.removeTab(1)
+            self.lwMenu.setMaximumWidth(74)
         if Settings().appStyle == constants.DARK_STYLE:
             self.rbDarkStyle.setChecked(True)
         self.checkBoxExtTerm.stateChanged.connect(
