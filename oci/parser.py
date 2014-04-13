@@ -236,7 +236,7 @@ def parse_paragraph(l, c, last_div_node, last_section_node, line):
     return node
 
 
-def parse_ast(filename, code=None, encoding="utf-8",free=False):
+def parse_ast(filename, code=None, encoding="utf-8", free=False):
     """
     Parse a cobol document and build as simple syntax tree. For convenience, it also
     returns the list of variables (PIC) and procedures (paragraphs).
@@ -256,7 +256,7 @@ def parse_ast(filename, code=None, encoding="utf-8",free=False):
     variables = []
     paragraphs = []
     if code is None:
-        with open(filename, "r") as f:
+        with open(filename, "r", encoding=encoding) as f:
             lines = f.readlines()
     else:
         lines = code.splitlines()
@@ -317,7 +317,7 @@ def parse_ast(filename, code=None, encoding="utf-8",free=False):
     return root_node, variables, paragraphs
 
 
-def detect_file_type(filename):
+def detect_file_type(filename, encoding):
     """
     Detect file type:
         - cobol program
@@ -330,7 +330,7 @@ def detect_file_type(filename):
     type = constants.ProgramType.Executable
     if ext in constants.ALL_COBOL_EXTENSIONS:
         try:
-            with open(filename, 'r') as f:
+            with open(filename, 'r', encoding=encoding) as f:
                 lines = f.readlines()
                 for l in lines:
                     # This is a subprogram
@@ -342,10 +342,10 @@ def detect_file_type(filename):
     return type
 
 
-def parse_dependencies(filename):
+def parse_dependencies(filename, encoding):
     directory = os.path.dirname(filename)
     dependencies = []
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding=encoding) as f:
         for l in f.readlines():
             if 'CALL' in l.upper():
                 raw_tokens = l.split(" ")
@@ -356,9 +356,9 @@ def parse_dependencies(filename):
                 dependency = os.path.join(directory, tokens[1].replace(
                     '"', "").replace("'", "") + ".cbl")
                 if os.path.exists(dependency):
-                    file_type = detect_file_type(dependency)
+                    file_type = detect_file_type(dependency, encoding)
                     dependencies.append((dependency, file_type))
-                    dependencies += parse_dependencies(dependency)
+                    dependencies += parse_dependencies(dependency, encoding)
 
     def make_unique_sorted(seq):
         # order preserving

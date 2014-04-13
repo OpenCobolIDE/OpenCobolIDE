@@ -128,7 +128,7 @@ class QCobolCodeEdit(pyqode.core.QCodeEdit):
                  detectEncoding=False):
         pyqode.core.QCodeEdit.openFile(self, filePath, replaceTabsBySpaces,
                                        encoding, detectEncoding)
-        self.__fileType = detect_file_type(filePath)
+        self.__fileType = detect_file_type(filePath, self.fileEncoding)
 
     def setLexerFromFilename(self, *args):
         self.syntaxHighlighterMode._lexer = CobolFreeformatLexer()
