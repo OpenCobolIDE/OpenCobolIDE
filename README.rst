@@ -83,7 +83,7 @@ The project depends on the following packages:
 - `pyqode.core`_
 - `pyqode.widgets`_
 - `Pygments`_ **>= 1.6**
-- `chardet2`_
+- `chardet`_
 - `qdarkstyle`_
 
 
