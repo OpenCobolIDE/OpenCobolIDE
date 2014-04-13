@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Copyright (c) <2013-2014> Colin Duquesnoy
 #
 # This file is part of OpenCobolIDE.

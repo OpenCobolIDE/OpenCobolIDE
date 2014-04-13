@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+#
 # Copyright (c) <2013-2014> Colin Duquesnoy
 #
 # This file is part of OpenCobolIDE.
@@ -13,12 +15,11 @@
 #
 # You should have received a copy of the GNU General Public License along with
 # OpenCobolIDE. If not, see http://www.gnu.org/licenses/.
+#
 """
-PCEF is code editor framework for PySide applications
+Setup script for OpenCobolIDE
 
-This is the setup script, install it as any python package.
-
-.. note:: You will need to install PySide and OpenCobol on your own
+You will need to install PyQt4 and OpenCobol on your own.
 """
 import os
 import sys
@@ -47,11 +48,7 @@ with open('README.rst', 'r') as readme:
 
 # install requirements
 requirements = ['pygments>=1.6', 'pyqode.core>=1.3.1',
-                'pyqode.widgets>=1.2.1', 'qdarkstyle>=1.9']
-if sys.platform == "win32" and sys.version_info[0] == 3:
-    requirements += ['chardet2']
-else:
-    requirements += ['chardet']
+                'pyqode.widgets>=1.2.1', 'qdarkstyle>=1.9', 'chardet']
 
 data_files = []
 if sys.platform == "linux" and run_as_root():
@@ -86,8 +83,8 @@ setup(
         '(GPLv3+)',
         'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX :: Linux',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
         'Topic :: Text Editors :: Integrated Development Environments (IDE)']
 )
