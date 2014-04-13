@@ -95,3 +95,9 @@ def test_parse_pco():
     assert len(ast.children[2].children) == 2
     assert len(vars) == 0
     assert len(procs) == 1
+
+def test_parse_encoding():
+    """
+    See bug #31 on github
+    """
+    ast, vars, procs = parser.parse_ast("test/testfiles/HelloWorldLatin1.cbl")
