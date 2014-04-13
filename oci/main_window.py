@@ -263,7 +263,8 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.tabWidgetLogs.setCurrentIndex(0)
         editor = self.tabWidgetEditors.currentWidget()
         self.jobRunner.startJob(self.compileCurrent, False,
-                                editor.filePath, editor.programType)
+                                editor.filePath, editor.fileEncoding,
+                                editor.programType)
 
     @QtCore.pyqtSlot()
     def on_actionAbout_triggered(self):
@@ -332,12 +333,12 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
     def onProgramFinished(self, status):
         self.actionRun.setEnabled(True)
 
-    def compileCurrent(self, filePath, programType):
+    def compileCurrent(self, filePath, fileEncoding, programType):
         """
         Compiles the current file and its dependencies (executed in a background
         thread
         """
-        dependencies = parse_dependencies(filePath)
+        dependencies = parse_dependencies(filePath, fileEncoding)
         globalStatus = True
         for path, pgmType in dependencies:
             status, messags = compiler.compile(path, pgmType)

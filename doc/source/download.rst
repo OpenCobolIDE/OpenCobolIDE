@@ -1,14 +1,14 @@
 Download & Install
-=========================
+==================
 
 Here you'll find all the necessary explanations for installing OpenCobolIDE.
 
 
 Requirements:
-----------------
+-------------
 OpenCobolIDE depends on the following packages
 
-    - Python 2.7 or Python 3
+    - Python 3
     - PyQt4
     - OpenCobol
     - pyqode.core
@@ -17,10 +17,10 @@ OpenCobolIDE depends on the following packages
     - chardet (chardet2 if you are using python3)
 
 Installation
-------------------
+------------
 
 GNU/Linux
-++++++++++
++++++++++
 
 If you are on Ubuntu 13.10 or drivatives, you can use the ppa to easily
 install OpenCobolIDE::
@@ -35,23 +35,21 @@ Otherwise you will have to install from source:
 
 .. code-block:: bash
 
-    sudo apt-get install python-qt open-cobol
-
-.. note:: If you want to use python 3, you need to install python3-pyqt4
-          instead of python-qt.
+    sudo apt-get install python3-pyqt4 open-cobol
 
 2) Install OpenCobolIDE
 
-Using pip or easy_install::
+Using pip::
 
-    sudo pip install OpenCobolIDE
+    sudo pip3 install OpenCobolIDE
 
 From source::
 
     cd /path/to/source
-    sudo python setup.py install
+    sudo python3 setup.py install
 
-.. note:: Replace *python* by *python3* to install OpenCobolIDE for Python 3.
+.. note:: You need pip for python3. Depending on your distribution, you might
+          replace ``pip`` by ``pip3`` or ``pip-3.2``
 
 
 Both methods will install a desktop entry on your system.

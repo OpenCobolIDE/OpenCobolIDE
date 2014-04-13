@@ -190,7 +190,7 @@ def checkFile(queue, code, filePath, fileEncoding):
             code = code.encode(fileEncoding)
         f.write(code)
 
-    fileType = detect_file_type(tmp)
+    fileType = detect_file_type(tmp, fileEncoding)
     output = os.path.join(constants.getAppTempDirectory(),
                           QFileInfo(tmp).baseName() + fileType[2])
     status, messages = compiler.compile(tmp, fileType, outputFilename=output)

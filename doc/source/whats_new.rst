@@ -13,6 +13,14 @@ your thoughts to make OpenCobolIDE better.
 Milestones
 ----------
 
+2.3.1
++++++
+
+- drop python 2 support (the main script must now be run by a python3
+  interpreter)
+
+- fix bug with encoding error, see bug #31 on github
+
 2.3.0
 +++++
 

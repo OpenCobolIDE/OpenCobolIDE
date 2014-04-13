@@ -54,13 +54,16 @@ There is now a PPA for Ubuntu and derivatives::
     $ sudo apt-get update
     $ sudo apt-get install open-cobol-ide
 
-From pip
-++++++++
+From pypi
++++++++++
+**You must have the latest version of pip for python3!**
+
 Run the following commands::
 
-    sudo apt-get install python-qt open-cobol
-    sudo easy_install OpenCobolIDE
+    sudo apt-get install python3-pyqt4 open-cobol
+    sudo pip3 install OpenCobolIDE
 
+*On Gnu/Linux, you must use pip3 instead of pip*
 
 Windows
 #######
@@ -73,14 +76,14 @@ Requirements
 
 The project depends on the following packages:
 
-- `Python`_  *( >= 2.7 or >= 3.2)*
+- `Python3`_
 - `setuptools`_
 - `PyQt4`_
 - `OpenCobol`_
 - `pyqode.core`_
 - `pyqode.widgets`_
 - `Pygments`_ **>= 1.6**
-- `chardet`_ *(chardet2 if you are using python3)*
+- `chardet`_
 - `qdarkstyle`_
 
 

@@ -1,6 +1,5 @@
 language: python
 env:
-    - TOXENV=py27
     - TOXENV=py32
 virtualenv:
   system_site_packages: true
