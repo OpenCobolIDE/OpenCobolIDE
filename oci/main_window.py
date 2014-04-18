@@ -190,8 +190,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.errorsTable.addMessage(message)
 
     def onCompilationFinished(self, status):
-        _logger().info('compilation finished with %s' %
-                       'success' if status else 'errors')
+        _logger().info('compilation finished')
         self.actionCompile.setEnabled(True)
         self.onCurrentEditorChanged(self.tabWidgetEditors.currentIndex())
         self.errorsTable.setSortingEnabled(True)

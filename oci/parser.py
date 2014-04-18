@@ -379,5 +379,6 @@ def parse_dependencies(filename, encoding):
                 checked.append(e)
         return sorted(checked)
     ret_val = make_unique_sorted(dependencies)
-    _logger().info('dependencies for %s: %r' % (filename, ret_val))
+    _logger().info('dependencies for %s: %r' %
+                   (filename, [f for f, ftype in ret_val]))
     return ret_val
