@@ -19,7 +19,6 @@ This script is intendented to launch OpenCobolIDE on windows. It simply call
 oci.main:main function and enable freeze support.
 """
 import logging
-logging.basicConfig()
 from oci.main import main
 from oci.constants import getAppTempDirectory
 from multiprocessing import freeze_support

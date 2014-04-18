@@ -17,6 +17,7 @@
 Contains and functions to cobol source code analysis
 """
 import glob
+import logging
 import shutil
 import os
 import subprocess
@@ -42,12 +43,17 @@ def make_bin_dir(filename):
                 shutil.copy(f, dirname)
 
 
+def _logger():
+    return logging.getLogger(__name__)
+
+
 def compile(filename, fileType, customOptions=None, outputFilename=None):
     """
     Compile a single cobol file, return the compiler exit status and output.
     The output is a list of checker messages (those can be used to implements
     a cobol live checker mode)
     """
+    _logger().debug('compiling %s -> %s' % (filename, outputFilename))
     if customOptions is None:
         customOptions = []
 
@@ -66,10 +72,14 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
         cmd = constants.ProgramType.cmd(fileType, input, output,
                                         customOptions)
 
+    _logger().debug('working directory = %s' % dirname)
+    _logger().info('cd %s && %s' % (dirname, ' '.join(cmd)))
+
     # run the compiler process
     messages = []
     try:
         if sys.platform == "win32":
+            _logger().debug('environment = %r' % os.environ.copy())
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
             p = subprocess.Popen(cmd, shell=False, startupinfo=startupinfo,
@@ -81,6 +91,7 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE)
     except OSError:
+        _logger().exception('cobc compiler not found')
         msg = pyqode.core.CheckerMessage("cobc compiler not found",
                                          pyqode.core.MSG_STATUS_ERROR, -1,
                                          filename=filename)
@@ -91,30 +102,25 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
         stdout, stderr = p.communicate()
         status = p.returncode
         if status != 0:
-            if sys.version_info[0] == 2:
-                lines = []
-                if stdout:
-                    lines += stdout.splitlines()
-                if stderr:
-                    lines += stderr.splitlines()
-            else:
-                # we have bytes in python 3
-                lines = []
-                if stdout:
-                    lines += str(stdout).splitlines()
-                if stderr:
-                    lines += str(stderr).splitlines()
+            lines = []
+            if stdout:
+                lines += str(stdout).splitlines()
+            if stderr:
+                lines += str(stderr).splitlines()
+            _logger().debug('cobc output: %s' % lines)
 
             # parse compilation results
             for l in lines:
                 if not l or l == "":
                     continue
                 tokens = l.split(":")
+                _logger().debug('line tokens: %r' % tokens)
                 try:
                     desc = tokens[len(tokens) - 1]
                     errType = tokens[len(tokens) - 2]
                     lineNbr = int(tokens[len(tokens) - 3])
                 except (ValueError, IndexError):
+                    _logger().exception('failed to process line %r' % l)
                     # not a compilation message, usually this is a file not found error.
                     desc = l
                     errType = "Error"
@@ -124,6 +130,7 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
                     status = pyqode.core.MSG_STATUS_ERROR
                 msg = pyqode.core.CheckerMessage(desc, status, lineNbr, filename=filename)
                 msg.filename = filename
+                _logger().debug('adding compiler message: %r' % msg)
                 messages.append(msg)
         return status, messages
 
@@ -132,6 +139,7 @@ def get_cobc_version():
     """ Returns the OpenCobol compiler version as a string """
     cmd = ["cobc", "--version"]
     try:
+        _logger().debug('getting cobc version: %s' % ' '.join(cmd))
         if sys.platform == "win32":
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -141,11 +149,53 @@ def get_cobc_version():
             p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE)
     except OSError:
+        _logger().exception('OpenCobol compiler not found')
         return "Not installed"
     stdout, stderr = p.communicate()
-    if sys.version_info[0] == 2:
-        return stdout.splitlines()[0].split(" ")[2]
-    else:
-        stdout = str(stdout)
-        return stdout.splitlines()[0].split(" ")[2].split("\\n")[0].split(
-            "\\r")[0]
+    stdout = str(stdout)
+    version = stdout.splitlines()[0].split(" ")[2].split(
+        "\\n")[0].split("\\r")[0]
+    return version
+
+
+def init_env():
+    """
+    Windows specific initialisation:
+
+    - set env var to embedded OpenCobol variable
+    - set PATH to cobol library path only (erase previous values)
+    """
+    cwd = os.getcwd()
+    _logger().info('setting up environment')
+    _logger().info('current working directory: %s' % cwd)
+    if sys.platform == "win32":
+        oc_root_pth = os.path.join(cwd, "OpenCobol")
+        os.environ["COB_CONFIG_DIR"] = os.path.join(oc_root_pth, "config")
+        os.environ["COB_COPY_DIR"] = os.path.join(oc_root_pth, "copy")
+        os.environ["COB_LIBRARY_PATH"] = os.path.join(oc_root_pth, "bin")
+        os.environ["COB_INCLUDE_PATH"] = os.path.join(oc_root_pth, "include")
+        os.environ["COB_LIB_PATH"] = os.path.join(oc_root_pth, "lib")
+        os.environ["PATH"] = os.environ["COB_LIBRARY_PATH"]
+
+        env_vars = ['COB_CONFIG_DIR', 'COB_COPY_DIR', 'COB_LIBRARY_PATH',
+                    'COB_INCLUDE_PATH', 'COB_LIB_PATH', 'PATH']
+        for var in env_vars:
+            _logger().info('%s: %s' % (var, os.environ[var]))
+
+
+def check_env():
+    version = get_cobc_version()
+    if version == "Not installed":
+        if sys.platform == 'win32':
+            expected_root_path = os.path.join(os.getcwd(), "OpenCobol")
+            expected_cobc_path = os.path.join(expected_root_path,
+                                              'bin', 'cobc.exe')
+            if not os.path.exists(expected_root_path):
+                _logger().warning('%s does not exists' % expected_root_path)
+            elif not os.path.exists(expected_cobc_path):
+                _logger().warning('%s does not exisits' % expected_cobc_path)
+            else:
+                _logger().info('cobc.exe found but not usable.')
+        return False
+    _logger().info('OpenCobol compiler v.%s' % version)
+    return True

@@ -119,10 +119,10 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QGridLayout" name="gridLayout_3">
-     <item row="0" column="0">
+     <item row="1" column="0">
       <widget class="QTabWidget" name="tabWidgetLogs">
        <property name="currentIndex">
-        <number>0</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="tabCompiler">
         <attribute name="icon">
@@ -176,6 +176,24 @@
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="tabAppLog">
+        <attribute name="icon">
+         <iconset resource="ide.qrc">
+          <normaloff>:/ide-icons/rc/silex-32x32.png</normaloff>:/ide-icons/rc/silex-32x32.png</iconset>
+        </attribute>
+        <attribute name="title">
+         <string>Application log</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QTextEdit" name="textEditLogs">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </item>
     </layout>
@@ -187,7 +205,7 @@
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>25</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -243,8 +261,19 @@
      <addaction name="aShowLogsWin"/>
      <addaction name="aShowNavWin"/>
     </widget>
+    <widget class="QMenu" name="menuApplication_log">
+     <property name="title">
+      <string>Application log</string>
+     </property>
+     <addaction name="actionShowAppLog"/>
+     <addaction name="actionDebug_level"/>
+     <addaction name="separator"/>
+     <addaction name="actionClearLog"/>
+    </widget>
     <addaction name="menuToolbars"/>
     <addaction name="menuDock_panels"/>
+    <addaction name="separator"/>
+    <addaction name="menuApplication_log"/>
     <addaction name="separator"/>
     <addaction name="actionFullscreen"/>
    </widget>
@@ -633,6 +662,9 @@
    <property name="shortcut">
     <string>F1</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionProgram">
    <property name="checkable">
@@ -651,6 +683,60 @@
    </property>
    <property name="text">
     <string>Module</string>
+   </property>
+  </action>
+  <action name="actionDebug">
+   <property name="text">
+    <string>Debug</string>
+   </property>
+  </action>
+  <action name="actionInfos">
+   <property name="text">
+    <string>Infos</string>
+   </property>
+  </action>
+  <action name="actionWarnings">
+   <property name="text">
+    <string>Warnings</string>
+   </property>
+  </action>
+  <action name="actionErrors">
+   <property name="text">
+    <string>Errors</string>
+   </property>
+  </action>
+  <action name="actionDebug_level">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Debug Log Level</string>
+   </property>
+   <property name="toolTip">
+    <string>Activate debug messages</string>
+   </property>
+  </action>
+  <action name="actionShowAppLog">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show window</string>
+   </property>
+   <property name="toolTip">
+    <string>Show/hide application log window</string>
+   </property>
+  </action>
+  <action name="actionClearLog">
+   <property name="icon">
+    <iconset resource="ide.qrc">
+     <normaloff>:/ide-icons/rc/edit-clear.png</normaloff>:/ide-icons/rc/edit-clear.png</iconset>
+   </property>
+   <property name="text">
+    <string>Clear</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

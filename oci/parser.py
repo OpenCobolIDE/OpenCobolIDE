@@ -16,6 +16,7 @@
 """
 Contains and functions to cobol source code analysis
 """
+import logging
 import os
 import sys
 from oci import constants
@@ -317,6 +318,10 @@ def parse_ast(filename, code=None, encoding="utf-8", free=False):
     return root_node, variables, paragraphs
 
 
+def _logger():
+    return logging.getLogger(__name__)
+
+
 def detect_file_type(filename, encoding):
     """
     Detect file type:
@@ -326,6 +331,7 @@ def detect_file_type(filename, encoding):
 
     :param filename: The file name to check
     """
+    _logger().debug('detecting file type: %s - %s' % (filename, encoding))
     ext = os.path.splitext(filename)[1].lower()
     type = constants.ProgramType.Executable
     if ext in constants.ALL_COBOL_EXTENSIONS:
@@ -339,10 +345,15 @@ def detect_file_type(filename, encoding):
                         break
         except IOError or OSError:
             pass
+    type_name = ('executable'
+                 if type == constants.ProgramType.Executable
+                 else 'module')
+    _logger().info('file type: %s' % type_name)
     return type
 
 
 def parse_dependencies(filename, encoding):
+    _logger().debug('parsing dependencies: %s - %s' % (filename, encoding))
     directory = os.path.dirname(filename)
     dependencies = []
     with open(filename, 'r', encoding=encoding) as f:
@@ -367,4 +378,6 @@ def parse_dependencies(filename, encoding):
             if e not in checked:
                 checked.append(e)
         return sorted(checked)
-    return make_unique_sorted(dependencies)
+    ret_val = make_unique_sorted(dependencies)
+    _logger().info('dependencies for %s: %r' % (filename, ret_val))
+    return ret_val

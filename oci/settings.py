@@ -287,3 +287,19 @@ class Settings(object):
     @runInExternalTerminal.setter
     def runInExternalTerminal(self, value):
         self._settings.setValue('runInExternalTerminal', int(value))
+
+    @property
+    def appLogVisible(self):
+        return bool(int(self._settings.value('appLogVisible', '0')))
+
+    @appLogVisible.setter
+    def appLogVisible(self, value):
+        self._settings.setValue('appLogVisible', int(value))
+
+    @property
+    def debugLog(self):
+        return bool(int(self._settings.value('debugLog', "0")))
+
+    @debugLog.setter
+    def debugLog(self, value):
+        self._settings.setValue('debugLog', int(value))
