@@ -101,34 +101,34 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
         # get compilation results
         stdout, stderr = p.communicate()
         status = p.returncode
+        _logger().debug('compilation command terminated with status %d' % status)
         if status != 0:
             lines = []
+            _logger().debug('parsing cobc output')
             if stdout:
-                lines += str(stdout).splitlines()
+                lines += str(stdout.decode(sys.getfilesystemencoding())).splitlines()
             if stderr:
-                lines += str(stderr).splitlines()
+                lines += str(stderr.decode(sys.getfilesystemencoding())).splitlines()
             _logger().debug('cobc output: %s' % lines)
-
+            print(lines)
             # parse compilation results
             for l in lines:
                 if not l or l == "":
                     continue
                 tokens = l.split(":")
                 _logger().debug('line tokens: %r' % tokens)
+                msg_type = pyqode.core.MSG_STATUS_WARNING
                 try:
                     desc = tokens[len(tokens) - 1]
                     errType = tokens[len(tokens) - 2]
                     lineNbr = int(tokens[len(tokens) - 3])
                 except (ValueError, IndexError):
-                    _logger().exception('failed to process line %r' % l)
-                    # not a compilation message, usually this is a file not found error.
-                    desc = l
-                    errType = "Error"
-                    lineNbr = -1
-                    status = pyqode.core.MSG_STATUS_WARNING
-                if errType == "Error":
-                    status = pyqode.core.MSG_STATUS_ERROR
-                msg = pyqode.core.CheckerMessage(desc, status, lineNbr, filename=filename)
+                    _logger().debug('failed to process line %r, skipping' % l)
+                    continue
+                if errType.strip() == "Error":
+                    msg_type = pyqode.core.MSG_STATUS_ERROR
+                print(errType, msg_type, pyqode.core.MSG_STATUS_WARNING, pyqode.core.MSG_STATUS_ERROR)
+                msg = pyqode.core.CheckerMessage(desc, msg_type, lineNbr, filename=filename)
                 msg.filename = filename
                 _logger().debug('adding compiler message: %r' % msg)
                 messages.append(msg)
