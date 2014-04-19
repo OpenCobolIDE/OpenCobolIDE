@@ -82,11 +82,15 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
             _logger().debug('environment = %r' % os.environ.copy())
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            _logger().debug('running build command in a subprocess on windows' %
+                            os.environ.copy())
             p = subprocess.Popen(cmd, shell=False, startupinfo=startupinfo,
                                  env=os.environ.copy(),
                                  cwd=dirname,
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         else:
+            _logger().debug('running build command in a subprocess' %
+                            os.environ.copy())
             p = subprocess.Popen(cmd, shell=False, cwd=dirname,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE)
