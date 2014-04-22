@@ -87,13 +87,12 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
             p = subprocess.Popen(cmd, shell=False, startupinfo=startupinfo,
                                  env=os.environ.copy(),
                                  cwd=dirname,
-                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
         else:
             _logger().debug('running build command in a subprocess' %
                             os.environ.copy())
             p = subprocess.Popen(cmd, shell=False, cwd=dirname,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE)
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except OSError:
         _logger().exception('cobc compiler not found')
         msg = pyqode.core.CheckerMessage("cobc compiler not found",
@@ -148,7 +147,8 @@ def get_cobc_version():
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
             p = subprocess.Popen(cmd, shell=False, startupinfo=startupinfo,
-                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                 stdin=subprocess.PIPE)
         else:
             p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE)
