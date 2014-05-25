@@ -4,8 +4,8 @@ application messages.
 """
 import logging
 
-from PyQt4.QtCore import QObject, pyqtSignal
-from PyQt4.QtGui import QTextEdit, QTextCursor
+from pyqode.qt.QtCore import QObject, Signal
+from pyqode.qt.QtGui import QTextCursor
 
 import oci
 
@@ -20,7 +20,7 @@ class TextEditWriter(QObject):
     (using an internal signal to ensure QTextEdit.append will always be
     called from the main gui thread)
     """
-    _appendMsgRequested = pyqtSignal(str)
+    _appendMsgRequested = Signal(str)
 
     def __init__(self, text_edit):
         super().__init__()
@@ -56,15 +56,21 @@ def setup(text_edit):
     :param text_edit: QTextEdit where to log messages
     """
     level = logging.DEBUG if Settings().debugLog else logging.INFO
-    logger = logging.getLogger(oci.__name__)
+    loggers = [logging.getLogger(oci.__name__), logging.getLogger('pyqode')]
     formatter = logging.Formatter(
         '%(levelname)s::%(name)s::%(message)s',
         "%Y-%m-%d %H:%M:%S")
-    handler = logging.StreamHandler()
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    handler = TextEditHandler(text_edit)
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.setLevel(level)
-    logger.info('OpenCobolIDE %s' % __version__)
+    handlers = [logging.StreamHandler(), TextEditHandler(text_edit)]
+    loggers[0].setLevel(level)
+    loggers[1].setLevel(logging.WARNING)
+    for handler in handlers:
+        handler.setFormatter(formatter)
+    for logger in loggers:
+        for handler in handlers:
+            logger.addHandler(handler)
+        logger.info('OpenCobolIDE %s' % __version__)
+
+
+def close():
+    logging.getLogger(oci.__name__).handlers[:] = [logging.StreamHandler()]
+    logging.getLogger('pyqode').handlers[:] = [logging.StreamHandler()]

@@ -1,7 +1,7 @@
 """
 Tests the pic fields parser
 """
-from oci.pic_parser import get_field_infos
+from oci.backend.pic_parser import get_field_infos
 
 source = """       01 INPUT-DATA.
            05 U1-DINRAR PIC X(06)        .

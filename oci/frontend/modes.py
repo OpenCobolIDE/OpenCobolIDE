@@ -18,17 +18,17 @@ Contains cobol specific modes
 """
 import logging
 import os
-from oci.parser import cmp_doc_node, parse_ast, detect_file_type
 
-os.environ["QT_API"] = "PyQt"
-import pyqode.core
-from PyQt4.QtCore import Qt, QFileInfo, QObject, pyqtSignal, QTimer, pyqtSlot
-from PyQt4.QtGui import QTextCursor, QAction, QInputDialog, QIcon
-import sys
-from pyqode.core import Mode, RightMarginMode
-from pyqode.core import CheckerMode, CHECK_TRIGGER_TXT_SAVED
-from oci import compiler, constants
-from oci.pic_parser import get_field_infos
+from pyqode.core import frontend
+from pyqode.qt.QtCore import Qt, QObject, Signal, QTimer, Slot
+from pyqode.qt.QtWidgets import QAction
+from pyqode.qt.QtGui import QTextCursor, QIcon
+from pyqode.core.frontend import Mode
+from pyqode.core.frontend.modes import CheckerMode, RightMarginMode
+
+from oci.backend import workers
+from oci.backend.parser import cmp_doc_node, parse_ast
+from oci.backend.pic_parser import get_field_infos
 
 
 class ToUpperMode(Mode):
@@ -38,14 +38,14 @@ class ToUpperMode(Mode):
     IDENTIFIER = "toUpperMode"
     DESCRIPTION = "Automatically transform alpha char to upper case"
 
-    def _onStateChanged(self, state):
+    def _on_state_changed(self, state):
         """
         Called when the mode is activated/deactivated
         """
         if state:
-            self.editor.keyPressed.connect(self.__onKeyPressed)
+            self.editor.key_pressed.connect(self.__onKeyPressed)
         else:
-            self.editor.keyPressed.disconnect(self.__onKeyPressed)
+            self.editor.key_pressed.disconnect(self.__onKeyPressed)
 
     def __onKeyPressed(self, ev):
         """
@@ -75,7 +75,7 @@ class CommentsMode(Mode):
     IDENTIFIER = "commentsMode"
     DESCRIPTION = "Comments/uncomments a set of lines (Ctrl+/)"
 
-    def _onStateChanged(self, state):
+    def _on_state_changed(self, state):
         """
         Called when the mode is activated/deactivated
         """
@@ -83,11 +83,11 @@ class CommentsMode(Mode):
             self.action = QAction("Comment/Uncomment", self.editor)
             self.action.setShortcut("Ctrl+/")
             self.action.triggered.connect(self.comment)
-            self.separator = self.editor.addSeparator()
-            self.editor.addAction(self.action)
+            self.separator = self.editor.add_separator()
+            self.editor.add_action(self.action)
         else:
-            self.editor.removeAction(self.action)
-            self.editor.removeAction(self.separator)
+            self.editor.remove_action(self.action)
+            self.editor.remove_action(self.separator)
 
     def comment(self):
         cursor = self.editor.textCursor()
@@ -165,36 +165,9 @@ class LeftMarginMode(RightMarginMode):
     """
     IDENTIFIER = "leftMarginMode"
 
-    def _onInstall(self, editor):
-        RightMarginMode._onInstall(self, editor)
-        # adapt the right margin automatically
-        self.editor.settings.setValue("rightMarginPos", 72)
-        self.marginPos = int(self.editor.settings.addProperty(
-            "leftMarginPos", "7"))
-
-    def _onSettingsChanged(self, section, key):
-        #RightMarginMode._onSettingsChanged(self, section, key)
-        if key == "leftMarginPos" or not key:
-            self.marginPos = self.editor.settings.value("leftMarginPos")
-
-
-def checkFile(queue, code, filePath, fileEncoding):
-    tmp = os.path.join(constants.getAppTempDirectory(),
-                       QFileInfo(filePath).fileName())
-    if os.path.isdir(tmp):
-        return
-    with open(tmp, 'wb') as f:
-        if sys.version_info[0] == 3:
-            code = bytes(code, fileEncoding)
-        else:
-            code = code.encode(fileEncoding)
-        f.write(code)
-
-    fileType = detect_file_type(tmp, fileEncoding)
-    output = os.path.join(constants.getAppTempDirectory(),
-                          QFileInfo(tmp).baseName() + fileType[2])
-    status, messages = compiler.compile(tmp, fileType, outputFilename=output)
-    queue.put(messages)
+    def __init__(self):
+        super().__init__()
+        self.marginPos = 72
 
 
 class CobolCheckerMode(CheckerMode):
@@ -203,10 +176,10 @@ class CobolCheckerMode(CheckerMode):
                   "temp file"
 
     def __init__(self):
-        CheckerMode.__init__(self, checkFile)
+        CheckerMode.__init__(self, workers.checkFile)
 
 
-class DocumentAnalyserMode(Mode, QObject):
+class DocumentAnalyserMode(QObject, Mode):
     """
     Your mode documentation goes here
     """
@@ -214,7 +187,7 @@ class DocumentAnalyserMode(Mode, QObject):
     DESCRIPTION = "Analyse document when file content is saved/open"
 
     #: Signal emitted when the document layout changed
-    documentLayoutChanged = pyqtSignal(object)
+    documentLayoutChanged = Signal(object)
 
     @property
     def root_node(self):
@@ -244,16 +217,16 @@ class DocumentAnalyserMode(Mode, QObject):
         self.__vars = []
         self.__paragraphs = []
 
-    def _onStateChanged(self, state):
+    def _on_state_changed(self, state):
         """
         Called when the mode is activated/deactivated
         """
         if state:
-            self.editor.newTextSet.connect(self.parse)
-            self.editor.textSaved.connect(self.parse)
+            self.editor.new_text_set.connect(self.parse)
+            self.editor.text_saved.connect(self.parse)
         else:
-            self.editor.newTextSet.disconnect(self.parse)
-            self.editor.textSaved.disconnect(self.parse)
+            self.editor.new_text_set.disconnect(self.parse)
+            self.editor.text_saved.disconnect(self.parse)
 
     def parse(self):
         """ Parse the document layout.
@@ -264,14 +237,14 @@ class DocumentAnalyserMode(Mode, QObject):
             - paragraphs
         """
         # preview in preferences dialog have no file path
-        if not self.editor.filePath:
+        if not self.editor.file_path:
             return
         root_node = None
         variables = []
         paragraphs = []
         try:
             root_node, variables, paragraphs = parse_ast(
-                self.editor.filePath, encoding=self.editor.fileEncoding)
+                self.editor.file_path, encoding=self.editor.file_encoding)
         except (TypeError, IOError):
             # file does not exists
             pass
@@ -335,32 +308,16 @@ class GoToDefinitionMode(Mode, QObject):
     def _onInstall(self, editor):
         Mode._onInstall(self, editor)
 
-    def _onStateChanged(self, state):
+    def _on_state_changed(self, state):
         if state:
             assert hasattr(self.editor, "wordClickMode")
-            self.editor.wordClickMode.wordClicked.connect(self.requestGoTo)
-            self.sep = self.editor.addSeparator()
-            self.editor.addAction(self.aGotToDef)
-            if hasattr(self.editor, "codeCompletionMode"):
-                self.editor.codeCompletionMode.preLoadStarted.connect(
-                    self._onPreloadStarted)
-                self.editor.codeCompletionMode.preLoadCompleted.connect(
-                    self._onPreloadCompleted)
+            self.editor.wordClickMode.word_clicked.connect(self.requestGoTo)
+            self.sep = self.editor.add_separator()
+            self.editor.add_action(self.aGotToDef)
         else:
-            self.editor.wordClickMode.wordClicked.disconnect(self.requestGoTo)
-            self.editor.removeAction(self.aGotToDef)
-            self.editor.removeAction(self.sep)
-            if hasattr(self.editor, "codeCompletionMode"):
-                self.editor.codeCompletionMode.preLoadStarted.disconnect(
-                    self._onPreloadStarted)
-                self.editor.codeCompletionMode.preLoadCompleted.disconnect(
-                    self._onPreloadCompleted)
-
-    def _onPreloadStarted(self):
-        self.aGotToDef.setDisabled(True)
-
-    def _onPreloadCompleted(self):
-        self.aGotToDef.setEnabled(True)
+            self.editor.wordClickMode.word_clicked.disconnect(self.requestGoTo)
+            self.editor.remove_action(self.aGotToDef)
+            self.editor.remove_action(self.sep)
 
     def requestGoTo(self, tc=None):
         """
@@ -372,7 +329,7 @@ class GoToDefinitionMode(Mode, QObject):
         :type tc: QtGui.QTextCursor
         """
         if not tc:
-            tc = self.editor.selectWordUnderCursor()
+            tc = frontend.word_under_cursor(self.editor)
         symbol = tc.selectedText()
         analyser = getattr(self.editor, "analyserMode")
         if analyser:
@@ -384,7 +341,8 @@ class GoToDefinitionMode(Mode, QObject):
     def _goToDefinition(self):
         line = self._definition.line
         col = self._definition.column
-        self.editor.gotoLine(line, move=True, column=col)
+        frontend.goto_line(self.editor,
+                           line, move=True, column=col)
 
     def _makeUnique(self, seq):
         """
@@ -403,45 +361,45 @@ class GoToDefinitionMode(Mode, QObject):
         return checked
 
 
-class CobolFolder(pyqode.core.IndentBasedFoldDetector):
-    def getFoldIndent(self, highlighter, block, text):
-        text = text.upper()
-        indent = int((len(text) - len(text.lstrip())))
-        prev = block.previous()
-        while prev.isValid() and not len(prev.text().strip()):
-            prev = prev.previous()
-        pusd = block.previous().userData()
-        pb = prev
-        if len(text.strip()) == 0:
-            while not len(pb.text().strip()) and pb.isValid():
-                pb = pb.previous()
-            pbIndent = (len(pb.text()) - len(pb.text().lstrip()))
-            # check next blocks to see if their indent is >= then the last block
-            nb = block.next()
-            while not len(nb.text().strip()) and nb.isValid():
-                nb = nb.next()
-            nbIndent = (len(nb.text()) - len(nb.text().lstrip()))
-            # print(pb.userState())
-            if nbIndent >= pbIndent or pb.userState() & 0x7F:
-                if pb.userData():
-                    return pb.userData().foldIndent
-            return -1
-        if indent == 6:
-            if pusd:
-                return pusd.foldIndent
-            return 0
-        if indent == 7:
-            if "DIVISION" in text:
-                return 0
-            if "SECTION" in text:
-                return 2
-            if "END" in text or  "STOP" in text:
-                return pusd.foldIndent
-            return 3
-        return indent
+# class CobolFolder(pyqode.core.IndentBasedFoldDetector):
+#     def getFoldIndent(self, highlighter, block, text):
+#         text = text.upper()
+#         indent = int((len(text) - len(text.lstrip())))
+#         prev = block.previous()
+#         while prev.isValid() and not len(prev.text().strip()):
+#             prev = prev.previous()
+#         pusd = block.previous().userData()
+#         pb = prev
+#         if len(text.strip()) == 0:
+#             while not len(pb.text().strip()) and pb.isValid():
+#                 pb = pb.previous()
+#             pbIndent = (len(pb.text()) - len(pb.text().lstrip()))
+#             # check next blocks to see if their indent is >= then the last block
+#             nb = block.next()
+#             while not len(nb.text().strip()) and nb.isValid():
+#                 nb = nb.next()
+#             nbIndent = (len(nb.text()) - len(nb.text().lstrip()))
+#             # print(pb.userState())
+#             if nbIndent >= pbIndent or pb.userState() & 0x7F:
+#                 if pb.userData():
+#                     return pb.userData().foldIndent
+#             return -1
+#         if indent == 6:
+#             if pusd:
+#                 return pusd.foldIndent
+#             return 0
+#         if indent == 7:
+#             if "DIVISION" in text:
+#                 return 0
+#             if "SECTION" in text:
+#                 return 2
+#             if "END" in text or  "STOP" in text:
+#                 return pusd.foldIndent
+#             return 3
+#         return indent
 
 
-class OffsetCalculatorMode(pyqode.core.Mode, QObject):
+class OffsetCalculatorMode(QObject, Mode):
     """
     This modes computes the selected PIC fields offsets.
 
@@ -449,24 +407,25 @@ class OffsetCalculatorMode(pyqode.core.Mode, QObject):
     emits the signal |picInfosAvailable| when the the user triggered the action
     and the pic infos have been computed.
     """
-    picInfosAvailable = pyqtSignal(list)
+    picInfosAvailable = Signal(list)
 
     def __init__(self):
-        QObject.__init__(self)
-        pyqode.core.Mode.__init__(self)
+        if '4' in os.environ['QT_API']:
+            Mode.__init__(self)
+        super().__init__()
 
-    def _onInstall(self, editor):
-        pyqode.core.Mode._onInstall(self, editor)
+    def _on_install(self, editor):
+        super()._on_install(editor)
         self.action = QAction(editor)
         self.action.setText("Calculate PIC offsets")
         self.action.setIcon(QIcon.fromTheme(
             "accessories-calculator",
             QIcon(":/ide-icons/rc/accessories-calculator.png")))
-        editor.addSeparator()
-        editor.addAction(self.action)
+        editor.add_separator()
+        editor.add_action(self.action)
         self.action.triggered.connect(self._computeOffsets)
 
-    @pyqtSlot()
+    @Slot()
     def _computeOffsets(self):
         original_tc = self.editor.textCursor()
         tc = self.editor.textCursor()
@@ -477,8 +436,8 @@ class OffsetCalculatorMode(pyqode.core.Mode, QObject):
         start_line = tc.blockNumber() + 1
         tc.setPosition(end)
         end_line = tc.blockNumber() + 1
-
-        self.editor.selectFullLines(start_line, end_line, True)
-        source = self.editor.selectedText()
+        frontend.select_lines(self.editor, start=start_line, end=end_line,
+                              apply_selection=True)
+        source = frontend.selected_text(self.editor)
         self.picInfosAvailable.emit(get_field_infos(source))
         self.editor.setTextCursor(original_tc)

@@ -9,7 +9,7 @@ Requirements:
 OpenCobolIDE depends on the following packages
 
     - Python 3
-    - PyQt4
+    - pyqode.qt
     - OpenCobol
     - pyqode.core
     - pyqode.widgets
@@ -31,7 +31,7 @@ install OpenCobolIDE::
 
 Otherwise you will have to install from source:
 
-1) Install OpenCobol and PyQt4
+1) Install OpenCobol and pyqode.qt
 
 .. code-block:: bash
 

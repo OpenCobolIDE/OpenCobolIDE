@@ -17,22 +17,21 @@
 """
 This module contains the application main function.
 """
-import os
+import logging
+logging.basicConfig(level=logging.INFO)
 import sys
-# setup environement to force pyqode to use PyQt4
-os.environ['QT_API'] = 'PyQt'
-from PyQt4 import QtGui
-from oci.main_window import MainWindow
-from oci.settings import Settings
-
+from pyqode.qt import QtWidgets
+from oci.utils import windows_init
+from oci.frontend.main_window import MainWindow
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)
-    # open main window
+    app = QtWidgets.QApplication(sys.argv)
+    if sys.platform == "win32":
+        windows_init()
     win = MainWindow()
     app.exec_()
-    
-    
+
+
 if __name__ == "__main__":
     main()

@@ -19,8 +19,8 @@ Gives an easy and safe access to the app settings
 import os
 import sys
 import pyqode.core
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import QSettings
+from pyqode.qt import QtCore, QtGui
+from pyqode.qt.QtCore import QSettings
 
 
 DEFAULT_EDITOR_SETTINGS = """{

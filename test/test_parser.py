@@ -1,7 +1,7 @@
 """
 This module tests the parser module
 """
-from oci import parser
+from oci.backend import parser
 
 
 def test_parse_dependencies():
@@ -57,7 +57,7 @@ def test_free_parser():
     free_ast, free_vars, free_procs = parser.parse_ast("test/testfiles/HelloWorldFree.cbl",
                                                        free=True)
     result = parser.cmp_doc_node(non_free_ast, free_ast)
-    assert result == 0  # 0 means same statement.
+    assert result
 
 
 def test_variables():

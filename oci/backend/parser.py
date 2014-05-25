@@ -47,19 +47,14 @@ class Statement(object):
             description = name
         self.description = description.replace(".", "")
         self.children = []
-        #self.setText(0, name)
-        #if createIcon:
-        #    self.setIcon(0, QIcon(self.ICONS[node_type]))
-        #self.setToolTip(0, self.description)
 
     def add_child(self, child):
         """
-        Add a child to the node (call QTreeWidgetItem::addChilld automatically)
+        Add a child to the node
 
         :param child: The child node to add
         """
         self.children.append(child)
-        #self.addChild(child)
 
     def print_tree(self, indent=0):
         """
@@ -102,19 +97,20 @@ def cmp_doc_node(first_node, second_node):
 
     :return: 0 if same statement, 1 if statements are differents.
     """
-    ret_val = 0
     if len(first_node.children) == len(second_node.children):
         for first_child, second_child in zip(first_node.children,
                                              second_node.children):
-            if first_child.name != second_child.name:
-                ret_val = 1
-            else:
-                ret_val = cmp_doc_node(first_child, second_child)
+            for key in first_child.__dict__.keys():
+                if key.startswith('_'):
+                    continue
+                if first_child.__dict__[key] != second_child.__dict__[key]:
+                    return 1
+            ret_val = cmp_doc_node(first_child, second_child)
             if ret_val != 0:
-                break
+                return 1
     else:
-        ret_val = 1
-    return ret_val
+        return 1
+    return 0
 
 
 def parse_division(l, c, line, root_node, last_section_node):

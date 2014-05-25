@@ -19,46 +19,44 @@ Contains the main window implementation
 import logging
 import os
 import sys
-from PyQt4.QtGui import QMessageBox
-
-import qdarkstyle
-
-import pyqode.core
-import pyqode.widgets
-
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import QToolButton, QActionGroup, QListWidgetItem, QTreeWidgetItem, QInputDialog
 import subprocess
 
-from oci import __version__, constants, compiler, utils, logger
+import qdarkstyle
+from pyqode.core import frontend, style
+from pyqode.core.frontend import modes, widgets
+from pyqode.core.frontend import utils as pyqode_utils
+from pyqode.qt import QtCore, QtGui, QtWidgets
+from pyqode.qt.QtWidgets import QTreeWidgetItem
+from pyqode.qt.QtWidgets import QMessageBox
+
 import oci
-from oci.dialogs import DlgNewFile, DlgAbout, DlgPreferences
-from oci.editor import QCobolCodeEdit
-from oci import settings
-from oci.parser import parse_dependencies
-from oci.pic_parser import PicFieldInfo
+from oci import __version__, constants, logger, utils, settings
 from oci.settings import Settings
-from oci.ui import ide_ui
+from oci.backend import compiler
+from oci.backend.parser import parse_dependencies
+from oci.backend.pic_parser import PicFieldInfo
+from oci.frontend.dialogs import DlgNewFile, DlgAbout
+from oci.frontend.editors import CobolCodeEdit, GenericCodeEdit
+from oci.frontend.ui import ide_ui
 
 
 def _logger():
     return logging.getLogger(__name__)
 
 
-class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
+class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
 
-    compilerMsgReady = QtCore.pyqtSignal(pyqode.core.CheckerMessage)
-    compilationFinished = QtCore.pyqtSignal(bool)
+    compilerMsgReady = QtCore.Signal(modes.CheckerMessage)
+    compilationFinished = QtCore.Signal(bool)
 
     def __init__(self):
-        QtGui.QMainWindow.__init__(self)
-        ide_ui.Ui_MainWindow.__init__(self)
+        super().__init__()
         self.setupUi(self)
         logger.setup(self.textEditLogs)
         if Settings().fullscreen:
             self.showFullScreen()
         else:
-            self.showCentered()
+            self.show()
         compiler.init_env()
         if not compiler.check_env():
             if sys.platform == 'win32':
@@ -69,14 +67,12 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                 msg = 'You have to install the package open-cobol to use the ' \
                       'IDE.'
             QMessageBox.warning(self, 'Compiler configuration error',
-                                'Failed to find the OpenCobol compiler.\n%s' % msg)
+                                'Failed to find the OpenCobol compiler.\n%s' %
+                                msg)
 
     def setupUi(self, MainWindow):
         super().setupUi(MainWindow)
         s = Settings()
-
-        print(s.appLogVisible)
-
         # application log
         if not s.appLogVisible:
             self.tabWidgetLogs.removeTab(2)
@@ -85,13 +81,17 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.actionDebug_level.setChecked(s.debugLog)
         self.actionShowAppLog.setChecked(s.appLogVisible)
 
+        # recent files menu + manager
+        self.setup_recent_files_menu()
+
         # status bar
-        self.lblFilename = QtGui.QLabel()
-        self.lblEncoding = QtGui.QLabel()
-        self.lblCursorPos = QtGui.QLabel()
+        self.lblFilename = QtWidgets.QLabel()
+        self.lblEncoding = QtWidgets.QLabel()
+        self.lblCursorPos = QtWidgets.QLabel()
         self.statusbar.addPermanentWidget(self.lblFilename, 200)
         self.statusbar.addPermanentWidget(self.lblEncoding, 20)
         self.statusbar.addPermanentWidget(self.lblCursorPos, 20)
+
 
         self.initDefaultSettings()
         self.stackedWidget.setCurrentIndex(0)
@@ -106,39 +106,29 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.prevSize = s.size
         self.actionFullscreen.setChecked(s.fullscreen)
 
-        self.consoleOutput.backgroundColor = s.consoleBackground
-        self.consoleOutput.processOutputColor = s.consoleForeground
-        self.consoleOutput.usrInputColor = s.consoleUserInput
-        self.consoleOutput.appMessageColor = s.consoleAppOutput
-
-        self.setHomePageColorScheme(s.homePageColorScheme)
+        self.consoleOutput.background_color = s.consoleBackground
+        self.consoleOutput.stdout_color = s.consoleForeground
+        self.consoleOutput.stderr_color = s.consoleForeground
+        self.consoleOutput.stdin_color = s.consoleUserInput
+        self.consoleOutput.app_msg_color = s.consoleAppOutput
 
         if s.appStyle == constants.DARK_STYLE:
-            QtGui.QApplication.instance().setStyleSheet(
+            QtWidgets.QApplication.instance().setStyleSheet(
                 qdarkstyle.load_stylesheet(pyside=False))
 
         self.setupIcons()
-        self.QHomeWidget.setupRecentFiles(
-            organization="OpenCobolIDE",
-            app="OpenCobolIDE",
-            menuRecentFiles=self.menuRecent_files,
-            actionClearMnuRecentFiles=self.actionClear)
-        self.QHomeWidget.fileOpenRequested.connect(self.openFile)
-        self.setupQuickStartActions()
         self.showHomePage(True)
-        self.tabWidgetEditors.lastTabClosed.connect(self.showHomePage)
-        self.tabWidgetEditors.dirtyChanged.connect(
-            self.actionSave.setEnabled)
+        self.tabWidgetEditors.last_tab_closed.connect(self.showHomePage)
         self.tabWidgetEditors.currentChanged.connect(
             self.onCurrentEditorChanged)
-        self.tabWidgetEditors.dirtyChanged.emit(False)
+        self.tabWidgetEditors.dirty_changed.emit(False)
         self.setupToolbar()
-        self.errorsTable.messageActivated.connect(
+        self.errorsTable.msg_activated.connect(
             self.onCompilerMessageActivated)
-        self.jobRunner = pyqode.core.JobRunner(self, nbThreadsMax=1)
+        self.jobRunner = pyqode_utils.DelayJobRunner(delay=0)
         self.compilerMsgReady.connect(self.addCompilerMsg)
         self.compilationFinished.connect(self.onCompilationFinished)
-        self.consoleOutput.processFinished.connect(self.onProgramFinished)
+        self.consoleOutput.process_finished.connect(self.onProgramFinished)
 
         # View actions
         # toolbars
@@ -160,12 +150,24 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.aShowLogsWin.toggled.connect(
             self.dockWidgetLogs.setVisible)
 
+    def setup_recent_files_menu(self):
+        """ Setup the recent files menu and manager """
+        self.recent_files_manager = widgets.RecentFilesManager(
+            'OpenCobolIDE', 'OpenCobolIDE')
+        self.menu_recents = widgets.MenuRecentFiles(
+            self.menuFile, title='Recents',
+            recent_files_manager=self.recent_files_manager)
+        self.menu_recents.open_requested.connect(self.openFile)
+        self.menu_recents.clear_requested.connect(self.listWidgetRecents.clear)
+        self.menu_recents.clear()
+        self.menuFile.insertMenu(self.actionQuit, self.menu_recents)
+        self.menuFile.insertSeparator(self.actionQuit)
+        self.updateRecents()
+
     @staticmethod
     def initDefaultSettings():
-        e = QCobolCodeEdit()
-        settings.DEFAULT_EDITOR_STYLE = e.style.dump()
-        settings.DEFAULT_EDITOR_SETTINGS = e.settings.dump()
-        del e
+        settings.DEFAULT_EDITOR_STYLE = style.__dict__
+        settings.DEFAULT_EDITOR_SETTINGS = settings.__dict__
 
     def updateViewToolbarMenu(self):
         """
@@ -186,8 +188,7 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             self.dockWidgetNavPanel.isVisible())
 
     def addCompilerMsg(self, message):
-        _logger().debug('adding compiler message %r' % message)
-        self.errorsTable.addMessage(message)
+        self.errorsTable.add_message(message)
 
     def onCompilationFinished(self, status):
         _logger().info('compilation finished')
@@ -217,32 +218,36 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         Setup the toolbar (adds a drop-down button for program types)
         """
         # create program type group
-        ag = QActionGroup(self)
+        ag = QtWidgets.QActionGroup(self)
         ag.addAction(self.actionProgram)
         ag.addAction(self.actionSubprogram)
         ag.triggered.connect(self.on_programType_triggered)
-        self.programActionGroup = ag
-        self.tb = QToolButton()
-        self.tb.setToolTip("Select the compiler program type to make")
-        self.tb.setMenu(self.menuProgramType)
-        self.tb.setPopupMode(QToolButton.InstantPopup)
-        self.tb.setText("Executable")
-        self.toolBarCode.insertWidget(self.actionCompile, self.tb)
-        self.toolBarCode.insertSeparator(self.actionCompile)
+        # self.programActionGroup = ag
+        # tb = QToolButton()
+        # tb.setToolTip("Select the compiler program type to make")
+        # tb.setMenu(self.menuProgramType)
+        # tb.setPopupMode(QToolButton.InstantPopup)
+        # tb.setText("Executable")
+        # self.toolBarCode.insertWidget(self.actionCompile, tb)
+        # self.toolBarCode.insertSeparator(self.actionCompile)
+        pass
 
     def on_programType_triggered(self, action):
-        self.tb.setText(action.text())
+        # self.tb.setText(action.text())
         editor = self.tabWidgetEditors.currentWidget()
         if action.text() == "Executable":
             editor.programType = constants.ProgramType.Executable
         else:
             editor.programType = constants.ProgramType.Module
 
-    def setHomePageColorScheme(self, schemeNbr):
-        schemes = [pyqode.widgets.ColorScheme, constants.DarkColorScheme]
-        self.QHomeWidget.setColorScheme(schemes[schemeNbr]())
+    def on_listWidgetRecents_itemClicked(self):
+        self.openFile(self.listWidgetRecents.currentItem().data(32))
 
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
+    def on_btNewFile_clicked(self):
+        self.on_actionNew_triggered()
+
+    @QtCore.Slot()
     def on_actionNew_triggered(self):
         _logger().debug('action new triggered')
         dlg = DlgNewFile(self)
@@ -255,53 +260,72 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                 f.write(content)
             self.openFile(pth)
 
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
+    def on_btOpenFile_clicked(self):
+        self.on_actionOpen_triggered()
+
+    @QtCore.Slot()
     def on_actionOpen_triggered(self):
         _logger().debug('action open triggered')
         filter = "%s%s%s" % (constants.COBOL_FILES_FILTER,
                             constants.FILTER_SEPARATOR,
                             constants.OTHER_FILES_FILTER)
-        self.openFile(QtGui.QFileDialog.getOpenFileName(
-            self, "Open a file", Settings().lastFilePath, filter))
+        self.openFile(QtWidgets.QFileDialog.getOpenFileName(
+            self, "Open a file", Settings().lastFilePath, filter)[0])
 
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
     def on_actionSave_triggered(self):
-        _logger().debug('action save triggered')
-        self.tabWidgetEditors.saveCurrent()
+        self.tabWidgetEditors.save_current()
 
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
     def on_actionSaveAs_triggered(self):
         _logger().debug('action save as triggered')
         filter = "%s%s%s" % (constants.COBOL_FILES_FILTER,
                             constants.FILTER_SEPARATOR,
                             constants.OTHER_FILES_FILTER)
-        fn, filter = QtGui.QFileDialog.getSaveFileNameAndFilter(
+        fn, filter = QtWidgets.QFileDialog.getSaveFileName(
             self, "Save file as...", Settings().lastFilePath, filter)
         if os.path.splitext(fn)[1] == "":
             if filter == constants.COBOL_FILES_FILTER:
                 fn += ".cob"
         if fn:
             _logger().debug('new path = %s' % fn)
-            self.tabWidgetEditors.currentEditor.dirty = True
-            self.tabWidgetEditors.saveCurrent(filePath=fn)
-            self.QHomeWidget.setCurrentFile(fn)
+            self.tabWidgetEditors.currentWidget().dirty = True
+            self.tabWidgetEditors.save_current(path=fn)
+            self.recent_files_manager.open_file(fn)
+            self.menu_recents.update_actions()
+            self.updateRecents()
 
-    @QtCore.pyqtSlot()
+    def updateRecents(self):
+        self.listWidgetRecents.clear()
+        for file in self.recent_files_manager.get_recent_files():
+            item = QtWidgets.QListWidgetItem()
+            if ('.' + QtCore.QFileInfo(file).suffix().upper() in
+                constants.COBOL_EXTENSIONS):
+                icon = QtGui.QIcon(":/ide-icons/rc/silex-32x32.png")
+            else:
+                icon = QtGui.QIcon(":/ide-icons/rc/text-x-generic.png")
+            item.setText(QtCore.QFileInfo(file).fileName())
+            item.setToolTip(file)
+            item.setIcon(icon)
+            item.setData(32, file)
+            self.listWidgetRecents.addItem(item)
+
+    @QtCore.Slot()
     def on_actionQuit_triggered(self):
-        if QtGui.QMessageBox.question(
+        if QtWidgets.QMessageBox.question(
                 self, "Quit OpenCobolIDE?",
                 "Are you sure you want to quit OpenCobolIDE?",
-                QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
-                QtGui.QMessageBox.No) == QtGui.QMessageBox.Yes:
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.Yes:
             self.saveSettings()
-            QtGui.QApplication.instance().aboutToQuit.emit()
+            QtWidgets.QApplication.instance().aboutToQuit.emit()
             sys.exit(0)
 
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
     def on_actionCompile_triggered(self):
         _logger().debug('compile action triggered')
-        self.tabWidgetEditors.saveAll()
-        _logger().debug('opened editors saved')
+        self.tabWidgetEditors.save_all()
         self.errorsTable.clear()
         _logger().debug('error table cleared')
         self.errorsTable.setSortingEnabled(False)
@@ -310,20 +334,19 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.dockWidgetLogs.show()
         self.tabWidgetLogs.setCurrentIndex(0)
         editor = self.tabWidgetEditors.currentWidget()
-        _logger().info('compiling file: %s' % editor.filePath)
-        self.jobRunner.startJob(self.compileCurrent, False,
-                                editor.filePath, editor.fileEncoding,
-                                editor.programType)
+        _logger().info('compiling file: %s' % editor.file_path)
+        self.jobRunner.request_job(self.compileCurrent,
+                                   editor.file_path, editor.file_encoding,
+                                   editor.programType)
 
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
     def on_actionAbout_triggered(self):
         dlg = DlgAbout(self)
         dlg.exec_()
 
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
     def on_actionRun_triggered(self):
-        _logger().debug('action run triggered')
-        source_fn = self.tabWidgetEditors.currentWidget().filePath
+        source_fn = self.tabWidgetEditors.currentWidget().file_path
         source_fn = os.path.join(os.path.dirname(source_fn), "bin",
                                  os.path.basename(source_fn))
         target = compiler.makeOutputFilePath(
@@ -335,50 +358,49 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
             self.dockWidgetLogs.show()
             self.consoleOutput.setFocus(True)
             self.actionRun.setEnabled(False)
-            self.consoleOutput.runProcess(target, cwd=wd)
+            self.consoleOutput.start_process(target, cwd=wd)
         else:
             _logger().info('running %s in external terminal' % target)
             if sys.platform == "win32":
                 subprocess.Popen(
-                    target, cwd=wd, creationflags=subprocess.CREATE_NEW_CONSOLE)
+                    target, cwd=wd,
+                    creationflags=subprocess.CREATE_NEW_CONSOLE)
             else:
                 subprocess.Popen(Settings().shellCommand.split(' ') + [target],
                                  cwd=wd)
 
-    @QtCore.pyqtSlot()
-    def on_actionPreferences_triggered(self):
-        s = Settings()
-        dlg = DlgPreferences(self)
-        dlg.homePageColorScheme = s.homePageColorScheme
-        dlg.editorSettings = s.editorSettings
-        dlg.editorStyle = s.editorStyle
-        dlg.consoleBackground = s.consoleBackground
-        dlg.consoleUserInput = s.consoleUserInput
-        dlg.consoleForeground = s.consoleForeground
-        dlg.consoleAppOutput = s.consoleAppOutput
-        dlg.console.runProcess("python")
-        if dlg.exec_() == dlg.Accepted:
-            _logger().debug('updating settings')
-            s.editorSettings = dlg.editorSettings
-            _logger().debug('updating style')
-            s.editorStyle = dlg.editorStyle
-            s.consoleBackground = dlg.consoleBackground
-            s.consoleForeground = dlg.consoleForeground
-            s.consoleUserInput = dlg.consoleUserInput
-            s.consoleAppOutput = dlg.consoleAppOutput
-            s.homePageColorScheme = dlg.homePageColorScheme
-            s.runInExternalTerminal = dlg.checkBoxExtTerm.isChecked()
-            self.setHomePageColorScheme(s.homePageColorScheme)
-            self.tabWidgetEditors.resetSettings(dlg.editorSettings)
-            self.tabWidgetEditors.resetStyle(dlg.editorStyle)
-            self.tabWidgetEditors.refreshIcons(useTheme=dlg.rbLightStyle.isChecked())
-            self.consoleOutput.backgroundColor = dlg.consoleBackground
-            self.consoleOutput.processOutputColor = dlg.consoleForeground
-            self.consoleOutput.usrInputColor = dlg.consoleUserInput
-            self.consoleOutput.appMessageColor = dlg.consoleAppOutput
-            self.setupIcons()
+    # @QtCore.Slot()
+    # def on_actionPreferences_triggered(self):
+    #     s = Settings()
+    #     dlg = DlgPreferences(self)
+    #     dlg.homePageColorScheme = s.homePageColorScheme
+    #     dlg.editorSettings = s.editorSettings
+    #     dlg.editorStyle = s.editorStyle
+    #     dlg.consoleBackground = s.consoleBackground
+    #     dlg.consoleUserInput = s.consoleUserInput
+    #     dlg.consoleForeground = s.consoleForeground
+    #     dlg.consoleAppOutput = s.consoleAppOutput
+    #     dlg.console.runProcess("python")
+    #     if dlg.exec_() == dlg.Accepted:
+    #         s.editorSettings = dlg.editorSettings
+    #         s.editorStyle = dlg.editorStyle
+    #         s.consoleBackground = dlg.consoleBackground
+    #         s.consoleForeground = dlg.consoleForeground
+    #         s.consoleUserInput = dlg.consoleUserInput
+    #         s.consoleAppOutput = dlg.consoleAppOutput
+    #         s.homePageColorScheme = dlg.homePageColorScheme
+    #         s.runInExternalTerminal = dlg.checkBoxExtTerm.isChecked()
+    #         self.setHomePageColorScheme(s.homePageColorScheme)
+    #         self.tabWidgetEditors.resetSettings(dlg.editorSettings)
+    #         self.tabWidgetEditors.resetStyle(dlg.editorStyle)
+    #         self.tabWidgetEditors.refreshIcons(useTheme=dlg.rbLightStyle.isChecked())
+    #         self.consoleOutput.backgroundColor = dlg.consoleBackground
+    #         self.consoleOutput.processOutputColor = dlg.consoleForeground
+    #         self.consoleOutput.usrInputColor = dlg.consoleUserInput
+    #         self.consoleOutput.appMessageColor = dlg.consoleAppOutput
+    #         self.setupIcons()
 
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
     def on_actionHelp_triggered(self):
         QtGui.QDesktopServices.openUrl(
             QtCore.QUrl("http://opencobolide.readthedocs.org/en/latest/"))
@@ -407,41 +429,34 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         _logger().info('program finished')
         self.actionRun.setEnabled(True)
 
-    def compileCurrent(self, filePath, fileEncoding, programType):
+    def compileCurrent(self, file_path, file_encoding, programType):
         """
         Compiles the current file and its dependencies (executed in a background
         thread
         """
-        dependencies = parse_dependencies(filePath, fileEncoding)
+        dependencies = parse_dependencies(file_path, file_encoding)
         globalStatus = True
         for path, pgmType in dependencies:
             status, messags = compiler.compile(path, pgmType)
             globalStatus &= status
             for msg in messags:
                 self.compilerMsgReady.emit(msg)
-            if status == 0:
-                msg = pyqode.core.CheckerMessage(
-                        "Compilation succeeded", pyqode.core.MSG_STATUS_INFO, -1,
-                        icon=":/ide-icons/rc/accept.png", filename=path)
-                msg.filename =path
-            else:
-                msg = pyqode.core.CheckerMessage(
-                    "Compilation failed", pyqode.core.MSG_STATUS_ERROR, -1, filename=path)
-            msg.filename = path
-            self.compilerMsgReady.emit(msg)
-        status, messages = compiler.compile(filePath, programType)
+        status, messages = compiler.compile(file_path, programType)
+        messages = [modes.CheckerMessage(*msg) for msg in messages]
         for msg in messages:
             self.compilerMsgReady.emit(msg)
         if status == 0:
-            msg = pyqode.core.CheckerMessage(
-                "Compilation succeeded", pyqode.core.MSG_STATUS_INFO, -1,
-                icon=":/ide-icons/rc/accept.png", filename=filePath)
+            msg = modes.CheckerMessage("Compilation succeeded",
+                                       modes.CheckerMessages.INFO, 1,
+                                       icon=":/ide-icons/rc/accept.png",
+                                       path=file_path)
+            msg.filename = file_path
+            self.compilerMsgReady.emit(msg)
         else:
-            msg = pyqode.core.CheckerMessage(
-                "Compilation failed", pyqode.core.MSG_STATUS_ERROR, -1,
-                filename=filePath)
-        msg.filename = filePath
-        self.compilerMsgReady.emit(msg)
+            msg = modes.CheckerMessage(
+                "Compilation failed", modes.CheckerMessages.ERROR, -1,
+                path=file_path)
+            self.compilerMsgReady.emit(msg)
         self.compilationFinished.emit(globalStatus)
 
     def onCurrentEditorChanged(self, index):
@@ -449,12 +464,12 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         if w:
             try:
                 if w.programType[0] == constants.ProgramType.Executable[0]:
-                    self.programActionGroup.triggered.emit(self.actionProgram)
+                    # self.programActionGroup.triggered.emit(self.actionProgram)
                     self.actionProgram.setChecked(True)
                     self.actionRun.setEnabled(True)
                     self.actionCompile.setEnabled(True)
                 else:
-                    self.programActionGroup.triggered.emit(self.actionSubprogram)
+                    # self.programActionGroup.triggered.emit(self.actionSubprogram)
                     self.actionSubprogram.setChecked(True)
                     self.actionRun.setEnabled(False)
                     self.actionCompile.setEnabled(True)
@@ -462,10 +477,8 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                 rn = w.analyserMode.root_node
                 if rn:
                     self.updateNavigationPanel(rn)
-                self.tb.setEnabled(True)
                 self.updateStatusBar(w)
             except AttributeError:
-                self.tb.setEnabled(False)
                 self.actionRun.setEnabled(False)
                 self.actionCompile.setEnabled(False)
             self.menuEdit.clear()
@@ -478,9 +491,9 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
     def updateStatusBar(self, editor=None):
         if editor is None:
             editor = self.tabWidgetEditors.currentWidget()
-        self.lblEncoding.setText(editor.fileEncoding)
-        self.lblFilename.setText(editor.filePath)
-        self.lblCursorPos.setText("%d:%d" % editor.cursorPosition)
+        self.lblEncoding.setText(editor.file_encoding)
+        self.lblFilename.setText(editor.file_path)
+        self.lblCursorPos.setText("%d:%d" % frontend.cursor_position(editor))
 
     def saveSettings(self):
         if self.stackedWidget.currentIndex() == 1:
@@ -496,23 +509,25 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
     def closeEvent(self, QCloseEvent):
         self.tabWidgetEditors.closeEvent(QCloseEvent)
         self.saveSettings()
+        logger.close()
 
     def onCompilerMessageActivated(self, message):
-        index = self.tabWidgetEditors.isFileOpen(message.filename)
+        index = self.tabWidgetEditors.index_from_filename(message.path)
         if index == -1:
-            self.openFile(message.filename)
+            self.openFile(message.path)
         else:
             self.tabWidgetEditors.setCurrentIndex(index)
-        self.tabWidgetEditors.currentWidget().gotoLine(message.line, move=True)
+        frontend.goto_line(self.tabWidgetEditors.currentWidget(),
+                           message.line, move=True)
 
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
     def on_actionFullscreen_triggered(self):
         if self.actionFullscreen.isChecked():
             self.showFullScreen()
         else:
             self.showNormal()
 
-    @QtCore.pyqtSlot(QTreeWidgetItem, int)
+    @QtCore.Slot(QTreeWidgetItem, int)
     def on_twNavigation_itemActivated(self, item, column):
         """
         Moves the text cursor on the selected document node position
@@ -521,7 +536,8 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         """
         w = self.tabWidgetEditors.currentWidget()
         statement = item.data(0, QtCore.Qt.UserRole)
-        w.gotoLine(statement.line, move=True, column=statement.column)
+        frontend.goto_line(w, statement.line, move=True,
+                           column=statement.column)
 
     def openFile(self, fn):
         try:
@@ -531,33 +547,23 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                 icon = None
                 Settings().lastFilePath = fn
                 if extension.lower() in constants.ALL_COBOL_EXTENSIONS:
-                    _logger().debug('setting up QCobolCodeEdit')
-                    tab = QCobolCodeEdit(self.tabWidgetEditors)
+                    tab = CobolCodeEdit(self.tabWidgetEditors)
                     icon = QtGui.QIcon(tab.icon)
                     tab.analyserMode.documentLayoutChanged.connect(
                         self.updateNavigationPanel)
-                    tab.settings = Settings().editorSettings
-                    tab.settings.setValue("triggerKeys", [],
-                                          section="Code completion")
-                    tab.style = Settings().editorStyle
                     tab.picInfosAvailable.connect(self.displayPICInfos)
                 else:
-                    _logger().debug('setting up QGenericCodeEdit')
-                    tab = pyqode.core.QGenericCodeEdit(self.tabWidgetEditors)
-                    tab.settings = Settings().editorSettings
-                    tab.settings.setValue("minIndentColumn", 0)
-                    tab.style = Settings().editorStyle
-                _logger().debug('opening file in editor')
-                tab.openFile(fn, detectEncoding=True)
-                tab.refreshIcons(useTheme=Settings().appStyle == constants.WHITE_STYLE)
-                self.tabWidgetEditors.addEditorTab(tab, icon=icon)
+                    tab = GenericCodeEdit(self.tabWidgetEditors)
+                tab.openFile(fn)
+                self.tabWidgetEditors.add_code_edit(tab, icon=icon)
                 self.showHomePage(False)
-                self.QHomeWidget.setCurrentFile(fn)
                 self.updateStatusBar(tab)
                 tab.cursorPositionChanged.connect(self.updateStatusBar)
+                self.recent_files_manager.open_file(fn)
+                self.menu_recents.update_actions()
+                self.updateRecents()
         except IOError:
-            _logger().warning('failed to open %s' % fn)
-            QtGui.QMessageBox.warning(
+            QtWidgets.QMessageBox.warning(
                 self, "File does not exist",
                 "Cannot open file %s, the file does not exists." % fn)
 
@@ -615,7 +621,9 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.actionQuit.setIcon(quitIcon)
         self.actionFullscreen.setIcon(fullscreenIcon)
         self.actionOpen.setIcon(docOpenIcon)
+        self.btOpenFile.setIcon(docOpenIcon)
         self.actionNew.setIcon(docNewIcon)
+        self.btNewFile.setIcon(docNewIcon)
         self.actionSave.setIcon(docSaveIcon)
         self.actionSaveAs.setIcon(docSaveAsIcon)
         self.actionRun.setIcon(runIcon)
@@ -624,46 +632,19 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.tabWidgetLogs.setTabIcon(0, compileIcon)
         self.tabWidgetLogs.setTabIcon(1, runIcon)
 
-        self.QHomeWidget.setActionIcon(self.actionNew, docNewIcon)
-        self.QHomeWidget.setActionIcon(self.actionOpen, docOpenIcon)
-        self.QHomeWidget.setActionIcon(self.actionPreferences, preferencesIcon)
-        self.QHomeWidget.setActionIcon(self.actionHelp, helpIcon)
-        self.QHomeWidget.setActionIcon(self.actionQuit, quitIcon)
-
-    def setupQuickStartActions(self):
-        self.QHomeWidget.addAction(self.actionNew)
-        self.QHomeWidget.addAction(self.actionOpen)
-        self.QHomeWidget.addAction(self.actionPreferences)
-        self.QHomeWidget.addAction(self.actionHelp)
-        self.QHomeWidget.addAction(self.actionAbout)
-        self.QHomeWidget.addAction(self.actionQuit)
-        self.addAction(self.actionFullscreen)
-
-    def showCentered(self):
-        screenGeometry = QtGui.QApplication.desktop().screenGeometry()
-        x = (screenGeometry.width() - self.width()) / 2
-        y = (screenGeometry.height() - self.height()) / 2
-        self.move(x, y)
-        self.showNormal()
-
     def showHomePage(self, home=True):
         if home:
             _logger().debug('going to home page')
+            self.setMinimumWidth(1280)
+            self.setMinimumHeight(768)
+            self.resize(1280, 768)
             if self.stackedWidget.currentIndex() == 1:
                 self.prevSize = self.size()
                 self.wasMaximised = self.isMaximized()
                 s = Settings()
                 s.navigationPanelVisible = self.dockWidgetNavPanel.isVisible()
                 s.logPanelVisible = self.dockWidgetLogs.isVisible()
-                self.setMinimumWidth(700)
-                self.setMinimumHeight(400)
-                self.resize(700, 400)
-                if not self.isFullScreen():
-                    self.showCentered()
             self.consoleOutput.clear()
-            self.setMinimumWidth(700)
-            self.setMinimumHeight(400)
-            self.resize(700, 400)
             self.stackedWidget.setCurrentIndex(0)
             self.menuBar.hide()
             self.toolBarFile.hide()
@@ -687,13 +668,6 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
                 if not self.isFullScreen():
                     if self.wasMaximised:
                         self.showMaximized()
-                    else:
-                        if self.prevSize.width() < 900:
-                            self.prevSize.setWidth(900)
-                        if self.prevSize.height() < 700:
-                            self.prevSize.setHeight(700)
-                        self.resize(self.prevSize)
-                        self.showCentered()
                 s = Settings()
                 self.dockWidgetNavPanel.setVisible(s.navigationPanelVisible)
                 self.dockWidgetLogs.setVisible(s.logPanelVisible)
@@ -704,20 +678,26 @@ class MainWindow(QtGui.QMainWindow, ide_ui.Ui_MainWindow):
         self.tableWidgetOffsets.setRowCount(len(infos))
         self.tableWidgetOffsets.setHorizontalHeaderLabels(
             ['Level', 'Name', 'Offset', 'PIC'])
-        self.tableWidgetOffsets.horizontalHeader().setResizeMode(
-            QtGui.QHeaderView.ResizeToContents)
-        self.tableWidgetOffsets.horizontalHeader().setResizeMode(
-            1, QtGui.QHeaderView.Stretch)
+        try:
+            self.tableWidgetOffsets.horizontalHeader().setResizeMode(
+                QtWidgets.QHeaderView.ResizeToContents)
+            self.tableWidgetOffsets.horizontalHeader().setResizeMode(
+                1, QtWidgets.QHeaderView.Stretch)
+        except AttributeError:
+            self.tableWidgetOffsets.horizontalHeader().setSectionResizeMode(
+                QtWidgets.QHeaderView.ResizeToContents)
+            self.tableWidgetOffsets.horizontalHeader().setSectionResizeMode(
+                1, QtWidgets.QHeaderView.Stretch)
 
         for i, info in enumerate(infos):
             assert isinstance(info, PicFieldInfo)
             self.tableWidgetOffsets.setItem(
-                i, 0, QtGui.QTableWidgetItem("%s" % info.level))
+                i, 0, QtWidgets.QTableWidgetItem("%s" % info.level))
             self.tableWidgetOffsets.setItem(
-                i, 1, QtGui.QTableWidgetItem(info.name))
+                i, 1, QtWidgets.QTableWidgetItem(info.name))
             self.tableWidgetOffsets.setItem(
-                i, 2, QtGui.QTableWidgetItem("%s" % info.offset))
+                i, 2, QtWidgets.QTableWidgetItem("%s" % info.offset))
             self.tableWidgetOffsets.setItem(
-                i, 3, QtGui.QTableWidgetItem(info.pic))
+                i, 3, QtWidgets.QTableWidgetItem(info.pic))
         self.dockWidgetOffsets.show()
         self.dockWidgetOffsets.adjustSize()

@@ -19,7 +19,8 @@
 """
 Setup script for OpenCobolIDE
 
-You will need to install PyQt4 and OpenCobol on your own.
+You will need to install pyqode.qt (or PyQt5) and OpenCobol on your own.
+
 """
 import os
 import sys
@@ -47,12 +48,13 @@ with open('README.rst', 'r') as readme:
 
 
 # install requirements
-requirements = ['pygments>=1.6', 'pyqode.core>=1.3.1',
-                'pyqode.widgets>=1.2.1', 'qdarkstyle>=1.9', 'chardet']
+requirements = ['pygments>=1.6', 'pyqode.core>=2.0.0-beta1',
+                'qdarkstyle>=1.9', 'chardet']
 
 data_files = []
 if sys.platform == "linux" and run_as_root():
-    data_files.append(('/usr/share/applications', ['share/open-cobol-ide.desktop']))
+    data_files.append(('/usr/share/applications',
+                       ['share/open-cobol-ide.desktop']))
     data_files.append(('/usr/share/pixmaps', ['share/OpenCobolIDE.png']))
 
 

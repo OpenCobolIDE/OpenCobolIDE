@@ -81,7 +81,7 @@ Here are the major changes:
     - port to *pyqode 1.0*
     - new compiler errors panel
     - interactive output console for program output
-    - uses *PyQt4* in place of *PySide*
+    - uses *pyqode.qt* in place of *PySide*
     - support for both python 2 and python 3
     - *on the fly* syntax check, OpenCobolIDE compile your code in the
       background to quickly warn you about wrong syntax.

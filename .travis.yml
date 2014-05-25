@@ -1,6 +1,9 @@
 language: python
+python:
+  - "3.2"
 env:
-    - TOXENV=py32
+  - QT_API=PyQt4
+  - QT_API=PyQt5
 virtualenv:
   system_site_packages: true
 before_install:
@@ -9,8 +12,13 @@ before_install:
  - sudo apt-get update
 install:
  - sudo apt-get install open-cobol
- - sudo apt-get install python-qt4;
  - sudo apt-get install python3-pyqt4;
- - pip install --quiet --use-mirrors tox
+ # PyQt5 (won't be available untill travis upgrade to ubuntu 14.04
+ - if [ $QT_API = "PyQt5" ]; then
+   sudo apt-get install -qq python3-pyqt5 --fix-missing;
+   fi
 script:
-  - tox
+ - pip install .
+ - if [ $QT_API ]; then
+   python3 runtests.py;
+   fi

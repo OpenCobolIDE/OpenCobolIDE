@@ -22,8 +22,6 @@ import shutil
 import os
 import subprocess
 import sys
-import pyqode.core
-
 from oci import constants
 
 
@@ -53,7 +51,9 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
     The output is a list of checker messages (those can be used to implements
     a cobol live checker mode)
     """
-    _logger().debug('compiling %s -> %s' % (filename, outputFilename))
+    WARNING = 1
+    ERROR = 2
+
     if customOptions is None:
         customOptions = []
 
@@ -94,10 +94,7 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
             p = subprocess.Popen(cmd, shell=False, cwd=dirname,
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except OSError:
-        _logger().exception('cobc compiler not found')
-        msg = pyqode.core.CheckerMessage("cobc compiler not found",
-                                         pyqode.core.MSG_STATUS_ERROR, -1,
-                                         filename=filename)
+        msg = ("cobc compiler not found", ERROR, -1, 0, None, None, filename)
         msg.filename = filename
         return 1, [msg]
     else:
@@ -113,28 +110,26 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
             if stderr:
                 lines += str(stderr.decode(sys.getfilesystemencoding())).splitlines()
             _logger().debug('cobc output: %s' % lines)
-            print(lines)
             # parse compilation results
             for l in lines:
                 if not l or l == "":
                     continue
                 tokens = l.split(":")
                 _logger().debug('line tokens: %r' % tokens)
-                msg_type = pyqode.core.MSG_STATUS_WARNING
                 try:
                     desc = tokens[len(tokens) - 1]
                     errType = tokens[len(tokens) - 2]
                     lineNbr = int(tokens[len(tokens) - 3])
                 except (ValueError, IndexError):
-                    _logger().debug('failed to process line %r, skipping' % l)
-                    continue
-                if errType.strip() == "Error":
-                    msg_type = pyqode.core.MSG_STATUS_ERROR
-                print(errType, msg_type, pyqode.core.MSG_STATUS_WARNING, pyqode.core.MSG_STATUS_ERROR)
-                msg = pyqode.core.CheckerMessage(desc, msg_type, lineNbr, filename=filename)
-                msg.filename = filename
-                _logger().debug('adding compiler message: %r' % msg)
-                messages.append(msg)
+                    # not a compilation message, usually this is a file not found error.
+                    desc = l
+                    errType = "Error"
+                    lineNbr = -1
+                    status = WARNING
+                if errType == "Error":
+                    status = ERROR
+                messages.append((desc, status, lineNbr, 0, None, None,
+                                 filename))
         return status, messages
 
 

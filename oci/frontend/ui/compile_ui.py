@@ -30,10 +30,8 @@ def fix_script(script):
         lines = f_script.read().splitlines()
     new_lines = []
     for l in lines:
-        if l.startswith("import "):
-            l = "from . " + l
-        if "from PySide import" in l:
-            l = l.replace("from PySide import", "from pyqode.qt import")
+        if "from PyQt5 import" in l:
+            l = l.replace("from PyQt5 import", "from pyqode.qt import")
         new_lines.append(l)
     with open(script, 'w') as f_script:
         f_script.write("\n".join(new_lines))
@@ -44,8 +42,9 @@ def main():
     for ui_file in glob.glob("*.ui"):
         base_name = os.path.splitext(ui_file)[0]
         dst = "%s_ui.py" % base_name
-        if os.path.getmtime(ui_file) > os.path.getmtime(dst):
-            cmd = "pyuic4 %s -o %s" % (ui_file, dst)
+        if (not os.path.exists(dst) or
+                os.path.getmtime(ui_file) > os.path.getmtime(dst)):
+            cmd = "pyuic5 --from-import %s -o %s" % (ui_file, dst)
             print(cmd)
             os.system(cmd)
             fix_script(dst)
@@ -56,8 +55,9 @@ def main():
     for rc_file in glob.glob("*.qrc"):
         base_name = os.path.splitext(rc_file)[0]
         dst = "%s_rc.py" % base_name
-        cmd = "pyrcc4 -py3 %s -o %s" % (rc_file, dst)
-        if os.path.getmtime(rc_file) > os.path.getmtime(dst):
+        cmd = "pyrcc5 %s -o %s" % (rc_file, dst)
+        if (not os.path.exists(dst) or
+                os.path.getmtime(rc_file) > os.path.getmtime(dst)):
             print(cmd)
             os.system(cmd)
             fix_script(dst)

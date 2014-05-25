@@ -65,7 +65,7 @@ if len(sys.argv) == 1:
 # have a recent version of setuptools and that you did not install it
 # using ez_setup.py or setup.py, cx_Freeze does not seem to be able to parse
 # eggs (at least, it fails on the setuptools egg)
-options = {"excludes": ["PyQt4.uic.port_v3"],
+options = {"excludes": ["pyqode.qt.uic.port_v3"],
            # add the namespace packages that you uses
            "namespace_packages": ["pyqode.core", "pyqode.widgets"],
            # freeze the pygments default style along with our executable
@@ -82,7 +82,7 @@ setup(name="OpenCobolIDE",
       version=__version__,
       options={"build_exe": options},
       executables=[
-          Executable("OpenCobolIDE.pyw", targetName="OpenCobolIDE.exe",
+          Executable("open-cobol-ide", targetName="OpenCobolIDE.exe",
                      icon="oci/ui/rc/silex-icon.ico", base="Win32GUI")])
 
 print("### Copying OpenCobol distribution\n"

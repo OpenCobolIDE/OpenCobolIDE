@@ -17,13 +17,9 @@
 This file contains all the pyqode-widgets QtDesigner oci_designer_plugins.
 """
 # This only works with PyQt, PySide does not support the QtDesigner module
-import os
-if not 'QT_API' in os.environ:
-    os.environ.setdefault("QT_API", "PyQt")
-from pyqode.qt.QtGui import QIcon
-from oci.editor import QCobolCodeEdit
+from oci.frontend.editors import CobolCodeEdit
 
-PLUGINS_TYPES = {'QCobolCodeEdit': QCobolCodeEdit}
+PLUGINS_TYPES = {'QCobolCodeEdit': CobolCodeEdit}
 
 try:
     from pyqode.core.plugins.pyqode_core_plugin import QCodeEditPlugin
@@ -34,8 +30,8 @@ try:
         _name = "QCobolCodeEdit"
 
         def createWidget(self, parent):
-            return QCobolCodeEdit(parent=parent)
+            return CobolCodeEdit(parent=parent)
 
 
 except ImportError:
-    print("Cannot use pyQode oci_designer_plugins without PyQt4")
+    print("Cannot use pyQode oci_designer_plugins without pyqode.qt")

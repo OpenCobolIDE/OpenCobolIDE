@@ -17,7 +17,7 @@ OpenCobolIDE is a simple and lightweight cobol IDE based on the OpenCobol
 compiler.
 
 
-The software is written in Python using `PyQt4`_ and `pyQode`_
+The software is written in Python using `PyQt5`_ and `pyQode`_
 
 Features:
 ---------
@@ -78,7 +78,7 @@ The project depends on the following packages:
 
 - `Python3`_
 - `setuptools`_
-- `PyQt4`_
+- `pyqode.qt`_
 - `OpenCobol`_
 - `pyqode.core`_
 - `pyqode.widgets`_
