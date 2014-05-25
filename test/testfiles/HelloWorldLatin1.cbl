@@ -27,7 +27,7 @@
       * The main procedure of the program
       **
             DISPLAY "Hello world"
-            DISPLAY "Hello World"
             STOP RUN.
       ** add other procedures here
        END PROGRAM YOUR-PROGRAM-NAME.
+

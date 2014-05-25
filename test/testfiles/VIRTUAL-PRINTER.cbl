@@ -52,7 +52,7 @@
                        END-PERFORM
                     END-IF
                 END-IF
-                WRITE ENREG-PRINTER FROM PA-BUFFER 
+                WRITE ENREG-PRINTER FROM PA-BUFFER
                 IF(PA-WHEN = "BEFORE")
                    IF(PA-WHAT = "PAGE")
                        MOVE '>------------------------------------------'
