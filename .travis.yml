@@ -4,6 +4,9 @@ python:
 env:
   - QT_API=PyQt4
   - QT_API=PyQt5
+matrix:
+  allow_failures:
+      - env: QT_API=PyQt5
 virtualenv:
   system_site_packages: true
 before_install:
