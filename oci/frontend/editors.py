@@ -133,7 +133,9 @@ class CobolCodeEdit(frontend.CodeEdit):
         frontend.install_mode(self, cob_modes.GoToDefinitionMode())
 
         # cobol specific modes
-        frontend.install_mode(self, modes.RightMarginMode())
+        rm = modes.RightMarginMode()
+        rm.position = 72
+        frontend.install_mode(self, rm)
         frontend.install_mode(self, cob_modes.LeftMarginMode())
         frontend.install_mode(self, cob_modes.CommentsMode())
         frontend.install_mode(self, cob_modes.CobolCheckerMode())

@@ -167,7 +167,10 @@ class LeftMarginMode(RightMarginMode):
 
     def __init__(self):
         super().__init__()
-        self.marginPos = 72
+
+    def _on_install(self, editor):
+        super()._on_install(editor)
+        self.position = 7
 
 
 class CobolCheckerMode(CheckerMode):
