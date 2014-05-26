@@ -31,6 +31,7 @@ from oci import constants
 from oci.backend import server
 from oci.backend.parser import detect_file_type
 from oci.frontend import modes as cob_modes
+from oci.settings import Settings
 
 
 for ext in constants.COBOL_EXTENSIONS:
@@ -50,13 +51,6 @@ class CobolCodeEdit(frontend.CodeEdit):
     Extends QCodeEdit with a hardcoded set of modes and panels specifics to
     a cobol code editor widget
     """
-
-    class Highlighter(modes.PygmentsSyntaxHighlighter):
-        def set_lexer_from_mime_type(self, mime, **options):
-            """
-            Sets the pygments lexer from mime type.
-            """
-            super().set_lexer_from_mime_type(mime, **options)
 
     picInfosAvailable = QtCore.Signal(list)
 
@@ -81,6 +75,7 @@ class CobolCodeEdit(frontend.CodeEdit):
         self.setLineWrapMode(self.NoWrap)
         self.setupPanels()
         self.setupModes()
+        self.updateSettings()
 
     def __del__(self):
         frontend.stop_server(self)
@@ -99,52 +94,81 @@ class CobolCodeEdit(frontend.CodeEdit):
         """
         Setup the editor's modes
         """
-        frontend.install_mode(self, modes.CaretLineHighlighterMode())
-
         # generic modes
-        frontend.install_mode(self, modes.ZoomMode())
-        frontend.install_mode(self, modes.SymbolMatcherMode())
-        indenter = modes.IndenterMode()
-        indenter.min_indent = 7
-        frontend.install_mode(self, indenter)
+        # -------------
+        # current line highlighter
+        self.caretLineHighlighter = modes.CaretLineHighlighterMode()
+        frontend.install_mode(self, self.caretLineHighlighter)
+        # zoom
+        self.zoom = modes.ZoomMode()
+        frontend.install_mode(self, self.zoom)
+        # matching braces
+        self.symbolMatcher = modes.SymbolMatcherMode()
+        frontend.install_mode(self, self.symbolMatcher)
+        # indenter
+        self.indenter = modes.IndenterMode()
+        self.indenter.min_indent = 7
+        frontend.install_mode(self, self.indenter)
+        # Case converter
         frontend.install_mode(self, modes.CaseConverterMode())
+        # File watcher
         frontend.install_mode(self, modes.FileWatcherMode())
-
+        # Auto complete (", ', (, ), {, }, [, ])
         frontend.install_mode(self, modes.AutoCompleteMode())
-
-        # code completion
+        # Code completion
         self.codeCompletionMode = modes.CodeCompletionMode()
         frontend.install_mode(self, self.codeCompletionMode)
         self.codeCompletionMode.trigger_symbols[:] = []
-        # auto indent
+        # Auto indent
         self.autoIndentMode = modes.AutoIndentMode()
         frontend.install_mode(self, self.autoIndentMode)
         self.autoIndentMode.min_indent = 7 * " "
-
-        # syntax highlighter
-        self.syntaxHighlighterMode = self.Highlighter(self.document())
+        # Syntax highlighter
+        self.syntaxHighlighterMode = modes.PygmentsSyntaxHighlighter(
+            self.document())
         frontend.install_mode(self, self.syntaxHighlighterMode)
         self.syntaxHighlighterMode.block_highlight_finished.connect(
             self._highlighComments)
-
         # word click and go to definition
         self.wordClickMode = modes.WordClickMode()
         frontend.install_mode(self, self.wordClickMode)
+        # Goto definition
         frontend.install_mode(self, cob_modes.GoToDefinitionMode())
 
         # cobol specific modes
-        rm = modes.RightMarginMode()
-        rm.position = 72
-        frontend.install_mode(self, rm)
-        frontend.install_mode(self, cob_modes.LeftMarginMode())
+        # --------------------
+        # Right margin
+        self.rightMargin = modes.RightMarginMode()
+        self.rightMargin.position = 72
+        frontend.install_mode(self, self.rightMargin)
+        # Left margin
+        self.leftMargin = cob_modes.LeftMarginMode()
+        frontend.install_mode(self, self.leftMargin)
+        # Comment/Uncomment
         frontend.install_mode(self, cob_modes.CommentsMode())
-        frontend.install_mode(self, cob_modes.CobolCheckerMode())
+        # Linter
+        frontend.install_mode(self, cob_modes.LinterMode())
+        # Document analyser (defined names)
         self.analyserMode = cob_modes.DocumentAnalyserMode()
         frontend.install_mode(self, self.analyserMode)
-
+        # Offset calculator
         o = cob_modes.OffsetCalculatorMode()
         o.picInfosAvailable.connect(self.picInfosAvailable.emit)
         frontend.install_mode(self, o)
+
+    def updateSettings(self):
+        settings = Settings()
+        self.caretLineHighlighter.enabled = settings.highlightCurrentLine
+        self.symbolMatcher.enabled = settings.highlightMatchingBraces
+        self.syntaxHighlighterMode.pygments_style = settings.colorScheme
+        self.rightMargin.enabled = settings.displayMargins
+        self.leftMargin.enabled = settings.displayMargins
+        self.autoIndentMode.enabled = settings.enableAutoIndent
+        self.codeCompletionMode.trigger_length = settings.ccTriggerLen
+        self.font_name = settings.fontName
+        self.font_size = settings.fontSize
+        self.show_whitespaces = settings.highlightWhitespaces
+        # todo: tab len
 
     def detect_file_type(self):
         self.__fileType = detect_file_type(self.file_path, self.file_encoding)
@@ -175,7 +199,6 @@ class CobolCodeEdit(frontend.CodeEdit):
             index = expression.indexIn(text, index + length)
 
 
-
 class GenericCodeEdit(frontend.CodeEdit):
     """
     A generic code editor widget. This is just a CodeEdit with a preconfigured
@@ -196,17 +219,36 @@ class GenericCodeEdit(frontend.CodeEdit):
         frontend.install_mode(self, modes.AutoCompleteMode())
         frontend.install_mode(self, modes.CaseConverterMode())
         frontend.install_mode(self, modes.FileWatcherMode())
-        frontend.install_mode(self, modes.CaretLineHighlighterMode())
-        frontend.install_mode(self, modes.RightMarginMode())
-        frontend.install_mode(self, modes.PygmentsSyntaxHighlighter(
-            self.document()))
+        self.caretLineHighlighter = frontend.install_mode(
+            self, modes.CaretLineHighlighterMode())
+        self.rightMargin = frontend.install_mode(self, modes.RightMarginMode())
+        self.highlither = frontend.install_mode(
+            self, modes.PygmentsSyntaxHighlighter(self.document()))
         frontend.install_mode(self, modes.ZoomMode())
-        frontend.install_mode(self, modes.CodeCompletionMode())
-        frontend.install_mode(self, modes.AutoIndentMode())
+        self.codeCompletionMode = frontend.install_mode(
+            self, modes.CodeCompletionMode())
+        self.autoIndenter = frontend.install_mode(self, modes.AutoIndentMode())
         frontend.install_mode(self, modes.IndenterMode())
-        frontend.install_mode(self, modes.SymbolMatcherMode())
+        self.symbolMatcher = frontend.install_mode(
+            self, modes.SymbolMatcherMode())
+        self.updateSettings()
 
     def openFile(self, file_path, replaceTabsBySpaces=True, encoding=None):
         frontend.open_file(self, file_path,
                            replace_tabs_by_spaces=replaceTabsBySpaces,
                            default_encoding=encoding)
+
+    def updateSettings(self):
+        settings = Settings()
+        self.caretLineHighlighter.enabled = settings.highlightCurrentLine
+        self.symbolMatcher.enabled = settings.highlightMatchingBraces
+        self.syntaxHighlighterMode.pygments_style = settings.colorScheme
+        self.rightMargin.enabled = settings.displayMargins
+        self.leftMargin.enabled = settings.displayMargins
+        self.autoIndentMode.enabled = settings.enableAutoIndent
+        self.codeCompletionMode.trigger_length = settings.ccTriggerLen
+        self.font_name = settings.fontName
+        self.font_size = settings.fontSize
+        self.show_whitespaces = settings.highlightWhitespaces
+        # todo: tab len
+

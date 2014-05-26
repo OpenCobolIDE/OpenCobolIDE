@@ -173,7 +173,7 @@ class LeftMarginMode(RightMarginMode):
         self.position = 7
 
 
-class CobolCheckerMode(CheckerMode):
+class LinterMode(CheckerMode):
     IDENTIFIER = "cobolCheckerMode"
     DESCRIPTION = "Checks your cobol code on the fly (by compiling it to a " \
                   "temp file"

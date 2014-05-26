@@ -19,20 +19,19 @@ Contains the application dialogs
 import os
 
 import pygments
+from pyqode.core.frontend.modes import PYGMENTS_STYLES
 from pyqode.qt import QtWidgets
 from pyqode.qt import QtCore
+from pyqode.qt import QtGui
 import qdarkstyle
 import pyqode.core
+import sys
 
 from oci.backend import compiler
 from oci import __version__
 from oci.constants import TEMPLATES
 from oci.settings import Settings
-from oci.frontend.ui import dlg_about_ui, dlg_file_type_ui
-
-
-
-# , dlg_preferences_ui
+from oci.frontend.ui import dlg_about_ui, dlg_file_type_ui, dlg_preferences_ui
 
 
 class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
@@ -99,147 +98,220 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
             self.tbwVersions.setItem(i, 0, item)
         self.textBrowser.setStyleSheet("color: red")
 
+class DialogRejected(Exception):
+    pass
 
-# class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
-#     @property
-#     def editorSettings(self):
-#         return self.codeEdit.settings
-#
-#     @editorSettings.setter
-#     def editorSettings(self, value):
-#         self.codeEdit.settings = value
-#         self.propGridSettings.setPropertyRegistry(self.codeEdit.settings)
-#
-#     @property
-#     def editorStyle(self):
-#         return self.codeEdit.style
-#
-#     @editorStyle.setter
-#     def editorStyle(self, value):
-#         self.codeEdit.style = value
-#         self.propGridStyle.setPropertyRegistry(self.codeEdit.style)
-#
-#     @property
-#     def consoleBackground(self):
-#         return self.console.backgroundColor
-#
-#     @consoleBackground.setter
-#     def consoleBackground(self, value):
-#         self.console.backgroundColor = value
-#         self.colorButtonConsoleBck.color = value
-#
-#     @property
-#     def consoleForeground(self):
-#         return self.console.processOutputColor
-#
-#     @consoleForeground.setter
-#     def consoleForeground(self, value):
-#         self.console.processOutputColor = value
-#         self.colorButtonConsoleFore.color = value
-#
-#     @property
-#     def consoleUserInput(self):
-#         return self.console.userInputOutputColor
-#
-#     @consoleUserInput.setter
-#     def consoleUserInput(self, value):
-#         self.console.userInputOutputColor = value
-#         self.colorButtonConsoleUsr.color = value
-#
-#     @property
-#     def consoleAppOutput(self):
-#         return self.console.appMessageColor
-#
-#     @consoleAppOutput.setter
-#     def consoleAppOutput(self, value):
-#         self.console.appMessageColor = value
-#         self.colorButtonConsoleApp.color = value
-#
-#     def __init__(self, parent=None,
-#                  editorSettings=None, editorStyle=None):
-#         super().__init__(parent)
-#         self.setupUi(self)
-#         self.__homePageColorScheme = 0
-#         self.codeEdit.syntaxHighlighterMode.setLexerFromFilename("file.cbl")
-#         self.codeEdit.syntaxHighlighterMode.rehighlight()
-#         self.stackedWidget.setCurrentIndex(0)
-#         self.tabWidgetSettings.setCurrentIndex(0)
-#         self.tabWidgetStyle.setCurrentIndex(0)
-#         self.propGridStyle.rehighlightRequested.connect(
-#             self.codeEdit.syntaxHighlighterMode.rehighlight)
-#         self.radioButtonWhite.toggled.connect(self.onHomePageStyleChanged)
-#         if sys.platform == "win32":
-#             self.tabWidgetStyle.removeTab(1)
-#             self.lwMenu.setMaximumWidth(74)
-#         if Settings().appStyle == constants.DARK_STYLE:
-#             self.rbDarkStyle.setChecked(True)
-#         self.checkBoxExtTerm.stateChanged.connect(
-#             self.lineEditShellCmd.setEnabled)
-#         self.checkBoxExtTerm.setChecked(Settings().runInExternalTerminal)
-#         self.lineEditShellCmd.setEnabled(Settings().runInExternalTerminal)
-#         if sys.platform == 'win32':
-#             self.labelShellCmd.hide()
-#             self.lineEditShellCmd.hide()
-#         else:
-#             self.lineEditShellCmd.setText(Settings().shellCommand)
-#
-#     @QtCore.Slot(bool)
-#     def on_rbDarkStyle_clicked(self, checked):
-#         app = QtWidgets.QApplication.instance()
-#         if checked:
-#             app.setStyleSheet(qdarkstyle.load_stylesheet(pyside=False))
-#             style = self.editorStyle
-#             style.setValue("pygmentsStyle", "monokai")
-#             style.setValue("selectionBackground", "monokai")
-#             style.setValue("background",
-#                                       QtGui.QColor("#272822"))
-#             style.setValue("caretLineBackground",
-#                                       QtGui.QColor("#272822"))
-#             style.setValue("selectionBackground",
-#                                  QtGui.QColor("#353d44"))
-#             style.setValue("whiteSpaceForeground",
-#                                  QtGui.QColor("#393939"))
-#             style.setValue("nativeFoldingIndicator", False)
-#             self.homePageColorScheme = 1
-#             # force grid refresh
-#             self.editorStyle = style
-#
-#             s = Settings()
-#             s.appStyle = constants.DARK_STYLE
-#
-#     @QtCore.Slot(bool)
-#     def on_rbLightStyle_clicked(self, checked):
-#         app = QtWidgets.QApplication.instance()
-#         if checked:
-#             app.setStyleSheet("")
-#             self.editorStyle = oci.editors.QGenericCodeEdit().style
-#             self.homePageColorScheme = 0
-#             s = Settings()
-#             s.appStyle = constants.WHITE_STYLE
-#
-#     @QtCore.Slot(int)
-#     def on_lwMenu_currentRowChanged(self, row):
-#         self.stackedWidget.setCurrentIndex(row)
-#
-#     @QtCore.Slot(QtGui.QColor)
-#     def on_colorButtonConsoleFore_valueChanged(self, color):
-#         self.consoleForeground = color
-#
-#     @QtCore.Slot(QtGui.QColor)
-#     def on_colorButtonConsoleBck_valueChanged(self, color):
-#         self.consoleBackground = color
-#
-#     @QtCore.Slot(QtGui.QColor)
-#     def on_colorButtonConsoleUsr_valueChanged(self, color):
-#         self.consoleUserInput = color
-#
-#     @QtCore.Slot(QtGui.QColor)
-#     def on_colorButtonConsoleApp_valueChanged(self, color):
-#         self.consoleAppOutput = color
-#
-#     def keyPressEvent(self, QKeyEvent):
-#         if QKeyEvent.key() == QtCore.Qt.Key_Return:
-#             QKeyEvent.accept()
-#
-#     def onHomePageStyleChanged(self, whiteEnable):
-#         self.homePageColorScheme = int(not whiteEnable)
+
+class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
+    TAB_WIDGET_WHITE_CSS = """
+QTabWidget::pane { /* The tab widget frame */
+     border-top: 1px black;
+     position: absolute;
+     outline: none;
+ }
+
+/* Style the tab using the tab sub-control. Note that
+   it reads QTabBar _not_ QTabWidget */
+QTabBar::tab {
+     border: none;
+     padding: 5px;
+     color: #7C8080;
+     outline: none;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    border-bottom: 3px solid gray; /* same as the pane color */
+    color: #2E3436;
+}
+
+QTabBar::tab:selected {
+    border-bottom: 3px solid #5F96CD; /* same as the pane color */
+    color: #2E3436;
+    font: bold;
+}
+"""
+    TAB_WIDGET_DARK_CSS = """
+QTabWidget::pane { /* The tab widget frame */
+     position: absolute;
+     outline: none;
+     border: none;
+ }
+
+/* Style the tab using the tab sub-control. Note that
+   it reads QTabBar _not_ QTabWidget */
+QTabBar::tab {
+     background: #282828;
+     border: none;
+     border-bottom: 2px solid silver;
+     border-top: 2px solid silver;
+     border-radius: 0px;
+     padding: 5px;
+     color: #808080;
+     outline: none;
+     padding: 5px;
+     margin: 0px;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    border-bottom: 3px solid gray; /* same as the pane color */
+    color: #D2D2D2;
+    padding: 5px;
+    margin: 0px;
+}
+
+QTabBar::tab:selected {
+    border-bottom: 3px solid #5F96CD; /* same as the pane color */
+    color: #D2D2D2;
+    font: bold;
+    padding: 5px;
+    margin: 0px;
+}
+"""
+
+    TAB_BAR_WHITE_CSS = """
+background: #E2E2E2;
+alignment: center;
+border:1px transparent;
+outline: none;
+border-bottom: 1px solid #A7ABA7;
+border-top: 1px solid #A7ABA7
+"""
+
+    TAB_BAR_DARK_CSS = """
+background: #282828;
+alignment: center;
+border:1px transparent;
+outline: none;
+border-bottom: 2px solid silver;
+border-top: 2px solid silver;
+"""
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setupUi(self)
+        self.buttonBox.button(self.buttonBox.Reset).clicked.connect(self.reset)
+        self.buttonBox.button(self.buttonBox.RestoreDefaults).clicked.connect(
+            self.restoreDefaults)
+        self.reset(allTabs=True)
+
+    @QtCore.Slot(bool)
+    def on_radioButtonColorWhite_toggled(self, state):
+        for i in range(self.listWidgetColorSchemes.count()):
+            if (state and
+                    self.listWidgetColorSchemes.item(i).text() == 'default'):
+                self.listWidgetColorSchemes.setCurrentRow(i)
+                break
+            elif (not state and
+                    self.listWidgetColorSchemes.item(i).text() == 'monokai'):
+                self.listWidgetColorSchemes.setCurrentRow(i)
+                break
+
+    def setupUi(self, Dialog):
+        super().setupUi(Dialog)
+        self.setMinimumWidth(450)
+        self.tabWidget.setCurrentIndex(0)
+        bar = self.tabWidget.tabBar()
+        if Settings().globalStyle == 'white':
+            bar.setStyleSheet(self.TAB_BAR_WHITE_CSS)
+        else:
+            bar.setStyleSheet(self.TAB_BAR_DARK_CSS)
+
+    def reset(self, allTabs=False):
+        settings = Settings()
+        if self.tabWidget.currentIndex() == 0 or allTabs:
+            # View tab
+            self.checkBoxViewLineNumber.setChecked(settings.displayLineNumbers)
+            self.checkBoxViewMargins.setChecked(settings.displayMargins)
+            self.checkBoxViewStatus.setChecked(settings.displayStatusBar)
+            self.checkBoxHighlightCurrentLine.setChecked(
+                settings.highlightCurrentLine)
+            self.checkBoxHighlightBraces.setChecked(
+                settings.highlightMatchingBraces)
+            self.checkBoxHighlightWhitespaces.setChecked(
+                settings.highlightWhitespaces)
+        # Editor Tab
+        if self.tabWidget.currentIndex() == 1 or allTabs:
+            self.spinBoxEditorTabLen.setValue(settings.tabWidth)
+            self.checkBoxEditorAutoIndent.setChecked(
+                settings.enableAutoIndent)
+            self.checkBoxEditorSaveOnFocusOut.setChecked(
+                settings.saveOnFocusOut)
+            self.spinBoxEditorCCTriggerLen.setValue(settings.ccTriggerLen)
+        if self.tabWidget.currentIndex() == 2 or allTabs:
+            # Font & Color tab
+            rb = self.radioButtonColorWhite if settings.globalStyle == 'white' \
+                else self.radioButtonColorDark
+            rb.setChecked(True)
+            self.fontComboBox.setCurrentFont(QtGui.QFont(settings.fontName))
+            self.spinBoxFontSize.setValue(settings.fontSize)
+            self.listWidgetColorSchemes.clear()
+            current_index = None
+            for style in PYGMENTS_STYLES:
+                self.listWidgetColorSchemes.addItem(style)
+                if style == settings.colorScheme:
+                    current_index = self.listWidgetColorSchemes.count() - 1
+            if current_index:
+                self.listWidgetColorSchemes.setCurrentRow(current_index)
+        # Build & run tab
+        if self.tabWidget.currentIndex() == 3 or allTabs:
+            self.checkBoxRunExtTerm.setChecked(settings.runInShell)
+            self.lineEditRunTerm.setVisible(sys.platform != 'win32')
+            self.lineEditRunTerm.setEnabled(settings.runInShell)
+            self.lineEditRunTerm.setText(settings.shellCommand)
+            # todo recompile before run and auto detect deps
+
+    def restoreDefaults(self):
+        settings = Settings()
+        index = self.tabWidget.currentIndex()
+        if index == 0:
+            settings.displayLineNumbers = True
+            settings.displayMargins = True
+            settings.displayStatusBar = True
+            settings.highlightCurrentLine = True
+            settings.highlightMatchingBraces = True
+            settings.highlightWhitespaces = False
+        if index == 1:
+            settings.tabWidth = 4
+            settings.enableAutoIndent = True
+            settings.saveOnFocusOut = True
+            settings.ccTriggerLen = 1
+        if index == 2:
+            settings.globalStyle = 'white'
+            settings.fontName = None
+            settings.fontSize = 10
+            settings.colorScheme = 'default'
+        if index == 3:
+            settings.runInShell = False
+            settings.shellCommand = None
+        self.reset()
+
+    def resizeEvent(self, *args, **kwargs):
+        self.tabWidget.tabBar().setFixedWidth(self.width())
+        css = self.TAB_WIDGET_WHITE_CSS if Settings().globalStyle == 'white' \
+            else self.TAB_WIDGET_DARK_CSS
+        self.tabWidget.setStyleSheet(
+            css + 'QTabBar::tab { width: %dpx};' %
+            ((self.width() - self.width() / 8) / self.tabWidget.count()))
+
+    @classmethod
+    def editSettings(cls, parent):
+        dlg = cls(parent)
+        if dlg.exec_() != dlg.Accepted:
+            raise DialogRejected()
+        settings = Settings()
+        settings.displayLineNumbers = dlg.checkBoxViewLineNumber.isChecked()
+        settings.displayMargins = dlg.checkBoxViewMargins.isChecked()
+        settings.displayStatusBar = dlg.checkBoxViewStatus.isChecked()
+        settings.highlightCurrentLine = dlg.checkBoxHighlightCurrentLine.isChecked()
+        settings.highlightMatchingBraces = dlg.checkBoxHighlightBraces.isChecked()
+        settings.highlightWhitespaces = dlg.checkBoxHighlightWhitespaces.isChecked()
+        settings.tabWidth = dlg.spinBoxEditorTabLen.value()
+        settings.enableAutoIndent = dlg.checkBoxEditorAutoIndent.isChecked()
+        settings.saveOnFocusOut = dlg.checkBoxEditorSaveOnFocusOut.isChecked()
+        settings.ccTriggerLen = dlg.spinBoxEditorCCTriggerLen.value()
+        settings.globalStyle = 'white' if dlg.radioButtonColorWhite.isChecked() else 'dark'
+        settings.fontName = dlg.fontComboBox.currentFont().family()
+        settings.fontSize = dlg.spinBoxFontSize.value()
+        settings.colorScheme = dlg.listWidgetColorSchemes.currentItem().text()
+        settings.runInShell = dlg.checkBoxRunExtTerm.isChecked()
+        settings.shellCommand = dlg.lineEditRunTerm.text()

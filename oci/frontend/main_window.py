@@ -35,7 +35,8 @@ from oci.settings import Settings
 from oci.backend import compiler
 from oci.backend.parser import parse_dependencies
 from oci.backend.pic_parser import PicFieldInfo
-from oci.frontend.dialogs import DlgNewFile, DlgAbout
+from oci.frontend.dialogs import DlgNewFile, DlgAbout, DlgPreferences, \
+    DialogRejected
 from oci.frontend.editors import CobolCodeEdit, GenericCodeEdit
 from oci.frontend.ui import ide_ui
 
@@ -52,6 +53,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.applySettings()
         logger.setup(self.textEditLogs)
         if Settings().fullscreen:
             self.showFullScreen()
@@ -112,7 +114,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         self.consoleOutput.stdin_color = s.consoleUserInput
         self.consoleOutput.app_msg_color = s.consoleAppOutput
 
-        if s.appStyle == constants.DARK_STYLE:
+        if s.globalStyle == constants.DARK_STYLE:
             QtWidgets.QApplication.instance().setStyleSheet(
                 qdarkstyle.load_stylesheet(pyside=False))
 
@@ -352,7 +354,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         target = compiler.makeOutputFilePath(
             source_fn, self.tabWidgetEditors.currentWidget().programType)
         wd = os.path.join(os.path.dirname(target))
-        if not Settings().runInExternalTerminal:
+        if not Settings().runInShell:
             _logger().info('running %s in embedded terminal' % target)
             self.tabWidgetLogs.setCurrentIndex(1)
             self.dockWidgetLogs.show()
@@ -369,36 +371,29 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                 subprocess.Popen(Settings().shellCommand.split(' ') + [target],
                                  cwd=wd)
 
-    # @QtCore.Slot()
-    # def on_actionPreferences_triggered(self):
-    #     s = Settings()
-    #     dlg = DlgPreferences(self)
-    #     dlg.homePageColorScheme = s.homePageColorScheme
-    #     dlg.editorSettings = s.editorSettings
-    #     dlg.editorStyle = s.editorStyle
-    #     dlg.consoleBackground = s.consoleBackground
-    #     dlg.consoleUserInput = s.consoleUserInput
-    #     dlg.consoleForeground = s.consoleForeground
-    #     dlg.consoleAppOutput = s.consoleAppOutput
-    #     dlg.console.runProcess("python")
-    #     if dlg.exec_() == dlg.Accepted:
-    #         s.editorSettings = dlg.editorSettings
-    #         s.editorStyle = dlg.editorStyle
-    #         s.consoleBackground = dlg.consoleBackground
-    #         s.consoleForeground = dlg.consoleForeground
-    #         s.consoleUserInput = dlg.consoleUserInput
-    #         s.consoleAppOutput = dlg.consoleAppOutput
-    #         s.homePageColorScheme = dlg.homePageColorScheme
-    #         s.runInExternalTerminal = dlg.checkBoxExtTerm.isChecked()
-    #         self.setHomePageColorScheme(s.homePageColorScheme)
-    #         self.tabWidgetEditors.resetSettings(dlg.editorSettings)
-    #         self.tabWidgetEditors.resetStyle(dlg.editorStyle)
-    #         self.tabWidgetEditors.refreshIcons(useTheme=dlg.rbLightStyle.isChecked())
-    #         self.consoleOutput.backgroundColor = dlg.consoleBackground
-    #         self.consoleOutput.processOutputColor = dlg.consoleForeground
-    #         self.consoleOutput.usrInputColor = dlg.consoleUserInput
-    #         self.consoleOutput.appMessageColor = dlg.consoleAppOutput
-    #         self.setupIcons()
+    def applySettings(self):
+        if Settings().globalStyle == 'white':
+            QtWidgets.QApplication.instance().setStyleSheet("")
+        else:
+            if '5' in os.environ['QT_API']:
+                QtWidgets.QApplication.instance().setStyleSheet(
+                    qdarkstyle.load_stylesheet_pyqt5())
+            else:
+                QtWidgets.QApplication.instance().setStyleSheet(
+                    qdarkstyle.load_stylesheet(pyside=False))
+        self.statusbar.setVisible(Settings().displayStatusBar)
+        for i in range(self.tabWidgetEditors.count()):
+            self.tabWidgetEditors.widget(i).updateSettings()
+        self.setupIcons()
+
+    @QtCore.Slot()
+    def on_actionPreferences_triggered(self):
+        try:
+            DlgPreferences.editSettings(self)
+        except DialogRejected:
+            pass
+        else:
+            self.applySettings()
 
     @QtCore.Slot()
     def on_actionHelp_triggered(self):
@@ -496,12 +491,12 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         self.lblCursorPos.setText("%d:%d" % frontend.cursor_position(editor))
 
     def saveSettings(self):
+        s = Settings()
+        s.geometry = self.saveGeometry()
+        s.state = self.saveState()
+        s.maximised = self.isMaximized()
+        s.size = self.size()
         if self.stackedWidget.currentIndex() == 1:
-            s = Settings()
-            s.geometry = self.saveGeometry()
-            s.state = self.saveState()
-            s.maximised = self.isMaximized()
-            s.size = self.size()
             s.navigationPanelVisible = self.dockWidgetNavPanel.isVisible()
             s.logPanelVisible = self.dockWidgetLogs.isVisible()
             s.fullscreen = self.isFullScreen()
@@ -572,7 +567,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                 "Cannot open file %s, the file does not exists." % fn)
 
     def setupIcons(self):
-        if Settings().appStyle == constants.WHITE_STYLE:
+        if Settings().globalStyle == 'white':
             docOpenIcon = QtGui.QIcon.fromTheme(
                 "document-open", QtGui.QIcon(":/ide-icons/rc/document-open.png"))
             docSaveIcon = QtGui.QIcon.fromTheme(
