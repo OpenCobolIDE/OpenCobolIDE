@@ -478,7 +478,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                 if rn:
                     self.updateNavigationPanel(rn)
                 self.updateStatusBar(w)
-            except AttributeError:
+            except (AttributeError, TypeError):
                 self.actionRun.setEnabled(False)
                 self.actionCompile.setEnabled(False)
             self.menuEdit.clear()
@@ -519,6 +519,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
             self.tabWidgetEditors.setCurrentIndex(index)
         frontend.goto_line(self.tabWidgetEditors.currentWidget(),
                            message.line, move=True)
+        self.tabWidgetEditors.currentWidget().setFocus()
 
     @QtCore.Slot()
     def on_actionFullscreen_triggered(self):
@@ -538,10 +539,11 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         statement = item.data(0, QtCore.Qt.UserRole)
         frontend.goto_line(w, statement.line, move=True,
                            column=statement.column)
+        self.tabWidgetEditors.currentWidget().setFocus()
 
     def openFile(self, fn):
         try:
-            if fn:
+            if fn and self.tabWidgetEditors.index_from_filename(fn) == -1:
                 _logger().info('opening file: %s' % fn)
                 extension = os.path.splitext(fn)[1]
                 icon = None
@@ -554,14 +556,16 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                     tab.picInfosAvailable.connect(self.displayPICInfos)
                 else:
                     tab = GenericCodeEdit(self.tabWidgetEditors)
-                tab.openFile(fn)
-                self.tabWidgetEditors.add_code_edit(tab, icon=icon)
+                tab.file_path = fn
+                index = self.tabWidgetEditors.add_code_edit(tab, icon=icon)
                 self.showHomePage(False)
                 self.updateStatusBar(tab)
                 tab.cursorPositionChanged.connect(self.updateStatusBar)
                 self.recent_files_manager.open_file(fn)
                 self.menu_recents.update_actions()
                 self.updateRecents()
+                tab.openFile(fn)
+                self.onCurrentEditorChanged(index)
         except IOError:
             QtWidgets.QMessageBox.warning(
                 self, "File does not exist",
@@ -635,12 +639,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
     def showHomePage(self, home=True):
         if home:
             _logger().debug('going to home page')
-            self.setMinimumWidth(1280)
-            self.setMinimumHeight(768)
-            self.resize(1280, 768)
             if self.stackedWidget.currentIndex() == 1:
-                self.prevSize = self.size()
-                self.wasMaximised = self.isMaximized()
                 s = Settings()
                 s.navigationPanelVisible = self.dockWidgetNavPanel.isVisible()
                 s.logPanelVisible = self.dockWidgetLogs.isVisible()
@@ -663,11 +662,6 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                 self.toolBarFile.show()
                 self.toolBarCode.show()
                 self.dockWidgetNavPanel.show()
-                self.setMinimumWidth(900)
-                self.setMinimumHeight(700)
-                if not self.isFullScreen():
-                    if self.wasMaximised:
-                        self.showMaximized()
                 s = Settings()
                 self.dockWidgetNavPanel.setVisible(s.navigationPanelVisible)
                 self.dockWidgetLogs.setVisible(s.logPanelVisible)
