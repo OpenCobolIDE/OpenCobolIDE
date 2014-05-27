@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Mon May 26 15:19:27 2014
+# Created: Tue May 27 16:05:39 2014
 #      by: PyQt5 UI code generator 5.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -131,7 +131,7 @@ class Ui_MainWindow(object):
 "")
         self.label_4.setObjectName("label_4")
         self.verticalLayout_4.addWidget(self.label_4)
-        self.listWidgetRecents = QtWidgets.QListWidget(self.frame_2)
+        self.listWidgetRecents = RecentFilesListWidget(self.frame_2)
         self.listWidgetRecents.setMinimumSize(QtCore.QSize(400, 0))
         self.listWidgetRecents.setStyleSheet("border: none;\n"
 "background-color: transparent;")
@@ -520,5 +520,6 @@ class Ui_MainWindow(object):
         self.actionShowAppLog.setToolTip(_translate("MainWindow", "Show/hide application log window"))
         self.actionClearLog.setText(_translate("MainWindow", "Clear"))
 
-from pyqode.core.frontend.widgets import ErrorsTable, TabWidget, InteractiveConsole
+from pyqode.core.frontend.widgets import ErrorsTable, InteractiveConsole, TabWidget
+from oci.frontend.widgets import RecentFilesListWidget
 from . import ide_rc

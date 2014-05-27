@@ -321,7 +321,7 @@ border-bottom: 1px solid rgb(150, 150, 150);
               </widget>
              </item>
              <item>
-              <widget class="QListWidget" name="listWidgetRecents">
+              <widget class="RecentFilesListWidget" name="listWidgetRecents">
                <property name="minimumSize">
                 <size>
                  <width>400</width>
@@ -1051,6 +1051,11 @@ background-color: transparent;</string>
    <class>ErrorsTable</class>
    <extends>QTableWidget</extends>
    <header>pyqode.core.frontend.widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>RecentFilesListWidget</class>
+   <extends>QListWidget</extends>
+   <header>oci/frontend/widgets</header>
   </customwidget>
  </customwidgets>
  <resources>

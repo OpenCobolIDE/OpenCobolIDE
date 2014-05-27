@@ -74,6 +74,9 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
 
     def setupUi(self, MainWindow):
         super().setupUi(MainWindow)
+        self.listWidgetRecents.clear_requested.connect(self._clear_recents)
+        self.listWidgetRecents.remove_current_requested.connect(
+            self._remove_current_recent_file)
         s = Settings()
         # application log
         if not s.appLogVisible:
@@ -149,6 +152,17 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
             self.dockWidgetNavPanel.setVisible)
         self.aShowLogsWin.toggled.connect(
             self.dockWidgetLogs.setVisible)
+
+    def _clear_recents(self):
+        self.recent_files_manager.clear()
+        self.updateRecents()
+
+    def _remove_current_recent_file(self):
+        filename = self.listWidgetRecents.currentItem().data(32)
+        files = self.recent_files_manager.get_recent_files()
+        files.remove(filename)
+        self.recent_files_manager.remove(filename)
+        self.updateRecents()
 
     def setup_recent_files_menu(self):
         """ Setup the recent files menu and manager """
