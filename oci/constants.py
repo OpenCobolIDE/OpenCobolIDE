@@ -18,10 +18,6 @@ Contains application constants
 """
 import os
 import sys
-from pyqode.core import settings
-
-# cobol use - extensively for complex identifier, don't break them!
-settings.word_separators.remove("-")
 
 COBOL_EXTENSIONS = [".COB", ".CBL", ".PCO", ".CPY"]
 ALL_COBOL_EXTENSIONS = COBOL_EXTENSIONS + [ext.lower() for ext in COBOL_EXTENSIONS]

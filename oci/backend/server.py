@@ -12,6 +12,7 @@ from oci.backend.workers import CobolAnalyserProvider
 
 
 if __name__ == '__main__':
+    backend.DocumentWordsProvider.separators.remove('-')
     backend.CodeCompletionWorker.providers.append(
         CobolAnalyserProvider())
     backend.CodeCompletionWorker.providers.append(

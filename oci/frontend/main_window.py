@@ -22,7 +22,7 @@ import sys
 import subprocess
 
 import qdarkstyle
-from pyqode.core import frontend, style
+from pyqode.core import frontend
 from pyqode.core.frontend import modes, widgets
 from pyqode.core.frontend import utils as pyqode_utils
 from pyqode.qt import QtCore, QtGui, QtWidgets
@@ -94,8 +94,6 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         self.statusbar.addPermanentWidget(self.lblEncoding, 20)
         self.statusbar.addPermanentWidget(self.lblCursorPos, 20)
 
-
-        self.initDefaultSettings()
         self.stackedWidget.setCurrentIndex(0)
         self.__prevRootNode = None
         if s.geometry:
@@ -165,11 +163,6 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         self.menuFile.insertMenu(self.actionQuit, self.menu_recents)
         self.menuFile.insertSeparator(self.actionQuit)
         self.updateRecents()
-
-    @staticmethod
-    def initDefaultSettings():
-        settings.DEFAULT_EDITOR_STYLE = style.__dict__
-        settings.DEFAULT_EDITOR_SETTINGS = settings.__dict__
 
     def updateViewToolbarMenu(self):
         """

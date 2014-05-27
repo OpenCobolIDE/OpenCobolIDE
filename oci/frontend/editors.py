@@ -76,6 +76,7 @@ class CobolCodeEdit(frontend.CodeEdit):
         self.setupPanels()
         self.setupModes()
         self.updateSettings()
+        self.word_separators.remove('-')
 
     def __del__(self):
         frontend.stop_server(self)
