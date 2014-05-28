@@ -50,3 +50,7 @@ def windows_init():
     os.environ["COB_INCLUDE_PATH"] = os.path.join(oc_root_pth, "include")
     os.environ["COB_LIB_PATH"] = os.path.join(oc_root_pth, "lib")
     os.environ["PATH"] = os.environ["COB_LIBRARY_PATH"]
+
+
+def osx_init():
+    os.environ["PATH"] += ':/usr/local/bin'

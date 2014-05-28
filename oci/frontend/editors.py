@@ -16,6 +16,7 @@
 """
 Contains an editor specialised for cobol source code editing.
 """
+import logging
 import mimetypes
 import os
 import sys
@@ -41,7 +42,12 @@ for ext in constants.COBOL_EXTENSIONS:
 
 def _start_server(editor):
     if hasattr(sys, "frozen"):
-        frontend.start_server(editor, os.path.join(os.getcwd(), 'server.exe'))
+        cwd = os.path.dirname(sys.executable)
+        srv = 'server.exe' if sys.platform == 'win32' else 'ociserver'
+        srv = os.path.join(cwd, srv)
+        with open('/Users/renega_666/Documents/info.txt', 'w') as f:
+            f.write(srv)
+        frontend.start_server(editor, srv)
     else:
         frontend.start_server(editor, server.__file__)
 

@@ -25,6 +25,27 @@ import sys
 from cx_Freeze import setup, Executable
 
 
+# Clean up
+if os.path.exists("build"):
+    shutil.rmtree(os.path.join(os.getcwd(), "build"))
+if os.path.exists("dist"):
+    shutil.rmtree(os.path.join(os.getcwd(), "dist"))
+
+# Detect system
+windows = sys.platform == 'win32'
+osx = sys.platform == 'darwin'
+
+app_script = "open-cobol-ide"
+app_name = "OpenCobolIDE"
+app_exe = "OpenCobolIDE.exe" if windows else "OpenCobolIDE"
+srv_script = "oci/backend/server.py"
+srv_name = "server"
+srv_exe = "server.exe" if windows else "ociserver"
+
+app_icon = "oci/frontend/ui/rc/silex-icon.ico" if windows else "oci/frontend/ui/rc/silex-192x192.icns"
+
+
+# Get App version
 def read_version():
     """
     Reads the version without self importing
@@ -34,69 +55,52 @@ def read_version():
         for l in lines:
             if "__version__" in l:
                 return l.split("=")[1].strip().replace('"', "")
-
-
 __version__ = read_version()
 
-
-def get_build_dir():
-    build_dir = glob.glob("build/*")[0]
-    return build_dir
-
-
-def configure_iss_script():
-    """
-    Configures installer version (setup.iss.in > setup.iss)
-    """
-    build_dir = get_build_dir()
-    with open("setup.iss.in", "r") as src, open("setup.iss", "w") as dst:
-        lines = src.readlines()
-        data = []
-        for l in lines:
-            l = l.replace("@VERSION@", __version__)
-            l = l.replace("@BUILD_DIR@", build_dir)
-            data.append(l)
-        dst.writelines(data)
 
 if len(sys.argv) == 1:
     sys.argv.append("build")
 
-# note: if you have troubles with pkg_resources import, ensure you
-# have a recent version of setuptools and that you did not install it
-# using ez_setup.py or setup.py, cx_Freeze does not seem to be able to parse
-# eggs (at least, it fails on the setuptools egg)
 options = {"excludes": ["pyqode.qt.uic.port_v3"],
            # add the namespace packages that you uses
-           "namespace_packages": ["pyqode.core", "pyqode.widgets"],
+           "namespace_packages": ["pyqode.core"],
            # freeze the pygments default style along with our executable
            "includes": ["pygments.styles.default", "pygments.styles.monokai",
                         "pkg_resources"]}
 
 print("### Freezing application\n"
       "#####################################################################\n")
-if os.path.exists("build"):
-    shutil.rmtree(os.path.join(os.getcwd(), "build"))
-if os.path.exists("dist"):
-    shutil.rmtree(os.path.join(os.getcwd(), "dist"))
-setup(name="OpenCobolIDE",
+setup(name=app_name,
       version=__version__,
-      options={"build_exe": options},
+      options={"build_exe": options, "bdist_mac": {'iconfile': app_icon}},
       executables=[
-          Executable("open-cobol-ide", targetName="OpenCobolIDE.exe",
-                     icon="oci/ui/rc/silex-icon.ico", base="Win32GUI")])
+          Executable(app_script,
+                     targetName=app_exe,
+                     icon=app_icon if windows else None,
+                     base="Win32GUI" if windows else None),
+          Executable(srv_script, targetName=srv_exe)])
 
-print("### Copying OpenCobol distribution\n"
-      "#####################################################################\n")
-build_dir = os.path.join(os.getcwd(), get_build_dir())
-cobc_dir = os.path.join(build_dir, "OpenCobol")
-if not os.path.exists(cobc_dir):
-    shutil.copytree(os.path.join(os.getcwd(), "OpenCobol"),
-                    os.path.join(build_dir, "OpenCobol"))
+if windows:
+    print("### Copying OpenCobol distribution\n"
+          "#####################################################################\n")
+    build_dir = os.path.join(os.getcwd(), glob.glob("build/*")[0])
+    cobc_dir = os.path.join(build_dir, "OpenCobol")
+    if not os.path.exists(cobc_dir):
+        shutil.copytree(os.path.join(os.getcwd(), "OpenCobol"),
+                        os.path.join(build_dir, "OpenCobol"))
 
-print("\n### Creating windows installer using Inno Setup\n"
-      "#####################################################################\n")
-try:
-    configure_iss_script()
-    os.system("iscc %s" % os.path.join(os.getcwd(), "setup.iss"))
-except Exception as e:
-    print(e)
+    print("\n### Creating windows installer using Inno Setup\n"
+          "#####################################################################\n")
+    try:
+        build_dir = glob.glob("build/*")[0]
+        with open("setup.iss.in", "r") as src, open("setup.iss", "w") as dst:
+            lines = src.readlines()
+            data = []
+            for l in lines:
+                l = l.replace("@VERSION@", __version__)
+                l = l.replace("@BUILD_DIR@", build_dir)
+                data.append(l)
+            dst.writelines(data)
+        os.system("iscc %s" % os.path.join(os.getcwd(), "setup.iss"))
+    except Exception as e:
+        print(e)

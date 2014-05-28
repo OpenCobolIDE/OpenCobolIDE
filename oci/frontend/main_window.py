@@ -55,6 +55,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         self.setupUi(self)
         self.applySettings()
         logger.setup(self.textEditLogs)
+        _logger().info('Environment: %r' % os.environ)
         if Settings().fullscreen:
             self.showFullScreen()
         else:
@@ -77,6 +78,8 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         self.listWidgetRecents.clear_requested.connect(self._clear_recents)
         self.listWidgetRecents.remove_current_requested.connect(
             self._remove_current_recent_file)
+        self.toolBarCode.setIconSize(QtCore.QSize(22, 22))
+        self.toolBarFile.setIconSize(QtCore.QSize(22, 22))
         s = Settings()
         # application log
         if not s.appLogVisible:

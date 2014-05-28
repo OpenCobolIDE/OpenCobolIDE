@@ -98,6 +98,7 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
             self.tbwVersions.setItem(i, 0, item)
         self.textBrowser.setStyleSheet("color: red")
 
+
 class DialogRejected(Exception):
     pass
 
@@ -170,7 +171,7 @@ QTabBar::tab:selected {
 
     TAB_BAR_WHITE_CSS = """
 background: #E2E2E2;
-alignment: center;
+alignment: left;
 border:1px transparent;
 outline: none;
 border-bottom: 1px solid #A7ABA7;
@@ -179,7 +180,7 @@ border-top: 1px solid #A7ABA7
 
     TAB_BAR_DARK_CSS = """
 background: #282828;
-alignment: center;
+alignment: left;
 border:1px transparent;
 outline: none;
 border-bottom: 2px solid silver;
@@ -211,10 +212,11 @@ border-top: 2px solid silver;
         self.setMinimumWidth(450)
         self.tabWidget.setCurrentIndex(0)
         bar = self.tabWidget.tabBar()
-        if Settings().globalStyle == 'white':
-            bar.setStyleSheet(self.TAB_BAR_WHITE_CSS)
-        else:
-            bar.setStyleSheet(self.TAB_BAR_DARK_CSS)
+        if sys.platform != 'darwin':
+            if Settings().globalStyle == 'white':
+                bar.setStyleSheet(self.TAB_BAR_WHITE_CSS)
+            else:
+                bar.setStyleSheet(self.TAB_BAR_DARK_CSS)
 
     def reset(self, allTabs=False):
         settings = Settings()
@@ -286,12 +288,14 @@ border-top: 2px solid silver;
         self.reset()
 
     def resizeEvent(self, *args, **kwargs):
-        self.tabWidget.tabBar().setFixedWidth(self.width())
-        css = self.TAB_WIDGET_WHITE_CSS if Settings().globalStyle == 'white' \
-            else self.TAB_WIDGET_DARK_CSS
-        self.tabWidget.setStyleSheet(
-            css + 'QTabBar::tab { width: %dpx};' %
-            ((self.width() - self.width() / 8) / self.tabWidget.count()))
+        super().resizeEvent(*args, **kwargs)
+        if sys.platform != 'darwin':
+            self.tabWidget.tabBar().setFixedWidth(self.width())
+            css = self.TAB_WIDGET_WHITE_CSS if Settings().globalStyle == 'white' \
+                else self.TAB_WIDGET_DARK_CSS
+            self.tabWidget.setStyleSheet(
+                css + 'QTabBar::tab { width: %dpx};' %
+                ((self.width() - self.width() / 8) / self.tabWidget.count()))
 
     @classmethod
     def editSettings(cls, parent):

@@ -62,7 +62,7 @@ def setup(text_edit):
         "%Y-%m-%d %H:%M:%S")
     handlers = [logging.StreamHandler(), TextEditHandler(text_edit)]
     loggers[0].setLevel(level)
-    loggers[1].setLevel(logging.WARNING)
+    loggers[1].setLevel(level)
     for handler in handlers:
         handler.setFormatter(formatter)
     for logger in loggers:

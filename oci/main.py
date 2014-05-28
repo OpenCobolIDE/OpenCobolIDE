@@ -21,7 +21,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 import sys
 from pyqode.qt import QtWidgets
-from oci.utils import windows_init
+from oci.utils import windows_init, osx_init
 from oci.frontend.main_window import MainWindow
 
 
@@ -29,6 +29,8 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     if sys.platform == "win32":
         windows_init()
+    elif sys.platform == 'darwin':
+        osx_init()
     win = MainWindow()
     app.exec_()
 
