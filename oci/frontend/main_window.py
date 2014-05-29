@@ -75,6 +75,8 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
 
     def setupUi(self, MainWindow):
         super().setupUi(MainWindow)
+        self.actionPreferences.setShortcut('F2')
+        self.addActions(self.menuBar.actions())
         self.listWidgetRecents.clear_requested.connect(self._clear_recents)
         self.listWidgetRecents.remove_current_requested.connect(
             self._remove_current_recent_file)
@@ -95,11 +97,35 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         # status bar
         self.lblFilename = QtWidgets.QLabel()
         self.lblEncoding = QtWidgets.QLabel()
+        self.lblEncoding.setAlignment(QtCore.Qt.AlignHCenter |
+                                       QtCore.Qt.AlignVCenter)
+        self.lblEncoding.setText('')
         self.lblCursorPos = QtWidgets.QLabel()
+        self.lblCursorPos.setAlignment(QtCore.Qt.AlignHCenter |
+                                       QtCore.Qt.AlignVCenter)
+        self.lblCursorPos.setText('')
+        if not sys.platform == 'darwin':
+            btMenu = QtWidgets.QToolButton(self)
+            btMenu.setPopupMode(btMenu.MenuButtonPopup)
+            mnu = QtWidgets.QMenu(self)
+            mnu.addAction(self.actionNew)
+            mnu.addAction(self.actionOpen)
+            mnu.addMenu(self.menu_recents)
+            mnu.addSeparator()
+            mnu.addAction(self.actionHelp)
+            mnu.addAction(self.actionAbout)
+            mnu.addSeparator()
+            mnu.addAction(self.actionQuit)
+            btMenu.setMenu(mnu)
+            btMenu.setToolTip('Preferences')
+            btMenu.clicked.connect(self.actionPreferences.trigger)
+            btMenu.setIcon(QtGui.QIcon.fromTheme(
+                "preferences-system",
+                QtGui.QIcon(":/ide-icons/rc/Preferences-system.png")))
+            self.statusbar.addPermanentWidget(btMenu)
         self.statusbar.addPermanentWidget(self.lblFilename, 200)
-        self.statusbar.addPermanentWidget(self.lblEncoding, 20)
-        self.statusbar.addPermanentWidget(self.lblCursorPos, 20)
-
+        self.statusbar.addPermanentWidget(self.lblEncoding, 10)
+        self.statusbar.addPermanentWidget(self.lblCursorPos, 1)
         self.stackedWidget.setCurrentIndex(0)
         self.__prevRootNode = None
         if s.geometry:
@@ -234,15 +260,6 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         ag.addAction(self.actionProgram)
         ag.addAction(self.actionSubprogram)
         ag.triggered.connect(self.on_programType_triggered)
-        # self.programActionGroup = ag
-        # tb = QToolButton()
-        # tb.setToolTip("Select the compiler program type to make")
-        # tb.setMenu(self.menuProgramType)
-        # tb.setPopupMode(QToolButton.InstantPopup)
-        # tb.setText("Executable")
-        # self.toolBarCode.insertWidget(self.actionCompile, tb)
-        # self.toolBarCode.insertSeparator(self.actionCompile)
-        pass
 
     def on_programType_triggered(self, action):
         # self.tb.setText(action.text())
@@ -309,6 +326,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
             self.updateRecents()
 
     def updateRecents(self):
+        self.menu_recents.update_actions()
         self.listWidgetRecents.clear()
         for file in self.recent_files_manager.get_recent_files():
             item = QtWidgets.QListWidgetItem()
@@ -395,6 +413,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         for i in range(self.tabWidgetEditors.count()):
             self.tabWidgetEditors.widget(i).updateSettings()
         self.setupIcons()
+        self.menuBar.setVisible(Settings().displayMenuBar)
         if self.stackedWidget.currentIndex():
             self.toolBarCode.setVisible(Settings().displayToolBar)
             self.toolBarFile.setVisible(Settings().displayToolBar)
@@ -651,6 +670,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         self.tabWidgetLogs.setTabIcon(1, runIcon)
 
     def showHomePage(self, home=True):
+        self.menuBar.setVisible(Settings().displayMenuBar)
         if home:
             _logger().debug('going to home page')
             if self.stackedWidget.currentIndex() == 1:
@@ -662,18 +682,19 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
             self.toolBarFile.hide()
             self.toolBarCode.hide()
             self.dockWidgetLogs.hide()
+            self.statusBar().setVisible(Settings().displayStatusBar)
             self.dockWidgetNavPanel.hide()
             self.dockWidgetOffsets.hide()
-            self.lblEncoding.setText("")
-            self.lblFilename.setText("OpenCobolIDE v.%s" % __version__)
-            self.lblCursorPos.setText("")
+            self.lblEncoding.setText('')
+            self.lblFilename.setText('OpenCobolIDE v.%s' % __version__)
+            self.lblCursorPos.setText('')
         else:
             _logger().debug('going to editor page')
             if self.stackedWidget.currentIndex() == 0:
                 self.stackedWidget.setCurrentIndex(1)
-                self.menuBar.show()
                 self.dockWidgetNavPanel.show()
                 s = Settings()
+                self.statusBar().setVisible(Settings().displayStatusBar)
                 self.dockWidgetNavPanel.setVisible(s.navigationPanelVisible)
                 self.dockWidgetLogs.setVisible(s.logPanelVisible)
                 if s.displayToolBar:

@@ -48,6 +48,7 @@ class ControlPanel(frontend.Panel):
         self.actionGroup.triggered.connect(self.onProgramTypeChangeRequest)
         menu.addActions([self.actionExe, self.actionModule])
         self.btCompile.setMenu(menu)
+        self.btCompile.setPopupMode(self.btCompile.DelayedPopup)
         layout.addWidget(self.btCompile)
         layout.addWidget(self.btRun)
         layout.addSpacerItem(spacer)

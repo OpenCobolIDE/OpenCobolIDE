@@ -19,16 +19,7 @@
    </iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>0</number>
    </property>
    <item row="0" column="0">
@@ -40,16 +31,7 @@
       <string notr="true"/>
      </property>
      <layout class="QGridLayout" name="widget_2">
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
+      <property name="margin">
        <number>0</number>
       </property>
       <property name="spacing">
@@ -101,6 +83,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="checkBoxViewMenuBar">
+            <property name="text">
+             <string>Display Menu bar</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="checkBoxViewStatus">
             <property name="text">
              <string>Display Status bar</string>
@@ -113,7 +102,7 @@
           <item>
            <widget class="QCheckBox" name="checkBoxViewToolBar">
             <property name="text">
-             <string>Display toolbar</string>
+             <string>Display Tool bar </string>
             </property>
            </widget>
           </item>
@@ -392,7 +381,7 @@
                  </property>
                  <property name="currentFont">
                   <font>
-                   <family>Andale Mono</family>
+                   <family>DejaVu Sans Mono</family>
                    <pointsize>10</pointsize>
                   </font>
                  </property>
@@ -501,16 +490,7 @@
    </item>
    <item row="1" column="0">
     <layout class="QGridLayout" name="gridLayout_3">
-     <property name="leftMargin">
-      <number>9</number>
-     </property>
-     <property name="topMargin">
-      <number>9</number>
-     </property>
-     <property name="rightMargin">
-      <number>9</number>
-     </property>
-     <property name="bottomMargin">
+     <property name="margin">
       <number>9</number>
      </property>
      <item row="0" column="0">

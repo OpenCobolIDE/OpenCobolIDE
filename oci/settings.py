@@ -151,6 +151,14 @@ class Settings(object):
         self._settings.setValue('displayMargins', int(value))
 
     @property
+    def displayMenuBar(self):
+        return bool(int(self._settings.value('displayMenuBar', '0')))
+
+    @displayMenuBar.setter
+    def displayMenuBar(self, value):
+        self._settings.setValue('displayMenuBar', int(value))
+
+    @property
     def displayStatusBar(self):
         return bool(int(self._settings.value('displayStatusBar', '1')))
 

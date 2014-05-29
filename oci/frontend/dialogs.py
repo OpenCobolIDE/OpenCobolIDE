@@ -225,6 +225,7 @@ border-top: 2px solid silver;
             self.checkBoxViewLineNumber.setChecked(settings.displayLineNumbers)
             self.checkBoxViewMargins.setChecked(settings.displayMargins)
             self.checkBoxViewStatus.setChecked(settings.displayStatusBar)
+            self.checkBoxViewMenuBar.setChecked(settings.displayMenuBar)
             self.checkBoxHighlightCurrentLine.setChecked(
                 settings.highlightCurrentLine)
             self.checkBoxHighlightBraces.setChecked(
@@ -273,6 +274,9 @@ border-top: 2px solid silver;
             settings.displayLineNumbers = True
             settings.displayMargins = True
             settings.displayStatusBar = True
+            settings.displayMenuBar = False
+            settings.displayControlPanel = True
+            settings.displayToolBar = False
             settings.highlightCurrentLine = True
             settings.highlightMatchingBraces = True
             settings.highlightWhitespaces = False
@@ -325,3 +329,4 @@ border-top: 2px solid silver;
         settings.shellCommand = dlg.lineEditRunTerm.text()
         settings.displayControlPanel = dlg.checkBoxViewControlPanel.isChecked()
         settings.displayToolBar = dlg.checkBoxViewToolBar.isChecked()
+        settings.displayMenuBar = dlg.checkBoxViewMenuBar.isChecked()

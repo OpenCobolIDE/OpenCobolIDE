@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_preferences.ui'
 #
-# Created: Thu May 29 18:24:19 2014
+# Created: Thu May 29 19:25:30 2014
 #      by: PyQt5 UI code generator 5.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -22,8 +22,8 @@ class Ui_Dialog(object):
         self.widget.setStyleSheet("")
         self.widget.setObjectName("widget")
         self.widget_2 = QtWidgets.QGridLayout(self.widget)
-        self.widget_2.setSpacing(0)
         self.widget_2.setContentsMargins(0, 0, 0, 0)
+        self.widget_2.setSpacing(0)
         self.widget_2.setObjectName("widget_2")
         self.tabWidget = QtWidgets.QTabWidget(self.widget)
         self.tabWidget.setStyleSheet("")
@@ -35,7 +35,6 @@ class Ui_Dialog(object):
         self.tabView = QtWidgets.QWidget()
         self.tabView.setObjectName("tabView")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.tabView)
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.checkBoxViewLineNumber = QtWidgets.QCheckBox(self.tabView)
         self.checkBoxViewLineNumber.setChecked(True)
@@ -45,6 +44,9 @@ class Ui_Dialog(object):
         self.checkBoxViewMargins.setChecked(True)
         self.checkBoxViewMargins.setObjectName("checkBoxViewMargins")
         self.verticalLayout_2.addWidget(self.checkBoxViewMargins)
+        self.checkBoxViewMenuBar = QtWidgets.QCheckBox(self.tabView)
+        self.checkBoxViewMenuBar.setObjectName("checkBoxViewMenuBar")
+        self.verticalLayout_2.addWidget(self.checkBoxViewMenuBar)
         self.checkBoxViewStatus = QtWidgets.QCheckBox(self.tabView)
         self.checkBoxViewStatus.setChecked(True)
         self.checkBoxViewStatus.setObjectName("checkBoxViewStatus")
@@ -166,7 +168,7 @@ class Ui_Dialog(object):
         self.fontComboBox = QtWidgets.QFontComboBox(self.groupBox_6)
         self.fontComboBox.setFontFilters(QtWidgets.QFontComboBox.MonospacedFonts)
         font = QtGui.QFont()
-        font.setFamily("Andale Mono")
+        font.setFamily("DejaVu Sans Mono")
         font.setPointSize(10)
         self.fontComboBox.setCurrentFont(font)
         self.fontComboBox.setObjectName("fontComboBox")
@@ -237,8 +239,9 @@ class Ui_Dialog(object):
         self.widget.setAccessibleName(_translate("Dialog", "widget", "widget"))
         self.checkBoxViewLineNumber.setText(_translate("Dialog", "Display line numbers"))
         self.checkBoxViewMargins.setText(_translate("Dialog", "Display margins"))
+        self.checkBoxViewMenuBar.setText(_translate("Dialog", "Display Menu bar"))
         self.checkBoxViewStatus.setText(_translate("Dialog", "Display Status bar"))
-        self.checkBoxViewToolBar.setText(_translate("Dialog", "Display toolbar"))
+        self.checkBoxViewToolBar.setText(_translate("Dialog", "Display Tool bar "))
         self.checkBoxViewControlPanel.setText(_translate("Dialog", "Display control panel (compile and run button inside editor)"))
         self.groupBox.setTitle(_translate("Dialog", "Highlighting"))
         self.checkBoxHighlightCurrentLine.setText(_translate("Dialog", "Highlight current line"))
