@@ -27,10 +27,11 @@ Features:
 - code folding
 - navigable tree view of division, sections, paragraphs etc.
 - calculates the offsets of selected record definitions
-- compile as program (.exe) or as subprogram (.so)
-- run the program from the editor
-- also open text files
-- cross platform: work on GNU/Linux and Windows
+- compile as program (.exe) or as subprogram (.so/.dll)
+- run the program from the editor or from a configurable external terminal
+- also open other text files
+- dark color schemes and theme
+- cross platform: work on GNU/Linux, Windows and Mac OSX
 
 
 License
@@ -70,6 +71,19 @@ Windows
 
 There is a windows installer available here: https://launchpad.net/cobcide/+download
 
+Mac OSX
+#######
+
+There is a dmg image available here: https://launchpad.net/cobcide/+download
+
+The only thing you have to do is:
+
+- 1) to install OpenCobol, e.g. using homebrew::
+
+    brew install open-cobol
+
+- 2) Run the OpenCobolIDE app
+
 
 Requirements
 ------------
@@ -78,7 +92,7 @@ The project depends on the following packages:
 
 - `Python3`_
 - `setuptools`_
-- `pyqode.qt`_
+- `PyQt4`_ or `PyQt5`_
 - `OpenCobol`_
 - `pyqode.core`_
 - `pyqode.widgets`_
@@ -132,7 +146,7 @@ Screenshots
     :align: center
 
 
-* Dark style support (based on `qdarkstyle`_ style sheet)
+* Dark style support
 
 .. image:: doc/source/_static/DarkStyle.png
     :align: center
@@ -151,4 +165,5 @@ Screenshots
 .. _pyqode.widgets: https://github.com/pyQode/pyqode.widgets/
 .. _OpenCobol: http://opencobol.org/
 .. _setuptools: https://pypi.python.org/pypi/setuptools
-.. _Python: http://python.org/
+.. _Python3: http://python.org/
+.. _PyQt5: http://www.riverbankcomputing.co.uk/software/pyqt/download
