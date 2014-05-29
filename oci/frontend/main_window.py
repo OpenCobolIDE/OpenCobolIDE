@@ -395,6 +395,9 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         for i in range(self.tabWidgetEditors.count()):
             self.tabWidgetEditors.widget(i).updateSettings()
         self.setupIcons()
+        if self.stackedWidget.currentIndex():
+            self.toolBarCode.setVisible(Settings().displayToolBar)
+            self.toolBarFile.setVisible(Settings().displayToolBar)
 
     @QtCore.Slot()
     def on_actionPreferences_triggered(self):
