@@ -296,7 +296,7 @@ border-top: 2px solid silver;
         self.reset()
 
     def resizeEvent(self, *args, **kwargs):
-        super().resizeEvent(*args, **kwargs)
+        # super().resizeEvent(*args, **kwargs)
         if sys.platform != 'darwin':
             self.tabWidget.tabBar().setFixedWidth(self.width())
             css = self.TAB_WIDGET_WHITE_CSS if Settings().globalStyle == 'white' \
