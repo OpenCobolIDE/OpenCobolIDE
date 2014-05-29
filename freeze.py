@@ -66,6 +66,7 @@ options = {"excludes": ["pyqode.qt.uic.port_v3"],
            "namespace_packages": ["pyqode.core"],
            # freeze the pygments default style along with our executable
            "includes": ["pygments.styles.default", "pygments.styles.monokai",
+                        "pygments.styles.native"
                         "pkg_resources"]}
 
 print("### Freezing application\n"

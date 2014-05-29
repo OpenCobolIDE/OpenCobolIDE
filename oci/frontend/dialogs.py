@@ -205,7 +205,7 @@ border-top: 2px solid silver;
                 self.listWidgetColorSchemes.setCurrentRow(i)
                 break
             elif (not state and
-                    self.listWidgetColorSchemes.item(i).text() == 'monokai'):
+                    self.listWidgetColorSchemes.item(i).text() == 'native'):
                 self.listWidgetColorSchemes.setCurrentRow(i)
                 break
 
