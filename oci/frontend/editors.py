@@ -107,7 +107,8 @@ class CobolCodeEdit(frontend.CodeEdit):
             self.pgmTypeChangeRequested.emit)
         frontend.install_panel(self, self.controlPanel,
                                frontend.Panel.Position.RIGHT)
-        frontend.install_panel(self, panels.LineNumberPanel(),
+        self.lineNumberPanel = panels.LineNumberPanel()
+        frontend.install_panel(self, self.lineNumberPanel,
                                frontend.Panel.Position.LEFT)
         frontend.install_panel(self, panels.MarkerPanel())
         frontend.install_panel(self, panels.SearchAndReplacePanel(),
@@ -181,6 +182,7 @@ class CobolCodeEdit(frontend.CodeEdit):
 
     def updateSettings(self):
         settings = Settings()
+        self.tab_length = settings.tabWidth
         self.caretLineHighlighter.enabled = settings.highlightCurrentLine
         self.symbolMatcher.enabled = settings.highlightMatchingBraces
         self.syntaxHighlighterMode.pygments_style = settings.colorScheme
@@ -193,7 +195,8 @@ class CobolCodeEdit(frontend.CodeEdit):
         self.show_whitespaces = settings.highlightWhitespaces
         self.controlPanel.enabled = settings.displayControlPanel
         self.controlPanel.setVisible(self.controlPanel.enabled)
-        # todo: tab len
+        self.lineNumberPanel.enabled = settings.displayLineNumbers
+        self.lineNumberPanel.setVisible(settings.displayLineNumbers)
 
     def detect_file_type(self):
         self.__fileType = detect_file_type(self.file_path, self.file_encoding)

@@ -45,6 +45,52 @@ def _logger():
     return logging.getLogger(__name__)
 
 
+# Homepage stylesheets
+frame_recent_white = """
+QFrame
+{
+border: 1px solid rgb(150, 150, 150);
+border-radius: 5px;
+background-color: rgb(255, 255, 255);
+}
+"""
+
+list_recent_white = """
+QListWidget
+{
+border: none;
+background-color: transparent;
+}
+"""
+label_recent_white = """border: none;
+border-top-left-radius: 3px;
+border-top-right-radius: 3px;
+border-bottom-left-radius: 0px;
+border-bottom-right-radius: 0px;
+background-color: rgb(206, 206, 206);
+padding: 5px;
+border-bottom: 1px solid rgb(150, 150, 150);
+"""
+
+frame_recent_dark = """border: 1px solid rgb(80, 80, 80);
+border-radius: 5px;
+"""
+
+list_recent_dark = """border: none;
+background-color: transparent;
+"""
+
+label_recent_dark = """border: none;
+border-top-left-radius: 3px;
+border-top-right-radius: 3px;
+border-bottom-left-radius: 0px;
+border-bottom-right-radius: 0px;
+background-color: rgb(64, 64, 64);
+padding: 5px;
+border-bottom: 1px solid rgb(80, 80, 80);
+"""
+
+
 class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
 
     compilerMsgReady = QtCore.Signal(modes.CheckerMessage)
@@ -75,6 +121,10 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
 
     def setupUi(self, MainWindow):
         super().setupUi(MainWindow)
+        # Home page stylesheet
+        self.frameRecents.setStyleSheet(frame_recent_white)
+        self.labelRecents.setStyleSheet(label_recent_white)
+        self.listWidgetRecents.setStyleSheet(list_recent_white)
         self.actionPreferences.setShortcut('F2')
         self.addActions(self.menuBar.actions())
         self.listWidgetRecents.clear_requested.connect(self._clear_recents)
@@ -402,7 +452,13 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
     def applySettings(self):
         if Settings().globalStyle == 'white':
             QtWidgets.QApplication.instance().setStyleSheet("")
+            self.frameRecents.setStyleSheet(frame_recent_white)
+            self.labelRecents.setStyleSheet(label_recent_white)
+            self.listWidgetRecents.setStyleSheet(list_recent_white)
         else:
+            self.frameRecents.setStyleSheet(frame_recent_dark)
+            self.labelRecents.setStyleSheet(label_recent_dark)
+            self.listWidgetRecents.setStyleSheet(list_recent_dark)
             if '5' in os.environ['QT_API']:
                 QtWidgets.QApplication.instance().setStyleSheet(
                     qdarkstyle.load_stylesheet_pyqt5())

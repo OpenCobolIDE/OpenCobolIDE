@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Thu May 29 21:31:03 2014
+# Created: Thu May 29 23:41:33 2014
 #      by: PyQt5 UI code generator 5.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -103,24 +103,21 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem7)
-        self.frame_2 = QtWidgets.QFrame(self.page)
+        self.frameRecents = QtWidgets.QFrame(self.page)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.frame_2.sizePolicy().hasHeightForWidth())
-        self.frame_2.setSizePolicy(sizePolicy)
-        self.frame_2.setStyleSheet("border: 1px solid rgb(150, 150, 150);\n"
-"border-radius: 5px;\n"
-"background-color: rgb(255, 255, 255);")
-        self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame_2.setObjectName("frame_2")
-        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.frame_2)
+        sizePolicy.setHeightForWidth(self.frameRecents.sizePolicy().hasHeightForWidth())
+        self.frameRecents.setSizePolicy(sizePolicy)
+        self.frameRecents.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frameRecents.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frameRecents.setObjectName("frameRecents")
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.frameRecents)
         self.verticalLayout_4.setSpacing(0)
         self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
-        self.label_4 = QtWidgets.QLabel(self.frame_2)
-        self.label_4.setStyleSheet("border: none;\n"
+        self.labelRecents = QtWidgets.QLabel(self.frameRecents)
+        self.labelRecents.setStyleSheet("border: none;\n"
 "border-top-left-radius: 3px;\n"
 "border-top-right-radius: 3px;\n"
 "border-bottom-left-radius: 0px;\n"
@@ -129,15 +126,15 @@ class Ui_MainWindow(object):
 "padding: 5px;\n"
 "border-bottom: 1px solid rgb(150, 150, 150);\n"
 "")
-        self.label_4.setObjectName("label_4")
-        self.verticalLayout_4.addWidget(self.label_4)
-        self.listWidgetRecents = RecentFilesListWidget(self.frame_2)
+        self.labelRecents.setObjectName("labelRecents")
+        self.verticalLayout_4.addWidget(self.labelRecents)
+        self.listWidgetRecents = RecentFilesListWidget(self.frameRecents)
         self.listWidgetRecents.setMinimumSize(QtCore.QSize(400, 0))
         self.listWidgetRecents.setStyleSheet("border: none;\n"
 "background-color: transparent;")
         self.listWidgetRecents.setObjectName("listWidgetRecents")
         self.verticalLayout_4.addWidget(self.listWidgetRecents)
-        self.horizontalLayout_5.addWidget(self.frame_2)
+        self.horizontalLayout_5.addWidget(self.frameRecents)
         spacerItem8 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem8)
         self.verticalLayout_5.addLayout(self.horizontalLayout_5)
@@ -437,7 +434,7 @@ class Ui_MainWindow(object):
         self.label_3.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><img src=\":/ide-icons/rc/silex-192x192.png\"/></p><p align=\"center\"><span style=\" font-size:20pt;\">Welcome to OpenCobolIDE</span><br/></p><p align=\"center\">Click on <span style=\" font-weight:600; font-style:italic;\">New </span>or <span style=\" font-weight:600; font-style:italic;\">Open </span>to get started!</p></body></html>"))
         self.btNewFile.setText(_translate("MainWindow", "New"))
         self.btOpenFile.setText(_translate("MainWindow", "Open"))
-        self.label_4.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-weight:600; font-style:italic;\">Recent files</span></p></body></html>"))
+        self.labelRecents.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-weight:600; font-style:italic;\">Recent files</span></p></body></html>"))
         self.toolBarFile.setWindowTitle(_translate("MainWindow", "Toolbar File"))
         self.toolBarCode.setWindowTitle(_translate("MainWindow", "Toolbar Code"))
         self.dockWidgetLogs.setWindowTitle(_translate("MainWindow", "Logs"))
@@ -520,6 +517,6 @@ class Ui_MainWindow(object):
         self.actionShowAppLog.setToolTip(_translate("MainWindow", "Show/hide application log window"))
         self.actionClearLog.setText(_translate("MainWindow", "Clear"))
 
-from pyqode.core.frontend.widgets import ErrorsTable, InteractiveConsole, TabWidget
 from oci.frontend.widgets import RecentFilesListWidget
+from pyqode.core.frontend.widgets import InteractiveConsole, TabWidget, ErrorsTable
 from . import ide_rc

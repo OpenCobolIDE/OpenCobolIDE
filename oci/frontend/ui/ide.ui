@@ -277,17 +277,12 @@
            </spacer>
           </item>
           <item>
-           <widget class="QFrame" name="frame_2">
+           <widget class="QFrame" name="frameRecents">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">border: 1px solid rgb(150, 150, 150);
-border-radius: 5px;
-background-color: rgb(255, 255, 255);</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
@@ -303,18 +298,7 @@ background-color: rgb(255, 255, 255);</string>
               <number>0</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_4">
-               <property name="styleSheet">
-                <string notr="true">border: none;
-border-top-left-radius: 3px;
-border-top-right-radius: 3px;
-border-bottom-left-radius: 0px;
-border-bottom-right-radius: 0px;
-background-color: rgb(206, 206, 206);
-padding: 5px;
-border-bottom: 1px solid rgb(150, 150, 150);
-</string>
-               </property>
+              <widget class="QLabel" name="labelRecents">
                <property name="text">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;Recent files&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
@@ -327,10 +311,6 @@ border-bottom: 1px solid rgb(150, 150, 150);
                  <width>400</width>
                  <height>0</height>
                 </size>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">border: none;
-background-color: transparent;</string>
                </property>
               </widget>
              </item>

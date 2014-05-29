@@ -193,6 +193,8 @@ border-top: 2px solid silver;
         self.buttonBox.button(self.buttonBox.Reset).clicked.connect(self.reset)
         self.buttonBox.button(self.buttonBox.RestoreDefaults).clicked.connect(
             self.restoreDefaults)
+        self.checkBoxRunExtTerm.stateChanged.connect(
+            self.lineEditRunTerm.setEnabled)
         self.reset(allTabs=True)
 
     @QtCore.Slot(bool)
