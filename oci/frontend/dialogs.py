@@ -231,6 +231,10 @@ border-top: 2px solid silver;
                 settings.highlightMatchingBraces)
             self.checkBoxHighlightWhitespaces.setChecked(
                 settings.highlightWhitespaces)
+            self.checkBoxViewToolBar.setChecked(
+                settings.displayToolBar)
+            self.checkBoxViewControlPanel.setChecked(
+                settings.displayControlPanel)
         # Editor Tab
         if self.tabWidget.currentIndex() == 1 or allTabs:
             self.spinBoxEditorTabLen.setValue(settings.tabWidth)
@@ -319,3 +323,5 @@ border-top: 2px solid silver;
         settings.colorScheme = dlg.listWidgetColorSchemes.currentItem().text()
         settings.runInShell = dlg.checkBoxRunExtTerm.isChecked()
         settings.shellCommand = dlg.lineEditRunTerm.text()
+        settings.displayControlPanel = dlg.checkBoxViewControlPanel.isChecked()
+        settings.displayToolBar = dlg.checkBoxViewToolBar.isChecked()

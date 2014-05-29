@@ -191,6 +191,8 @@ class CobolCodeEdit(frontend.CodeEdit):
         self.font_name = settings.fontName
         self.font_size = settings.fontSize
         self.show_whitespaces = settings.highlightWhitespaces
+        self.controlPanel.enabled = settings.displayControlPanel
+        self.controlPanel.setVisible(self.controlPanel.enabled)
         # todo: tab len
 
     def detect_file_type(self):

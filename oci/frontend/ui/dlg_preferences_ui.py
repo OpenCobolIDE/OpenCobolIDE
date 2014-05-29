@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_preferences.ui'
 #
-# Created: Mon May 26 22:03:49 2014
+# Created: Thu May 29 18:24:19 2014
 #      by: PyQt5 UI code generator 5.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from pyqode.qt import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(441, 404)
+        Dialog.resize(441, 407)
         icon = QtGui.QIcon.fromTheme("preferences-system")
         Dialog.setWindowIcon(icon)
         self.gridLayout_2 = QtWidgets.QGridLayout(Dialog)
@@ -22,8 +22,8 @@ class Ui_Dialog(object):
         self.widget.setStyleSheet("")
         self.widget.setObjectName("widget")
         self.widget_2 = QtWidgets.QGridLayout(self.widget)
-        self.widget_2.setContentsMargins(0, 0, 0, 0)
         self.widget_2.setSpacing(0)
+        self.widget_2.setContentsMargins(0, 0, 0, 0)
         self.widget_2.setObjectName("widget_2")
         self.tabWidget = QtWidgets.QTabWidget(self.widget)
         self.tabWidget.setStyleSheet("")
@@ -35,6 +35,7 @@ class Ui_Dialog(object):
         self.tabView = QtWidgets.QWidget()
         self.tabView.setObjectName("tabView")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.tabView)
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.checkBoxViewLineNumber = QtWidgets.QCheckBox(self.tabView)
         self.checkBoxViewLineNumber.setChecked(True)
@@ -48,6 +49,12 @@ class Ui_Dialog(object):
         self.checkBoxViewStatus.setChecked(True)
         self.checkBoxViewStatus.setObjectName("checkBoxViewStatus")
         self.verticalLayout_2.addWidget(self.checkBoxViewStatus)
+        self.checkBoxViewToolBar = QtWidgets.QCheckBox(self.tabView)
+        self.checkBoxViewToolBar.setObjectName("checkBoxViewToolBar")
+        self.verticalLayout_2.addWidget(self.checkBoxViewToolBar)
+        self.checkBoxViewControlPanel = QtWidgets.QCheckBox(self.tabView)
+        self.checkBoxViewControlPanel.setObjectName("checkBoxViewControlPanel")
+        self.verticalLayout_2.addWidget(self.checkBoxViewControlPanel)
         self.groupBox = QtWidgets.QGroupBox(self.tabView)
         self.groupBox.setObjectName("groupBox")
         self.formLayout = QtWidgets.QFormLayout(self.groupBox)
@@ -89,6 +96,7 @@ class Ui_Dialog(object):
         self.horizontalLayout.addItem(spacerItem)
         self.formLayout_2.setLayout(0, QtWidgets.QFormLayout.FieldRole, self.horizontalLayout)
         self.checkBoxEditorAutoIndent = QtWidgets.QCheckBox(self.groupBox_2)
+        self.checkBoxEditorAutoIndent.setChecked(True)
         self.checkBoxEditorAutoIndent.setObjectName("checkBoxEditorAutoIndent")
         self.formLayout_2.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.checkBoxEditorAutoIndent)
         self.gridLayout.addWidget(self.groupBox_2, 0, 0, 1, 2)
@@ -98,6 +106,7 @@ class Ui_Dialog(object):
         self.formLayout_4.setFieldGrowthPolicy(QtWidgets.QFormLayout.FieldsStayAtSizeHint)
         self.formLayout_4.setObjectName("formLayout_4")
         self.checkBoxEditorSaveOnFocusOut = QtWidgets.QCheckBox(self.groupBox_3)
+        self.checkBoxEditorSaveOnFocusOut.setChecked(True)
         self.checkBoxEditorSaveOnFocusOut.setObjectName("checkBoxEditorSaveOnFocusOut")
         self.formLayout_4.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.checkBoxEditorSaveOnFocusOut)
         self.gridLayout.addWidget(self.groupBox_3, 1, 0, 1, 1)
@@ -157,7 +166,7 @@ class Ui_Dialog(object):
         self.fontComboBox = QtWidgets.QFontComboBox(self.groupBox_6)
         self.fontComboBox.setFontFilters(QtWidgets.QFontComboBox.MonospacedFonts)
         font = QtGui.QFont()
-        font.setFamily("DejaVu Sans Mono")
+        font.setFamily("Andale Mono")
         font.setPointSize(10)
         self.fontComboBox.setCurrentFont(font)
         self.fontComboBox.setObjectName("fontComboBox")
@@ -217,7 +226,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.addLayout(self.gridLayout_3, 1, 0, 1, 1)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -229,6 +238,8 @@ class Ui_Dialog(object):
         self.checkBoxViewLineNumber.setText(_translate("Dialog", "Display line numbers"))
         self.checkBoxViewMargins.setText(_translate("Dialog", "Display margins"))
         self.checkBoxViewStatus.setText(_translate("Dialog", "Display Status bar"))
+        self.checkBoxViewToolBar.setText(_translate("Dialog", "Display toolbar"))
+        self.checkBoxViewControlPanel.setText(_translate("Dialog", "Display control panel (compile and run button inside editor)"))
         self.groupBox.setTitle(_translate("Dialog", "Highlighting"))
         self.checkBoxHighlightCurrentLine.setText(_translate("Dialog", "Highlight current line"))
         self.checkBoxHighlightBraces.setText(_translate("Dialog", "Highlight matching braces"))

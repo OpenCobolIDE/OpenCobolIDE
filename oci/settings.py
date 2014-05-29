@@ -159,6 +159,22 @@ class Settings(object):
         self._settings.setValue('displayStatusBar', int(value))
 
     @property
+    def displayToolBar(self):
+        return bool(int(self._settings.value('displayToolBar', '0')))
+
+    @displayToolBar.setter
+    def displayToolBar(self, value):
+        self._settings.setValue('displayToolBar', int(value))
+
+    @property
+    def displayControlPanel(self):
+        return bool(int(self._settings.value('displayControlPanel', '1')))
+
+    @displayControlPanel.setter
+    def displayControlPanel(self, value):
+        self._settings.setValue('displayControlPanel', int(value))
+
+    @property
     def highlightCurrentLine(self):
         return bool(int(self._settings.value('highlightCurrentLine', '1')))
 

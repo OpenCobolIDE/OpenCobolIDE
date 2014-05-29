@@ -674,6 +674,9 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                 s = Settings()
                 self.dockWidgetNavPanel.setVisible(s.navigationPanelVisible)
                 self.dockWidgetLogs.setVisible(s.logPanelVisible)
+                if s.displayToolBar:
+                    self.toolBarFile.setVisible(True)
+                    self.toolBarCode.setVisible(True)
 
     def displayPICInfos(self, infos):
         _logger().debug('display PIC infos requested')

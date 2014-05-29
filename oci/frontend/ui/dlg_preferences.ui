@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>441</width>
-    <height>404</height>
+    <height>407</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,16 @@
    </iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item row="0" column="0">
@@ -31,7 +40,16 @@
       <string notr="true"/>
      </property>
      <layout class="QGridLayout" name="widget_2">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <property name="spacing">
@@ -89,6 +107,20 @@
             </property>
             <property name="checked">
              <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxViewToolBar">
+            <property name="text">
+             <string>Display toolbar</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxViewControlPanel">
+            <property name="text">
+             <string>Display control panel (compile and run button inside editor)</string>
             </property>
            </widget>
           </item>
@@ -360,7 +392,7 @@
                  </property>
                  <property name="currentFont">
                   <font>
-                   <family>DejaVu Sans Mono</family>
+                   <family>Andale Mono</family>
                    <pointsize>10</pointsize>
                   </font>
                  </property>
@@ -469,7 +501,16 @@
    </item>
    <item row="1" column="0">
     <layout class="QGridLayout" name="gridLayout_3">
-     <property name="margin">
+     <property name="leftMargin">
+      <number>9</number>
+     </property>
+     <property name="topMargin">
+      <number>9</number>
+     </property>
+     <property name="rightMargin">
+      <number>9</number>
+     </property>
+     <property name="bottomMargin">
       <number>9</number>
      </property>
      <item row="0" column="0">
