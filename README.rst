@@ -31,7 +31,7 @@ Features:
 - run the program from the editor or from a configurable external terminal
 - also open other text files
 - dark color schemes and theme
-- cross platform: work on GNU/Linux, Windows and Mac OSX
+- cross platform: work on **GNU/Linux**, **Windows** and **Mac OSX**
 
 
 License
