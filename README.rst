@@ -78,11 +78,11 @@ There is a dmg image available here: https://launchpad.net/cobcide/+download
 
 The only thing you have to do is:
 
-- 1) to install OpenCobol, e.g. using homebrew::
+    - 1) to install OpenCobol compiler, e.g. using homebrew::
 
-    brew install open-cobol
+        brew install open-cobol
 
-- 2) Run the OpenCobolIDE app
+    - 2) Run the OpenCobolIDE app
 
 
 Requirements
