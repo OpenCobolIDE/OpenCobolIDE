@@ -659,7 +659,6 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                 s.logPanelVisible = self.dockWidgetLogs.isVisible()
             self.consoleOutput.clear()
             self.stackedWidget.setCurrentIndex(0)
-            self.menuBar.hide()
             self.toolBarFile.hide()
             self.toolBarCode.hide()
             self.dockWidgetLogs.hide()
