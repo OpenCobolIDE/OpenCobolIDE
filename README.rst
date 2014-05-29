@@ -24,7 +24,7 @@ Features:
 
 - syntax highlighting
 - code completion
-- code folding
+- code folding -> temporarely removed for performance reasons
 - navigable tree view of division, sections, paragraphs etc.
 - calculates the offsets of selected record definitions
 - compile as program (.exe) or as subprogram (.so/.dll)
@@ -95,7 +95,6 @@ The project depends on the following packages:
 - `PyQt4`_ or `PyQt5`_
 - `OpenCobol`_
 - `pyqode.core`_
-- `pyqode.widgets`_
 - `Pygments`_ **>= 1.6**
 - `chardet`_
 - `qdarkstyle`_
@@ -162,7 +161,6 @@ Screenshots
 .. _chardet: https://pypi.python.org/pypi/chardet
 .. _Pygments: http://pygments.org/
 .. _pyqode.core: https://github.com/pyQode/pyqode.core/
-.. _pyqode.widgets: https://github.com/pyQode/pyqode.widgets/
 .. _OpenCobol: http://opencobol.org/
 .. _setuptools: https://pypi.python.org/pypi/setuptools
 .. _Python3: http://python.org/
