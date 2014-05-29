@@ -305,7 +305,7 @@ class GoToDefinitionMode(Mode, QObject):
         QObject.__init__(self)
         self._pending = False
         self.aGotToDef = QAction("Go to assignments", self)
-        self.aGotToDef.setShortcut("F2")
+        self.aGotToDef.setShortcut('F3')
         self.aGotToDef.triggered.connect(self.requestGoTo)
 
     def _onInstall(self, editor):
@@ -332,7 +332,8 @@ class GoToDefinitionMode(Mode, QObject):
         :type tc: QtGui.QTextCursor
         """
         if not tc:
-            tc = frontend.word_under_cursor(self.editor)
+            tc = frontend.word_under_cursor(self.editor,
+                                            select_whole_word=True)
         symbol = tc.selectedText()
         analyser = getattr(self.editor, "analyserMode")
         if analyser:
