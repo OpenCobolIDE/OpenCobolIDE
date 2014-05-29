@@ -61,7 +61,7 @@ From pypi
 
 Run the following commands::
 
-    sudo apt-get install python3-pyqt4 open-cobol
+    sudo apt-get install python3-pyqt5 open-cobol
     sudo pip3 install OpenCobolIDE
 
 *On Gnu/Linux, you must use pip3 instead of pip*
