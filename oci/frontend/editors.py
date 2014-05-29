@@ -270,13 +270,11 @@ class GenericCodeEdit(frontend.CodeEdit):
         settings = Settings()
         self.caretLineHighlighter.enabled = settings.highlightCurrentLine
         self.symbolMatcher.enabled = settings.highlightMatchingBraces
-        self.syntaxHighlighterMode.pygments_style = settings.colorScheme
+        self.highlither.pygments_style = settings.colorScheme
         self.rightMargin.enabled = settings.displayMargins
-        self.leftMargin.enabled = settings.displayMargins
-        self.autoIndentMode.enabled = settings.enableAutoIndent
+        self.autoIndenter.enabled = settings.enableAutoIndent
         self.codeCompletionMode.trigger_length = settings.ccTriggerLen
         self.font_name = settings.fontName
         self.font_size = settings.fontSize
         self.show_whitespaces = settings.highlightWhitespaces
-        # todo: tab len
-
+        self.tab_length = settings.tabWidth
