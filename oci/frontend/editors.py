@@ -32,6 +32,7 @@ from oci import constants
 from oci.backend import server
 from oci.backend.parser import detect_file_type
 from oci.frontend import modes as cob_modes
+from oci.frontend import panels as cob_panels
 from oci.settings import Settings
 
 
@@ -59,6 +60,10 @@ class CobolCodeEdit(frontend.CodeEdit):
     """
 
     picInfosAvailable = QtCore.Signal(list)
+    programTypeChanged = QtCore.Signal()
+    compilationRequested = QtCore.Signal()
+    runRequested = QtCore.Signal()
+    pgmTypeChangeRequested = QtCore.Signal(object)
 
     @property
     def programType(self):
@@ -68,7 +73,9 @@ class CobolCodeEdit(frontend.CodeEdit):
 
     @programType.setter
     def programType(self, value):
-        self.__fileType = value
+        if value != self.__fileType:
+            self.__fileType = value
+            self.programTypeChanged.emit()
 
     @property
     def icon(self):
@@ -91,6 +98,15 @@ class CobolCodeEdit(frontend.CodeEdit):
         """
         Setup the editor's panels
         """
+        self.controlPanel = cob_panels.ControlPanel()
+        self.controlPanel.compilationRequested.connect(
+            self.compilationRequested.emit)
+        self.controlPanel.runRequested.connect(
+            self.runRequested.emit)
+        self.controlPanel.pgmTypeChangeRequested.connect(
+            self.pgmTypeChangeRequested.emit)
+        frontend.install_panel(self, self.controlPanel,
+                               frontend.Panel.Position.RIGHT)
         frontend.install_panel(self, panels.LineNumberPanel(),
                                frontend.Panel.Position.LEFT)
         frontend.install_panel(self, panels.MarkerPanel())

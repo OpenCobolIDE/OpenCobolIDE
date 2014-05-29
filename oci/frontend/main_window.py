@@ -559,6 +559,12 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                     tab.analyserMode.documentLayoutChanged.connect(
                         self.updateNavigationPanel)
                     tab.picInfosAvailable.connect(self.displayPICInfos)
+                    tab.compilationRequested.connect(
+                        self.on_actionCompile_triggered)
+                    tab.runRequested.connect(
+                        self.on_actionRun_triggered)
+                    tab.pgmTypeChangeRequested.connect(
+                        self.on_programType_triggered)
                 else:
                     tab = GenericCodeEdit(self.tabWidgetEditors)
                 tab.file_path = fn
@@ -664,8 +670,6 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
             if self.stackedWidget.currentIndex() == 0:
                 self.stackedWidget.setCurrentIndex(1)
                 self.menuBar.show()
-                self.toolBarFile.show()
-                self.toolBarCode.show()
                 self.dockWidgetNavPanel.show()
                 s = Settings()
                 self.dockWidgetNavPanel.setVisible(s.navigationPanelVisible)
