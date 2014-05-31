@@ -453,7 +453,6 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
             Settings().lastFilePath = fn
             if extension.lower() in constants.ALL_COBOL_EXTENSIONS:
                 icon, tab = editors.make_cobol_editor()
-                icon, tab = editors.make_cobol_editor()
             else:
                 tab = editors.GenericCodeEdit(self.tabWidgetEditors)
             tab.file_path = fn
