@@ -48,44 +48,6 @@ QToolButton::menu-arrow:open  {
 
 """
 
-btn_stylesheet = """
-
-QToolButton  { /* all types of tool button */
-    background-color: transparent;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    padding: 2px;
-}
-
-QToolButton:hover {
-    background-color: rgba(128, 128, 128, 20);
-    border: 1px solid rgba(128, 128, 128, 40);
-}
-
-QToolButton:pressed  {
-    background-color: rgba(128, 128, 128, 40);
-    border: 1px solid rgba(128, 128, 128, 80);
-}
-
-/* the subcontrols below are used only in the MenuButtonPopup mode */
-QToolButton::menu-button  {
-    border: 2px solid gray;
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
-    /* 16px width + 4px for border = 20px allocated above */
-    width: 16px;
-}
-
-/*QToolButton::menu-arrow  {
-    image: url(downarrow.png);
-}*/
-
-QToolButton::menu-arrow:open  {
-    top: 1px; left: 1px; /* shift it a bit */
-}
-
-"""
-
 
 class ControlPanel(frontend.Panel):
     compilationRequested = QtCore.Signal()
@@ -108,7 +70,7 @@ class ControlPanel(frontend.Panel):
             "media-playback-start", QtGui.QIcon(
                 ":/ide-icons/rc/media-playback-start.png"))
         self.btRun = QtWidgets.QToolButton()
-        self.btRun.setStyleSheet(btn_stylesheet)
+        self.btRun.setStyleSheet(dropbtn_stylesheet)
         self.btRun.setIcon(runIcon)
         if (self.position == self.Position.RIGHT or
                 self.position == self.Position.LEFT):
