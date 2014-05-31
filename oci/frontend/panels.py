@@ -5,6 +5,7 @@ Contains cobol specific editor panels:
 """
 from pyqode.qt import QtWidgets, QtCore, QtGui
 from pyqode.core import frontend
+from oci import services
 from oci.constants import ProgramType
 
 
@@ -15,6 +16,10 @@ class ControlPanel(frontend.Panel):
 
     def _on_install(self, editor):
         super()._on_install(editor)
+        services.main_window().actionCompile.changed.connect(
+            self._on_action_changed)
+        services.main_window().actionRun.changed.connect(
+            self._on_action_changed)
         compileIcon = QtGui.QIcon.fromTheme(
             "application-x-executable", QtGui.QIcon(
                 ":/ide-icons/rc/application-x-executable.png"))
@@ -56,6 +61,10 @@ class ControlPanel(frontend.Panel):
         self.btCompile.clicked.connect(self.compilationRequested.emit)
         self.btRun.clicked.connect(self.runRequested.emit)
 
+    def _on_uninstall(self):
+        self.btCompile.clicked.disconnect(self.compilationRequested.emit)
+        self.btRun.clicked.disconnect(self.runRequested.emit)
+
     def _on_state_changed(self, state):
         if state:
             self.editor.programTypeChanged.connect(self.updateButtonsStates)
@@ -82,3 +91,9 @@ class ControlPanel(frontend.Panel):
             self._background_brush = QtGui.QBrush(self.editor.background)
             painter = QtGui.QPainter(self)
             painter.fillRect(event.rect(), self._background_brush)
+
+    def _on_action_changed(self):
+        self.btCompile.setEnabled(
+            services.main_window().actionCompile.isEnabled())
+        self.btRun.setEnabled(
+            services.main_window().actionRun.isEnabled())
