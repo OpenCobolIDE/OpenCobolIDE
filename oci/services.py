@@ -19,7 +19,7 @@ def _set_main_window(win):
 def main_window():
     """
     Returns a reference to the application main window.
-    :return:
+    :rtype: oci.frontend.main_window.MainWindow
     """
     global _main_window
     return _main_window

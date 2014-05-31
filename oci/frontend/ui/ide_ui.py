@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Sat May 31 20:06:11 2014
+# Created: Sat May 31 21:47:21 2014
 #      by: PyQt5 UI code generator 5.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -15,7 +15,7 @@ class Ui_MainWindow(object):
         MainWindow.resize(900, 700)
         MainWindow.setMinimumSize(QtCore.QSize(900, 700))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/ide-icons/rc/silex-64x64.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/ide-icons/rc/silex-192x192.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -283,7 +283,9 @@ class Ui_MainWindow(object):
         self.actionRun.setIconVisibleInMenu(True)
         self.actionRun.setObjectName("actionRun")
         self.actionAbout = QtWidgets.QAction(MainWindow)
-        self.actionAbout.setIcon(icon)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(":/ide-icons/rc/silex-64x64.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionAbout.setIcon(icon4)
         self.actionAbout.setIconVisibleInMenu(True)
         self.actionAbout.setObjectName("actionAbout")
         self.actionSave = QtWidgets.QAction(MainWindow)
@@ -361,9 +363,9 @@ class Ui_MainWindow(object):
         self.actionShowAppLog.setCheckable(True)
         self.actionShowAppLog.setObjectName("actionShowAppLog")
         self.actionClearLog = QtWidgets.QAction(MainWindow)
-        icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/ide-icons/rc/edit-clear.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionClearLog.setIcon(icon4)
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap(":/ide-icons/rc/edit-clear.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionClearLog.setIcon(icon5)
         self.actionClearLog.setIconVisibleInMenu(True)
         self.actionClearLog.setObjectName("actionClearLog")
         self.toolBarFile.addAction(self.actionNew)
@@ -506,6 +508,6 @@ class Ui_MainWindow(object):
         self.actionShowAppLog.setToolTip(_translate("MainWindow", "Show/hide application log window"))
         self.actionClearLog.setText(_translate("MainWindow", "Clear"))
 
-from pyqode.core.frontend.widgets import InteractiveConsole, TabWidget, ErrorsTable
 from oci.frontend.widgets import RecentFilesListWidget
+from pyqode.core.frontend.widgets import TabWidget, ErrorsTable, InteractiveConsole
 from . import ide_rc

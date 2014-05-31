@@ -99,7 +99,7 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
         self.textBrowser.setStyleSheet("color: red")
 
 
-class DialogRejected(Exception):
+class DlgRejectedError(Exception):
     pass
 
 
@@ -311,7 +311,7 @@ border-top: 2px solid silver;
     def editSettings(cls, parent):
         dlg = cls(parent)
         if dlg.exec_() != dlg.Accepted:
-            raise DialogRejected()
+            raise DlgRejectedError()
         settings = Settings()
         settings.displayLineNumbers = dlg.checkBoxViewLineNumber.isChecked()
         settings.displayMargins = dlg.checkBoxViewMargins.isChecked()

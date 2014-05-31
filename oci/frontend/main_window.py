@@ -34,11 +34,8 @@ from oci import __version__, constants, logger, utils, services
 from oci.settings import Settings
 from oci.backend import compiler
 from oci.backend.pic_parser import PicFieldInfo
-from oci.frontend import home
-from oci.frontend.compiler import CompilationManager, CompilerOutputEdit
-from oci.frontend.dialogs import DlgNewFile, DlgAbout, DlgPreferences, \
-    DialogRejected
-from oci.frontend.editors import CobolCodeEdit, GenericCodeEdit
+from oci.frontend import home, dialogs, editors
+from oci.frontend import compiler as compiler_frontend
 from oci.frontend.ui import ide_ui
 
 
@@ -55,7 +52,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         super().__init__()
         self._run_request = None
         services._set_main_window(self)
-        self.compilation_manager = CompilationManager()
+        self.compilation_manager = compiler_frontend.CompilationManager()
         self.setupUi(self)
         self.applySettings()
         self.__prevRootNode = None
@@ -134,10 +131,10 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
     @QtCore.Slot()
     def on_actionNew_triggered(self):
         _logger().debug('action new triggered')
-        dlg = DlgNewFile(self)
-        if dlg.exec_() == DlgNewFile.Accepted:
-            pth = dlg.path()
-            content = dlg.template()
+        dialogs.Dlg = dialogs.DlgNewFile(self)
+        if dialogs.Dlg.exec_() == dialogs.DlgNewFile.Accepted:
+            pth = dialogs.Dlg.path()
+            content = dialogs.Dlg.template()
             with open(pth, 'wb') as f:
                 if sys.version_info[0] == 3:
                     content = bytes(content, "utf-8")
@@ -178,23 +175,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
             self.tabWidgetEditors.save_current(path=fn)
             self.recent_files_manager.open_file(fn)
             self.menu_recents.update_actions()
-            self.updateRecents()
-
-    def updateRecents(self):
-        self.menu_recents.update_actions()
-        self.listWidgetRecents.clear()
-        for file in self.recent_files_manager.get_recent_files():
-            item = QtWidgets.QListWidgetItem()
-            if ('.' + QtCore.QFileInfo(file).suffix().upper() in
-                constants.COBOL_EXTENSIONS):
-                icon = QtGui.QIcon(":/ide-icons/rc/silex-32x32.png")
-            else:
-                icon = QtGui.QIcon(":/ide-icons/rc/text-x-generic.png")
-            item.setText(QtCore.QFileInfo(file).fileName())
-            item.setToolTip(file)
-            item.setIcon(icon)
-            item.setData(32, file)
-            self.listWidgetRecents.addItem(item)
+            home.updateRecents()
 
     @QtCore.Slot()
     def on_actionQuit_triggered(self):
@@ -224,8 +205,8 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
 
     @QtCore.Slot()
     def on_actionAbout_triggered(self):
-        dlg = DlgAbout(self)
-        dlg.exec_()
+        dialogs.Dlg = dialogs.DlgAbout(self)
+        dialogs.Dlg.exec_()
 
     def run_target(self, target, wd):
         if not Settings().runInShell:
@@ -260,8 +241,8 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
     @QtCore.Slot()
     def on_actionPreferences_triggered(self):
         try:
-            DlgPreferences.editSettings(self)
-        except DialogRejected:
+            dialogs.DlgPreferences.editSettings(self)
+        except dialogs.DlgRejectedError:
             pass
         else:
             self.applySettings()
@@ -472,19 +453,9 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                 icon = None
                 Settings().lastFilePath = fn
                 if extension.lower() in constants.ALL_COBOL_EXTENSIONS:
-                    tab = CobolCodeEdit(self.tabWidgetEditors)
-                    icon = QtGui.QIcon(tab.icon)
-                    tab.analyserMode.documentLayoutChanged.connect(
-                        self.updateNavigationPanel)
-                    tab.picInfosAvailable.connect(self.displayPICInfos)
-                    tab.compilationRequested.connect(
-                        self.on_actionCompile_triggered)
-                    tab.runRequested.connect(
-                        self.on_actionRun_triggered)
-                    tab.pgmTypeChangeRequested.connect(
-                        self.on_programType_triggered)
+                    icon, tab = editors.make_cobol_editor()
                 else:
-                    tab = GenericCodeEdit(self.tabWidgetEditors)
+                    tab = editors.GenericCodeEdit(self.tabWidgetEditors)
                 tab.file_path = fn
                 index = self.tabWidgetEditors.add_code_edit(tab, icon=icon)
                 self.showHomePage(False)
@@ -492,7 +463,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                 tab.cursorPositionChanged.connect(self.updateStatusBar)
                 self.recent_files_manager.open_file(fn)
                 self.menu_recents.update_actions()
-                self.updateRecents()
+                home.updateRecents()
                 tab.openFile(fn)
                 self.onCurrentEditorChanged(index)
         except IOError:
@@ -728,7 +699,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
     def setupUi(self, MainWindow):
         s = Settings()
         super().setupUi(MainWindow)
-        self.compilerOutputEdit = CompilerOutputEdit()
+        self.compilerOutputEdit = compiler_frontend.CompilerOutputEdit()
         self.tabWidgetLogs.insertTab(0, self.compilerOutputEdit,
                                      'Compilation output')
         self.compilation_manager.stdoutAvailable.connect(

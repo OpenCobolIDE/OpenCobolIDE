@@ -24,11 +24,12 @@ from pygments.lexers.compiled import CobolFreeformatLexer
 
 from pygments.token import Comment
 from pyqode.qt import QtCore
+from pyqode.qt import QtGui
 from pyqode.core.frontend import panels
 from pyqode.core.frontend import modes
 from pyqode.core import frontend
 
-from oci import constants
+from oci import constants, services
 from oci.backend import server
 from oci.backend.parser import detect_file_type
 from oci.frontend import modes as cob_modes
@@ -278,3 +279,19 @@ class GenericCodeEdit(frontend.CodeEdit):
         self.font_size = settings.fontSize
         self.show_whitespaces = settings.highlightWhitespaces
         self.tab_length = settings.tabWidth
+
+
+def make_cobol_editor():
+    main_window = services.main_window()
+    tab = CobolCodeEdit(main_window.tabWidgetEditors)
+    icon = QtGui.QIcon(tab.icon)
+    tab.analyserMode.documentLayoutChanged.connect(
+        main_window.updateNavigationPanel)
+    tab.picInfosAvailable.connect(main_window.displayPICInfos)
+    tab.compilationRequested.connect(
+        main_window.on_actionCompile_triggered)
+    tab.runRequested.connect(
+        main_window.on_actionRun_triggered)
+    tab.pgmTypeChangeRequested.connect(
+        main_window.on_programType_triggered)
+    return icon, tab

@@ -21,7 +21,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="ide.qrc">
-    <normaloff>:/ide-icons/rc/silex-64x64.png</normaloff>:/ide-icons/rc/silex-64x64.png</iconset>
+    <normaloff>:/ide-icons/rc/silex-192x192.png</normaloff>:/ide-icons/rc/silex-192x192.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout" rowstretch="0" columnstretch="0">
