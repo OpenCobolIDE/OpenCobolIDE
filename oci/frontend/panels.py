@@ -5,8 +5,9 @@ Contains cobol specific editor panels:
 """
 from pyqode.qt import QtWidgets, QtCore, QtGui
 from pyqode.core import frontend
-from oci import services
+
 from oci.constants import ProgramType
+from oci.frontend import services
 
 
 dropbtn_stylesheet = """

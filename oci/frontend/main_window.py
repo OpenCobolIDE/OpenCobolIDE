@@ -23,18 +23,18 @@ import subprocess
 
 import qdarkstyle
 from pyqode.core import frontend
-from pyqode.core.frontend import modes, widgets
+from pyqode.core.frontend import modes
 from pyqode.core.frontend import utils as pyqode_utils
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from pyqode.qt.QtWidgets import QTreeWidgetItem
 from pyqode.qt.QtWidgets import QMessageBox
 
 import oci
-from oci import __version__, constants, logger, utils, services
+from oci import __version__, constants, utils
 from oci.settings import Settings
 from oci.backend import compiler
 from oci.backend.pic_parser import PicFieldInfo
-from oci.frontend import home, dialogs, editors
+from oci.frontend import home, dialogs, editors, services, logger
 from oci.frontend import compiler as compiler_frontend
 from oci.frontend.ui import ide_ui
 
@@ -446,30 +446,33 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         logger.close()
 
     def openFile(self, fn):
-        try:
-            if fn and self.tabWidgetEditors.index_from_filename(fn) == -1:
-                _logger().info('opening file: %s' % fn)
-                extension = os.path.splitext(fn)[1]
-                icon = None
-                Settings().lastFilePath = fn
-                if extension.lower() in constants.ALL_COBOL_EXTENSIONS:
-                    icon, tab = editors.make_cobol_editor()
-                else:
-                    tab = editors.GenericCodeEdit(self.tabWidgetEditors)
-                tab.file_path = fn
-                index = self.tabWidgetEditors.add_code_edit(tab, icon=icon)
-                self.showHomePage(False)
-                self.updateStatusBar(tab)
-                tab.cursorPositionChanged.connect(self.updateStatusBar)
-                self.recent_files_manager.open_file(fn)
-                self.menu_recents.update_actions()
-                home.updateRecents()
+        if fn and self.tabWidgetEditors.index_from_filename(fn) == -1:
+            _logger().info('opening file: %s' % fn)
+            extension = os.path.splitext(fn)[1]
+            icon = None
+            Settings().lastFilePath = fn
+            if extension.lower() in constants.ALL_COBOL_EXTENSIONS:
+                icon, tab = editors.make_cobol_editor()
+                icon, tab = editors.make_cobol_editor()
+            else:
+                tab = editors.GenericCodeEdit(self.tabWidgetEditors)
+            tab.file_path = fn
+            index = self.tabWidgetEditors.add_code_edit(tab, icon=icon)
+            self.showHomePage(False)
+            self.updateStatusBar(tab)
+            tab.cursorPositionChanged.connect(self.updateStatusBar)
+            self.recent_files_manager.open_file(fn)
+            self.menu_recents.update_actions()
+            home.updateRecents()
+
+            try:
                 tab.openFile(fn)
-                self.onCurrentEditorChanged(index)
-        except IOError:
-            QtWidgets.QMessageBox.warning(
-                self, "File does not exist",
-                "Cannot open file %s, the file does not exists." % fn)
+            except IOError:
+                QtWidgets.QMessageBox.warning(
+                    self, "File does not exist",
+                    "Cannot open file %s, the file does not exists." % fn)
+
+            self.onCurrentEditorChanged(index)
 
     def showHomePage(self, home=True):
         self.menuBar.setVisible(Settings().displayMenuBar)
