@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="ide-icons">
+    <file>rc/emblem-important.png</file>
     <file>rc/accessories-calculator.png</file>
     <file alias="rc/paragraph">rc/func.png</file>
     <file alias="rc/var">rc/var.png</file>

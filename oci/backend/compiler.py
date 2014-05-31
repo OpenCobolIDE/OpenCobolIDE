@@ -25,6 +25,23 @@ import sys
 from oci import constants
 
 
+class InitializationFailed(Exception):
+    pass
+
+
+def initialize():
+    init_env()
+    if not check_env():
+        if sys.platform == 'win32':
+            msg = 'OpenCobol is bundled with the IDE. Ensure that ' \
+                  'the IDE is installed in a path without spaces and ' \
+                  'that the OpenCobol folder sits next to the executable.'
+        else:
+            msg = 'You have to install the package <b>open-cobol</b> to ' \
+                  'use the IDE.'
+        raise InitializationFailed(msg)
+
+
 def makeOutputFilePath(filename, fileType):
     return os.path.normpath(os.path.splitext(filename)[0] + fileType[2])
 
@@ -45,6 +62,58 @@ def _logger():
     return logging.getLogger(__name__)
 
 
+def get_all_commands(filename, encoding, filetype):
+    """
+    Returns the list of commands required to compile ``filename`` (includes
+    all dependencies).
+
+    :param filename: file to compile
+    :param encoding: file encoding
+    :param filetype: file type: exe or module
+
+    :return: List of tuples.
+    """
+    from oci.backend import parser
+    deps = parser.parse_dependencies(filename, encoding)
+    return ([cmd_for(path, fileType=pgmType) for path, pgmType in deps] +
+            [cmd_for(filename, fileType=filetype)])
+
+
+def cmd_for(filename, outputFilename=None,
+            fileType=constants.ProgramType.Executable,
+            customOptions=None):
+    """
+    Return the compilation command and the command execution directory to
+    compile the specified cobol file.
+
+    :param filename: file to compile
+    :param outputFilename: The desiered filename, auto deducted if None
+    :param fileType: The programe type: exe or module
+    :param customOptions: Custom compilation options will be integrated in the
+        command
+    :return: A tuple made up of the command args list and the execution
+        directory.
+
+    """
+    # prepare command
+    if customOptions is None:
+        customOptions = []
+    dirname = os.path.dirname(filename)
+    if outputFilename is None:  # user request
+        # create a binary dir next to the source
+        make_bin_dir(filename)
+        output = os.path.join("bin", os.path.splitext(
+            os.path.basename(filename))[0] + fileType[2])
+        input = os.path.split(filename)[1]
+        cmd = constants.ProgramType.cmd(fileType, input, output, customOptions)
+    else:  # from check mode
+        input = os.path.split(filename)[1]
+        output = os.path.split(filename)[1]
+        cmd = constants.ProgramType.cmd(fileType, input, output,
+                                        customOptions)
+    return cmd, dirname
+
+
 def compile(filename, fileType, customOptions=None, outputFilename=None):
     """
     Compile a single cobol file, return the compiler exit status and output.
@@ -54,23 +123,8 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
     WARNING = 1
     ERROR = 2
 
-    if customOptions is None:
-        customOptions = []
-
-    # prepare command
-    dirname = os.path.dirname(filename)
-    if outputFilename is None:  # user request
-        # create a binary dir next to the source
-        make_bin_dir(filename)
-        output = os.path.join("bin", os.path.splitext(
-                              os.path.basename(filename))[0] + fileType[2])
-        input = os.path.split(filename)[1]
-        cmd = constants.ProgramType.cmd(fileType, input, output, customOptions)
-    else:  # from check mode
-        input = os.path.split(filename)[1]
-        output = os.path.split(filename)[1]
-        cmd = constants.ProgramType.cmd(fileType, input, output,
-                                        customOptions)
+    cmd, dirname = cmd_for(filename, outputFilename, fileType,
+                               customOptions)
 
     _logger().debug('working directory = %s' % dirname)
     _logger().info('cd %s && %s' % (dirname, ' '.join(cmd)))

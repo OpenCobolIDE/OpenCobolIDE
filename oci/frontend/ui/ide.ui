@@ -406,15 +406,15 @@
      <item row="1" column="0">
       <widget class="QTabWidget" name="tabWidgetLogs">
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tabCompiler">
         <attribute name="icon">
          <iconset resource="ide.qrc">
-          <normaloff>:/ide-icons/rc/applications-system.png</normaloff>:/ide-icons/rc/applications-system.png</iconset>
+          <normaloff>:/ide-icons/rc/emblem-important.png</normaloff>:/ide-icons/rc/emblem-important.png</iconset>
         </attribute>
         <attribute name="title">
-         <string>Compiler</string>
+         <string>Issues</string>
         </attribute>
         <attribute name="toolTip">
          <string>Show compiler log</string>

@@ -30,11 +30,12 @@ from pyqode.qt.QtWidgets import QTreeWidgetItem
 from pyqode.qt.QtWidgets import QMessageBox
 
 import oci
-from oci import __version__, constants, logger, utils, settings
+from oci import __version__, constants, logger, utils, services
 from oci.settings import Settings
 from oci.backend import compiler
-from oci.backend.parser import parse_dependencies
 from oci.backend.pic_parser import PicFieldInfo
+from oci.frontend import home
+from oci.frontend.compiler import CompilationManager, CompilerOutputEdit
 from oci.frontend.dialogs import DlgNewFile, DlgAbout, DlgPreferences, \
     DialogRejected
 from oci.frontend.editors import CobolCodeEdit, GenericCodeEdit
@@ -45,52 +46,6 @@ def _logger():
     return logging.getLogger(__name__)
 
 
-# Homepage stylesheets
-frame_recent_white = """
-QFrame
-{
-border: 1px solid rgb(150, 150, 150);
-border-radius: 5px;
-background-color: rgb(255, 255, 255);
-}
-"""
-
-list_recent_white = """
-QListWidget
-{
-border: none;
-background-color: transparent;
-}
-"""
-label_recent_white = """border: none;
-border-top-left-radius: 3px;
-border-top-right-radius: 3px;
-border-bottom-left-radius: 0px;
-border-bottom-right-radius: 0px;
-background-color: rgb(206, 206, 206);
-padding: 5px;
-border-bottom: 1px solid rgb(150, 150, 150);
-"""
-
-frame_recent_dark = """border: 1px solid rgb(80, 80, 80);
-border-radius: 5px;
-"""
-
-list_recent_dark = """border: none;
-background-color: transparent;
-"""
-
-label_recent_dark = """border: none;
-border-top-left-radius: 3px;
-border-top-right-radius: 3px;
-border-bottom-left-radius: 0px;
-border-bottom-right-radius: 0px;
-background-color: rgb(64, 64, 64);
-padding: 5px;
-border-bottom: 1px solid rgb(80, 80, 80);
-"""
-
-
 class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
 
     compilerMsgReady = QtCore.Signal(modes.CheckerMessage)
@@ -98,165 +53,21 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
 
     def __init__(self):
         super().__init__()
+        self._run_request = None
+        services._set_main_window(self)
+        self.compilation_manager = CompilationManager()
         self.setupUi(self)
         self.applySettings()
+        self.__prevRootNode = None
         logger.setup(self.textEditLogs)
         _logger().info('Environment: %r' % os.environ)
         if Settings().fullscreen:
             self.showFullScreen()
         else:
             self.show()
-        compiler.init_env()
-        if not compiler.check_env():
-            if sys.platform == 'win32':
-                msg = 'OpenCobol is bundled with the IDE. Ensure that ' \
-                      'the IDE is installed in a path without spaces and ' \
-                      'that the OpenCobol folder sits next to the executable.'
-            else:
-                msg = 'You have to install the package open-cobol to use the ' \
-                      'IDE.'
-            QMessageBox.warning(self, 'Compiler configuration error',
-                                'Failed to find the OpenCobol compiler.\n%s' %
-                                msg)
+        self.init_compiler()
 
-    def setupUi(self, MainWindow):
-        super().setupUi(MainWindow)
-        # Home page stylesheet
-        self.frameRecents.setStyleSheet(frame_recent_white)
-        self.labelRecents.setStyleSheet(label_recent_white)
-        self.listWidgetRecents.setStyleSheet(list_recent_white)
-        self.actionPreferences.setShortcut('F2')
-        self.addActions(self.menuBar.actions())
-        self.listWidgetRecents.clear_requested.connect(self._clear_recents)
-        self.listWidgetRecents.remove_current_requested.connect(
-            self._remove_current_recent_file)
-        self.toolBarCode.setIconSize(QtCore.QSize(22, 22))
-        self.toolBarFile.setIconSize(QtCore.QSize(22, 22))
-        s = Settings()
-        # application log
-        if not s.appLogVisible:
-            self.tabWidgetLogs.removeTab(2)
-        self.tabWidgetLogs.setCurrentIndex(0)
-        self.actionClearLog.triggered.connect(self.textEditLogs.clear)
-        self.actionDebug_level.setChecked(s.debugLog)
-        self.actionShowAppLog.setChecked(s.appLogVisible)
-
-        # recent files menu + manager
-        self.setup_recent_files_menu()
-
-        # status bar
-        self.lblFilename = QtWidgets.QLabel()
-        self.lblEncoding = QtWidgets.QLabel()
-        self.lblEncoding.setAlignment(QtCore.Qt.AlignHCenter |
-                                       QtCore.Qt.AlignVCenter)
-        self.lblEncoding.setText('')
-        self.lblCursorPos = QtWidgets.QLabel()
-        self.lblCursorPos.setAlignment(QtCore.Qt.AlignHCenter |
-                                       QtCore.Qt.AlignVCenter)
-        self.lblCursorPos.setText('')
-        if not sys.platform == 'darwin':
-            btMenu = QtWidgets.QToolButton(self)
-            btMenu.setPopupMode(btMenu.MenuButtonPopup)
-            mnu = QtWidgets.QMenu(self)
-            mnu.addAction(self.actionNew)
-            mnu.addAction(self.actionOpen)
-            mnu.addMenu(self.menu_recents)
-            mnu.addSeparator()
-            mnu.addAction(self.actionHelp)
-            mnu.addAction(self.actionAbout)
-            mnu.addSeparator()
-            mnu.addAction(self.actionQuit)
-            btMenu.setMenu(mnu)
-            btMenu.setToolTip('Preferences')
-            btMenu.clicked.connect(self.actionPreferences.trigger)
-            btMenu.setIcon(QtGui.QIcon.fromTheme(
-                "preferences-system",
-                QtGui.QIcon(":/ide-icons/rc/Preferences-system.png")))
-            self.statusbar.addPermanentWidget(btMenu)
-        self.statusbar.addPermanentWidget(self.lblFilename, 200)
-        self.statusbar.addPermanentWidget(self.lblEncoding, 10)
-        self.statusbar.addPermanentWidget(self.lblCursorPos, 1)
-        self.stackedWidget.setCurrentIndex(0)
-        self.__prevRootNode = None
-        if s.geometry:
-            self.restoreGeometry(s.geometry)
-        if s.state:
-            self.restoreState(s.state)
-        self.dockWidgetNavPanel.setFloating(False)
-        self.dockWidgetLogs.setFloating(False)
-        self.wasMaximised = s.maximised
-        self.prevSize = s.size
-        self.actionFullscreen.setChecked(s.fullscreen)
-
-        self.consoleOutput.background_color = s.consoleBackground
-        self.consoleOutput.stdout_color = s.consoleForeground
-        self.consoleOutput.stderr_color = s.consoleForeground
-        self.consoleOutput.stdin_color = s.consoleUserInput
-        self.consoleOutput.app_msg_color = s.consoleAppOutput
-
-        if s.globalStyle == constants.DARK_STYLE:
-            QtWidgets.QApplication.instance().setStyleSheet(
-                qdarkstyle.load_stylesheet(pyside=False))
-
-        self.setupIcons()
-        self.showHomePage(True)
-        self.tabWidgetEditors.last_tab_closed.connect(self.showHomePage)
-        self.tabWidgetEditors.currentChanged.connect(
-            self.onCurrentEditorChanged)
-        self.tabWidgetEditors.dirty_changed.emit(False)
-        self.setupToolbar()
-        self.errorsTable.msg_activated.connect(
-            self.onCompilerMessageActivated)
-        self.jobRunner = pyqode_utils.DelayJobRunner(delay=0)
-        self.compilerMsgReady.connect(self.addCompilerMsg)
-        self.compilationFinished.connect(self.onCompilationFinished)
-        self.consoleOutput.process_finished.connect(self.onProgramFinished)
-
-        # View actions
-        # toolbars
-        self.toolBarFile.visibilityChanged.connect(
-            self.updateViewToolbarMenu)
-        self.toolBarCode.visibilityChanged.connect(
-            self.updateViewToolbarMenu)
-        self.aShowCodeToolbar.toggled.connect(
-            self.toolBarCode.setVisible)
-        self.aShowFilesToolbar.toggled.connect(
-            self.toolBarFile.setVisible)
-        # dock windows
-        self.dockWidgetLogs.visibilityChanged.connect(
-            self.updateViewWindowMenu)
-        self.dockWidgetNavPanel.visibilityChanged.connect(
-            self.updateViewWindowMenu)
-        self.aShowNavWin.toggled.connect(
-            self.dockWidgetNavPanel.setVisible)
-        self.aShowLogsWin.toggled.connect(
-            self.dockWidgetLogs.setVisible)
-
-    def _clear_recents(self):
-        self.recent_files_manager.clear()
-        self.updateRecents()
-
-    def _remove_current_recent_file(self):
-        filename = self.listWidgetRecents.currentItem().data(32)
-        files = self.recent_files_manager.get_recent_files()
-        files.remove(filename)
-        self.recent_files_manager.remove(filename)
-        self.updateRecents()
-
-    def setup_recent_files_menu(self):
-        """ Setup the recent files menu and manager """
-        self.recent_files_manager = widgets.RecentFilesManager(
-            'OpenCobolIDE', 'OpenCobolIDE')
-        self.menu_recents = widgets.MenuRecentFiles(
-            self.menuFile, title='Recents',
-            recent_files_manager=self.recent_files_manager)
-        self.menu_recents.open_requested.connect(self.openFile)
-        self.menu_recents.clear_requested.connect(self.listWidgetRecents.clear)
-        self.menu_recents.clear()
-        self.menuFile.insertMenu(self.actionQuit, self.menu_recents)
-        self.menuFile.insertSeparator(self.actionQuit)
-        self.updateRecents()
-
+    @QtCore.Slot()
     def updateViewToolbarMenu(self):
         """
         Updates the View>Toolbars menu
@@ -266,6 +77,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         v = self.toolBarCode.isVisible()
         self.aShowCodeToolbar.setChecked(v)
 
+    @QtCore.Slot()
     def updateViewWindowMenu(self):
         """
         Updates the View>Windows menu
@@ -275,42 +87,34 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         self.aShowNavWin.setChecked(
             self.dockWidgetNavPanel.isVisible())
 
+    @QtCore.Slot(object)
     def addCompilerMsg(self, message):
         self.errorsTable.add_message(message)
+        self.tabWidgetLogs.setCurrentIndex(1)
 
-    def onCompilationFinished(self, status):
+    @QtCore.Slot(int)
+    def onCompilerProcessError(self, error):
+        from pyqode.core.frontend.client import PROCESS_ERROR_STRING
+        QMessageBox.warning(self, 'Compiler process error',
+                            'An error occured with the cobc process: %s' %
+                            PROCESS_ERROR_STRING[error])
+
+    @QtCore.Slot(bool)
+    def onCompilationFinished(self, failure):
         _logger().info('compilation finished')
+        self.compilerOutputEdit.setTextColor(self.palette().text().color())
+        self.compilerOutputEdit.append('Compilation finished')
         self.actionCompile.setEnabled(True)
         self.onCurrentEditorChanged(self.tabWidgetEditors.currentIndex())
         self.errorsTable.setSortingEnabled(True)
         self.errorsTable.sortItems(0)
+        if self._run_request:
+            target, wd = self._run_request
+            self._run_request = None
+            if not failure:
+                self.run_target(target, wd)
 
-    def updateNavigationPanel(self, rootNode):
-        """
-        Updates the navigation panel using the DocumentAnalyserMode infos.
-        """
-        if self.__prevRootNode != rootNode:
-            _logger().debug('updating navigation panel')
-            self.twNavigation.clear()
-            tiRoot = utils.ast_to_qtree(rootNode)
-            self.twNavigation.addTopLevelItem(tiRoot)
-            self.twNavigation.expandItem(tiRoot)
-            for i in range(tiRoot.childCount()):
-                self.twNavigation.expandItem(tiRoot.child(i))
-            #self.twNavigation.expandAll()
-            #self.twNavigation.expandChildren()
-            self.__prevRootNode = rootNode
-
-    def setupToolbar(self):
-        """
-        Setup the toolbar (adds a drop-down button for program types)
-        """
-        # create program type group
-        ag = QtWidgets.QActionGroup(self)
-        ag.addAction(self.actionProgram)
-        ag.addAction(self.actionSubprogram)
-        ag.triggered.connect(self.on_programType_triggered)
-
+    @QtCore.Slot(QtWidgets.QAction)
     def on_programType_triggered(self, action):
         # self.tb.setText(action.text())
         editor = self.tabWidgetEditors.currentWidget()
@@ -319,6 +123,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         else:
             editor.programType = constants.ProgramType.Module
 
+    @QtCore.Slot(QtWidgets.QListWidgetItem)
     def on_listWidgetRecents_itemClicked(self):
         self.openFile(self.listWidgetRecents.currentItem().data(32))
 
@@ -414,27 +219,18 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         self.dockWidgetLogs.show()
         self.tabWidgetLogs.setCurrentIndex(0)
         editor = self.tabWidgetEditors.currentWidget()
-        _logger().info('compiling file: %s' % editor.file_path)
-        self.jobRunner.request_job(self.compileCurrent,
-                                   editor.file_path, editor.file_encoding,
-                                   editor.programType)
+        self.compileCurrent(editor.file_path, editor.file_encoding,
+                            editor.programType)
 
     @QtCore.Slot()
     def on_actionAbout_triggered(self):
         dlg = DlgAbout(self)
         dlg.exec_()
 
-    @QtCore.Slot()
-    def on_actionRun_triggered(self):
-        source_fn = self.tabWidgetEditors.currentWidget().file_path
-        source_fn = os.path.join(os.path.dirname(source_fn), "bin",
-                                 os.path.basename(source_fn))
-        target = compiler.makeOutputFilePath(
-            source_fn, self.tabWidgetEditors.currentWidget().programType)
-        wd = os.path.join(os.path.dirname(target))
+    def run_target(self, target, wd):
         if not Settings().runInShell:
             _logger().info('running %s in embedded terminal' % target)
-            self.tabWidgetLogs.setCurrentIndex(1)
+            self.tabWidgetLogs.setCurrentIndex(2)
             self.dockWidgetLogs.show()
             self.consoleOutput.setFocus(True)
             self.actionRun.setEnabled(False)
@@ -449,30 +245,17 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                 subprocess.Popen(Settings().shellCommand.split(' ') + [target],
                                  cwd=wd)
 
-    def applySettings(self):
-        if Settings().globalStyle == 'white':
-            QtWidgets.QApplication.instance().setStyleSheet("")
-            self.frameRecents.setStyleSheet(frame_recent_white)
-            self.labelRecents.setStyleSheet(label_recent_white)
-            self.listWidgetRecents.setStyleSheet(list_recent_white)
-        else:
-            self.frameRecents.setStyleSheet(frame_recent_dark)
-            self.labelRecents.setStyleSheet(label_recent_dark)
-            self.listWidgetRecents.setStyleSheet(list_recent_dark)
-            if '5' in os.environ['QT_API']:
-                QtWidgets.QApplication.instance().setStyleSheet(
-                    qdarkstyle.load_stylesheet_pyqt5())
-            else:
-                QtWidgets.QApplication.instance().setStyleSheet(
-                    qdarkstyle.load_stylesheet(pyside=False))
-        self.statusbar.setVisible(Settings().displayStatusBar)
-        for i in range(self.tabWidgetEditors.count()):
-            self.tabWidgetEditors.widget(i).updateSettings()
-        self.setupIcons()
-        self.menuBar.setVisible(Settings().displayMenuBar)
-        if self.stackedWidget.currentIndex():
-            self.toolBarCode.setVisible(Settings().displayToolBar)
-            self.toolBarFile.setVisible(Settings().displayToolBar)
+    @QtCore.Slot()
+    def on_actionRun_triggered(self):
+        source_fn = self.tabWidgetEditors.currentWidget().file_path
+
+        source_fn = os.path.join(os.path.dirname(source_fn), "bin",
+                                 os.path.basename(source_fn))
+        target = compiler.makeOutputFilePath(
+            source_fn, self.tabWidgetEditors.currentWidget().programType)
+        wd = os.path.join(os.path.dirname(target))
+        self._run_request = (target, wd)
+        self.on_actionCompile_triggered()
 
     @QtCore.Slot()
     def on_actionPreferences_triggered(self):
@@ -497,9 +280,9 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                 self.tabAppLog,
                 QtGui.QIcon(':/ide-icons/rc/silex-32x32.png'),
                 'Application log')
-            self.tabWidgetLogs.setCurrentIndex(2)
+            self.tabWidgetLogs.setCurrentIndex(3)
         else:
-            self.tabWidgetLogs.removeTab(2)
+            self.tabWidgetLogs.removeTab(3)
 
     @QtCore.pyqtSlot()
     def on_actionDebug_level_triggered(self):
@@ -508,92 +291,12 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         l = logging.getLogger(oci.__name__)
         l.setLevel(logging.DEBUG if state else logging.INFO)
 
+    @QtCore.Slot(int)
     def onProgramFinished(self, status):
-        _logger().info('program finished')
+        _logger().info('program finished %s' % status)
         self.actionRun.setEnabled(True)
 
-    def compileCurrent(self, file_path, file_encoding, programType):
-        """
-        Compiles the current file and its dependencies (executed in a background
-        thread
-        """
-        dependencies = parse_dependencies(file_path, file_encoding)
-        globalStatus = True
-        for path, pgmType in dependencies:
-            status, messags = compiler.compile(path, pgmType)
-            globalStatus &= status
-            for msg in messags:
-                self.compilerMsgReady.emit(msg)
-        status, messages = compiler.compile(file_path, programType)
-        messages = [modes.CheckerMessage(*msg) for msg in messages]
-        for msg in messages:
-            self.compilerMsgReady.emit(msg)
-        if status == 0:
-            msg = modes.CheckerMessage("Compilation succeeded",
-                                       modes.CheckerMessages.INFO, 1,
-                                       icon=":/ide-icons/rc/accept.png",
-                                       path=file_path)
-            msg.filename = file_path
-            self.compilerMsgReady.emit(msg)
-        else:
-            msg = modes.CheckerMessage(
-                "Compilation failed", modes.CheckerMessages.ERROR, -1,
-                path=file_path)
-            self.compilerMsgReady.emit(msg)
-        self.compilationFinished.emit(globalStatus)
-
-    def onCurrentEditorChanged(self, index):
-        w = self.tabWidgetEditors.widget(index)
-        if w:
-            try:
-                if w.programType[0] == constants.ProgramType.Executable[0]:
-                    # self.programActionGroup.triggered.emit(self.actionProgram)
-                    self.actionProgram.setChecked(True)
-                    self.actionRun.setEnabled(True)
-                    self.actionCompile.setEnabled(True)
-                else:
-                    # self.programActionGroup.triggered.emit(self.actionSubprogram)
-                    self.actionSubprogram.setChecked(True)
-                    self.actionRun.setEnabled(False)
-                    self.actionCompile.setEnabled(True)
-                w.analyserMode.parse()
-                rn = w.analyserMode.root_node
-                if rn:
-                    self.updateNavigationPanel(rn)
-                self.updateStatusBar(w)
-            except (AttributeError, TypeError):
-                self.actionRun.setEnabled(False)
-                self.actionCompile.setEnabled(False)
-            self.menuEdit.clear()
-            self.menuEdit.addActions(w.actions())
-            self.menuEdit.addSeparator()
-        else:
-            self.showHomePage(True)
-        self.menuEdit.addAction(self.actionPreferences)
-
-    def updateStatusBar(self, editor=None):
-        if editor is None:
-            editor = self.tabWidgetEditors.currentWidget()
-        self.lblEncoding.setText(editor.file_encoding)
-        self.lblFilename.setText(editor.file_path)
-        self.lblCursorPos.setText("%d:%d" % frontend.cursor_position(editor))
-
-    def saveSettings(self):
-        s = Settings()
-        s.geometry = self.saveGeometry()
-        s.state = self.saveState()
-        s.maximised = self.isMaximized()
-        s.size = self.size()
-        if self.stackedWidget.currentIndex() == 1:
-            s.navigationPanelVisible = self.dockWidgetNavPanel.isVisible()
-            s.logPanelVisible = self.dockWidgetLogs.isVisible()
-            s.fullscreen = self.isFullScreen()
-
-    def closeEvent(self, QCloseEvent):
-        self.tabWidgetEditors.closeEvent(QCloseEvent)
-        self.saveSettings()
-        logger.close()
-
+    @QtCore.Slot(object)
     def onCompilerMessageActivated(self, message):
         index = self.tabWidgetEditors.index_from_filename(message.path)
         if index == -1:
@@ -623,6 +326,143 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         frontend.goto_line(w, statement.line, move=True,
                            column=statement.column)
         self.tabWidgetEditors.currentWidget().setFocus()
+
+    @QtCore.Slot(int)
+    def onCurrentEditorChanged(self, index):
+        w = self.tabWidgetEditors.widget(index)
+        if w:
+            try:
+                if w.programType[0] == constants.ProgramType.Executable[0]:
+                    # self.programActionGroup.triggered.emit(self.actionProgram)
+                    self.actionProgram.setChecked(True)
+                    self.actionRun.setEnabled(True)
+                    self.actionCompile.setEnabled(True)
+                else:
+                    # self.programActionGroup.triggered.emit(self.actionSubprogram)
+                    self.actionSubprogram.setChecked(True)
+                    self.actionRun.setEnabled(False)
+                    self.actionCompile.setEnabled(True)
+                w.analyserMode.parse()
+                rn = w.analyserMode.root_node
+                if rn:
+                    self.updateNavigationPanel(rn)
+                self.updateStatusBar(w)
+            except (AttributeError, TypeError):
+                self.actionRun.setEnabled(False)
+                self.actionCompile.setEnabled(False)
+            self.menuEdit.clear()
+            self.menuEdit.addActions(w.actions())
+            self.menuEdit.addSeparator()
+        else:
+            self.showHomePage(True)
+        self.menuEdit.addAction(self.actionPreferences)
+
+    @QtCore.Slot(object)
+    def displayPICInfos(self, infos):
+        _logger().debug('display PIC infos requested')
+        self.tableWidgetOffsets.clear()
+        self.tableWidgetOffsets.setRowCount(len(infos))
+        self.tableWidgetOffsets.setHorizontalHeaderLabels(
+            ['Level', 'Name', 'Offset', 'PIC'])
+        try:
+            # PyQt4
+            self.tableWidgetOffsets.horizontalHeader().setResizeMode(
+                QtWidgets.QHeaderView.ResizeToContents)
+            self.tableWidgetOffsets.horizontalHeader().setResizeMode(
+                1, QtWidgets.QHeaderView.Stretch)
+        except AttributeError:
+            # PyQt5
+            self.tableWidgetOffsets.horizontalHeader().setSectionResizeMode(
+                QtWidgets.QHeaderView.ResizeToContents)
+            self.tableWidgetOffsets.horizontalHeader().setSectionResizeMode(
+                1, QtWidgets.QHeaderView.Stretch)
+        # process each info in a separate row
+        for i, info in enumerate(infos):
+            assert isinstance(info, PicFieldInfo)
+            self.tableWidgetOffsets.setItem(
+                i, 0, QtWidgets.QTableWidgetItem("%s" % info.level))
+            self.tableWidgetOffsets.setItem(
+                i, 1, QtWidgets.QTableWidgetItem(info.name))
+            self.tableWidgetOffsets.setItem(
+                i, 2, QtWidgets.QTableWidgetItem("%s" % info.offset))
+            self.tableWidgetOffsets.setItem(
+                i, 3, QtWidgets.QTableWidgetItem(info.pic))
+        self.dockWidgetOffsets.show()
+        self.dockWidgetOffsets.adjustSize()
+
+    def applySettings(self):
+        if Settings().globalStyle == 'white':
+            QtWidgets.QApplication.instance().setStyleSheet("")
+            self.frameRecents.setStyleSheet(home.frame_recent_white)
+            self.labelRecents.setStyleSheet(home.label_recent_white)
+            self.listWidgetRecents.setStyleSheet(home.list_recent_white)
+        else:
+            self.frameRecents.setStyleSheet(home.frame_recent_dark)
+            self.labelRecents.setStyleSheet(home.label_recent_dark)
+            self.listWidgetRecents.setStyleSheet(home.list_recent_dark)
+            if '5' in os.environ['QT_API']:
+                QtWidgets.QApplication.instance().setStyleSheet(
+                    qdarkstyle.load_stylesheet_pyqt5())
+            else:
+                QtWidgets.QApplication.instance().setStyleSheet(
+                    qdarkstyle.load_stylesheet(pyside=False))
+        self.statusbar.setVisible(Settings().displayStatusBar)
+        for i in range(self.tabWidgetEditors.count()):
+            self.tabWidgetEditors.widget(i).updateSettings()
+        self.setupIcons()
+        self.menuBar.setVisible(Settings().displayMenuBar)
+        if self.stackedWidget.currentIndex():
+            self.toolBarCode.setVisible(Settings().displayToolBar)
+            self.toolBarFile.setVisible(Settings().displayToolBar)
+
+    def updateNavigationPanel(self, rootNode):
+        """
+        Updates the navigation panel using the DocumentAnalyserMode infos.
+        """
+        if self.__prevRootNode != rootNode:
+            _logger().debug('updating navigation panel')
+            self.twNavigation.clear()
+            tiRoot = utils.ast_to_qtree(rootNode)
+            self.twNavigation.addTopLevelItem(tiRoot)
+            self.twNavigation.expandItem(tiRoot)
+            for i in range(tiRoot.childCount()):
+                self.twNavigation.expandItem(tiRoot.child(i))
+            self.__prevRootNode = rootNode
+
+    def compileCurrent(self, file_path, file_encoding, programType):
+        """
+        Compiles the current file and its dependencies (
+        executed in a background thread)
+        """
+        self.compilerOutputEdit.clear()
+        self.compilerOutputEdit.setTextColor(self.palette().text().color())
+        self.compilerOutputEdit.append('Compilation started')
+        commands = compiler.get_all_commands(
+            file_path, file_encoding, programType)
+        self.compilation_manager.run_compilation_commands(commands)
+
+    def updateStatusBar(self, editor=None):
+        if editor is None:
+            editor = self.tabWidgetEditors.currentWidget()
+        self.lblEncoding.setText(editor.file_encoding)
+        self.lblFilename.setText(editor.file_path)
+        self.lblCursorPos.setText("%d:%d" % frontend.cursor_position(editor))
+
+    def saveSettings(self):
+        s = Settings()
+        s.geometry = self.saveGeometry()
+        s.state = self.saveState()
+        s.maximised = self.isMaximized()
+        s.size = self.size()
+        if self.stackedWidget.currentIndex() == 1:
+            s.navigationPanelVisible = self.dockWidgetNavPanel.isVisible()
+            s.logPanelVisible = self.dockWidgetLogs.isVisible()
+            s.fullscreen = self.isFullScreen()
+
+    def closeEvent(self, QCloseEvent):
+        self.tabWidgetEditors.closeEvent(QCloseEvent)
+        self.saveSettings()
+        logger.close()
 
     def openFile(self, fn):
         try:
@@ -660,71 +500,6 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                 self, "File does not exist",
                 "Cannot open file %s, the file does not exists." % fn)
 
-    def setupIcons(self):
-        if Settings().globalStyle == 'white':
-            docOpenIcon = QtGui.QIcon.fromTheme(
-                "document-open", QtGui.QIcon(":/ide-icons/rc/document-open.png"))
-            docSaveIcon = QtGui.QIcon.fromTheme(
-                "document-save", QtGui.QIcon(":/ide-icons/rc/document-save.png"))
-            docSaveAsIcon = QtGui.QIcon.fromTheme(
-                "document-save-as", QtGui.QIcon(":/ide-icons/rc/document-save-as.png"))
-            docNewIcon = QtGui.QIcon.fromTheme(
-                "document-new",
-                QtGui.QIcon(":/ide-icons/rc/document-new.png"))
-            compileIcon = QtGui.QIcon.fromTheme(
-                "application-x-executable", QtGui.QIcon(
-                    ":/ide-icons/rc/application-x-executable.png"))
-            runIcon = QtGui.QIcon.fromTheme(
-                "media-playback-start", QtGui.QIcon(
-                    ":/ide-icons/rc/media-playback-start.png"))
-            fullscreenIcon = QtGui.QIcon.fromTheme(
-                "view-fullscreen", QtGui.QIcon(
-                    ":/ide-icons/rc/view-fullscreen.png"))
-            quitIcon = QtGui.QIcon.fromTheme(
-                "window-close", QtGui.QIcon(":/ide-icons/rc/system-log-out.png"))
-            clearIcon = QtGui.QIcon.fromTheme(
-                "edit-clear", QtGui.QIcon(":/ide-icons/rc/edit-clear.png"))
-            helpIcon = QtGui.QIcon.fromTheme(
-                "help", QtGui.QIcon(":/ide-icons/rc/help.png"))
-            preferencesIcon = QtGui.QIcon.fromTheme(
-                "preferences-system",
-                QtGui.QIcon(":/ide-icons/rc/Preferences-system.png"))
-            aboutIcon = QtGui.QIcon.fromTheme(
-                'info', QtGui.QIcon(':/ide-icons/rc/dialog-information.png'))
-        else:
-            docOpenIcon = QtGui.QIcon(":/ide-icons/rc/document-open.png")
-            docSaveIcon = QtGui.QIcon(":/ide-icons/rc/document-save.png")
-            docSaveAsIcon = QtGui.QIcon(":/ide-icons/rc/document-save-as.png")
-            docNewIcon = QtGui.QIcon(":/ide-icons/rc/document-new.png")
-            compileIcon = QtGui.QIcon(
-                ":/ide-icons/rc/application-x-executable.png")
-            runIcon = QtGui.QIcon(
-                ":/ide-icons/rc/media-playback-start.png")
-            fullscreenIcon = QtGui.QIcon(
-                ":/ide-icons/rc/view-fullscreen.png")
-            quitIcon = QtGui.QIcon(":/ide-icons/rc/system-log-out.png")
-            clearIcon = QtGui.QIcon(":/ide-icons/rc/edit-clear.png")
-            helpIcon = QtGui.QIcon(":/ide-icons/rc/help.png")
-            preferencesIcon = QtGui.QIcon(
-                ":/ide-icons/rc/Preferences-system.png")
-            aboutIcon = QtGui.QIcon(':/ide-icons/rc/dialog-information.png')
-        self.actionPreferences.setIcon(preferencesIcon)
-        self.actionHelp.setIcon(helpIcon)
-        self.actionClear.setIcon(clearIcon)
-        self.actionQuit.setIcon(quitIcon)
-        self.actionFullscreen.setIcon(fullscreenIcon)
-        self.actionOpen.setIcon(docOpenIcon)
-        self.btOpenFile.setIcon(docOpenIcon)
-        self.actionNew.setIcon(docNewIcon)
-        self.btNewFile.setIcon(docNewIcon)
-        self.actionSave.setIcon(docSaveIcon)
-        self.actionSaveAs.setIcon(docSaveAsIcon)
-        self.actionRun.setIcon(runIcon)
-        self.actionCompile.setIcon(compileIcon)
-        self.actionAbout.setIcon(aboutIcon)
-        self.tabWidgetLogs.setTabIcon(0, compileIcon)
-        self.tabWidgetLogs.setTabIcon(1, runIcon)
-
     def showHomePage(self, home=True):
         self.menuBar.setVisible(Settings().displayMenuBar)
         if home:
@@ -757,32 +532,220 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                     self.toolBarFile.setVisible(True)
                     self.toolBarCode.setVisible(True)
 
-    def displayPICInfos(self, infos):
-        _logger().debug('display PIC infos requested')
-        self.tableWidgetOffsets.clear()
-        self.tableWidgetOffsets.setRowCount(len(infos))
-        self.tableWidgetOffsets.setHorizontalHeaderLabels(
-            ['Level', 'Name', 'Offset', 'PIC'])
+    def init_compiler(self):
         try:
-            self.tableWidgetOffsets.horizontalHeader().setResizeMode(
-                QtWidgets.QHeaderView.ResizeToContents)
-            self.tableWidgetOffsets.horizontalHeader().setResizeMode(
-                1, QtWidgets.QHeaderView.Stretch)
-        except AttributeError:
-            self.tableWidgetOffsets.horizontalHeader().setSectionResizeMode(
-                QtWidgets.QHeaderView.ResizeToContents)
-            self.tableWidgetOffsets.horizontalHeader().setSectionResizeMode(
-                1, QtWidgets.QHeaderView.Stretch)
+            compiler.initialize()
+        except compiler.InitializationFailed as e:
+            QMessageBox.warning(
+                self, 'Compiler configuration error',
+                'Failed to find OpenCobol compiler.\n%s' % e)
 
-        for i, info in enumerate(infos):
-            assert isinstance(info, PicFieldInfo)
-            self.tableWidgetOffsets.setItem(
-                i, 0, QtWidgets.QTableWidgetItem("%s" % info.level))
-            self.tableWidgetOffsets.setItem(
-                i, 1, QtWidgets.QTableWidgetItem(info.name))
-            self.tableWidgetOffsets.setItem(
-                i, 2, QtWidgets.QTableWidgetItem("%s" % info.offset))
-            self.tableWidgetOffsets.setItem(
-                i, 3, QtWidgets.QTableWidgetItem(info.pic))
-        self.dockWidgetOffsets.show()
-        self.dockWidgetOffsets.adjustSize()
+    def setupStatusBar(self):
+        self.lblFilename = QtWidgets.QLabel()
+        self.lblEncoding = QtWidgets.QLabel()
+        self.lblEncoding.setAlignment(QtCore.Qt.AlignHCenter |
+                                      QtCore.Qt.AlignVCenter)
+        self.lblEncoding.setText('')
+        self.lblCursorPos = QtWidgets.QLabel()
+        self.lblCursorPos.setAlignment(QtCore.Qt.AlignHCenter |
+                                       QtCore.Qt.AlignVCenter)
+        self.lblCursorPos.setText('')
+        if not sys.platform == 'darwin':
+            btMenu = QtWidgets.QToolButton(self)
+            btMenu.setPopupMode(btMenu.MenuButtonPopup)
+            mnu = QtWidgets.QMenu(self)
+            mnu.addAction(self.actionNew)
+            mnu.addAction(self.actionOpen)
+            mnu.addMenu(self.menu_recents)
+            mnu.addSeparator()
+            mnu.addMenu(self.menuView)
+            mnu.addSeparator()
+            mnu.addAction(self.actionHelp)
+            mnu.addAction(self.actionAbout)
+            mnu.addSeparator()
+            mnu.addAction(self.actionQuit)
+
+            btMenu.setMenu(mnu)
+            btMenu.setToolTip('Preferences')
+            btMenu.clicked.connect(self.actionPreferences.trigger)
+            btMenu.setIcon(QtGui.QIcon.fromTheme(
+                "preferences-system",
+                QtGui.QIcon(":/ide-icons/rc/Preferences-system.png")))
+            self.statusbar.addPermanentWidget(btMenu)
+        self.statusbar.addPermanentWidget(self.lblFilename, 200)
+        self.statusbar.addPermanentWidget(self.lblEncoding, 10)
+        self.statusbar.addPermanentWidget(self.lblCursorPos, 1)
+        self.stackedWidget.setCurrentIndex(0)
+
+    def setupAppLog(self, s):
+        if not s.appLogVisible:
+            self.tabWidgetLogs.removeTab(3)
+        self.tabWidgetLogs.setCurrentIndex(0)
+        self.actionClearLog.triggered.connect(self.textEditLogs.clear)
+        self.actionDebug_level.setChecked(s.debugLog)
+        self.actionShowAppLog.setChecked(s.appLogVisible)
+
+    def setupGeometryAndState(self, s):
+        if s.geometry:
+            self.restoreGeometry(s.geometry)
+        if s.state:
+            self.restoreState(s.state)
+        self.dockWidgetNavPanel.setFloating(False)
+        self.dockWidgetLogs.setFloating(False)
+        self.wasMaximised = s.maximised
+        self.prevSize = s.size
+        self.actionFullscreen.setChecked(s.fullscreen)
+
+    def setupConsoleOutput(self, s):
+        self.consoleOutput.background_color = s.consoleBackground
+        self.consoleOutput.stdout_color = s.consoleForeground
+        self.consoleOutput.stderr_color = s.consoleForeground
+        self.consoleOutput.stdin_color = s.consoleUserInput
+        self.consoleOutput.app_msg_color = s.consoleAppOutput
+
+    def setupStyle(self, s):
+        if s.globalStyle == constants.DARK_STYLE:
+            QtWidgets.QApplication.instance().setStyleSheet(
+                qdarkstyle.load_stylesheet(pyside=False))
+        self.setupIcons()
+
+    def setupActions(self):
+        self.tabWidgetEditors.last_tab_closed.connect(self.showHomePage)
+        self.tabWidgetEditors.currentChanged.connect(
+            self.onCurrentEditorChanged)
+        self.tabWidgetEditors.dirty_changed.emit(False)
+        self.setupToolbar()
+        self.errorsTable.msg_activated.connect(
+            self.onCompilerMessageActivated)
+        self.jobRunner = pyqode_utils.DelayJobRunner(delay=0)
+        self.compilerMsgReady.connect(self.addCompilerMsg)
+        self.consoleOutput.process_finished.connect(self.onProgramFinished)
+        # View actions
+        # toolbars
+        self.toolBarFile.visibilityChanged.connect(
+            self.updateViewToolbarMenu)
+        self.toolBarCode.visibilityChanged.connect(
+            self.updateViewToolbarMenu)
+        self.aShowCodeToolbar.toggled.connect(
+            self.toolBarCode.setVisible)
+        self.aShowFilesToolbar.toggled.connect(
+            self.toolBarFile.setVisible)
+        # dock windows
+        self.dockWidgetLogs.visibilityChanged.connect(
+            self.updateViewWindowMenu)
+        self.dockWidgetNavPanel.visibilityChanged.connect(
+            self.updateViewWindowMenu)
+        self.aShowNavWin.toggled.connect(
+            self.dockWidgetNavPanel.setVisible)
+        self.aShowLogsWin.toggled.connect(
+            self.dockWidgetLogs.setVisible)
+        # compilation
+        self.compilation_manager.compilationFinished.connect(
+            self.onCompilationFinished)
+        self.compilation_manager.compilerMessageAvailable.connect(
+            self.addCompilerMsg)
+        self.compilation_manager.processError.connect(
+            self.onCompilerProcessError)
+
+    def setupIcons(self):
+
+        docOpenIcon = QtGui.QIcon.fromTheme(
+            "document-open", QtGui.QIcon(":/ide-icons/rc/document-open.png"))
+        docSaveIcon = QtGui.QIcon.fromTheme(
+            "document-save", QtGui.QIcon(":/ide-icons/rc/document-save.png"))
+        docSaveAsIcon = QtGui.QIcon.fromTheme(
+            "document-save-as", QtGui.QIcon(":/ide-icons/rc/document-save-as.png"))
+        docNewIcon = QtGui.QIcon.fromTheme(
+            "document-new",
+            QtGui.QIcon(":/ide-icons/rc/document-new.png"))
+        issueIcon = QtGui.QIcon.fromTheme('important', QtGui.QIcon(
+            ':/ide-icons/rc/emblem-important.png'))
+        compileIcon = QtGui.QIcon.fromTheme(
+            "application-x-executable", QtGui.QIcon(
+                ":/ide-icons/rc/application-x-executable.png"))
+        runIcon = QtGui.QIcon.fromTheme(
+            "media-playback-start", QtGui.QIcon(
+                ":/ide-icons/rc/media-playback-start.png"))
+        fullscreenIcon = QtGui.QIcon.fromTheme(
+            "view-fullscreen", QtGui.QIcon(
+                ":/ide-icons/rc/view-fullscreen.png"))
+        quitIcon = QtGui.QIcon.fromTheme(
+            "window-close", QtGui.QIcon(":/ide-icons/rc/system-log-out.png"))
+        clearIcon = QtGui.QIcon.fromTheme(
+            "edit-clear", QtGui.QIcon(":/ide-icons/rc/edit-clear.png"))
+        helpIcon = QtGui.QIcon.fromTheme(
+            "help", QtGui.QIcon(":/ide-icons/rc/help.png"))
+        preferencesIcon = QtGui.QIcon.fromTheme(
+            "preferences-system",
+            QtGui.QIcon(":/ide-icons/rc/Preferences-system.png"))
+        aboutIcon = QtGui.QIcon.fromTheme(
+            'info', QtGui.QIcon(':/ide-icons/rc/dialog-information.png'))
+        if Settings().globalStyle != 'white':
+            docOpenIcon = QtGui.QIcon(":/ide-icons/rc/document-open.png")
+            docSaveIcon = QtGui.QIcon(":/ide-icons/rc/document-save.png")
+            docSaveAsIcon = QtGui.QIcon(":/ide-icons/rc/document-save-as.png")
+            docNewIcon = QtGui.QIcon(":/ide-icons/rc/document-new.png")
+            compileIcon = QtGui.QIcon(
+                ":/ide-icons/rc/application-x-executable.png")
+            runIcon = QtGui.QIcon(
+                ":/ide-icons/rc/media-playback-start.png")
+            fullscreenIcon = QtGui.QIcon(
+                ":/ide-icons/rc/view-fullscreen.png")
+            quitIcon = QtGui.QIcon(":/ide-icons/rc/system-log-out.png")
+            clearIcon = QtGui.QIcon(":/ide-icons/rc/edit-clear.png")
+            helpIcon = QtGui.QIcon(":/ide-icons/rc/help.png")
+            preferencesIcon = QtGui.QIcon(
+                ":/ide-icons/rc/Preferences-system.png")
+            aboutIcon = QtGui.QIcon(':/ide-icons/rc/dialog-information.png')
+        self.actionPreferences.setIcon(preferencesIcon)
+        self.actionHelp.setIcon(helpIcon)
+        self.actionClear.setIcon(clearIcon)
+        self.actionQuit.setIcon(quitIcon)
+        self.actionFullscreen.setIcon(fullscreenIcon)
+        self.actionOpen.setIcon(docOpenIcon)
+        self.btOpenFile.setIcon(docOpenIcon)
+        self.actionNew.setIcon(docNewIcon)
+        self.btNewFile.setIcon(docNewIcon)
+        self.actionSave.setIcon(docSaveIcon)
+        self.actionSaveAs.setIcon(docSaveAsIcon)
+        self.actionRun.setIcon(runIcon)
+        self.actionCompile.setIcon(compileIcon)
+        self.actionAbout.setIcon(aboutIcon)
+        self.tabWidgetLogs.setTabIcon(0, compileIcon)
+        self.tabWidgetLogs.setTabIcon(1, issueIcon)
+        self.tabWidgetLogs.setTabIcon(2, runIcon)
+
+    def setupToolbar(self):
+            """
+            Setup the toolbar (adds a drop-down button for program types)
+            """
+            # create program type group
+            ag = QtWidgets.QActionGroup(self)
+            ag.addAction(self.actionProgram)
+            ag.addAction(self.actionSubprogram)
+            ag.triggered.connect(self.on_programType_triggered)
+
+    def setupUi(self, MainWindow):
+        s = Settings()
+        super().setupUi(MainWindow)
+        self.compilerOutputEdit = CompilerOutputEdit()
+        self.tabWidgetLogs.insertTab(0, self.compilerOutputEdit,
+                                     'Compilation output')
+        self.compilation_manager.stdoutAvailable.connect(
+            self.compilerOutputEdit.writeStdout)
+        self.compilation_manager.stderrAvailable.connect(
+            self.compilerOutputEdit.writeStderr)
+        self.compilation_manager.cmdStarted.connect(
+            self.compilerOutputEdit.writeCmd)
+        self.toolBarCode.setIconSize(QtCore.QSize(22, 22))
+        self.toolBarFile.setIconSize(QtCore.QSize(22, 22))
+        self.actionPreferences.setShortcut('F2')
+        self.addActions(self.menuBar.actions())
+        home.setup_recent_files()
+        self.setupAppLog(s)
+        self.setupStatusBar()
+        self.setupGeometryAndState(s)
+        self.setupConsoleOutput(s)
+        self.setupStyle(s)
+        self.showHomePage(True)
+        self.setupActions()

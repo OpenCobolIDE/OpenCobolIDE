@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Thu May 29 23:41:33 2014
+# Created: Sat May 31 20:06:11 2014
 #      by: PyQt5 UI code generator 5.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -117,21 +117,10 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.labelRecents = QtWidgets.QLabel(self.frameRecents)
-        self.labelRecents.setStyleSheet("border: none;\n"
-"border-top-left-radius: 3px;\n"
-"border-top-right-radius: 3px;\n"
-"border-bottom-left-radius: 0px;\n"
-"border-bottom-right-radius: 0px;\n"
-"background-color: rgb(206, 206, 206);\n"
-"padding: 5px;\n"
-"border-bottom: 1px solid rgb(150, 150, 150);\n"
-"")
         self.labelRecents.setObjectName("labelRecents")
         self.verticalLayout_4.addWidget(self.labelRecents)
         self.listWidgetRecents = RecentFilesListWidget(self.frameRecents)
         self.listWidgetRecents.setMinimumSize(QtCore.QSize(400, 0))
-        self.listWidgetRecents.setStyleSheet("border: none;\n"
-"background-color: transparent;")
         self.listWidgetRecents.setObjectName("listWidgetRecents")
         self.verticalLayout_4.addWidget(self.listWidgetRecents)
         self.horizontalLayout_5.addWidget(self.frameRecents)
@@ -182,7 +171,7 @@ class Ui_MainWindow(object):
         self.errorsTable.setRowCount(0)
         self.gridLayout_4.addWidget(self.errorsTable, 0, 0, 1, 1)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/ide-icons/rc/applications-system.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/ide-icons/rc/emblem-important.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.tabWidgetLogs.addTab(self.tabCompiler, icon1, "")
         self.tabProgramOutput = QtWidgets.QWidget()
         self.tabProgramOutput.setObjectName("tabProgramOutput")
@@ -425,7 +414,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.stackedWidget.setCurrentIndex(0)
-        self.tabWidgetLogs.setCurrentIndex(2)
+        self.tabWidgetLogs.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -438,7 +427,7 @@ class Ui_MainWindow(object):
         self.toolBarFile.setWindowTitle(_translate("MainWindow", "Toolbar File"))
         self.toolBarCode.setWindowTitle(_translate("MainWindow", "Toolbar Code"))
         self.dockWidgetLogs.setWindowTitle(_translate("MainWindow", "Logs"))
-        self.tabWidgetLogs.setTabText(self.tabWidgetLogs.indexOf(self.tabCompiler), _translate("MainWindow", "Compiler"))
+        self.tabWidgetLogs.setTabText(self.tabWidgetLogs.indexOf(self.tabCompiler), _translate("MainWindow", "Issues"))
         self.tabWidgetLogs.setTabToolTip(self.tabWidgetLogs.indexOf(self.tabCompiler), _translate("MainWindow", "Show compiler log"))
         self.tabWidgetLogs.setTabText(self.tabWidgetLogs.indexOf(self.tabProgramOutput), _translate("MainWindow", "Output"))
         self.tabWidgetLogs.setTabText(self.tabWidgetLogs.indexOf(self.tabAppLog), _translate("MainWindow", "Application log"))
@@ -517,6 +506,6 @@ class Ui_MainWindow(object):
         self.actionShowAppLog.setToolTip(_translate("MainWindow", "Show/hide application log window"))
         self.actionClearLog.setText(_translate("MainWindow", "Clear"))
 
-from oci.frontend.widgets import RecentFilesListWidget
 from pyqode.core.frontend.widgets import InteractiveConsole, TabWidget, ErrorsTable
+from oci.frontend.widgets import RecentFilesListWidget
 from . import ide_rc
