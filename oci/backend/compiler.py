@@ -114,14 +114,41 @@ def cmd_for(filename, outputFilename=None,
     return cmd, dirname
 
 
+def parse_output(lines, filename):
+    from pyqode.core.frontend.modes import CheckerMessage, CheckerMessages
+    _logger().debug('parsing cobc output: %s' % lines)
+    retval = []
+    # parse compilation results
+    for l in lines:
+        if not l or l == "":
+            continue
+        tokens = l.split(":")
+        _logger().debug('line tokens: %r' % tokens)
+        status = CheckerMessages.INFO
+        try:
+            desc = tokens[len(tokens) - 1]
+            errType = tokens[len(tokens) - 2]
+            lineNbr = int(tokens[len(tokens) - 3])
+        except (ValueError, IndexError):
+            # not a compilation message, usually this is a file not
+            # found error.
+            desc = l
+            errType = "Error"
+            lineNbr = -1
+            status = CheckerMessages.WARNING
+        if "Error" in errType:
+            status = CheckerMessages.ERROR
+        msg = (desc, status, lineNbr, 0, None, None, filename)
+        retval.append(msg)
+    return retval
+
+
 def compile(filename, fileType, customOptions=None, outputFilename=None):
     """
     Compile a single cobol file, return the compiler exit status and output.
     The output is a list of checker messages (those can be used to implements
     a cobol live checker mode)
     """
-    WARNING = 1
-    ERROR = 2
 
     cmd, dirname = cmd_for(filename, outputFilename, fileType,
                                customOptions)
@@ -148,7 +175,7 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
             p = subprocess.Popen(cmd, shell=False, cwd=dirname,
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except OSError:
-        msg = ("cobc compiler not found", ERROR, -1, 0, None, None, filename)
+        msg = ("cobc compiler not found", 2, -1, 0, None, None, filename)
         msg.filename = filename
         return 1, [msg]
     else:
@@ -163,27 +190,7 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
                 lines += str(stdout.decode(sys.getfilesystemencoding())).splitlines()
             if stderr:
                 lines += str(stderr.decode(sys.getfilesystemencoding())).splitlines()
-            _logger().debug('cobc output: %s' % lines)
-            # parse compilation results
-            for l in lines:
-                if not l or l == "":
-                    continue
-                tokens = l.split(":")
-                _logger().debug('line tokens: %r' % tokens)
-                try:
-                    desc = tokens[len(tokens) - 1]
-                    errType = tokens[len(tokens) - 2]
-                    lineNbr = int(tokens[len(tokens) - 3])
-                except (ValueError, IndexError):
-                    # not a compilation message, usually this is a file not found error.
-                    desc = l
-                    errType = "Error"
-                    lineNbr = -1
-                    status = WARNING
-                if errType == "Error":
-                    status = ERROR
-                messages.append((desc, status, lineNbr, 0, None, None,
-                                 filename))
+            messages = parse_output(lines, filename)
         return status, messages
 
 

@@ -10,6 +10,7 @@ import logging
 import os
 from pyqode.core.frontend.modes import CheckerMessages, CheckerMessage
 from pyqode.qt import QtCore, QtWidgets, QtGui
+from oci.backend.compiler import parse_output
 
 
 def _logger():
@@ -120,32 +121,10 @@ class CompilationManager(QtCore.QObject):
             self._current_process.cmd[-1]))
 
     def _parse_output(self):
-        _logger().debug('parsing cobc output')
-        lines = (self._process_output + self._process_error).splitlines()
-        _logger().debug('cobc output: %s' % lines)
-        # parse compilation results
-        for l in lines:
-            if not l or l == "":
-                continue
-            tokens = l.split(":")
-            _logger().debug('line tokens: %r' % tokens)
-            status = CheckerMessages.INFO
-            try:
-                desc = tokens[len(tokens) - 1]
-                errType = tokens[len(tokens) - 2]
-                lineNbr = int(tokens[len(tokens) - 3])
-            except (ValueError, IndexError):
-                # not a compilation message, usually this is a file not
-                # found error.
-                desc = l
-                errType = "Error"
-                lineNbr = -1
-                status = CheckerMessages.WARNING
-            if "Error" in errType:
-                status = CheckerMessages.ERROR
-            msg = CheckerMessage(desc, status, lineNbr, 0, None, None,
-                                 self.get_filename_from_cmd())
-            self.compilerMessageAvailable.emit(msg)
+        for msg in parse_output((
+                self._process_output + self._process_error).splitlines(),
+                self.get_filename_from_cmd()):
+            self.compilerMessageAvailable.emit(CheckerMessage(*msg))
             self._error = True
 
 
