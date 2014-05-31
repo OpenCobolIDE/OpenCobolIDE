@@ -16,12 +16,11 @@
 """
 Contains an editor specialised for cobol source code editing.
 """
-import logging
 import mimetypes
 import os
 import sys
-from pygments.lexers.compiled import CobolFreeformatLexer
 
+from pygments.lexers.compiled import CobolFreeformatLexer
 from pygments.token import Comment
 from pyqode.qt import QtCore
 from pyqode.qt import QtGui
@@ -29,10 +28,10 @@ from pyqode.core.frontend import panels
 from pyqode.core.frontend import modes
 from pyqode.core import frontend
 
-from oci import constants, services
+from oci import constants
 from oci.backend import server
 from oci.backend.parser import detect_file_type
-from oci.frontend import modes as cob_modes
+from oci.frontend import modes as cob_modes, services
 from oci.frontend import panels as cob_panels
 from oci.settings import Settings
 
@@ -45,10 +44,8 @@ for ext in constants.COBOL_EXTENSIONS:
 def _start_server(editor):
     if hasattr(sys, "frozen"):
         cwd = os.path.dirname(sys.executable)
-        srv = 'server.exe' if sys.platform == 'win32' else 'ociserver'
+        srv = 'ociserver.exe' if sys.platform == 'win32' else 'ociserver'
         srv = os.path.join(cwd, srv)
-        with open('/Users/renega_666/Documents/info.txt', 'w') as f:
-            f.write(srv)
         frontend.start_server(editor, srv)
     else:
         frontend.start_server(editor, server.__file__)

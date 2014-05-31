@@ -39,8 +39,8 @@ app_script = "open-cobol-ide"
 app_name = "OpenCobolIDE"
 app_exe = "OpenCobolIDE.exe" if windows else "OpenCobolIDE"
 srv_script = "oci/backend/server.py"
-srv_name = "server"
-srv_exe = "server.exe" if windows else "ociserver"
+srv_name = "ociserver"
+srv_exe = "ociserver.exe" if windows else "ociserver"
 
 app_icon = "oci/frontend/ui/rc/silex-icon.ico" if windows else "oci/frontend/ui/rc/silex-192x192.icns"
 
@@ -61,12 +61,11 @@ __version__ = read_version()
 if len(sys.argv) == 1:
     sys.argv.append("build")
 
-options = {"excludes": ["pyqode.qt.uic.port_v3"],
-           # add the namespace packages that you uses
+options = {# add the namespace packages that you uses
            "namespace_packages": ["pyqode.core"],
            # freeze the pygments default style along with our executable
            "includes": ["pygments.styles.default", "pygments.styles.monokai",
-                        "pygments.styles.native"
+                        "pygments.styles.native",
                         "pkg_resources"]}
 
 print("### Freezing application\n"
