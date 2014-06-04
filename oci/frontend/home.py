@@ -53,16 +53,16 @@ border-bottom: 1px solid rgb(80, 80, 80);
 
 
 def clear_recents():
-    services.main_window()().recent_files_manager.clear()
-    services.main_window()().updateRecents()
+    services.main_window().recent_files_manager.clear()
+    updateRecents()
 
 
 def remove_current_recent_file():
-    filename = services.main_window()().listWidgetRecents.currentItem().data(32)
-    files = services.main_window()().recent_files_manager.get_recent_files()
+    filename = services.main_window().listWidgetRecents.currentItem().data(32)
+    files = services.main_window().recent_files_manager.get_recent_files()
     files.remove(filename)
-    services.main_window()().recent_files_manager.remove(filename)
-    services.main_window()().updateRecents()
+    services.main_window().recent_files_manager.remove(filename)
+    services.main_window().updateRecents()
 
 
 def setup_recent_files():
