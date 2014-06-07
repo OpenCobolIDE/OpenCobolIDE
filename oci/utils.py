@@ -3,6 +3,8 @@ This module contains utility functions
 """
 import os
 from pyqode.qt import QtGui, QtCore, QtWidgets
+import sys
+from oci.settings import Settings
 
 
 AST_ICONS = {
@@ -33,6 +35,17 @@ def ast_to_qtree(root_node):
     for display.
     """
     return convert_statement(root_node)
+
+
+def init_env():
+    if sys.platform == 'win32':
+        windows_init()
+    elif sys.platform == 'darwin':
+        osx_init()
+    path = Settings().customCompilerPath
+    if path:
+        sep = ';' if sys.platform == 'win32' else ':'
+        os.environ['PATH'] += sep + path
 
 
 def windows_init():

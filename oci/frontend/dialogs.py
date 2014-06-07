@@ -195,6 +195,8 @@ border-top: 2px solid silver;
             self.restoreDefaults)
         self.checkBoxRunExtTerm.stateChanged.connect(
             self.lineEditRunTerm.setEnabled)
+        self.checkBoxCustomPath.stateChanged.connect(
+            self.lineEditCompilerPath.setEnabled)
         self.reset(allTabs=True)
 
     @QtCore.Slot(bool)
@@ -267,7 +269,9 @@ border-top: 2px solid silver;
             self.lineEditRunTerm.setVisible(sys.platform != 'win32')
             self.lineEditRunTerm.setEnabled(settings.runInShell)
             self.lineEditRunTerm.setText(settings.shellCommand)
-            # todo recompile before run and auto detect deps
+            self.checkBoxCustomPath.setChecked(
+                settings.customCompilerPath != '')
+            self.lineEditCompilerPath.setText(settings.customCompilerPath)
 
     def restoreDefaults(self):
         settings = Settings()
@@ -295,6 +299,7 @@ border-top: 2px solid silver;
         if index == 3:
             settings.runInShell = False
             settings.shellCommand = None
+            settings.customCompilerPath = ''
         self.reset()
 
     def resizeEvent(self, *args, **kwargs):
@@ -332,3 +337,7 @@ border-top: 2px solid silver;
         settings.displayControlPanel = dlg.checkBoxViewControlPanel.isChecked()
         settings.displayToolBar = dlg.checkBoxViewToolBar.isChecked()
         settings.displayMenuBar = dlg.checkBoxViewMenuBar.isChecked()
+        if dlg.checkBoxCustomPath.isChecked():
+            settings.customCompilerPath = dlg.lineEditCompilerPath.text()
+        else:
+            settings.customCompilerPath = ''

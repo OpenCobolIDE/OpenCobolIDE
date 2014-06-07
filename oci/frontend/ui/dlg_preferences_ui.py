@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_preferences.ui'
 #
-# Created: Thu May 29 19:25:30 2014
+# Created: Sat Jun  7 18:44:31 2014
 #      by: PyQt5 UI code generator 5.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from pyqode.qt import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(441, 407)
+        Dialog.resize(441, 429)
         icon = QtGui.QIcon.fromTheme("preferences-system")
         Dialog.setWindowIcon(icon)
         self.gridLayout_2 = QtWidgets.QGridLayout(Dialog)
@@ -214,6 +214,12 @@ class Ui_Dialog(object):
         self.checkBoxAutoDetectDeps.setChecked(True)
         self.checkBoxAutoDetectDeps.setObjectName("checkBoxAutoDetectDeps")
         self.formLayout_6.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.checkBoxAutoDetectDeps)
+        self.checkBoxCustomPath = QtWidgets.QCheckBox(self.tab_2)
+        self.checkBoxCustomPath.setObjectName("checkBoxCustomPath")
+        self.formLayout_6.setWidget(5, QtWidgets.QFormLayout.LabelRole, self.checkBoxCustomPath)
+        self.lineEditCompilerPath = QtWidgets.QLineEdit(self.tab_2)
+        self.lineEditCompilerPath.setObjectName("lineEditCompilerPath")
+        self.formLayout_6.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.lineEditCompilerPath)
         self.tabWidget.addTab(self.tab_2, "")
         self.widget_2.addWidget(self.tabWidget, 0, 0, 1, 1)
         self.gridLayout_2.addWidget(self.widget, 0, 0, 1, 1)
@@ -228,7 +234,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.addLayout(self.gridLayout_3, 1, 0, 1, 1)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(3)
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -267,6 +273,7 @@ class Ui_Dialog(object):
         self.checkBoxRunExtTerm.setText(_translate("Dialog", "Run in external terminal"))
         self.checkBoxCompileBeforeRun.setText(_translate("Dialog", "Recompile before run"))
         self.checkBoxAutoDetectDeps.setText(_translate("Dialog", "Autodetect dependencies"))
+        self.checkBoxCustomPath.setText(_translate("Dialog", "Custom compiler path"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", "Build && Run"))
 
 from . import ide_rc

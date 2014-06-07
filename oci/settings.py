@@ -353,3 +353,14 @@ class Settings(object):
     @shellCommand.setter
     def shellCommand(self, cmd):
         self._settings.setValue("shell", cmd)
+
+    @property
+    def customCompilerPath(self):
+        return self._settings.value('customCompilerPath', '')
+
+    @customCompilerPath.setter
+    def customCompilerPath(self, value):
+        # add to PATH
+        sep = ';' if sys.platform == 'win32' else ':'
+        os.environ['PATH'] += sep + value
+        self._settings.setValue('customCompilerPath', value)
