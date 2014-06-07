@@ -53,4 +53,8 @@ def windows_init():
 
 
 def osx_init():
-    os.environ["PATH"] += ':/usr/local/bin'
+    # there are some missing paths, see github issue #40
+    paths = ['/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin',
+             '/usr/local/sbin', '/opt/bin', '/opt/sbin', '/opt/local/bin',
+             '/opt/local/sbin']
+    os.environ["PATH"] = ':'.join(paths)
