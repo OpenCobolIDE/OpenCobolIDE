@@ -37,8 +37,10 @@ def initialize():
                   'the IDE is installed in a path without spaces and ' \
                   'that the OpenCobol folder sits next to the executable.'
         else:
-            msg = 'You have to install the package <b>open-cobol</b> to ' \
-                  'use the IDE.'
+            msg = 'You have to install the package open-cobol to ' \
+                  'use the IDE.\nIf you installed open-cobol in a ' \
+                  'non standard directory, you can specify that diretory ' \
+                  'in the preferences dialog (build & run tab).'
         raise InitializationFailed(msg)
 
 
