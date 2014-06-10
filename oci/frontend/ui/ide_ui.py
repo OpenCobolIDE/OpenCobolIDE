@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Sat May 31 21:47:21 2014
+# Created: Tue Jun 10 19:39:37 2014
 #      by: PyQt5 UI code generator 5.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -508,6 +508,6 @@ class Ui_MainWindow(object):
         self.actionShowAppLog.setToolTip(_translate("MainWindow", "Show/hide application log window"))
         self.actionClearLog.setText(_translate("MainWindow", "Clear"))
 
-from oci.frontend.widgets import RecentFilesListWidget
 from pyqode.core.frontend.widgets import TabWidget, ErrorsTable, InteractiveConsole
+from oci.frontend.widgets import RecentFilesListWidget
 from . import ide_rc

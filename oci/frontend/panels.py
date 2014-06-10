@@ -17,7 +17,14 @@ QToolButton  { /* all types of tool button */
     border: 1px solid transparent;
     border-radius: 8px;
     padding: 2px;
-    padding-right: 10px; /* make way for the popup button */
+}
+
+QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
+ padding-right: 10px; /* make way for the popup button */
+}
+
+QToolButton[popupMode="2"] { /* only for MenuButtonPopup */
+ padding-right: 10px; /* make way for the popup button */
 }
 
 QToolButton:hover {
@@ -32,16 +39,17 @@ QToolButton:pressed  {
 
 /* the subcontrols below are used only in the MenuButtonPopup mode */
 QToolButton::menu-button  {
-    border: 2px solid gray;
+    background-color: transparent;
+    border: 1px transparent black;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
     /* 16px width + 4px for border = 20px allocated above */
     width: 16px;
 }
 
-/*QToolButton::menu-arrow  {
-    image: url(downarrow.png);
-}*/
+QToolButton::menu-arrow  {
+    image: url(:/ide-icons/rc/downarrow.png);
+}
 
 QToolButton::menu-arrow:open  {
     top: 1px; left: 1px; /* shift it a bit */
@@ -73,6 +81,7 @@ class ControlPanel(frontend.Panel):
         self.btRun = QtWidgets.QToolButton()
         self.btRun.setStyleSheet(dropbtn_stylesheet)
         self.btRun.setIcon(runIcon)
+        self.btRun.setToolTip('Run program')
         if (self.position == self.Position.RIGHT or
                 self.position == self.Position.LEFT):
             layout = QtWidgets.QVBoxLayout()
@@ -96,7 +105,9 @@ class ControlPanel(frontend.Panel):
         self.actionGroup.triggered.connect(self.onProgramTypeChangeRequest)
         menu.addActions([self.actionExe, self.actionModule])
         self.btCompile.setMenu(menu)
-        self.btCompile.setPopupMode(self.btCompile.DelayedPopup)
+        self.btCompile.setToolTip(
+            'Compile file.\nClick on the arrow to change program type')
+        self.btCompile.setPopupMode(self.btCompile.MenuButtonPopup)
         layout.addWidget(self.btCompile)
         layout.addWidget(self.btRun)
         layout.addSpacerItem(spacer)
