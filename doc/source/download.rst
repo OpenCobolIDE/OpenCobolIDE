@@ -6,36 +6,34 @@ Here you'll find all the necessary explanations for installing OpenCobolIDE.
 
 Requirements:
 -------------
-OpenCobolIDE depends on the following packages
+OpenCobolIDE depends on the following packages:
 
     - Python 3
-    - pyqode.qt
+    - PyQt5
     - OpenCobol
     - pyqode.core
-    - pyqode.widgets
     - pygments >= 1.6
-    - chardet (chardet2 if you are using python3)
-
-Installation
-------------
+    - chardet
 
 GNU/Linux
-+++++++++
+---------
 
-If you are on Ubuntu 13.10 or drivatives, you can use the ppa to easily
+If you are on Ubuntu 14.04 or derivatives, you can use the `PPA`_ to easily
 install OpenCobolIDE::
 
     sudo apt-add-repository ppa:open-cobol-ide/stable
     sudo apt-get update
     sudo apt-get install open-cobol-ide
 
+If you are on archlinux, packages are available on the AUR.
+
 Otherwise you will have to install from source:
 
-1) Install OpenCobol and pyqode.qt
+1) Install OpenCobol and PyQt5
 
 .. code-block:: bash
 
-    sudo apt-get install python3-pyqt4 open-cobol
+    sudo apt-get install python3-pyqt5 open-cobol
 
 2) Install OpenCobolIDE
 
@@ -43,30 +41,46 @@ Using pip::
 
     sudo pip3 install OpenCobolIDE
 
-From source::
+or from source::
 
     cd /path/to/source
     sudo python3 setup.py install
 
-.. note:: You need pip for python3. Depending on your distribution, you might
-          replace ``pip`` by ``pip3`` or ``pip-3.2``
-
-
 Both methods will install a desktop entry on your system.
 
 An **open-cobol-ide** entry should appear in the development category. If the
-entry does not appear, you can always open a terminal and type *open-cobol-ide* to run the IDE.
+entry does not appear, you can always open a terminal and type
+*open-cobol-ide* to run the IDE.
 
 
 Windows
-++++++++++++
+-------
 
-Please use the Windows Installer available `here`_.
-
-.. _`here`: https://github.com/OpenCobolIDE/OpenCobolIDE/releases
+Please use the Windows Installer available in the `release section on github`_.
 
 
-.. note:: Installation from source is possible but you need to install all
-          requirements yourself and run the OpenCobolIDE.pyw from the *extracted
-          archive* or *git repository* without actually installing OpenCobolIDE
-          (**do not run** *setup.py install* on windows).
+Mac OSX
+-------
+
+There is a standalone app available in the `release section on github`_.
+
+The app is standalone, you don't have to install any of its libraries but **you
+will need a working open-cobol compiler**.
+
+One can easily install OpenCobol on Mac using `homebrew`_::
+
+    brew install open-cobol
+
+
+.. _`release section on github`: https://github.com/OpenCobolIDE/OpenCobolIDE/releases
+
+.. _homebrew: http://brew.sh/
+
+.. _PPA: https://launchpad.net/~open-cobol-ide/+archive/stable
+
+
+.. note:: Installation from source is possible on Mac and Windows but you will
+          need to install all requirements yourself and run the open-cobol-ide
+          script from the *extracted archive* or *git repository* without
+          actually installing OpenCobolIDE.
+          **Do not run `setup.py install` on Windows or Mac OSX**.

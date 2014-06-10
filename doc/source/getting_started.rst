@@ -1,103 +1,73 @@
 Getting started
 ===============
-.. note:: All the screenshots were taken on Linux Mint 15. You will have a
-          different look and feel on other OS/DE.
+
+.. note:: All the screenshots were taken on Gnome 3 desktop.
+          You will have different looks and feels on other OS/DE.
+
+This is the first window you will see when running OpenCobolIDE. This is your
+home page.
 
 .. image:: _static/Home.png
     :align: center
 
-This is the first window you will see when running OpenCobolIDE. This is your
-home page. From there you can fire a quick start action to open or create a
-cobol source file. You can also view an quickly open the recent documents you
-recently worked on.
+From there you can create new files or open existing one. OpenCobolIDE is
+**simple and lightweight** IDE. It works on a single file basis (i.e. it
+has no concept of project):
 
-OpenCobolIDE is simple and lightweight IDE. It works on a single file basis (
-i.e. it has no concept of project):
+    *You create/open a file, compile it then run it.*
 
-    You **create/open** a file, **compile** it then **run** it.
-
-.. contents:: :local:
 
 Create a new file
 -----------------
 
-Click on *New* in the *Quick start Actions* list:
+- click on *New*
 
-.. image:: _static/NewAction.png
-    :align: center
-
-The following Dialog should appear:
+- the following dialog should appear:
 
 .. image:: _static/NewFile.png
     :align: center
 
-Fill up the following information:
+- fill up the following information:
 
-Type
-++++
+    - Type:
+        Specify the type of file to create. You can choose from
 
-OpenCobolIDE makes the distinction between a Program and a
-subprogram, called a Module.
+            - program:
+                A *program* is an **executable**.
+                When compiled, it produces an **.exe** on Windows and an
+                **executable binary file** on GNU/Linux and Mac OSX.
 
-A **Program** is an executable program. When compiled, it produces a **.exe** on
-Windows and an **executable binary file** on GNU/Linux.
+            - module:
+                A *module* or *subprogram* is a **library**, a list of
+                procedures that can be shared among other modules/programs.
+                When compiled, it produces a dynamically linked library
+                (**.dll**) on Windows and a shared object (**.so**) on
+                GNU/Linux and Mac OSX.
 
-A **Module** or subprogram is a **library**, a procedure that can be shared
-among other modules/program.
-When compiled, it produces a dynamically linked library (**.dll**) on Windows
-and a shared object (**.so**) on GNU/Linux.
+            - empty:
+                create an empty file.
 
-When you create a new file you have can choose one of the 3 following options:
+        The type can be changed later. It used now to setup the default
+        code skeleton, to simplify your life ;)
 
-    - **program**: create a .CBL or .COB file with the default structure needed
-      for an executable program, a hello world example.
+    - Name:
+        file name without extension (you can choose the extension in the
+        drop down list)
 
-      .. image:: _static/NewProgram.png
-          :align: center
-
-    - **module**: create a .CBL or .COB file with the default structure needed
-      for a sub program. It will setup a basic linkage section.
-
-      .. image:: _static/NewModule.png
-          :align: center
-
-    - **empty**: create an empty .CBL or .COB
+    - Directory:
+        directory where the file will be created.
 
 
 .. warning:: Modules source code must be in the same directory as the parent
-             program source code.
-
-Name
-++++
-
-Choose the file name and extension (.cbl/.CBL, .cob/.COB, .pco/.PCO, .cpy/.CPY)
-
-Directory
-+++++++++
-
-Choose the location of the new file.
-
-
+             program source code to work properly.
 
 Open a file
 -----------
 
-You can browse the file system to open a new file, for that click on *Open* in
-the *Quick start Actions* list:
+Simply click on *Open* or choose a file in the recent files list.
 
-.. image:: _static/OpenAction.png
-    :align: center
-
-Or open a file you've recently worked on in the *Recents* list:
-
-.. image:: _static/OpenRecent.png
-    :align: center
-
-.. note:: OpenCobolIDE will parse your code looking for the usage/declaration of a
-          linkage section to detect the cobol file type (program/subprogram).
-
-          You can change the type to use to compile the file later by going to
-          *Menu->Cobol->Program Type* or by using the combo box in the toolbar.
+.. note:: The recent files list have a context menu that let you remove a file
+          or clear the entire list.
 
 
 The main window
@@ -105,59 +75,88 @@ The main window
 
 Here is the main window of OpenCobolIDE:
 
-.. image:: _static/NewProgram.png
+.. image:: _static/MainWindow.png
     :align: center
 
-It is made up of 3 important parts (omitting the menubar and the toolbar):
+It is made up of 4 important parts:
 
-  1) The text editors organized in a tab widget.
+1) the text editor tabs:
 
-     .. tip:: You can close an editor tab using mouse wheel click. You can also
-              right click on the tab bar for more options.
+    This is where you type your code.
 
-  2) The **Navigation** panel layout windows (movable and closable).
+2) the **navigation** panel (movable and closable):
 
-     .. tip:: Clicking on an item in the tree will move the cursor to the
-              definition in the current editor.
+    This panel show you the structure of your code and let you navigate
+    quickly inside your document.
 
-  3) The **Log** panel (movable and closable) made up of the following
-     tabs:
+3) The **Log** panel (movable and closable):
 
-        - Compiler: compilier (cobc) output are organized in a sortable
-          table.
+    This panel show various log and output.
 
-        - Program output: An interactive output console.
+    It is made up of the following tabs:
+
+    - Compilation output:
+        textual output of the cobol compiler
+    - Issues:
+        the list of issues
+    - Output:
+        the program output (when you run it). The output console is
+        interactive and accepts stdin.
+    - Application log:
+        the application log, for debugging purpose. This window is not
+        visible when you start the IDE.
+        You can show it by checking: `menu -> View -> Appplication log -> Show window`
+
+4) the status bar:
+
+Since version 2.4, the status bar has become an important part of the
+application as it now contains the preferences button and the general menu
+as a drop down menu button:
+
+    .. image:: _static/Menu.png
+        :align: center
+
+You can click on the button to show the preferences dialog or click on the
+arrow to reveal the general menu (Open, New, View, Help, ...).
 
 Compile a file
 --------------
 
-To compile a file, press **F8**. This will compile the current file but also the
-referenced modules.
+To compile a file, press **F8** or press the compile button (inside the
+editor). This will compile the current file but also the referenced modules.
 
-The compiler output will be automatically show:
+The compiler output will automatically be shown:
 
 .. image:: _static/CompilerOutput.png
     :align: center
 
-You can double click on an entry to quickly go to the problematic line in the
-code editor. (if the file hasn't been open, OpenCobolIDE will gently open it for
-you).
+You can double click on an entry in the issues table to quickly go to the
+problematic line in the code editor (if the file hasn't been open,
+OpenCobolIDE will gently open it for you).
+
+To change the program type you must press the down arrow next to the compile
+button. Doing this will reveal a drop down menu that let you choose the program
+type:
+
+.. image:: _static/CompilerMenu.png
+    :align: center
 
 
 Run a compiled program
 ----------------------
 
-Press **F5** to run the last compiled program.
+Press **F5** or click the run button (inside the editor) to run the file.
 
-The program will be run in the Output window which is interactive (support for
+The program will run in the *Output* window which is interactive (support for
 stdin has been tested and works with the **ACCEPT** keyword).
 
-.. image:: _static/ProgramOutput.png
+
+.. image:: _static/PgmOutput.png
     :align: center
 
 
-.. note:: It will not recompile the program. If you really need it, open a feature
-          request on the issue tracker on github.
+.. note:: It will recompile the file and all its dependencies before running
+          the compiled program.
 
 
 Calculate the offset of a selected record
@@ -171,7 +170,7 @@ Since version 2.2, you can now calculate the offset of a selected record.
 - a new side panel will open and will show you a table with the offset of
   each selected record:
 
-.. image:: _static/OffsetCalculator.png
+.. image:: _static/PicOffsets.png
     :align: center
 
 Switching to a full dark style
@@ -182,11 +181,11 @@ Since version 2.2, OpenCobolIDE comes with a dark style sheet.
 To activate it, open the preferences dialog (edit->preferences). Then go to the
 style page and click on the *Dark style* radio button.
 
-.. image:: _static/StyleSettings.png
+.. image:: _static/Settings.png
     :align: center
 
 
 Your IDE shoul look like that:
 
-.. image:: _static/DarkStyle.png
+.. image:: _static/Dark.png
     :align: center
