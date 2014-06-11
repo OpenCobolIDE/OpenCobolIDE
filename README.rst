@@ -141,13 +141,13 @@ Screenshots
 
 * Offset calculator
 
-.. image:: doc/source/_static/OffsetCalculator.png
+.. image:: doc/source/_static/PicOffsets.png
     :align: center
 
 
 * Dark style support
 
-.. image:: doc/source/_static/DarkStyle.png
+.. image:: doc/source/_static/Dark.png
     :align: center
 
 
