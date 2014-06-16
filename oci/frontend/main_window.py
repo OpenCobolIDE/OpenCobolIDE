@@ -209,15 +209,17 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         dialogs.Dlg.exec_()
 
     def run_target(self, target, wd):
+        self.tabWidgetLogs.setCurrentIndex(2)
+        self.dockWidgetLogs.show()
+        self.consoleOutput.clear()
         if not Settings().runInShell:
             _logger().info('running %s in embedded terminal' % target)
-            self.tabWidgetLogs.setCurrentIndex(2)
-            self.dockWidgetLogs.show()
             self.consoleOutput.setFocus(True)
             self.actionRun.setEnabled(False)
             self.consoleOutput.start_process(target, cwd=wd)
         else:
             _logger().info('running %s in external terminal' % target)
+            self.consoleOutput.append("Launched in external terminal")
             if sys.platform == "win32":
                 subprocess.Popen(
                     target, cwd=wd,
