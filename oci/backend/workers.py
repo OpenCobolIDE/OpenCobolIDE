@@ -3,6 +3,7 @@ import os
 from oci import constants
 from oci.backend import compiler
 from oci.backend.parser import detect_file_type, parse_ast
+from oci.settings import Settings
 
 
 def checkFile(data):
@@ -32,7 +33,7 @@ class CobolAnalyserProvider:
         completions = []
         try:
             root, vars, functions = parse_ast(
-                file_path, code=code, encoding=file_encoding)
+                file_path, code=code, encoding=file_encoding, free=Settings().free_format)
         except AttributeError:
             vars = []
             functions = []

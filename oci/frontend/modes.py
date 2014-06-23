@@ -255,7 +255,8 @@ class DocumentAnalyserMode(QObject, Mode):
         paragraphs = []
         try:
             root_node, variables, paragraphs = parse_ast(
-                self.editor.file.path, encoding=self.editor.file.encoding)
+                self.editor.file.path, encoding=self.editor.file.encoding,
+                free=Settings().free_format)
         except (TypeError, IOError):
             # file does not exists
             pass
