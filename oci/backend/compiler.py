@@ -117,7 +117,7 @@ def cmd_for(filename, outputFilename=None,
 
 
 def parse_output(lines, filename):
-    from pyqode.core.frontend.modes import CheckerMessage, CheckerMessages
+    from pyqode.core.modes import CheckerMessages
     _logger().debug('parsing cobc output: %s' % lines)
     retval = []
     # parse compilation results
