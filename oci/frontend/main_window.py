@@ -396,6 +396,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         if self.stackedWidget.currentIndex():
             self.toolBarCode.setVisible(Settings().displayToolBar)
             self.toolBarFile.setVisible(Settings().displayToolBar)
+        self.lblFormat.setText('Free format' if Settings().free_format else 'Fixed format')
 
     def updateNavigationPanel(self, rootNode):
         """
@@ -517,6 +518,10 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
     def setupStatusBar(self):
         self.lblFilename = QtWidgets.QLabel()
         self.lblEncoding = QtWidgets.QLabel()
+        self.lblFormat = QtWidgets.QLabel()
+        self.lblFormat.setAlignment(QtCore.Qt.AlignHCenter |
+                                    QtCore.Qt.AlignVCenter)
+        self.lblFormat.setText('Free format' if Settings().free_format else 'Fixed format')
         self.lblEncoding.setAlignment(QtCore.Qt.AlignHCenter |
                                       QtCore.Qt.AlignVCenter)
         self.lblEncoding.setText('')
@@ -547,8 +552,9 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                 QtGui.QIcon(":/ide-icons/rc/Preferences-system.png")))
             self.statusbar.addPermanentWidget(btMenu)
         self.statusbar.addPermanentWidget(self.lblFilename, 200)
+        self.statusbar.addPermanentWidget(self.lblFormat, 20)
         self.statusbar.addPermanentWidget(self.lblEncoding, 10)
-        self.statusbar.addPermanentWidget(self.lblCursorPos, 1)
+        self.statusbar.addPermanentWidget(self.lblCursorPos, 5)
         self.stackedWidget.setCurrentIndex(0)
 
     def setupAppLog(self, s):
