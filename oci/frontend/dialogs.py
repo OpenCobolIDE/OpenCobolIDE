@@ -29,7 +29,7 @@ import sys
 
 from oci.backend import compiler
 from oci import __version__
-from oci.constants import TEMPLATES
+from oci.constants import TEMPLATES, CobolStandard
 from oci.settings import Settings
 from oci.frontend.ui import dlg_about_ui, dlg_file_type_ui, dlg_preferences_ui
 
@@ -276,6 +276,8 @@ border-top: 2px solid silver;
             self.checkBoxFreeFormat.setChecked(settings.free_format)
             self.spinBoxLeftMargin.setValue(settings.left_margin)
             self.spinBoxRightMargin.setValue(settings.right_margin)
+            self.lineEditCommentIndicator.setText(settings.comment_indicator)
+            self.comboBoxStandard.setCurrentIndex(int(settings.cobol_standard))
 
 
     def restoreDefaults(self):
@@ -309,6 +311,8 @@ border-top: 2px solid silver;
             settings.free_format = False
             settings.left_margin = 7
             settings.right_margin = 72
+            settings.cobol_standard = CobolStandard.default
+            settings.comment_indicator = '*>'
         self.reset()
 
     def resizeEvent(self, *args, **kwargs):
@@ -353,3 +357,5 @@ border-top: 2px solid silver;
         settings.free_format = dlg.checkBoxFreeFormat.isChecked()
         settings.left_margin = dlg.spinBoxLeftMargin.value()
         settings.right_margin = dlg.spinBoxRightMargin.value()
+        settings.comment_indicator = dlg.lineEditCommentIndicator.text()
+        settings.cobol_standard = CobolStandard(dlg.comboBoxStandard.currentIndex())

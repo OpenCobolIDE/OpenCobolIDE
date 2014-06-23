@@ -20,6 +20,7 @@ import os
 import sys
 from pyqode.core.qt import QtCore, QtGui
 from pyqode.core.qt.QtCore import QSettings
+from oci.constants import CobolStandard
 
 
 class Settings(object):
@@ -391,3 +392,19 @@ class Settings(object):
     @right_margin.setter
     def right_margin(self, value):
         self._settings.setValue('right_margin', value)
+
+    @property
+    def comment_indicator(self):
+        return self._settings.value('comment_indicator', '*>')
+
+    @comment_indicator.setter
+    def comment_indicator(self, value):
+        self._settings.setValue('comment_indicator', value)
+
+    @property
+    def cobol_standard(self):
+        return CobolStandard(int(self._settings.value('cobc_standard', '0')))
+
+    @cobol_standard.setter
+    def cobol_standard(self, value):
+        self._settings.setValue('cobc_standard', int(value))

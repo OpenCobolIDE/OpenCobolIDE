@@ -16,6 +16,7 @@
 """
 Contains application constants
 """
+from enum import IntEnum
 import os
 import sys
 
@@ -244,3 +245,16 @@ COBOL_KEYWORDS = [
     "USING", "VALUE", "VALUES", "VARYING", "WHEN", "WITH", "WORDS",
     "WORKING-STORAGE",
     "WRITE", "WRITE-ONLY", "XML", "ZERO", "ZEROES", "ZEROS"]
+
+
+class CobolStandard(IntEnum):
+    default = 0
+    cobol2002 = 1
+    cobol85 = 2
+    ibm = 3
+    mvs = 4
+    bs2000 = 5
+    mf = 6
+
+
+print(str(CobolStandard.default))

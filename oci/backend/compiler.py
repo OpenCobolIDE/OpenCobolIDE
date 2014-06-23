@@ -101,6 +101,12 @@ def cmd_for(filename, outputFilename=None,
     # prepare command
     if customOptions is None:
         customOptions = []
+    # standard
+    standard = Settings().cobol_standard
+    if standard != constants.CobolStandard.default:
+        customOptions += ['-std=%s' %
+                          str(standard).replace('CobolStandard.', '')]
+    # free
     if Settings().free_format:
         customOptions += ['-free']
     dirname = os.path.dirname(filename)

@@ -104,11 +104,12 @@ class CommentsMode(Mode):
         nb_lines = len(lines)
         cursor.setPosition(sel_start)
         comment = False
+        comment_symbol = Settings().comment_indicator
         for i in range(nb_lines):
             cursor.movePosition(QTextCursor.StartOfLine)
             cursor.movePosition(QTextCursor.EndOfLine, cursor.KeepAnchor)
             line = cursor.selectedText().lstrip()
-            if not line.startswith("*"):
+            if not line.startswith(comment_symbol):
                 comment = True
                 break
             # next line
@@ -118,16 +119,19 @@ class CommentsMode(Mode):
         for i in range(nb_lines):
             cursor.movePosition(QTextCursor.StartOfLine)
             cursor.movePosition(QTextCursor.EndOfLine, cursor.KeepAnchor)
-            line = cursor.selectedText().lstrip()
-            margin = Settings().left_margin - 1
-            if margin < 0:
+            full_line = cursor.selectedText()
+            line = full_line.lstrip()
+            indent = len(full_line) - len(line)
+            if indent == 0 and Settings().free_format:
                 margin = 0
+            else:
+                margin = 6
             if line != "":
                 cursor.movePosition(QTextCursor.StartOfLine)
                 # Uncomment
                 if not comment:
                     cursor.setPosition(cursor.position() + margin)
-                    cursor.movePosition(cursor.Right, cursor.KeepAnchor, 1)
+                    cursor.movePosition(cursor.Right, cursor.KeepAnchor, len(comment_symbol))
                     cursor.insertText("")
                     if i == 0:
                         sel_start -= 1
@@ -138,7 +142,7 @@ class CommentsMode(Mode):
                 else:
                     cursor.movePosition(QTextCursor.StartOfLine)
                     cursor.setPosition(cursor.position() + margin)
-                    cursor.insertText("*")
+                    cursor.insertText(comment_symbol)
                     if i == 0:
                         sel_start += 1
                         sel_end += 1
