@@ -254,8 +254,7 @@ class GenericCodeEdit(api.CodeEdit):
         self.updateSettings()
 
     def openFile(self, file_path, replaceTabsBySpaces=True, encoding=None):
-        self.file.open(file_path, replace_tabs_by_spaces=replaceTabsBySpaces,
-                       default_encoding=encoding)
+        self.file.open(file_path)
 
     def updateSettings(self):
         settings = Settings()
