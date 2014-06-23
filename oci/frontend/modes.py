@@ -19,12 +19,11 @@ Contains cobol specific modes
 import logging
 import os
 
-from pyqode.core import frontend
-from pyqode.qt.QtCore import Qt, QObject, Signal, QTimer, Slot
-from pyqode.qt.QtWidgets import QAction
-from pyqode.qt.QtGui import QTextCursor, QIcon
-from pyqode.core.frontend import Mode
-from pyqode.core.frontend.modes import CheckerMode, RightMarginMode
+from pyqode.core.qt.QtCore import Qt, QObject, Signal, QTimer, Slot
+from pyqode.core.qt.QtWidgets import QAction
+from pyqode.core.qt.QtGui import QTextCursor, QIcon
+from pyqode.core.api import Mode, TextHelper
+from pyqode.core.modes import CheckerMode, RightMarginMode
 
 from oci.backend import workers
 from oci.backend.parser import cmp_doc_node, parse_ast
@@ -38,7 +37,7 @@ class ToUpperMode(Mode):
     IDENTIFIER = "toUpperMode"
     DESCRIPTION = "Automatically transform alpha char to upper case"
 
-    def _on_state_changed(self, state):
+    def on_state_changed(self, state):
         """
         Called when the mode is activated/deactivated
         """
@@ -75,7 +74,7 @@ class CommentsMode(Mode):
     IDENTIFIER = "commentsMode"
     DESCRIPTION = "Comments/uncomments a set of lines (Ctrl+/)"
 
-    def _on_state_changed(self, state):
+    def on_state_changed(self, state):
         """
         Called when the mode is activated/deactivated
         """
@@ -168,8 +167,8 @@ class LeftMarginMode(RightMarginMode):
     def __init__(self):
         super().__init__()
 
-    def _on_install(self, editor):
-        super()._on_install(editor)
+    def on_install(self, editor):
+        super().on_install(editor)
         self.position = 7
 
 
@@ -220,7 +219,7 @@ class DocumentAnalyserMode(QObject, Mode):
         self.__vars = []
         self.__paragraphs = []
 
-    def _on_state_changed(self, state):
+    def on_state_changed(self, state):
         """
         Called when the mode is activated/deactivated
         """
@@ -240,14 +239,14 @@ class DocumentAnalyserMode(QObject, Mode):
             - paragraphs
         """
         # preview in preferences dialog have no file path
-        if not self.editor.file_path:
+        if not self.editor.file.path:
             return
         root_node = None
         variables = []
         paragraphs = []
         try:
             root_node, variables, paragraphs = parse_ast(
-                self.editor.file_path, encoding=self.editor.file_encoding)
+                self.editor.file.path, encoding=self.editor.file.encoding)
         except (TypeError, IOError):
             # file does not exists
             pass
@@ -264,7 +263,6 @@ class DocumentAnalyserMode(QObject, Mode):
         self.__paragraphs = paragraphs
         if changed:
             self.documentLayoutChanged.emit(self.root_node)
-
 
 
 class Definition(object):
@@ -308,10 +306,7 @@ class GoToDefinitionMode(Mode, QObject):
         self.aGotToDef.setShortcut('F3')
         self.aGotToDef.triggered.connect(self.requestGoTo)
 
-    def _onInstall(self, editor):
-        Mode._onInstall(self, editor)
-
-    def _on_state_changed(self, state):
+    def on_state_changed(self, state):
         if state:
             assert hasattr(self.editor, "wordClickMode")
             self.editor.wordClickMode.word_clicked.connect(self.requestGoTo)
@@ -332,8 +327,8 @@ class GoToDefinitionMode(Mode, QObject):
         :type tc: QtGui.QTextCursor
         """
         if not tc:
-            tc = frontend.word_under_cursor(self.editor,
-                                            select_whole_word=True)
+            tc = TextHelper(self.editor).word_under_cursor(
+                select_whole_word=True)
         symbol = tc.selectedText()
         analyser = getattr(self.editor, "analyserMode")
         if analyser:
@@ -345,8 +340,7 @@ class GoToDefinitionMode(Mode, QObject):
     def _goToDefinition(self):
         line = self._definition.line
         col = self._definition.column
-        frontend.goto_line(self.editor,
-                           line, move=True, column=col)
+        TextHelper(self.editor).goto_line(line, move=True, column=col)
 
     def _makeUnique(self, seq):
         """
@@ -418,8 +412,8 @@ class OffsetCalculatorMode(QObject, Mode):
             Mode.__init__(self)
         super().__init__()
 
-    def _on_install(self, editor):
-        super()._on_install(editor)
+    def on_install(self, editor):
+        super().on_install(editor)
         self.action = QAction(editor)
         self.action.setText("Calculate PIC offsets")
         self.action.setIcon(QIcon.fromTheme(
@@ -440,8 +434,8 @@ class OffsetCalculatorMode(QObject, Mode):
         start_line = tc.blockNumber() + 1
         tc.setPosition(end)
         end_line = tc.blockNumber() + 1
-        frontend.select_lines(self.editor, start=start_line, end=end_line,
-                              apply_selection=True)
-        source = frontend.selected_text(self.editor)
+        th = TextHelper(self.editor)
+        th.select_lines(start=start_line, end=end_line, apply_selection=True)
+        source = th.selected_text()
         self.picInfosAvailable.emit(get_field_infos(source))
         self.editor.setTextCursor(original_tc)

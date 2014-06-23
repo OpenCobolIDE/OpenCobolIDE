@@ -18,8 +18,8 @@ Gives an easy and safe access to the app settings
 """
 import os
 import sys
-from pyqode.qt import QtCore, QtGui
-from pyqode.qt.QtCore import QSettings
+from pyqode.core.qt import QtCore, QtGui
+from pyqode.core.qt.QtCore import QSettings
 
 
 class Settings(object):

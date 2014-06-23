@@ -8,8 +8,8 @@ window which is added to the main window as a promoted widget in Qt designer.
 """
 import logging
 import os
-from pyqode.core.frontend.modes import CheckerMessages, CheckerMessage
-from pyqode.qt import QtCore, QtWidgets, QtGui
+from pyqode.core.modes import CheckerMessage
+from pyqode.core.qt import QtCore, QtWidgets, QtGui
 from oci.backend.compiler import parse_output
 
 

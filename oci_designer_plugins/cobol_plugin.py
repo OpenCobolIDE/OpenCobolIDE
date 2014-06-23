@@ -34,4 +34,4 @@ try:
 
 
 except ImportError:
-    print("Cannot use pyQode oci_designer_plugins without pyqode.qt")
+    print("Cannot use pyQode oci_designer_plugins without pyqode.core.qt")

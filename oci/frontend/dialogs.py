@@ -19,10 +19,10 @@ Contains the application dialogs
 import os
 
 import pygments
-from pyqode.core.frontend.modes import PYGMENTS_STYLES
-from pyqode.qt import QtWidgets
-from pyqode.qt import QtCore
-from pyqode.qt import QtGui
+from pyqode.core.modes import PYGMENTS_STYLES
+from pyqode.core.qt import QtWidgets
+from pyqode.core.qt import QtCore
+from pyqode.core.qt import QtGui
 import qdarkstyle
 import pyqode.core
 import sys

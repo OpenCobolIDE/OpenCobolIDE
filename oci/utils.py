@@ -2,7 +2,7 @@
 This module contains utility functions
 """
 import os
-from pyqode.qt import QtGui, QtCore, QtWidgets
+from pyqode.core.qt import QtGui, QtCore, QtWidgets
 import sys
 from oci.settings import Settings
 

@@ -7,7 +7,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from pyqode.qt import QtCore
+from pyqode.core.qt import QtCore
 
 qt_resource_data = b"\
 \x00\x00\x07\x2d\

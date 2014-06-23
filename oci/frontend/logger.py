@@ -4,8 +4,8 @@ application messages.
 """
 import logging
 
-from pyqode.qt.QtCore import QObject, Signal
-from pyqode.qt.QtGui import QTextCursor
+from pyqode.core.qt.QtCore import QObject, Signal
+from pyqode.core.qt.QtGui import QTextCursor
 
 import oci
 

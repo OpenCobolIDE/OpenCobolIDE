@@ -1,6 +1,6 @@
 # Homepage stylesheets
-from pyqode.core.frontend import widgets
-from pyqode.qt import QtWidgets, QtCore, QtGui
+from pyqode.core import widgets
+from pyqode.core.qt import QtWidgets, QtCore, QtGui
 
 from oci import constants
 from oci.frontend import services

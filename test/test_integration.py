@@ -9,7 +9,7 @@ import os
 import shutil
 import sys
 
-from pyqode.qt import QtWidgets, QtCore
+from pyqode.core.qt import QtWidgets, QtCore
 
 from oci.frontend import main_window
 

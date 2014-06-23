@@ -19,7 +19,7 @@
 """
 Setup script for OpenCobolIDE
 
-You will need to install pyqode.qt (or PyQt5) and OpenCobol on your own.
+You will need to install pyqode.core.qt (or PyQt5) and OpenCobol on your own.
 
 """
 import os

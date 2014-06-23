@@ -1,7 +1,7 @@
 """
 Widgets in this module are used as promoted widgets in QtDesigner
 """
-from pyqode.qt import QtCore, QtGui, QtWidgets
+from pyqode.core.qt import QtCore, QtGui, QtWidgets
 
 
 class RecentFilesListWidget(QtWidgets.QListWidget):

@@ -22,12 +22,11 @@ import sys
 import subprocess
 
 import qdarkstyle
-from pyqode.core import frontend
-from pyqode.core.frontend import modes
-from pyqode.core.frontend import utils as pyqode_utils
-from pyqode.qt import QtCore, QtGui, QtWidgets
-from pyqode.qt.QtWidgets import QTreeWidgetItem
-from pyqode.qt.QtWidgets import QMessageBox
+from pyqode.core import modes
+from pyqode.core.api import utils as pyqode_utils, TextHelper
+from pyqode.core.qt import QtCore, QtGui, QtWidgets
+from pyqode.core.qt.QtWidgets import QTreeWidgetItem
+from pyqode.core.qt.QtWidgets import QMessageBox
 
 import oci
 from oci import __version__, constants, utils
@@ -91,7 +90,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
 
     @QtCore.Slot(int)
     def onCompilerProcessError(self, error):
-        from pyqode.core.frontend.client import PROCESS_ERROR_STRING
+        from pyqode.core.api.client import PROCESS_ERROR_STRING
         QMessageBox.warning(self, 'Compiler process error',
                             'An error occured with the cobc process: %s' %
                             PROCESS_ERROR_STRING[error])
@@ -200,7 +199,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         self.dockWidgetLogs.show()
         self.tabWidgetLogs.setCurrentIndex(0)
         editor = self.tabWidgetEditors.currentWidget()
-        self.compileCurrent(editor.file_path, editor.file_encoding,
+        self.compileCurrent(editor.file.path, editor.file.encoding,
                             editor.programType)
 
     @QtCore.Slot()
@@ -230,8 +229,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
 
     @QtCore.Slot()
     def on_actionRun_triggered(self):
-        source_fn = self.tabWidgetEditors.currentWidget().file_path
-
+        source_fn = self.tabWidgetEditors.currentWidget().file.path
         source_fn = os.path.join(os.path.dirname(source_fn), "bin",
                                  os.path.basename(source_fn))
         target = compiler.makeOutputFilePath(
@@ -286,8 +284,8 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
             self.openFile(message.path)
         else:
             self.tabWidgetEditors.setCurrentIndex(index)
-        frontend.goto_line(self.tabWidgetEditors.currentWidget(),
-                           message.line, move=True)
+        editor = self.tabWidgetEditors.currentWidget()
+        TextHelper(editor).goto_line(message.line, move=True)
         self.tabWidgetEditors.currentWidget().setFocus()
 
     @QtCore.Slot()
@@ -306,8 +304,8 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         """
         w = self.tabWidgetEditors.currentWidget()
         statement = item.data(0, QtCore.Qt.UserRole)
-        frontend.goto_line(w, statement.line, move=True,
-                           column=statement.column)
+        TextHelper(w).goto_line(statement.line, move=True,
+                                column=statement.column)
         self.tabWidgetEditors.currentWidget().setFocus()
 
     @QtCore.Slot(int)
@@ -345,6 +343,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         _logger().debug('display PIC infos requested')
         self.tableWidgetOffsets.clear()
         self.tableWidgetOffsets.setRowCount(len(infos))
+        self.tableWidgetOffsets.setColumnCount(4)
         self.tableWidgetOffsets.setHorizontalHeaderLabels(
             ['Level', 'Name', 'Offset', 'PIC'])
         try:
@@ -358,7 +357,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
             self.tableWidgetOffsets.horizontalHeader().setSectionResizeMode(
                 QtWidgets.QHeaderView.ResizeToContents)
             self.tableWidgetOffsets.horizontalHeader().setSectionResizeMode(
-                1, QtWidgets.QHeaderView.Stretch)
+                QtWidgets.QHeaderView.Stretch)
         # process each info in a separate row
         for i, info in enumerate(infos):
             assert isinstance(info, PicFieldInfo)
@@ -427,9 +426,10 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
     def updateStatusBar(self, editor=None):
         if editor is None:
             editor = self.tabWidgetEditors.currentWidget()
-        self.lblEncoding.setText(editor.file_encoding)
-        self.lblFilename.setText(editor.file_path)
-        self.lblCursorPos.setText("%d:%d" % frontend.cursor_position(editor))
+        self.lblEncoding.setText(editor.file.encoding)
+        self.lblFilename.setText(editor.file.path)
+        self.lblCursorPos.setText(
+            "%d:%d" % TextHelper(editor).cursor_position())
 
     def saveSettings(self):
         s = Settings()
@@ -451,14 +451,13 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         if fn and self.tabWidgetEditors.index_from_filename(fn) == -1:
             _logger().info('opening file: %s' % fn)
             extension = os.path.splitext(fn)[1]
-            icon = None
             Settings().lastFilePath = fn
             if extension.lower() in constants.ALL_COBOL_EXTENSIONS:
-                icon, tab = editors.make_cobol_editor()
+                tab = editors.make_cobol_editor()
             else:
                 tab = editors.GenericCodeEdit(self.tabWidgetEditors)
-            tab.file_path = fn
-            index = self.tabWidgetEditors.add_code_edit(tab, icon=icon)
+            tab.file.open(fn)
+            index = self.tabWidgetEditors.add_code_edit(tab)
             self.showHomePage(False)
             self.updateStatusBar(tab)
             tab.cursorPositionChanged.connect(self.updateStatusBar)

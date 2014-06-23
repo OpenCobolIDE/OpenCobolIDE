@@ -20,7 +20,7 @@ This module contains the application main function.
 import logging
 logging.basicConfig(level=logging.INFO)
 import sys
-from pyqode.qt import QtWidgets
+from pyqode.core.qt import QtWidgets
 from oci.utils import init_env
 from oci.frontend.main_window import MainWindow
 

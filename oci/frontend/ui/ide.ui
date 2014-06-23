@@ -489,7 +489,7 @@
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>27</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1019,18 +1019,18 @@
   <customwidget>
    <class>InteractiveConsole</class>
    <extends>QTextEdit</extends>
-   <header>pyqode.core.frontend.widgets</header>
+   <header>pyqode.core.widgets</header>
   </customwidget>
   <customwidget>
    <class>TabWidget</class>
    <extends>QTabWidget</extends>
-   <header>pyqode.core.frontend.widgets</header>
+   <header>pyqode.core.widgets</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>ErrorsTable</class>
    <extends>QTableWidget</extends>
-   <header>pyqode.core.frontend.widgets</header>
+   <header>pyqode.core.widgets</header>
   </customwidget>
   <customwidget>
    <class>RecentFilesListWidget</class>

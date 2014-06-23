@@ -2,12 +2,12 @@
 
 # Form implementation generated from reading ui file 'ide.ui'
 #
-# Created: Tue Jun 10 19:39:37 2014
-#      by: PyQt5 UI code generator 5.2.1
+# Created: Mon Jun 23 12:25:10 2014
+#      by: PyQt5 UI code generator 5.3
 #
 # WARNING! All changes made in this file will be lost!
 
-from pyqode.qt import QtCore, QtGui, QtWidgets
+from pyqode.core.qt import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -167,8 +167,6 @@ class Ui_MainWindow(object):
         self.errorsTable = ErrorsTable(self.tabCompiler)
         self.errorsTable.setMinimumSize(QtCore.QSize(0, 0))
         self.errorsTable.setObjectName("errorsTable")
-        self.errorsTable.setColumnCount(5)
-        self.errorsTable.setRowCount(0)
         self.gridLayout_4.addWidget(self.errorsTable, 0, 0, 1, 1)
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(":/ide-icons/rc/emblem-important.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -200,7 +198,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 900, 27))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 900, 23))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -250,8 +248,6 @@ class Ui_MainWindow(object):
         self.tableWidgetOffsets.setDragDropOverwriteMode(False)
         self.tableWidgetOffsets.setShowGrid(True)
         self.tableWidgetOffsets.setObjectName("tableWidgetOffsets")
-        self.tableWidgetOffsets.setColumnCount(4)
-        self.tableWidgetOffsets.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidgetOffsets.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -446,14 +442,14 @@ class Ui_MainWindow(object):
         self.dockWidgetNavPanel.setWindowTitle(_translate("MainWindow", "Navigation"))
         self.dockWidgetOffsets.setWindowTitle(_translate("MainWindow", "Offset calculator"))
         self.tableWidgetOffsets.setSortingEnabled(True)
-        item = self.tableWidgetOffsets.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Level"))
-        item = self.tableWidgetOffsets.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Name"))
-        item = self.tableWidgetOffsets.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Offset"))
-        item = self.tableWidgetOffsets.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "PIC"))
+        # item = self.tableWidgetOffsets.horizontalHeaderItem(0)
+        # item.setText(_translate("MainWindow", "Level"))
+        # item = self.tableWidgetOffsets.horizontalHeaderItem(1)
+        # item.setText(_translate("MainWindow", "Name"))
+        # item = self.tableWidgetOffsets.horizontalHeaderItem(2)
+        # item.setText(_translate("MainWindow", "Offset"))
+        # item = self.tableWidgetOffsets.horizontalHeaderItem(3)
+        # item.setText(_translate("MainWindow", "PIC"))
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
         self.actionQuit.setToolTip(_translate("MainWindow", "Exit application (Ctrl+Q)"))
         self.actionQuit.setShortcut(_translate("MainWindow", "Ctrl+Q"))
@@ -508,6 +504,6 @@ class Ui_MainWindow(object):
         self.actionShowAppLog.setToolTip(_translate("MainWindow", "Show/hide application log window"))
         self.actionClearLog.setText(_translate("MainWindow", "Clear"))
 
-from pyqode.core.frontend.widgets import TabWidget, ErrorsTable, InteractiveConsole
 from oci.frontend.widgets import RecentFilesListWidget
+from pyqode.core.widgets import ErrorsTable, InteractiveConsole, TabWidget
 from . import ide_rc

@@ -3,9 +3,8 @@ Contains cobol specific editor panels:
     - compile and run panel
 
 """
-from pyqode.qt import QtWidgets, QtCore, QtGui
-from pyqode.core import frontend
-
+from pyqode.core.qt import QtWidgets, QtCore, QtGui
+from pyqode.core import api
 from oci.constants import ProgramType
 from oci.frontend import services
 
@@ -58,13 +57,13 @@ QToolButton::menu-arrow:open  {
 """
 
 
-class ControlPanel(frontend.Panel):
+class ControlPanel(api.Panel):
     compilationRequested = QtCore.Signal()
     runRequested = QtCore.Signal()
     pgmTypeChangeRequested = QtCore.Signal(object)
 
-    def _on_install(self, editor):
-        super()._on_install(editor)
+    def on_install(self, editor):
+        super().on_install(editor)
         services.main_window().actionCompile.changed.connect(
             self._on_action_changed)
         services.main_window().actionRun.changed.connect(
@@ -115,13 +114,13 @@ class ControlPanel(frontend.Panel):
         self.btCompile.clicked.connect(self.compilationRequested.emit)
         self.btRun.clicked.connect(self.runRequested.emit)
 
-    def __del__(self):
-        services.main_window().actionCompile.changed.disconnect(
-            self._on_action_changed)
-        services.main_window().actionRun.changed.disconnect(
-            self._on_action_changed)
+    # def __del__(self):
+    #     services.main_window().actionCompile.changed.disconnect(
+    #         self._on_action_changed)
+    #     services.main_window().actionRun.changed.disconnect(
+    #         self._on_action_changed)
 
-    def _on_state_changed(self, state):
+    def on_state_changed(self, state):
         if state:
             self.editor.programTypeChanged.connect(self.updateButtonsStates)
             self.editor.new_text_set.connect(self.updateButtonsStates)
