@@ -234,7 +234,7 @@ def parse_paragraph(l, c, last_div_node, last_section_node, line):
     return node
 
 
-def parse_ast(filename, code=None, encoding="utf-8"):
+def parse_ast(filename, code=None, encoding="utf-8", free=False):
     """
     Parse a cobol document and build as simple syntax tree. For convenience, it also
     returns the list of variables (PIC) and procedures (paragraphs).
@@ -246,7 +246,6 @@ def parse_ast(filename, code=None, encoding="utf-8"):
     :return: A tuple made up of the AST root node, the list of variables, the list of paragraphes.
     :rtype: Statement, list of Statement, list of Statement
     """
-    free = Settings().free_format
     if not filename:
         root_node = Statement(Statement.Type.Root, 0, 0, 'unknown')
     else:
