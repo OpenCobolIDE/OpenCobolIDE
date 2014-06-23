@@ -190,6 +190,7 @@ class CobolCodeEdit(api.CodeEdit):
         else:
             self.syntaxHighlighterMode._lexer = CobolLexer()
         self.syntaxHighlighterMode.rehighlight()
+        self.analyserMode.parse()
 
     def detect_file_type(self):
         self.__fileType = detect_file_type(self.file.path, self.file.encoding)
