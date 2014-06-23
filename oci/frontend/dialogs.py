@@ -197,7 +197,17 @@ border-top: 2px solid silver;
             self.lineEditRunTerm.setEnabled)
         self.checkBoxCustomPath.stateChanged.connect(
             self.lineEditCompilerPath.setEnabled)
+        self.checkBoxFreeFormat.stateChanged.connect(self.on_free_format_changed)
         self.reset(allTabs=True)
+
+    @QtCore.Slot(bool)
+    def on_free_format_changed(self, state):
+        if state:
+            self.spinBoxLeftMargin.setValue(0)
+            self.spinBoxRightMargin.setValue(256)
+        else:
+            self.spinBoxLeftMargin.setValue(7)
+            self.spinBoxRightMargin.setValue(72)
 
     @QtCore.Slot(bool)
     def on_radioButtonColorWhite_toggled(self, state):
