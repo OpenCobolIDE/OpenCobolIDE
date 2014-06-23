@@ -185,6 +185,11 @@ class CobolCodeEdit(api.CodeEdit):
         self.leftMargin.position = settings.left_margin
         self.leftMargin.enabled = settings.left_margin != 0
         self.rightMargin.position = settings.right_margin
+        if settings.free_format:
+            self.syntaxHighlighterMode._lexer = CobolFreeformatLexer()
+        else:
+            self.syntaxHighlighterMode._lexer = CobolLexer()
+        self.syntaxHighlighterMode.rehighlight()
 
     def detect_file_type(self):
         self.__fileType = detect_file_type(self.file.path, self.file.encoding)
