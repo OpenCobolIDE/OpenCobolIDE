@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'dlg_preferences.ui'
 #
-# Created: Sat Jun  7 18:44:31 2014
-#      by: PyQt5 UI code generator 5.2.1
+# Created: Mon Jun 23 15:46:08 2014
+#      by: PyQt5 UI code generator 5.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ from pyqode.core.qt import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(441, 429)
+        Dialog.resize(447, 393)
         icon = QtGui.QIcon.fromTheme("preferences-system")
         Dialog.setWindowIcon(icon)
         self.gridLayout_2 = QtWidgets.QGridLayout(Dialog)
@@ -22,8 +22,8 @@ class Ui_Dialog(object):
         self.widget.setStyleSheet("")
         self.widget.setObjectName("widget")
         self.widget_2 = QtWidgets.QGridLayout(self.widget)
-        self.widget_2.setContentsMargins(0, 0, 0, 0)
         self.widget_2.setSpacing(0)
+        self.widget_2.setContentsMargins(0, 0, 0, 0)
         self.widget_2.setObjectName("widget_2")
         self.tabWidget = QtWidgets.QTabWidget(self.widget)
         self.tabWidget.setStyleSheet("")
@@ -35,6 +35,7 @@ class Ui_Dialog(object):
         self.tabView = QtWidgets.QWidget()
         self.tabView.setObjectName("tabView")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.tabView)
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.checkBoxViewLineNumber = QtWidgets.QCheckBox(self.tabView)
         self.checkBoxViewLineNumber.setChecked(True)
@@ -221,6 +222,29 @@ class Ui_Dialog(object):
         self.lineEditCompilerPath.setObjectName("lineEditCompilerPath")
         self.formLayout_6.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.lineEditCompilerPath)
         self.tabWidget.addTab(self.tab_2, "")
+        self.tab_Cobol = QtWidgets.QWidget()
+        self.tab_Cobol.setObjectName("tab_Cobol")
+        self.formLayout_7 = QtWidgets.QFormLayout(self.tab_Cobol)
+        self.formLayout_7.setFieldGrowthPolicy(QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_7.setObjectName("formLayout_7")
+        self.checkBoxFreeFormat = QtWidgets.QCheckBox(self.tab_Cobol)
+        self.checkBoxFreeFormat.setObjectName("checkBoxFreeFormat")
+        self.formLayout_7.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.checkBoxFreeFormat)
+        self.label_5 = QtWidgets.QLabel(self.tab_Cobol)
+        self.label_5.setObjectName("label_5")
+        self.formLayout_7.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_5)
+        self.spinBoxLeftMargin = QtWidgets.QSpinBox(self.tab_Cobol)
+        self.spinBoxLeftMargin.setMaximum(256)
+        self.spinBoxLeftMargin.setObjectName("spinBoxLeftMargin")
+        self.formLayout_7.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.spinBoxLeftMargin)
+        self.label_6 = QtWidgets.QLabel(self.tab_Cobol)
+        self.label_6.setObjectName("label_6")
+        self.formLayout_7.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_6)
+        self.spinBoxRightMargin = QtWidgets.QSpinBox(self.tab_Cobol)
+        self.spinBoxRightMargin.setMaximum(256)
+        self.spinBoxRightMargin.setObjectName("spinBoxRightMargin")
+        self.formLayout_7.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.spinBoxRightMargin)
+        self.tabWidget.addTab(self.tab_Cobol, "")
         self.widget_2.addWidget(self.tabWidget, 0, 0, 1, 1)
         self.gridLayout_2.addWidget(self.widget, 0, 0, 1, 1)
         self.gridLayout_3 = QtWidgets.QGridLayout()
@@ -234,7 +258,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.addLayout(self.gridLayout_3, 1, 0, 1, 1)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(4)
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -275,5 +299,12 @@ class Ui_Dialog(object):
         self.checkBoxAutoDetectDeps.setText(_translate("Dialog", "Autodetect dependencies"))
         self.checkBoxCustomPath.setText(_translate("Dialog", "Custom compiler path"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", "Build && Run"))
+        self.checkBoxFreeFormat.setToolTip(_translate("Dialog", "Code and compile with free format support"))
+        self.checkBoxFreeFormat.setText(_translate("Dialog", "Free Format support"))
+        self.label_5.setText(_translate("Dialog", "Left margin position:"))
+        self.spinBoxLeftMargin.setToolTip(_translate("Dialog", "Position of the left margin (starting from 0)"))
+        self.label_6.setText(_translate("Dialog", "Right margin position"))
+        self.spinBoxRightMargin.setToolTip(_translate("Dialog", "Position of the right margin (starting from 0)"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_Cobol), _translate("Dialog", "Cobol"))
 
 from . import ide_rc

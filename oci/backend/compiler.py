@@ -23,6 +23,7 @@ import os
 import subprocess
 import sys
 from oci import constants
+from oci.settings import Settings
 
 
 class InitializationFailed(Exception):
@@ -100,6 +101,8 @@ def cmd_for(filename, outputFilename=None,
     # prepare command
     if customOptions is None:
         customOptions = []
+    if Settings().free_format:
+        customOptions += ['-free']
     dirname = os.path.dirname(filename)
     if outputFilename is None:  # user request
         # create a binary dir next to the source
@@ -178,7 +181,6 @@ def compile(filename, fileType, customOptions=None, outputFilename=None):
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except OSError:
         msg = ("cobc compiler not found", 2, -1, 0, None, None, filename)
-        msg.filename = filename
         return 1, [msg]
     else:
         # get compilation results

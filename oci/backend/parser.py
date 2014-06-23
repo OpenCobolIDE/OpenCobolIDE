@@ -20,6 +20,7 @@ import logging
 import os
 import sys
 from oci import constants
+from oci.settings import Settings
 
 
 class Statement(object):
@@ -233,7 +234,7 @@ def parse_paragraph(l, c, last_div_node, last_section_node, line):
     return node
 
 
-def parse_ast(filename, code=None, encoding="utf-8", free=False):
+def parse_ast(filename, code=None, encoding="utf-8"):
     """
     Parse a cobol document and build as simple syntax tree. For convenience, it also
     returns the list of variables (PIC) and procedures (paragraphs).
@@ -241,11 +242,11 @@ def parse_ast(filename, code=None, encoding="utf-8", free=False):
     :param filename: The cobol file path to open in case code is None.
     :param code: cobol code to parse. Default is None.
     :param encoding: file encoding
-    :param free: True to parse cobol as free cobol. Default is True.
 
     :return: A tuple made up of the AST root node, the list of variables, the list of paragraphes.
     :rtype: Statement, list of Statement, list of Statement
     """
+    free = Settings().free_format
     if not filename:
         root_node = Statement(Statement.Type.Root, 0, 0, 'unknown')
     else:

@@ -20,7 +20,7 @@ import mimetypes
 import os
 import sys
 
-from pygments.lexers.compiled import CobolFreeformatLexer
+from pygments.lexers.compiled import CobolFreeformatLexer, CobolLexer
 from pygments.token import Comment
 from pyqode.core.qt import QtCore
 from pyqode.core.qt import QtGui
@@ -123,7 +123,7 @@ class CobolCodeEdit(api.CodeEdit):
         self.symbolMatcher = self.modes.append(modes.SymbolMatcherMode())
         # indenter
         self.indenter = self.modes.append(modes.IndenterMode())
-        self.indenter.min_indent = 7
+        self.indenter.min_indent = Settings().left_margin
         # Case converter
         self.modes.append(modes.CaseConverterMode())
         # File watcher
@@ -150,9 +150,10 @@ class CobolCodeEdit(api.CodeEdit):
         # --------------------
         # Right margin
         self.rightMargin = self.modes.append(modes.RightMarginMode())
-        self.rightMargin.position = 72
+        self.rightMargin.position = Settings().right_margin
         # Left margin
         self.leftMargin = self.modes.append(cob_modes.LeftMarginMode())
+        self.leftMargin.position = Settings().left_margin
         # Comment/Uncomment
         self.modes.append(cob_modes.CommentsMode())
         # Linter
@@ -181,13 +182,19 @@ class CobolCodeEdit(api.CodeEdit):
         self.controlPanel.setVisible(self.controlPanel.enabled)
         self.lineNumberPanel.enabled = settings.displayLineNumbers
         self.lineNumberPanel.setVisible(settings.displayLineNumbers)
+        self.leftMargin.position = settings.left_margin
+        self.leftMargin.enabled = settings.left_margin != 0
+        self.rightMargin.position = settings.right_margin
 
     def detect_file_type(self):
         self.__fileType = detect_file_type(self.file.path, self.file.encoding)
 
     def openFile(self, file_path):
         self.file.open(file_path)
-        self.syntaxHighlighterMode._lexer = CobolFreeformatLexer()
+        if Settings().free_format:
+            # rehighlight with free support.
+            self.syntaxHighlighterMode._lexer = CobolFreeformatLexer()
+            self.syntaxHighlighterMode.rehighlight()
 
     def _highlighComments(self, highlighter, text):
         """

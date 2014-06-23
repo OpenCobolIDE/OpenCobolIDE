@@ -28,6 +28,7 @@ from pyqode.core.modes import CheckerMode, RightMarginMode
 from oci.backend import workers
 from oci.backend.parser import cmp_doc_node, parse_ast
 from oci.backend.pic_parser import get_field_infos
+from oci.settings import Settings
 
 
 class ToUpperMode(Mode):
@@ -71,6 +72,7 @@ class CommentsMode(Mode):
     """
     Mode that allow to comment/uncomment a set of lines.
     """
+    # TODO fix comments when free format is ON (* does not seem to work).
     IDENTIFIER = "commentsMode"
     DESCRIPTION = "Comments/uncomments a set of lines (Ctrl+/)"
 
@@ -117,11 +119,14 @@ class CommentsMode(Mode):
             cursor.movePosition(QTextCursor.StartOfLine)
             cursor.movePosition(QTextCursor.EndOfLine, cursor.KeepAnchor)
             line = cursor.selectedText().lstrip()
+            margin = Settings().left_margin - 1
+            if margin < 0:
+                margin = 0
             if line != "":
                 cursor.movePosition(QTextCursor.StartOfLine)
                 # Uncomment
                 if not comment:
-                    cursor.setPosition(cursor.position() + 6)
+                    cursor.setPosition(cursor.position() + margin)
                     cursor.movePosition(cursor.Right, cursor.KeepAnchor, 1)
                     cursor.insertText("")
                     if i == 0:
@@ -132,7 +137,7 @@ class CommentsMode(Mode):
                 # comment
                 else:
                     cursor.movePosition(QTextCursor.StartOfLine)
-                    cursor.setPosition(cursor.position() + 6)
+                    cursor.setPosition(cursor.position() + margin)
                     cursor.insertText("*")
                     if i == 0:
                         sel_start += 1

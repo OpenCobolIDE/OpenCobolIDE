@@ -54,14 +54,15 @@ class ProgramType:
     @staticmethod
     def cmd(programType, input, output, customOptions=None):
         baseCmdArgs = programType[1]
-        if programType[0] == 0:
-            args = [baseCmdArgs[0], baseCmdArgs[1],
-                    baseCmdArgs[2] % output, baseCmdArgs[3] % input]
-        else:
-            args = [baseCmdArgs[0], baseCmdArgs[1] % output,
-                    baseCmdArgs[2] % input]
+        args = [baseCmdArgs[0]]
         if customOptions:
             args += customOptions
+        if programType[0] == 0:
+            args += [baseCmdArgs[1],
+                     baseCmdArgs[2] % output, baseCmdArgs[3] % input]
+        else:
+            args += [baseCmdArgs[1] % output,
+                    baseCmdArgs[2] % input]
         return args
 
 

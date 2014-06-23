@@ -50,7 +50,7 @@ class CompilationManager(QtCore.QObject):
     #: of dependencies as well).
     compilationFinished = QtCore.Signal(bool)
     #: Emitted on compiler process error (not a compilation error).
-    processError = QtCore.Signal(str)
+    processError = QtCore.Signal(int)
     #: Emitted when a command has started running
     cmdStarted = QtCore.Signal(str)
 

@@ -364,3 +364,30 @@ class Settings(object):
         sep = ';' if sys.platform == 'win32' else ':'
         os.environ['PATH'] += sep + value
         self._settings.setValue('customCompilerPath', value)
+
+
+    # Cobol settings
+    # ----------------------
+    @property
+    def free_format(self):
+        return bool(int(self._settings.value('free_format', '0')))
+
+    @free_format.setter
+    def free_format(self, value):
+        self._settings.setValue('free_format', int(value))
+
+    @property
+    def left_margin(self):
+        return int(self._settings.value('left_margin', '7'))
+
+    @left_margin.setter
+    def left_margin(self, value):
+        self._settings.setValue('left_margin', value)
+
+    @property
+    def right_margin(self):
+        return int(self._settings.value('right_margin', '72'))
+
+    @right_margin.setter
+    def right_margin(self, value):
+        self._settings.setValue('right_margin', value)

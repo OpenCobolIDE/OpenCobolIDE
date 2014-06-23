@@ -272,6 +272,11 @@ border-top: 2px solid silver;
             self.checkBoxCustomPath.setChecked(
                 settings.customCompilerPath != '')
             self.lineEditCompilerPath.setText(settings.customCompilerPath)
+        if self.tabWidget.currentIndex() == 4 or allTabs:
+            self.checkBoxFreeFormat.setChecked(settings.free_format)
+            self.spinBoxLeftMargin.setValue(settings.left_margin)
+            self.spinBoxRightMargin.setValue(settings.right_margin)
+
 
     def restoreDefaults(self):
         settings = Settings()
@@ -300,6 +305,10 @@ border-top: 2px solid silver;
             settings.runInShell = False
             settings.shellCommand = None
             settings.customCompilerPath = ''
+        if index == 4:
+            settings.free_format = False
+            settings.left_margin = 7
+            settings.right_margin = 72
         self.reset()
 
     def resizeEvent(self, *args, **kwargs):
@@ -341,3 +350,6 @@ border-top: 2px solid silver;
             settings.customCompilerPath = dlg.lineEditCompilerPath.text()
         else:
             settings.customCompilerPath = ''
+        settings.free_format = dlg.checkBoxFreeFormat.isChecked()
+        settings.left_margin = dlg.spinBoxLeftMargin.value()
+        settings.right_margin = dlg.spinBoxRightMargin.value()
