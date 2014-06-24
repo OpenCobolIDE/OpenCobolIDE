@@ -18,6 +18,7 @@ Contains cobol specific modes
 """
 import logging
 import os
+from pyqode.core.qt import QtCore
 
 from pyqode.core.qt.QtCore import Qt, QObject, Signal, QTimer, Slot
 from pyqode.core.qt.QtWidgets import QAction
@@ -72,7 +73,6 @@ class CommentsMode(Mode):
     """
     Mode that allow to comment/uncomment a set of lines.
     """
-    # TODO fix comments when free format is ON (* does not seem to work).
     IDENTIFIER = "commentsMode"
     DESCRIPTION = "Comments/uncomments a set of lines (Ctrl+/)"
 
@@ -86,9 +86,20 @@ class CommentsMode(Mode):
             self.action.triggered.connect(self.comment)
             self.separator = self.editor.add_separator()
             self.editor.add_action(self.action)
+            if 'pyqt5' in os.environ['QT_API'].lower():
+                self.editor.key_pressed.connect(self.on_key_pressed)
         else:
             self.editor.remove_action(self.action)
             self.editor.remove_action(self.separator)
+            if 'pyqt5' in os.environ['QT_API'].lower():
+                self.editor.key_pressed.disconnect(self.on_key_pressed)
+
+    def on_key_pressed(self, key_event):
+        ctrl = (key_event.modifiers() & QtCore.Qt.ControlModifier ==
+                QtCore.Qt.ControlModifier)
+        if key_event.key() == QtCore.Qt.Key_Slash and ctrl:
+            self.comment()
+            key_event.accept()
 
     def comment(self):
         cursor = self.editor.textCursor()
