@@ -101,6 +101,12 @@ if windows:
                 l = l.replace("@BUILD_DIR@", build_dir)
                 data.append(l)
             dst.writelines(data)
+        # cx_freeze is missing libEGL.dll, copy it ourself
+        import PyQt5
+        shutil.copy(os.path.join(os.path.dirname(PyQt5.__file__), "libEGL.dll"), build_dir)
+        # if not in PATH, inno setup is usually located in C:\Program Files (x86)\Inno Setup 5
+        # on Windows
+        os.environ["PATH"] += ';C:\Program Files (x86)\Inno Setup 5'
         os.system("iscc %s" % os.path.join(os.getcwd(), "setup.iss"))
     except Exception as e:
         print(e)
