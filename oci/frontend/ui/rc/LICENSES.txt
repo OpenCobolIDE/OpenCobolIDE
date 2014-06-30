@@ -1,4 +1,4 @@
-Most of the icons come from the Tango Desktop Icon Project or the GNOME project.
+Most of the icons come from the Oxygen icon theme or the GNOME project.
 
 Exceptions:
 --------------
