@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'dlg_about.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/OpenCobolIDE/forms/dlg_about.ui'
 #
-# Created: Sun May 25 17:55:18 2014
-#      by: PyQt5 UI code generator 5.2.1
+# Created: Tue Jul  1 10:43:18 2014
+#      by: PyQt5 UI code generator 5.3
 #
 # WARNING! All changes made in this file will be lost!
 
-from pyqode.core.qt import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -72,8 +72,6 @@ class Ui_Dialog(object):
         self.tbwVersions.setGridStyle(QtCore.Qt.SolidLine)
         self.tbwVersions.setCornerButtonEnabled(False)
         self.tbwVersions.setObjectName("tbwVersions")
-        self.tbwVersions.setColumnCount(1)
-        self.tbwVersions.setRowCount(6)
         item = QtWidgets.QTableWidgetItem()
         self.tbwVersions.setVerticalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -114,7 +112,7 @@ class Ui_Dialog(object):
         self.textBrowser.setHtml(_translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Cantarell\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
+"</style></head><body style=\" font-family:\'Droid Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; color:#414141;\">OpenCobol IDE is a simple cobol IDE written in python based on OpenCobol and pyQode.</span></p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; font-weight:600; text-decoration: underline; color:#414141;\">Authors:</span></p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; color:#414141;\">Colin Duquesnoy  &lt;</span><a href=\"mailto:colin.duquesnoy@gmail\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">colin.duquesnoy@gmail</span></a><a href=\"mailto:colin.duquesnoy@gmail\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; text-decoration: underline; color:#414141;\">&gt;</span></a></p>\n"
@@ -125,21 +123,8 @@ class Ui_Dialog(object):
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; font-weight:600; text-decoration: underline; color:#414141;\">Contributors: </span></p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; color:#414141;\">- </span><a href=\"mailto:thiry.celi@gmail.com\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">Céline Thiry</span></a><span style=\" font-family:\'Ubuntu\'; font-size:9pt; color:#414141;\"> : application icon designer</span></p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; font-weight:600; text-decoration: underline; color:#414141;\">Credits: </span></p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://python.org/\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">Python</span></a><span style=\" font-family:\'Ubuntu\'; font-size:9pt; color:#414141;\"> , </span><a href=\"http://qt-project.org/\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">Qt</span></a><span style=\" font-family:\'Ubuntu\'; font-size:9pt; color:#2768ff;\">/</span><a href=\"http://www.riverbankcomputing.com/software/pyqt/intro\"><span style=\" font-family:\'Sans\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">PyQt</span></a><span style=\" font-family:\'Ubuntu\'; font-size:9pt; color:#414141;\"> , </span><a href=\"https://github.com/ColinDuquesnoy/pyqode-core\"><span style=\" font-family:\'Sans\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">PyQode</span></a><span style=\" font-family:\'Ubuntu\'; font-size:9pt; color:#414141;\"> , </span><a href=\"https://pypi.python.org/pypi/chardet\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">chardet</span></a><span style=\" font-family:\'Ubuntu\'; font-size:9pt; color:#414141;\"> , </span><a href=\"http://oxygen-icons.org\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">Oxygen icons</span></a><span style=\" font-family:\'Ubuntu\'; font-size:9pt; font-style:italic; color:#414141;\"> , </span><a href=\"http://www.opencobol.org/\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">OpenCobol</span></a><span style=\" font-family:\'Sans\'; font-size:9pt; color:#414141;\"> , </span><a href=\"https://github.com/ColinDuquesnoy/QDarkStyleSheet\"><span style=\" font-family:\'Sans\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">QDarkStyle</span></a></p></body></html>"))
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://python.org/\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">Python</span></a><span style=\" font-family:\'Ubuntu\'; font-size:9pt; color:#414141;\"> , </span><a href=\"http://qt-project.org/\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">Qt</span></a><span style=\" font-family:\'Ubuntu\'; font-size:9pt; color:#2768ff;\">/</span><a href=\"http://www.riverbankcomputing.com/software/pyqt/intro\"><span style=\" font-family:\'Sans\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">PyQt</span></a><span style=\" font-family:\'Ubuntu\'; font-size:9pt; color:#414141;\"> , </span><a href=\"https://github.com/ColinDuquesnoy/pyqode-core\"><span style=\" font-family:\'Sans\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">PyQode</span></a><span style=\" font-family:\'Ubuntu\'; font-size:9pt; color:#414141;\"> , </span><a href=\"https://pypi.python.org/pypi/chardet\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">chardet</span></a><span style=\" font-family:\'Ubuntu\'; font-size:9pt; color:#414141;\"> , </span><a href=\"http://www.opencobol.org/\"><span style=\" font-family:\'Ubuntu\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">OpenCobol</span></a><span style=\" font-family:\'Sans\'; font-size:9pt; color:#414141;\"> , </span><a href=\"http://www.oxygen-icons.org/\"><span style=\" text-decoration: underline; color:#0000ff;\">Oxygen Icons</span></a><span style=\" font-family:\'Sans\'; font-size:9pt; color:#414141;\">, </span><a href=\"https://github.com/ColinDuquesnoy/QDarkStyleSheet\"><span style=\" font-family:\'Sans\'; font-size:9pt; text-decoration: underline; color:#2768ff;\">QDarkStyle</span></a></p></body></html>"))
         self.label.setText(_translate("Dialog", "Third party libraries versions:"))
-        item = self.tbwVersions.verticalHeaderItem(0)
-        item.setText(_translate("Dialog", "OpenCobol"))
-        item = self.tbwVersions.verticalHeaderItem(1)
-        item.setText(_translate("Dialog", "Qt"))
-        item = self.tbwVersions.verticalHeaderItem(2)
-        item.setText(_translate("Dialog", "PyQt"))
-        item = self.tbwVersions.verticalHeaderItem(3)
-        item.setText(_translate("Dialog", "pyqode.core"))
-        item = self.tbwVersions.verticalHeaderItem(4)
-        item.setText(_translate("Dialog", "Pygments"))
-        item = self.tbwVersions.verticalHeaderItem(5)
-        item.setText(_translate("Dialog", "QDarkStyle"))
-        item = self.tbwVersions.horizontalHeaderItem(0)
-        item.setText(_translate("Dialog", "Version"))
+
 
 from . import ide_rc

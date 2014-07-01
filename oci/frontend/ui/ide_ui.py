@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ide.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/OpenCobolIDE/forms/ide.ui'
 #
-# Created: Mon Jun 23 12:25:10 2014
+# Created: Tue Jul  1 10:43:17 2014
 #      by: PyQt5 UI code generator 5.3
 #
 # WARNING! All changes made in this file will be lost!
 
-from pyqode.core.qt import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -505,5 +505,5 @@ class Ui_MainWindow(object):
         self.actionClearLog.setText(_translate("MainWindow", "Clear"))
 
 from oci.frontend.widgets import RecentFilesListWidget
-from pyqode.core.widgets import ErrorsTable, InteractiveConsole, TabWidget
+from pyqode.core.widgets import TabWidget, ErrorsTable, InteractiveConsole
 from . import ide_rc

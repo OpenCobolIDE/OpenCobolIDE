@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'dlg_preferences.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/OpenCobolIDE/forms/dlg_preferences.ui'
 #
-# Created: Mon Jun 23 18:41:47 2014
+# Created: Tue Jul  1 10:43:18 2014
 #      by: PyQt5 UI code generator 5.3
 #
 # WARNING! All changes made in this file will be lost!
 
-from pyqode.core.qt import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):

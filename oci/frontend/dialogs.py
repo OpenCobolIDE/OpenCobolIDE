@@ -86,6 +86,17 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        self.tbwVersions.setColumnCount(1)
+        self.tbwVersions.setRowCount(6)
+        self.tbwVersions.setVerticalHeaderLabels([
+            'OpenCobol',
+            'Qt',
+            'PyQt',
+            'pyqode.core',
+            'pygments',
+            'QDarkStyle'
+        ])
+        self.tbwVersions.setHorizontalHeaderLabels(["Version"])
         self.labelMain.setText(self.labelMain.text() % __version__)
         versions = [compiler.get_cobc_version(),
                     QtCore.QT_VERSION_STR,
@@ -288,7 +299,6 @@ border-top: 2px solid silver;
             self.spinBoxRightMargin.setValue(settings.right_margin)
             self.lineEditCommentIndicator.setText(settings.comment_indicator)
             self.comboBoxStandard.setCurrentIndex(int(settings.cobol_standard))
-
 
     def restoreDefaults(self):
         settings = Settings()
