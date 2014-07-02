@@ -50,7 +50,7 @@ if sys.platform == "linux" and run_as_root():
 setup(
     name='OpenCobolIDE',
     version=read_version(),
-    packages=find_packages(),
+    packages=[p for p in find_packages() if not 'test' in p],
     keywords=["Cobol; OpenCobol; IDE"],
     package_dir={'oci': 'oci', "oci_designer_plugins": "oci_designer_plugins"},
     data_files=data_files,

@@ -17,4 +17,4 @@
 Application package (OpenCobolIde => oci)
 """
 
-__version__ = "3.0.0-beta"
+__version__ = "3.0.0-rc"
