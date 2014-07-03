@@ -42,7 +42,7 @@ srv_script = "oci/backend/server.py"
 srv_name = "ociserver"
 srv_exe = "ociserver.exe" if windows else "ociserver"
 
-app_icon = "oci/frontend/ui/rc/silex-icon.ico" if windows else "oci/frontend/ui/rc/silex-192x192.icns"
+app_icon = "forms/rc/silex-icon.ico" if windows else None
 
 
 # Get App version
