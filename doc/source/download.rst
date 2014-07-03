@@ -16,60 +16,37 @@ OpenCobolIDE depends on the following packages:
     - chardet
 
 GNU/Linux
----------
+#########
 
-If you are on Ubuntu 14.04 or derivatives, you can use the `PPA`_ to easily
-install OpenCobolIDE::
-
-    sudo apt-add-repository ppa:open-cobol-ide/stable
-    sudo apt-get update
-    sudo apt-get install open-cobol-ide
-
-If you are on archlinux, packages are available on the AUR.
-
-Otherwise you will have to install from source:
-
-1) Install OpenCobol and PyQt5
-
-.. code-block:: bash
-
-    sudo apt-get install python3-pyqt5 open-cobol
-
-2) Install OpenCobolIDE
-
-Using pip::
+Install pyqt5, open-cobol and pip using your package manager, then run the following commands::
 
     sudo pip3 install OpenCobolIDE
 
-or from source::
 
-    cd /path/to/source
-    sudo python3 setup.py install
-
-Both methods will install a desktop entry on your system.
-
-An **open-cobol-ide** entry should appear in the development category. If the
-entry does not appear, you can always open a terminal and type
-*open-cobol-ide* to run the IDE.
+If you are on Archlinux, you can install OpenCobolIDE and all its dependencies from the AUR: https://aur.archlinux.org/packages/open-cobol-ide/
 
 
 Windows
--------
+#######
 
-Please use the Windows Installer available in the `release section on github`_.
-
+There is a windows installer available here: https://launchpad.net/cobcide/+download
 
 Mac OSX
--------
+#######
 
-There is a standalone app available in the `release section on github`_.
+There is a dmg image available here: https://launchpad.net/cobcide/+download
 
-The app is standalone, you don't have to install any of its libraries but **you
-will need a working open-cobol compiler**.
+The only thing you have to do is:
 
-One can easily install OpenCobol on Mac using `homebrew`_::
+- to install OpenCobol compiler, e.g. using homebrew::
 
     brew install open-cobol
+
+- run the OpenCobolIDE app
+
+.. note:: If you installed the compiler in a non-standard path and it is not recognized, you
+          can specify and the path to the compiler in the preferences dialog under the ``Build & Run`` section. Just
+          make sure to only specify the directory where the compiler can be found, not the full path.
 
 
 .. _`release section on github`: https://github.com/OpenCobolIDE/OpenCobolIDE/releases
@@ -77,10 +54,3 @@ One can easily install OpenCobol on Mac using `homebrew`_::
 .. _homebrew: http://brew.sh/
 
 .. _PPA: https://launchpad.net/~open-cobol-ide/+archive/stable
-
-
-.. note:: Installation from source is possible on Mac and Windows but you will
-          need to install all requirements yourself and run the open-cobol-ide
-          script from the *extracted archive* or *git repository* without
-          actually installing OpenCobolIDE.
-          **Do not run `setup.py install` on Windows or Mac OSX**.

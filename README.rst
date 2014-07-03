@@ -40,31 +40,34 @@ License
 OpenCobolIDE is released under the **GPL** version 3
 
 
+Requirements
+------------
+
+The project depends on the following packages:
+
+- `Python3`_
+- `setuptools`_
+- `PyQt4`_ or `PyQt5`_
+- `OpenCobol`_
+- `pyqode.core`_
+- `Pygments`_ **>= 1.6**
+- `chardet`_
+- `qdarkstyle`_
+
+
 Installation
 ------------
 
 GNU/Linux
 #########
 
-From PPA
-++++++++
+Install pyqt5, open-cobol and pip using your package manager, then run the following commands::
 
-There is now a PPA for Ubuntu and derivatives::
-
-    $ sudo apt-add-repository ppa:open-cobol-ide/stable
-    $ sudo apt-get update
-    $ sudo apt-get install open-cobol-ide
-
-From pypi
-+++++++++
-**You must have the latest version of pip for python3!**
-
-Run the following commands::
-
-    sudo apt-get install python3-pyqt5 open-cobol
     sudo pip3 install OpenCobolIDE
 
-*On Gnu/Linux, you must use pip3 instead of pip*
+
+If you are on Archlinux, you can install OpenCobolIDE and all its dependencies from the AUR: https://aur.archlinux.org/packages/open-cobol-ide/
+
 
 Windows
 #######
@@ -84,20 +87,10 @@ The only thing you have to do is:
 
 - run the OpenCobolIDE app
 
+If you installed the compiler in a non-standard path and it is not recognized, you
+can specify and the path to the compiler in the preferences dialog under the ``Build & Run`` section
+(make sure to only specify the directory where the compiler can be found, not the full path).
 
-Requirements
-------------
-
-The project depends on the following packages:
-
-- `Python3`_
-- `setuptools`_
-- `PyQt4`_ or `PyQt5`_
-- `OpenCobol`_
-- `pyqode.core`_
-- `Pygments`_ **>= 1.6**
-- `chardet`_
-- `qdarkstyle`_
 
 
 Resources
