@@ -8,8 +8,6 @@ include setup.py
 include LICENSE
 include README.rst
 include share/*
-include cobcide/ui/*
-include cobcide/ui/rc/*
 include doc/*
 include doc/source/*
 include doc/source/_static/*
