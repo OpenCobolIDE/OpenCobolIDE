@@ -37,8 +37,9 @@ with open('README.rst', 'r') as readme:
 
 
 # install requirements
-requirements = ['pygments>=1.6', 'pyqode.core>=2.0.0-beta1',
-                'qdarkstyle>=1.9', 'chardet']
+requirements = [
+    'pygments>=1.6', 'pyqode.core>=2.0.0', 'qdarkstyle>=1.11', 'chardet'
+]
 if int('%s%s' % sys.version_info[:2]) < 34:
     # python < 3.4 needs enum backport package
     requirements.append('enum34')
