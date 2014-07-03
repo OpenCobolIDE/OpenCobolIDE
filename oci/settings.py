@@ -18,57 +18,21 @@ Gives an easy and safe access to the app settings
 """
 import os
 import sys
-import pyqode.core
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import QSettings
+from pyqode.core.qt import QtCore, QtGui
+from pyqode.core.qt.QtCore import QSettings
+from oci.constants import CobolStandard
 
-
-DEFAULT_EDITOR_SETTINGS = """{
-    "General": {
-        "leftMarginPos": "7",
-        "rightMarginPos": "72",
-        "showWhiteSpaces": "False",
-        "tabLength": "4",
-        "useSpacesInsteadOfTab": "True"
-    },
-    "codeCompletion": {
-        "caseSensitive": "False",
-        "showTooltips": "True",
-        "triggerKey": "32",
-        "triggerKeys": "[46]",
-        "triggerLength": "1",
-        "triggerSymbols": "[]"
-    }
-}
-"""
-
-DEFAULT_EDITOR_STYLE = """{
-    "General": {
-        "background": "#f8f8f8",
-        "caretLineBackground": "#efefef",
-        "foldIndicatorBackground": "#c1d1b0",
-        "font": "monospace",
-        "fontSize": "10",
-        "foreground": "#000000",
-        "margin": "#FF0000",
-        "matchedBraceBackground": "#b4eeb4",
-        "matchedBraceForeground": "#ff0000",
-        "nativeFoldingIndicator": "True",
-        "pygmentsStyle": "default",
-        "searchOccurrenceBackground": "#ffff00",
-        "searchOccurrenceForeground": "#000000",
-        "selectionBackground": "#accd8a",
-        "selectionForeground": "#ffffff",
-        "whiteSpaceForeground": "#dddddd"
-    }
-}
-"""
 
 class Settings(object):
 
     def __init__(self):
         self._settings = QSettings("OpenCobolIDE", "OpenCobolIDE")
 
+    def clear(self):
+        self._settings.clear()
+
+    # Geometry and state (visible windows, ...) + working settings (last path)
+    # ------------------------------------------------------------------------
     @property
     def geometry(self):
         v = self._settings.value("mainWindowGeometry")
@@ -109,7 +73,11 @@ class Settings(object):
 
     @property
     def size(self):
-        return self._settings.value("size", QtCore.QSize(900, 700))
+        return self._settings.value("size", QtCore.QSize(1200, 800))
+
+    @size.setter
+    def size(self, value):
+        self._settings.setValue("size", value)
 
     @property
     def navigationPanelVisible(self):
@@ -117,7 +85,7 @@ class Settings(object):
 
     @navigationPanelVisible.setter
     def navigationPanelVisible(self, value):
-        return self._settings.setValue("navigationPanelVisible", int(value))
+        self._settings.setValue("navigationPanelVisible", int(value))
 
     @property
     def logPanelVisible(self):
@@ -125,11 +93,7 @@ class Settings(object):
 
     @logPanelVisible.setter
     def logPanelVisible(self, value):
-        return self._settings.setValue("logPanelVisible", int(value))
-
-    @size.setter
-    def size(self, value):
-        self._settings.setValue("size", value)
+        self._settings.setValue("logPanelVisible", int(value))
 
     @property
     def lastFilePath(self):
@@ -149,81 +113,140 @@ class Settings(object):
         :param path: path string
         :type path: str or unicode
         """
-        assert isinstance(path, str) or isinstance(path, unicode)
         self._settings.setValue("lastUsedPath", os.path.dirname(path))
 
+    # Logging settings
+    # ----------------
     @property
-    def show_line_numbers(self):
-        return bool(int(self._settings.value("showLineNumbers", True)))
+    def appLogVisible(self):
+        return bool(int(self._settings.value('appLogVisible', '0')))
 
-    @show_line_numbers.setter
-    def show_line_numbers(self, state):
-        self._settings.setValue("showLineNumbers", int(state))
-
-    @property
-    def show_whitespaces(self):
-        return bool(int(self._settings.value("showWhitespaces", False)))
-
-    @show_whitespaces.setter
-    def show_whitespaces(self, state):
-        self._settings.setValue("showWhitespaces", int(state))
+    @appLogVisible.setter
+    def appLogVisible(self, value):
+        self._settings.setValue('appLogVisible', int(value))
 
     @property
-    def enable_cc(self):
-        return bool(int(self._settings.value("enableCC", True)))
+    def debugLog(self):
+        return bool(int(self._settings.value('debugLog', "0")))
 
-    @enable_cc.setter
-    def enable_cc(self, state):
-        self._settings.setValue("enableCC", int(state))
+    @debugLog.setter
+    def debugLog(self, value):
+        self._settings.setValue('debugLog', int(value))
+
+    # View settings
+    # -------------
+    @property
+    def displayLineNumbers(self):
+        return bool(int(self._settings.value('displayLineNumbers', '1')))
+
+    @displayLineNumbers.setter
+    def displayLineNumbers(self, value):
+        self._settings.setValue('displayLineNumbers', int(value))
 
     @property
-    def useExternalShell(self):
-        return bool(int(self._settings.value("useExternalShell", False)))
+    def displayMargins(self):
+        return bool(int(self._settings.value('displayMargins', '1')))
 
-    @useExternalShell.setter
-    def useExternalShell(self, state):
-        self._settings.setValue("useExternalShell", int(state))
-
-    @property
-    def shellCommand(self):
-        # works on gnome, what about KDE and how do I detect that?
-        # at the moment just go with gnome, user can change that in the settings
-        # dialog anyway
-        default_shell_cmd = "gnome-terminal -e"
-        return str(self._settings.value("shell", default_shell_cmd))
-
-    @shellCommand.setter
-    def shellCommand(self, cmd):
-        self._settings.setValue("shell", cmd)
+    @displayMargins.setter
+    def displayMargins(self, value):
+        self._settings.setValue('displayMargins', int(value))
 
     @property
-    def editorSettings(self):
-        json_data = self._settings.value("editorSettings",
-                                         DEFAULT_EDITOR_SETTINGS)
-        r = pyqode.core.PropertyRegistry()
-        r.load(json_data)
-        return r
+    def displayMenuBar(self):
+        return bool(int(self._settings.value('displayMenuBar', '0')))
 
-    @editorSettings.setter
-    def editorSettings(self, propertyRegistry):
-        self._settings.setValue("editorSettings", propertyRegistry.dump())
+    @displayMenuBar.setter
+    def displayMenuBar(self, value):
+        self._settings.setValue('displayMenuBar', int(value))
 
     @property
-    def editorStyle(self):
-        json_data = self._settings.value("editorStyle",
-                                         DEFAULT_EDITOR_STYLE)
-        r = pyqode.core.PropertyRegistry()
-        r.load(json_data)
-        return r
+    def displayStatusBar(self):
+        return bool(int(self._settings.value('displayStatusBar', '1')))
 
-    @editorStyle.setter
-    def editorStyle(self, propertyRegistry):
-        self._settings.setValue("editorStyle", propertyRegistry.dump())
+    @displayStatusBar.setter
+    def displayStatusBar(self, value):
+        self._settings.setValue('displayStatusBar', int(value))
 
+    @property
+    def displayToolBar(self):
+        return bool(int(self._settings.value('displayToolBar', '0')))
+
+    @displayToolBar.setter
+    def displayToolBar(self, value):
+        self._settings.setValue('displayToolBar', int(value))
+
+    @property
+    def displayControlPanel(self):
+        return bool(int(self._settings.value('displayControlPanel', '1')))
+
+    @displayControlPanel.setter
+    def displayControlPanel(self, value):
+        self._settings.setValue('displayControlPanel', int(value))
+
+    @property
+    def highlightCurrentLine(self):
+        return bool(int(self._settings.value('highlightCurrentLine', '1')))
+
+    @highlightCurrentLine.setter
+    def highlightCurrentLine(self, value):
+        self._settings.setValue('highlightCurrentLine', int(value))
+
+    @property
+    def highlightMatchingBraces(self):
+        return bool(int(self._settings.value('highlightMatchingBraces', '1')))
+
+    @highlightMatchingBraces.setter
+    def highlightMatchingBraces(self, value):
+        self._settings.setValue('highlightMatchingBraces', int(value))
+
+    @property
+    def highlightWhitespaces(self):
+        return bool(int(self._settings.value('highlightWhitespaces', '0')))
+
+    @highlightWhitespaces.setter
+    def highlightWhitespaces(self, value):
+        self._settings.setValue('highlightWhitespaces', int(value))
+
+    @property
+    def tabWidth(self):
+        return int(self._settings.value('tabWidth', '4'))
+
+    @tabWidth.setter
+    def tabWidth(self, value):
+        self._settings.setValue('tabWidth', int(value))
+
+    # Editor settings
+    # ---------------
+    @property
+    def enableAutoIndent(self):
+        return bool(int(self._settings.value('enableAutoIndent', '1')))
+
+    @enableAutoIndent.setter
+    def enableAutoIndent(self, value):
+        self._settings.setValue('enableAutoIndent', int(value))
+
+    @property
+    def saveOnFocusOut(self):
+        return bool(int(self._settings.value('saveOnFocusOut', '1')))
+
+    @saveOnFocusOut.setter
+    def saveOnFocusOut(self, value):
+        self._settings.setValue('saveOnFocusOut', int(value))
+
+    @property
+    def ccTriggerLen(self):
+        return int(self._settings.value('ccTriggerLen', '1'))
+
+    @ccTriggerLen.setter
+    def ccTriggerLen(self, value):
+        self._settings.setValue('ccTriggerLen', value)
+
+    # Font & Color settings
+    # ---------------------
     @property
     def consoleBackground(self):
-        return QtGui.QColor(self._settings.value("consoleBackground",
-                                                 "#FFFFFF"))
+        return QtGui.QColor(
+            self._settings.value("consoleBackground", "#FFFFFF"))
 
     @consoleBackground.setter
     def consoleBackground(self, value):
@@ -233,8 +256,8 @@ class Settings(object):
 
     @property
     def consoleForeground(self):
-        return QtGui.QColor(self._settings.value("consoleForeground",
-                                                 "#404040"))
+        return QtGui.QColor(
+            self._settings.value("consoleForeground", "#404040"))
 
     @consoleForeground.setter
     def consoleForeground(self, value):
@@ -265,25 +288,123 @@ class Settings(object):
         self._settings.setValue("consoleAppOutput", value)
 
     @property
-    def homePageColorScheme(self):
-        return int(self._settings.value("homePageStyle", "0"))
+    def globalStyle(self):
+        return self._settings.value("globalStyle", "white")
 
-    @homePageColorScheme.setter
-    def homePageColorScheme(self, value):
-        self._settings.setValue("homePageStyle", str(value))
-
-    @property
-    def appStyle(self):
-        return int(self._settings.value("style", "0"))
-
-    @appStyle.setter
-    def appStyle(self, value):
-        self._settings.setValue("style", value)
+    @globalStyle.setter
+    def globalStyle(self, value):
+        self._settings.setValue("globalStyle", value)
 
     @property
-    def runInExternalTerminal(self):
-        return bool(int(self._settings.value('runInExternalTerminal', "0")))
+    def fontName(self):
+        font = self._settings.value("fontName")
+        if not font:
+            font = "monospace"
+            if sys.platform == "win32":
+                font = "Consolas"
+            elif sys.platform == "darwin":
+                font = 'Monaco'
+        return font
 
-    @runInExternalTerminal.setter
-    def runInExternalTerminal(self, value):
-        self._settings.setValue('runInExternalTerminal', int(value))
+    @fontName.setter
+    def fontName(self, font):
+        print(font)
+        if not font:
+            font = "monospace"
+            if sys.platform == "win32":
+                font = "Consolas"
+            elif sys.platform == "darwin":
+                font = 'Monaco'
+        self._settings.setValue("fontName", font)
+
+    @property
+    def fontSize(self):
+        return int(self._settings.value('fontSize', '10'))
+
+    @fontSize.setter
+    def fontSize(self, value):
+        self._settings.setValue('fontSize', value)
+
+    @property
+    def colorScheme(self):
+        return self._settings.value('colorScheme', 'default')
+
+    @colorScheme.setter
+    def colorScheme(self, value):
+        self._settings.setValue('colorScheme', value)
+
+    # Build and Run settings
+    # ----------------------
+    @property
+    def runInShell(self):
+        return bool(int(self._settings.value('runInShell', "0")))
+
+    @runInShell.setter
+    def runInShell(self, value):
+        self._settings.setValue('runInShell', int(value))
+
+    @property
+    def shellCommand(self):
+        # works on gnome, what about KDE and how do I detect that?
+        # at the moment just go with gnome, user can change that in the
+        # settings dialog anyway
+        default_shell_cmd = "gnome-terminal -e"
+        return str(self._settings.value("shell", default_shell_cmd))
+
+    @shellCommand.setter
+    def shellCommand(self, cmd):
+        self._settings.setValue("shell", cmd)
+
+    @property
+    def customCompilerPath(self):
+        return self._settings.value('customCompilerPath', '')
+
+    @customCompilerPath.setter
+    def customCompilerPath(self, value):
+        # add to PATH
+        sep = ';' if sys.platform == 'win32' else ':'
+        os.environ['PATH'] += sep + value
+        self._settings.setValue('customCompilerPath', value)
+
+
+    # Cobol settings
+    # ----------------------
+    @property
+    def free_format(self):
+        return bool(int(self._settings.value('free_format', '0')))
+
+    @free_format.setter
+    def free_format(self, value):
+        self._settings.setValue('free_format', int(value))
+
+    @property
+    def left_margin(self):
+        return int(self._settings.value('left_margin', '7'))
+
+    @left_margin.setter
+    def left_margin(self, value):
+        self._settings.setValue('left_margin', value)
+
+    @property
+    def right_margin(self):
+        return int(self._settings.value('right_margin', '72'))
+
+    @right_margin.setter
+    def right_margin(self, value):
+        self._settings.setValue('right_margin', value)
+
+    @property
+    def comment_indicator(self):
+        return self._settings.value('comment_indicator', '*>')
+
+    @comment_indicator.setter
+    def comment_indicator(self, value):
+        self._settings.setValue('comment_indicator', value)
+
+    @property
+    def cobol_standard(self):
+        return CobolStandard(int(self._settings.value('cobc_standard', '0')))
+
+    @cobol_standard.setter
+    def cobol_standard(self, value):
+        self._settings.setValue('cobc_standard', int(value))

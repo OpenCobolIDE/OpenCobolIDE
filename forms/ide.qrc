@@ -1,0 +1,32 @@
+<RCC>
+  <qresource prefix="ide-icons">
+    <file>rc/downarrow.png</file>
+    <file>rc/emblem-important.png</file>
+    <file>rc/accessories-calculator.png</file>
+    <file alias="rc/paragraph">rc/func.png</file>
+    <file alias="rc/var">rc/var.png</file>
+    <file alias="rc/division">rc/namespace.png</file>
+    <file>rc/spinner.gif</file>
+    <file alias="rc/section">rc/class.png</file>
+    <file>rc/help.png</file>
+    <file>rc/Preferences-system.png</file>
+    <file>rc/silex-32x32.png</file>
+    <file>rc/silex-192x192.png</file>
+    <file>rc/silex-64x64.png</file>
+    <file alias="rc/keyword">rc/keyword.png</file>
+    <file>rc/accept.png</file>
+    <file>rc/cobol-mimetype.png</file>
+    <file>rc/text-x-generic.png</file>
+    <file>rc/dialog-information.png</file>
+    <file>rc/view-fullscreen.png</file>
+    <file>rc/edit-clear.png</file>
+    <file>rc/system-log-out.png</file>
+    <file>rc/application-x-executable.png</file>
+    <file>rc/application-x-sharedlib.png</file>
+    <file>rc/document-new.png</file>
+    <file>rc/document-open.png</file>
+    <file>rc/document-save-as.png</file>
+    <file>rc/document-save.png</file>
+    <file>rc/media-playback-start.png</file>
+  </qresource>
+</RCC>

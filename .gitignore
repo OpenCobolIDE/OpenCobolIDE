@@ -39,3 +39,4 @@ nosetests.xml
 /.idea
 /temp/
 /__pycache__/
+*.DS_Store

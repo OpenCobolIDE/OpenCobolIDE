@@ -16,14 +16,9 @@
 """
 Contains application constants
 """
+from enum import IntEnum
 import os
 import sys
-import pyqode.core
-import pyqode.widgets
-
-# cobol use - extensively for complex identifier, don't break them!
-pyqode.core.constants.WORD_SEPARATORS.remove("-")
-
 
 COBOL_EXTENSIONS = [".COB", ".CBL", ".PCO", ".CPY"]
 ALL_COBOL_EXTENSIONS = COBOL_EXTENSIONS + [ext.lower() for ext in COBOL_EXTENSIONS]
@@ -45,22 +40,6 @@ WHITE_STYLE = 0
 DARK_STYLE = 1
 
 
-class DarkColorScheme(pyqode.widgets.ColorScheme):
-    """
-    Define a dark color scheme for easy customization of the stylesheet.
-    """
-
-    def __init__(self):
-        super(DarkColorScheme, self).__init__()
-        self.background_color = "#302F2F"
-        self.title_background_color = "#4b4b4b"
-        self.text_color = "#C5C5C5"
-        self.border_color = "#555555"
-        self.selection_bck_color = "#343434"
-        self.selection_color = "#C5C5C5"
-        self.hover_color = "#343434"
-
-
 class ProgramType:
     """
     Enumerates the supported file types along with their base compile command
@@ -76,14 +55,15 @@ class ProgramType:
     @staticmethod
     def cmd(programType, input, output, customOptions=None):
         baseCmdArgs = programType[1]
-        if programType[0] == 0:
-            args = [baseCmdArgs[0], baseCmdArgs[1],
-                    baseCmdArgs[2] % output, baseCmdArgs[3] % input]
-        else:
-            args = [baseCmdArgs[0], baseCmdArgs[1] % output,
-                    baseCmdArgs[2] % input]
+        args = [baseCmdArgs[0]]
         if customOptions:
             args += customOptions
+        if programType[0] == 0:
+            args += [baseCmdArgs[1],
+                     baseCmdArgs[2] % output, baseCmdArgs[3] % input]
+        else:
+            args += [baseCmdArgs[1] % output,
+                    baseCmdArgs[2] % input]
         return args
 
 
@@ -265,3 +245,16 @@ COBOL_KEYWORDS = [
     "USING", "VALUE", "VALUES", "VARYING", "WHEN", "WITH", "WORDS",
     "WORKING-STORAGE",
     "WRITE", "WRITE-ONLY", "XML", "ZERO", "ZEROES", "ZEROS"]
+
+
+class CobolStandard(IntEnum):
+    default = 0
+    cobol2002 = 1
+    cobol85 = 2
+    ibm = 3
+    mvs = 4
+    bs2000 = 5
+    mf = 6
+
+
+print(str(CobolStandard.default))

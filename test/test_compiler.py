@@ -1,9 +1,10 @@
 """
 Tests the compiler module
 """
-import os
 import shutil
-from oci import compiler, constants
+
+from oci import constants
+from oci.backend import compiler
 
 
 def teardown_module():

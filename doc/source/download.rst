@@ -6,67 +6,51 @@ Here you'll find all the necessary explanations for installing OpenCobolIDE.
 
 Requirements:
 -------------
-OpenCobolIDE depends on the following packages
+OpenCobolIDE depends on the following packages:
 
     - Python 3
-    - PyQt4
+    - PyQt5
     - OpenCobol
     - pyqode.core
-    - pyqode.widgets
     - pygments >= 1.6
-    - chardet (chardet2 if you are using python3)
-
-Installation
-------------
+    - chardet
 
 GNU/Linux
-+++++++++
+#########
 
-If you are on Ubuntu 13.10 or drivatives, you can use the ppa to easily
-install OpenCobolIDE::
-
-    sudo apt-add-repository ppa:open-cobol-ide/stable
-    sudo apt-get update
-    sudo apt-get install open-cobol-ide
-
-Otherwise you will have to install from source:
-
-1) Install OpenCobol and PyQt4
-
-.. code-block:: bash
-
-    sudo apt-get install python3-pyqt4 open-cobol
-
-2) Install OpenCobolIDE
-
-Using pip::
+Install pyqt5, open-cobol and pip using your package manager, then run the following commands::
 
     sudo pip3 install OpenCobolIDE
 
-From source::
 
-    cd /path/to/source
-    sudo python3 setup.py install
-
-.. note:: You need pip for python3. Depending on your distribution, you might
-          replace ``pip`` by ``pip3`` or ``pip-3.2``
-
-
-Both methods will install a desktop entry on your system.
-
-An **open-cobol-ide** entry should appear in the development category. If the
-entry does not appear, you can always open a terminal and type *open-cobol-ide* to run the IDE.
+If you are on Archlinux, you can install OpenCobolIDE and all its dependencies from the AUR: https://aur.archlinux.org/packages/open-cobol-ide/
 
 
 Windows
-++++++++++++
+#######
 
-Please use the Windows Installer available `here`_.
+There is a windows installer available here: https://launchpad.net/cobcide/+download
 
-.. _`here`: https://github.com/OpenCobolIDE/OpenCobolIDE/releases
+Mac OSX
+#######
+
+There is a dmg image available here: https://launchpad.net/cobcide/+download
+
+The only thing you have to do is:
+
+- to install OpenCobol compiler, e.g. using homebrew::
+
+    brew install open-cobol
+
+- run the OpenCobolIDE app
+
+.. note:: If you installed the compiler in a non-standard path and it is not recognized, you
+          can specify and the path to the compiler in the preferences dialog under the ``Build & Run`` section. Just
+          make sure to only specify the directory where the compiler can be found, not the full path.
 
 
-.. note:: Installation from source is possible but you need to install all
-          requirements yourself and run the OpenCobolIDE.pyw from the *extracted
-          archive* or *git repository* without actually installing OpenCobolIDE
-          (**do not run** *setup.py install* on windows).
+.. _`release section on github`: https://github.com/OpenCobolIDE/OpenCobolIDE/releases
+
+.. _homebrew: http://brew.sh/
+
+.. _PPA: https://launchpad.net/~open-cobol-ide/+archive/stable

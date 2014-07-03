@@ -8,10 +8,43 @@ Next Version
 ------------
 
 We don't have any plans for the next release. Please report bugs and share
-your thoughts to make OpenCobolIDE better.
+your thoughts to make OpenCobolIDE better!
 
-Milestones
-----------
+Changelog
+---------
+
+2.4.0
++++++
+
+New features:
+    - add **Mac OSX** support
+
+    - move to **PyQt5** (to support retina screens)
+
+    - add support for **pyQode 2.0**:
+
+      the new api is a lot more stable API and is now fully
+      tested. The editor style and performances have been improved but **the
+      folding panel has been temporarely removed** *(for performance reason)*
+
+    - **new user interface**:
+
+      the menu and toolbar has gone, instead there is now a compile and run button
+      inside the editor and a drop down button in the status bar for the most
+      important actions.
+
+      The homepage and the preferences dialog also got redesigned.
+
+    - compiler process management has been improved:
+
+      We are now using QProcess instead of subprocess, this allow some neat
+      improvements such as auto compile before run.
+
+    - better log message + log window: include information from the log window
+      when you report bugs!
+
+Please, read the :doc:`/getting_started` section of this manual to get started
+with the new user interface!
 
 2.3.1
 +++++
@@ -81,7 +114,7 @@ Here are the major changes:
     - port to *pyqode 1.0*
     - new compiler errors panel
     - interactive output console for program output
-    - uses *PyQt4* in place of *PySide*
+    - uses *pyqode.qt* in place of *PySide*
     - support for both python 2 and python 3
     - *on the fly* syntax check, OpenCobolIDE compile your code in the
       background to quickly warn you about wrong syntax.

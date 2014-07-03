@@ -1,0 +1,6 @@
+Most of the icons come from the Oxygen icon theme or the GNOME project.
+
+Exceptions:
+--------------
+   - silex icons (silex-icon.svg, silex-14x14.png, silex-64x64.png and silex-192x192.png) are the creations of Céline Thiry
+     and are redistributed under the GPL version 3.

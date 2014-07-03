@@ -17,8 +17,6 @@
 """
 Launcher script for linux, uses python3 explicitly.
 """
-import sys
-import logging
 from oci.main import main
 
 

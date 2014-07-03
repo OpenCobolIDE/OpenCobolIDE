@@ -1,7 +1,10 @@
 """
 This module contains utility functions
 """
-from PyQt4 import QtGui, QtCore
+import os
+from pyqode.core.qt import QtGui, QtCore, QtWidgets
+import sys
+from oci.settings import Settings
 
 
 AST_ICONS = {
@@ -13,7 +16,7 @@ AST_ICONS = {
 
 
 def convert_statement(statement):
-    ti = QtGui.QTreeWidgetItem()
+    ti = QtWidgets.QTreeWidgetItem()
     ti.setText(0, statement.name)
     ti.setIcon(0, QtGui.QIcon(AST_ICONS[statement.node_type]))
     ti.setToolTip(0, statement.description)
@@ -32,3 +35,39 @@ def ast_to_qtree(root_node):
     for display.
     """
     return convert_statement(root_node)
+
+
+def init_env():
+    if sys.platform == 'win32':
+        windows_init()
+    elif sys.platform == 'darwin':
+        osx_init()
+    path = Settings().customCompilerPath
+    if path:
+        sep = ';' if sys.platform == 'win32' else ':'
+        os.environ['PATH'] += sep + path
+
+
+def windows_init():
+    """
+    Windows specific initialisation:
+
+    - set env var to embedded OpenCobol variable
+    - set PATH to cobol library path only (erase previous values)
+    """
+    cwd = os.getcwd()
+    oc_root_pth = os.path.join(cwd, "OpenCobol")
+    os.environ["COB_CONFIG_DIR"] = os.path.join(oc_root_pth, "config")
+    os.environ["COB_COPY_DIR"] = os.path.join(oc_root_pth, "copy")
+    os.environ["COB_LIBRARY_PATH"] = os.path.join(oc_root_pth, "bin")
+    os.environ["COB_INCLUDE_PATH"] = os.path.join(oc_root_pth, "include")
+    os.environ["COB_LIB_PATH"] = os.path.join(oc_root_pth, "lib")
+    os.environ["PATH"] = os.environ["COB_LIBRARY_PATH"]
+
+
+def osx_init():
+    # there are some missing paths, see github issue #40
+    paths = ['/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin',
+             '/usr/local/sbin', '/opt/bin', '/opt/sbin', '/opt/local/bin',
+             '/opt/local/sbin']
+    os.environ["PATH"] = ':'.join(paths)

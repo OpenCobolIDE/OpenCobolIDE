@@ -17,58 +17,27 @@ OpenCobolIDE is a simple and lightweight cobol IDE based on the OpenCobol
 compiler.
 
 
-The software is written in Python using `PyQt4`_ and `pyQode`_
+The software is written in Python using `PyQt5`_ and `pyQode`_
 
 Features:
 ---------
 
 - syntax highlighting
 - code completion
-- code folding
+- code folding -> temporarely removed for performance reasons
 - navigable tree view of division, sections, paragraphs etc.
 - calculates the offsets of selected record definitions
-- compile as program (.exe) or as subprogram (.so)
-- run the program from the editor
-- also open text files
-- cross platform: work on GNU/Linux and Windows
+- compile as program (.exe) or as subprogram (.so/.dll)
+- run the program from the editor or from a configurable external terminal
+- also open other text files
+- dark color schemes and theme
+- cross platform: work on **GNU/Linux**, **Windows** and **Mac OSX**
 
 
 License
 -------
 
 OpenCobolIDE is released under the **GPL** version 3
-
-
-Installation
-------------
-
-GNU/Linux
-#########
-
-From PPA
-++++++++
-
-There is now a PPA for Ubuntu and derivatives::
-
-    $ sudo apt-add-repository ppa:open-cobol-ide/stable
-    $ sudo apt-get update
-    $ sudo apt-get install open-cobol-ide
-
-From pypi
-+++++++++
-**You must have the latest version of pip for python3!**
-
-Run the following commands::
-
-    sudo apt-get install python3-pyqt4 open-cobol
-    sudo pip3 install OpenCobolIDE
-
-*On Gnu/Linux, you must use pip3 instead of pip*
-
-Windows
-#######
-
-There is a windows installer available here: https://launchpad.net/cobcide/+download
 
 
 Requirements
@@ -78,13 +47,50 @@ The project depends on the following packages:
 
 - `Python3`_
 - `setuptools`_
-- `PyQt4`_
+- `PyQt4`_ or `PyQt5`_
 - `OpenCobol`_
 - `pyqode.core`_
-- `pyqode.widgets`_
 - `Pygments`_ **>= 1.6**
 - `chardet`_
 - `qdarkstyle`_
+
+
+Installation
+------------
+
+GNU/Linux
+#########
+
+Install pyqt5, open-cobol and pip using your package manager, then run the following commands::
+
+    sudo pip3 install OpenCobolIDE
+
+
+If you are on Archlinux, you can install OpenCobolIDE and all its dependencies from the AUR: https://aur.archlinux.org/packages/open-cobol-ide/
+
+
+Windows
+#######
+
+There is a windows installer available here: https://launchpad.net/cobcide/+download
+
+Mac OSX
+#######
+
+There is a dmg image available here: https://launchpad.net/cobcide/+download
+
+The only thing you have to do is:
+
+- to install OpenCobol compiler, e.g. using homebrew::
+
+    brew install open-cobol
+
+- run the OpenCobolIDE app
+
+If you installed the compiler in a non-standard path and it is not recognized, you
+can specify and the path to the compiler in the preferences dialog under the ``Build & Run`` section
+(make sure to only specify the directory where the compiler can be found, not the full path).
+
 
 
 Resources
@@ -128,13 +134,13 @@ Screenshots
 
 * Offset calculator
 
-.. image:: doc/source/_static/OffsetCalculator.png
+.. image:: doc/source/_static/PicOffsets.png
     :align: center
 
 
-* Dark style support (based on `qdarkstyle`_ style sheet)
+* Dark style support
 
-.. image:: doc/source/_static/DarkStyle.png
+.. image:: doc/source/_static/Dark.png
     :align: center
 
 
@@ -148,7 +154,7 @@ Screenshots
 .. _chardet: https://pypi.python.org/pypi/chardet
 .. _Pygments: http://pygments.org/
 .. _pyqode.core: https://github.com/pyQode/pyqode.core/
-.. _pyqode.widgets: https://github.com/pyQode/pyqode.widgets/
 .. _OpenCobol: http://opencobol.org/
 .. _setuptools: https://pypi.python.org/pypi/setuptools
-.. _Python: http://python.org/
+.. _Python3: http://python.org/
+.. _PyQt5: http://www.riverbankcomputing.co.uk/software/pyqt/download
