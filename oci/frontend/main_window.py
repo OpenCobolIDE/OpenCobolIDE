@@ -457,7 +457,12 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
                 tab = editors.make_cobol_editor()
             else:
                 tab = editors.GenericCodeEdit(self.tabWidgetEditors)
-            tab.file.open(fn)
+            try:
+                tab.file.open(fn)
+            except IOError:
+                QtWidgets.QMessageBox.warning(
+                    self, "File does not exist",
+                    "Cannot open file %s, the file does not exists." % fn)
             index = self.tabWidgetEditors.add_code_edit(tab)
             self.showHomePage(False)
             self.updateStatusBar(tab)
@@ -465,13 +470,6 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
             self.recent_files_manager.open_file(fn)
             self.menu_recents.update_actions()
             home.updateRecents()
-
-            try:
-                tab.openFile(fn)
-            except IOError:
-                QtWidgets.QMessageBox.warning(
-                    self, "File does not exist",
-                    "Cannot open file %s, the file does not exists." % fn)
 
             self.onCurrentEditorChanged(index)
 

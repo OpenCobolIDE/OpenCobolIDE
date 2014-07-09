@@ -94,6 +94,8 @@ class CobolCodeEdit(api.CodeEdit):
         """
         Setup the editor's panels
         """
+        self.panels.append(panels.EncodingPanel(),
+                           panels.EncodingPanel.Position.TOP)
         self.controlPanel = cob_panels.ControlPanel()
         self.controlPanel.compilationRequested.connect(
             self.compilationRequested.emit)
@@ -104,7 +106,7 @@ class CobolCodeEdit(api.CodeEdit):
         self.panels.append(self.controlPanel, api.Panel.Position.RIGHT)
         self.lineNumberPanel = panels.LineNumberPanel()
         self.panels.append(self.lineNumberPanel, api.Panel.Position.LEFT)
-        self.panels.append(panels.MarkerPanel())
+        self.panels.append(panels.CheckerPanel())
         self.panels.append(panels.SearchAndReplacePanel(),
                            api.Panel.Position.BOTTOM)
 
@@ -170,7 +172,6 @@ class CobolCodeEdit(api.CodeEdit):
         self.tab_length = settings.tabWidth
         self.caretLineHighlighter.enabled = settings.highlightCurrentLine
         self.symbolMatcher.enabled = settings.highlightMatchingBraces
-        self.syntaxHighlighterMode.pygments_style = settings.colorScheme
         self.rightMargin.enabled = settings.displayMargins
         self.leftMargin.enabled = settings.displayMargins
         self.autoIndentMode.enabled = settings.enableAutoIndent
@@ -189,7 +190,7 @@ class CobolCodeEdit(api.CodeEdit):
             self.syntaxHighlighterMode._lexer = CobolFreeformatLexer()
         else:
             self.syntaxHighlighterMode._lexer = CobolLexer()
-        self.syntaxHighlighterMode.rehighlight()
+        self.syntaxHighlighterMode.pygments_style = settings.colorScheme
         self.analyserMode.parse()
 
     def detect_file_type(self):
@@ -213,6 +214,12 @@ class CobolCodeEdit(api.CodeEdit):
         expression = QtCore.QRegExp('\*.*')
         index = expression.indexIn(text, 0)
         usd = highlighter.currentBlock().userData()
+        if usd is None:
+            try:
+                # with pyqode >= 2.1
+                usd = highlighter.current_block.user_data
+            except AttributeError:
+                pass
         while index >= 0:
             index = expression.pos(0)
             length = len(expression.cap(0))
@@ -237,6 +244,8 @@ class GenericCodeEdit(api.CodeEdit):
         self.panels.append(panels.LineNumberPanel())
         self.panels.append(panels.SearchAndReplacePanel(),
                            panels.SearchAndReplacePanel.Position.BOTTOM)
+        self.panels.append(panels.EncodingPanel(),
+                           panels.EncodingPanel.Position.TOP)
 
         # add modes
         self.modes.append(modes.AutoCompleteMode())

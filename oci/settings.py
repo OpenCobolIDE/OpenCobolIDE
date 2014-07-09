@@ -108,7 +108,7 @@ class Settings(object):
     @lastFilePath.setter
     def lastFilePath(self, path):
         """
-        Sets the last used path (save or open path)
+        Sets the last used path (save or open path):
 
         :param path: path string
         :type path: str or unicode
