@@ -9,7 +9,8 @@
 #
 # OpenCobolIDE is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
 #
 # You should have received a copy of the GNU General Public License along with
 # OpenCobolIDE. If not, see http://www.gnu.org/licenses/.
@@ -175,8 +176,6 @@ def parse_pic_field(l, c, last_section_node, last_vars, line):
     :param line: The line string (without indentation)
     :return: The extracted variable node
     """
-    if "FD " in line:
-        pass
     parent_node = None
     raw_tokens = line.split(" ")
     tokens = []
@@ -199,6 +198,7 @@ def parse_pic_field(l, c, last_section_node, last_vars, line):
     description = line
     if lvl == 1:
         parent_node = last_section_node
+        last_vars.clear()
     else:
         # find parent level
         levels = sorted(last_vars.keys(), reverse=True)
@@ -225,7 +225,11 @@ def parse_paragraph(l, c, last_div_node, last_section_node, line):
     :param line: The line string (without indentation)
     :return: The extracted paragraph node
     """
+    if not line.endswith('.'):
+        return None
     name = line.replace(".", "")
+    if name.strip() == '':
+        return None
     parent_node = last_div_node
     if last_section_node is not None:
         parent_node = last_section_node
@@ -298,13 +302,14 @@ def parse_ast(filename, code=None, encoding="utf-8", free=False):
                           "PROCEDURE DIVISION" in last_div_node.name):
                 tokens = line.split(" ")
                 if len(tokens) == 1 and not tokens[0] in constants.COBOL_KEYWORDS:
-                    if last_par:
-                        last_par.end_line = i
                     p = parse_paragraph(
                         i, column, last_div_node, last_section_node, line)
                     if p:
                         paragraphs.append(p)
-                    last_par = p
+                        if last_par:
+                            last_par.end_line = i
+                        last_par = p
+
     # close last div
     if last_par:
         last_par.end_line = len(lines) - 1
