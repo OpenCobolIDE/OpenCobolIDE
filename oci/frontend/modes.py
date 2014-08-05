@@ -23,7 +23,7 @@ from pyqode.core.qt import QtCore
 from pyqode.core.qt.QtCore import Qt, QObject, Signal, QTimer, Slot
 from pyqode.core.qt.QtWidgets import QAction
 from pyqode.core.qt.QtGui import QTextCursor, QIcon
-from pyqode.core.api import Mode, TextHelper
+from pyqode.core.api import Mode, TextHelper, DelayJobRunner
 from pyqode.core.modes import CheckerMode, RightMarginMode
 
 from oci.backend import workers
@@ -238,17 +238,19 @@ class DocumentAnalyserMode(QObject, Mode):
         self.__root_node = None
         self.__vars = []
         self.__paragraphs = []
+        self._runner = DelayJobRunner()
 
     def on_state_changed(self, state):
         """
         Called when the mode is activated/deactivated
         """
         if state:
-            self.editor.new_text_set.connect(self.parse)
-            self.editor.text_saved.connect(self.parse)
+            self.editor.textChanged.connect(self._parse)
         else:
-            self.editor.new_text_set.disconnect(self.parse)
-            self.editor.text_saved.disconnect(self.parse)
+            self.editor.textChanged.disconnect(self._parse)
+
+    def _parse(self):
+        self._runner.request_job(self.parse)
 
     def parse(self):
         """ Parse the document layout.
@@ -266,7 +268,9 @@ class DocumentAnalyserMode(QObject, Mode):
         paragraphs = []
         try:
             root_node, variables, paragraphs = parse_ast(
-                self.editor.file.path, encoding=self.editor.file.encoding,
+                self.editor.file.path,
+                code=self.editor.toPlainText(),
+                encoding=self.editor.file.encoding,
                 free=Settings().free_format)
         except (TypeError, IOError):
             # file does not exists
