@@ -20,11 +20,11 @@ def read_version():
     """
     Reads the version without self importing
     """
-    with open("oci/__init__.py") as f:
+    with open("open_cobol_ide/__init__.py") as f:
         lines = f.read().splitlines()
         for l in lines:
             if "__version__" in l:
-                return l.split("=")[1].strip().replace('"', "")
+                return l.split("=")[1].strip().replace("'", '')
 
 
 def run_as_root():
@@ -57,7 +57,6 @@ setup(
     version=read_version(),
     packages=[p for p in find_packages() if not 'test' in p],
     keywords=["Cobol; OpenCobol; IDE"],
-    package_dir={'oci': 'oci', "oci_designer_plugins": "oci_designer_plugins"},
     data_files=data_files,
     url='https://github.com/OpenCobolIDE/OpenCobolIDE',
     license='GPL v3',
@@ -65,11 +64,8 @@ setup(
     author_email='colin.duquesnoy@gmail.com',
     description='A simple cobol IDE',
     long_description=long_desc,
-    zip_safe=False,
     install_requires=requirements,
-    entry_points={'gui_scripts': ['open-cobol-ide = oci.main:main'],
-                  'pyqode_plugins': [
-                      'oci_widgets = oci_designer_plugins.cobol_plugin']},
+    entry_points={'gui_scripts': ['OpenCobolIDE = open_cobol_ide.main:main']},
     cmdclass=cmdclass,
     classifiers=[
         'Development Status :: 5 - Production/Stable',

@@ -582,7 +582,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
         self.consoleOutput.app_msg_color = s.consoleAppOutput
 
     def setupStyle(self, s):
-        if s.globalStyle == constants.DARK_STYLE:
+        if s.global_style == constants.DARK_STYLE:
             QtWidgets.QApplication.instance().setStyleSheet(
                 qdarkstyle.load_stylesheet(pyside=False))
         self.setupIcons()

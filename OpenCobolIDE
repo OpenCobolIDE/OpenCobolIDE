@@ -17,7 +17,8 @@
 """
 Launcher script for linux, uses python3 explicitly.
 """
-from oci.main import main
+from open_cobol_ide.main import main
+# from oci.main import main
 
 
 if __name__ == "__main__":
