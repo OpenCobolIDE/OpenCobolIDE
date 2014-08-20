@@ -5,13 +5,15 @@ This module contains the FileController.
 import logging
 import mimetypes
 import os
+
 from pyqode.core import widgets
-from pyqode.core.widgets import GenericCodeEdit
 from pyqode.qt import QtWidgets
+
 from .base import Controller
 from .. import constants
 from ..settings import Settings
-from ..view.editors import CobolCodeEdit
+from ..view.dialogs.new_file import DlgNewFile
+from ..view.editors import CobolCodeEdit, GenericCodeEdit
 
 
 def _logger():
@@ -42,13 +44,22 @@ class FileController(Controller):
         self.recent_files_manager.updated.connect(
             self.menu_recents.update_actions)
         self.ui.actionOpen.triggered.connect(self.request_open)
-        # self.ui.actionNew.triggered.connect(self.request_new)
+        self.ui.actionNew.triggered.connect(self.request_new)
+        self.ui.actionSave.triggered.connect(
+            self.ui.tabWidgetEditors.save_current)
+        self.ui.actionSaveAs.triggered.connect(self._save_as)
+        self.ui.actionQuit.triggered.connect(self._on_quit)
 
     def _editor_from_mimetype(self, mimetype):
         for klass in self.editor_types:
             if mimetype in klass.mimetypes:
                 return klass()
-        return self.editor_types[-1]
+        return self.editor_types[-1]()
+
+    def request_new(self):
+        path = DlgNewFile.create_new_file(self.main_window)
+        if path:
+            self.open_file(path)
 
     def request_open(self):
         """
@@ -79,4 +90,32 @@ class FileController(Controller):
             self.ui.tabWidgetEditors.add_code_edit(editor, name)
         self.app.view.show_editors()
         self.app.file.recent_files_manager.open_file(path)
+
+    def _save_as(self):
+        filter = "%s%s%s" % (constants.COBOL_FILES_FILTER,
+                            constants.FILTER_SEPARATOR,
+                            constants.OTHER_FILES_FILTER)
+        fn, filter = QtWidgets.QFileDialog.getSaveFileName(
+            self.main_window, "Save file as...",
+            self.ui.tabWidgetEditors.currentWidget().file.path, filter)
+        # ensure correct extension
+        if os.path.splitext(fn)[1] == "":
+            if filter == constants.COBOL_FILES_FILTER:
+                fn += ".cbl"
+            else:
+                fn += '.txt'
+        _logger().info('saving editor content as: %s', fn)
+        self.ui.tabWidgetEditors.save_current(path=fn)
+        self.recent_files_manager.open_file(fn)
+        self.ui.tabWidgetEditors.currentChanged.emit(
+            self.ui.tabWidgetEditors.currentIndex())
+
+    def _on_quit(self):
+        if QtWidgets.QMessageBox.question(
+                self.main_window, "Quit OpenCobolIDE?",
+                "Are you sure you want to quit OpenCobolIDE?",
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.Yes:
+            _logger().debug('quit action triggered')
+            QtWidgets.QApplication.instance().closeAllWindows()
 

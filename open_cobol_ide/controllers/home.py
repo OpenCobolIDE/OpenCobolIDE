@@ -2,6 +2,7 @@
 Controls the home page.
 
 """
+from pyqode.cobol.api import icons
 from pyqode.cobol.widgets import CobolCodeEdit
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
@@ -20,6 +21,7 @@ class HomeController(Controller):
         self.app.file.recent_files_manager.updated.connect(
             self._update_recents)
         self.ui.btOpenFile.clicked.connect(self.app.file.request_open)
+        self.ui.btNewFile.clicked.connect(self.app.file.request_new)
         self.ui.listWidgetRecents.itemClicked.connect(
             self._on_recent_item_clicked)
         self.ui.listWidgetRecents.clear_requested.connect(self._clear_recents)
@@ -52,9 +54,10 @@ class HomeController(Controller):
             item = QtWidgets.QListWidgetItem()
             if ('.' + QtCore.QFileInfo(file).suffix().upper() in
                     CobolCodeEdit.extensions):
-                icon = QtGui.QIcon(":/ide-icons/rc/silex-32x32.png")
+                icon = QtGui.QIcon(icons.ICON_MIMETYPE)
             else:
-                icon = QtGui.QIcon(":/ide-icons/rc/text-x-generic.png")
+                icon = QtWidgets.QFileIconProvider().icon(
+                    QtCore.QFileInfo(file))
             item.setText(QtCore.QFileInfo(file).fileName())
             item.setToolTip(file)
             item.setIcon(icon)

@@ -15,10 +15,7 @@ def _logger():
 
 
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
+    def restore_state(self):
         s = Settings()
         if s.geometry:
             self.restoreGeometry(s.geometry)
@@ -28,17 +25,26 @@ class MainWindow(QtWidgets.QMainWindow):
         self.prevSize = s.size
         self.ui.actionFullscreen.setChecked(s.fullscreen)
 
+    def __init__(self):
+        super().__init__()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.restore_state()
+
     def __del__(self):
         _logger().debug("del main window")
+
+    def save_state(self):
+        s = Settings()
+        s.geometry = self.saveGeometry()
+        s.state = self.saveState()
+        s.maximised = self.isMaximized()
+        s.size = self.size()
+        if self.ui.stackedWidget.currentIndex() == 1:
+            s.outline_visible = self.ui.dockWidgetNavPanel.isVisible()
+            s.fullscreen = self.isFullScreen()
 
     def closeEvent(self, event):
         self.ui.tabWidgetEditors.closeEvent(event)
         if event.isAccepted():
-            s = Settings()
-            s.geometry = self.saveGeometry()
-            s.state = self.saveState()
-            s.maximised = self.isMaximized()
-            s.size = self.size()
-            if self.ui.stackedWidget.currentIndex() == 1:
-                s.outline_visible = self.ui.dockWidgetNavPanel.isVisible()
-                s.fullscreen = self.isFullScreen()
+            self.save_state()
