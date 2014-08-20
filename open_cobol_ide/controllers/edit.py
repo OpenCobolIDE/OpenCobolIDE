@@ -67,8 +67,9 @@ class EditController(Controller):
         editor = self._editor_from_mimetype(mimetype)
         editor.file.open(path)
         editor.cursorPositionChanged.connect(self._update_status_bar_labels)
-        self.ui.tabWidgetEditors.add_code_edit(editor, name)
+        index = self.ui.tabWidgetEditors.add_code_edit(editor, name)
         self.app.cobol.display_file_type(editor)
+        self.ui.tabWidgetEditors.setTabToolTip(index, path)
         self._update_status_bar_labels()
 
     def _editor_from_mimetype(self, mimetype):
