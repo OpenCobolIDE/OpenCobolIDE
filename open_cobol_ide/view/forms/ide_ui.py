@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '/home/colin/Dev/OpenCobolIDE/forms/ide.ui'
 #
-# Created: Wed Aug 20 12:18:57 2014
+# Created: Wed Aug 20 16:14:09 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from pyqode.core.qt import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1202, 851)
+        MainWindow.resize(1202, 824)
         MainWindow.setMinimumSize(QtCore.QSize(900, 700))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/ide-icons/rc/silex-192x192.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -255,20 +255,14 @@ class Ui_MainWindow(object):
         self.actionQuit.setIcon(icon)
         self.actionQuit.setIconVisibleInMenu(True)
         self.actionQuit.setObjectName("actionQuit")
-        self.actionCompile = QtWidgets.QAction(MainWindow)
-        icon = QtGui.QIcon.fromTheme("exec")
-        self.actionCompile.setIcon(icon)
-        self.actionCompile.setIconVisibleInMenu(True)
-        self.actionCompile.setObjectName("actionCompile")
         self.actionRun = QtWidgets.QAction(MainWindow)
         icon = QtGui.QIcon.fromTheme("media-playback-start")
         self.actionRun.setIcon(icon)
         self.actionRun.setIconVisibleInMenu(True)
         self.actionRun.setObjectName("actionRun")
         self.actionAbout = QtWidgets.QAction(MainWindow)
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/ide-icons/rc/silex-64x64.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionAbout.setIcon(icon1)
+        icon = QtGui.QIcon.fromTheme("help-about")
+        self.actionAbout.setIcon(icon)
         self.actionAbout.setIconVisibleInMenu(True)
         self.actionAbout.setObjectName("actionAbout")
         self.actionSave = QtWidgets.QAction(MainWindow)
@@ -320,7 +314,7 @@ class Ui_MainWindow(object):
         self.actionPreferences.setIconVisibleInMenu(True)
         self.actionPreferences.setObjectName("actionPreferences")
         self.actionHelp = QtWidgets.QAction(MainWindow)
-        icon = QtGui.QIcon.fromTheme("help")
+        icon = QtGui.QIcon.fromTheme("help-contents")
         self.actionHelp.setIcon(icon)
         self.actionHelp.setIconVisibleInMenu(True)
         self.actionHelp.setObjectName("actionHelp")
@@ -346,23 +340,27 @@ class Ui_MainWindow(object):
         self.actionShowAppLog.setCheckable(True)
         self.actionShowAppLog.setObjectName("actionShowAppLog")
         self.actionClearLog = QtWidgets.QAction(MainWindow)
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/ide-icons/rc/edit-clear.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionClearLog.setIcon(icon2)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/ide-icons/rc/edit-clear.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionClearLog.setIcon(icon1)
         self.actionClearLog.setIconVisibleInMenu(True)
         self.actionClearLog.setObjectName("actionClearLog")
         self.actionMinimal = QtWidgets.QAction(MainWindow)
         self.actionMinimal.setObjectName("actionMinimal")
-        self.actionClassic_2 = QtWidgets.QAction(MainWindow)
-        self.actionClassic_2.setObjectName("actionClassic_2")
-        self.actionMinimal_2 = QtWidgets.QAction(MainWindow)
-        self.actionMinimal_2.setObjectName("actionMinimal_2")
+        self.actionClassicView = QtWidgets.QAction(MainWindow)
+        self.actionClassicView.setObjectName("actionClassicView")
+        self.actionMinimalView = QtWidgets.QAction(MainWindow)
+        self.actionMinimalView.setObjectName("actionMinimalView")
+        self.actionCompile = QtWidgets.QAction(MainWindow)
+        icon = QtGui.QIcon.fromTheme("exec")
+        self.actionCompile.setIcon(icon)
+        self.actionCompile.setIconVisibleInMenu(True)
+        self.actionCompile.setObjectName("actionCompile")
         self.toolBarFile.addAction(self.actionNew)
         self.toolBarFile.addAction(self.actionOpen)
         self.toolBarFile.addSeparator()
         self.toolBarFile.addAction(self.actionSave)
         self.toolBarFile.addAction(self.actionSaveAs)
-        self.toolBarCode.addAction(self.actionCompile)
         self.toolBarCode.addAction(self.actionRun)
         self.menuFile.addAction(self.actionNew)
         self.menuFile.addAction(self.actionOpen)
@@ -375,8 +373,8 @@ class Ui_MainWindow(object):
         self.menuEdit.addAction(self.mnuActiveEditor.menuAction())
         self.menuEdit.addSeparator()
         self.menuEdit.addAction(self.actionPreferences)
-        self.menuPerspective.addAction(self.actionClassic_2)
-        self.menuPerspective.addAction(self.actionMinimal_2)
+        self.menuPerspective.addAction(self.actionClassicView)
+        self.menuPerspective.addAction(self.actionMinimalView)
         self.menuView.addAction(self.menuPerspective.menuAction())
         self.menuView.addSeparator()
         self.menuView.addAction(self.actionFullscreen)
@@ -434,9 +432,6 @@ class Ui_MainWindow(object):
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
         self.actionQuit.setToolTip(_translate("MainWindow", "Exit application (Ctrl+Q)"))
         self.actionQuit.setShortcut(_translate("MainWindow", "Ctrl+Q"))
-        self.actionCompile.setText(_translate("MainWindow", "Compile"))
-        self.actionCompile.setToolTip(_translate("MainWindow", "Compile the current file (F8)"))
-        self.actionCompile.setShortcut(_translate("MainWindow", "F8"))
         self.actionRun.setText(_translate("MainWindow", "Run"))
         self.actionRun.setToolTip(_translate("MainWindow", "Run the current file (F5)"))
         self.actionRun.setShortcut(_translate("MainWindow", "F5"))
@@ -485,10 +480,13 @@ class Ui_MainWindow(object):
         self.actionShowAppLog.setToolTip(_translate("MainWindow", "Show/hide application log window"))
         self.actionClearLog.setText(_translate("MainWindow", "Clear"))
         self.actionMinimal.setText(_translate("MainWindow", "Minimal"))
-        self.actionClassic_2.setText(_translate("MainWindow", "Classic"))
-        self.actionMinimal_2.setText(_translate("MainWindow", "Minimal"))
+        self.actionClassicView.setText(_translate("MainWindow", "Classic"))
+        self.actionMinimalView.setText(_translate("MainWindow", "Minimal"))
+        self.actionCompile.setText(_translate("MainWindow", "Compile"))
+        self.actionCompile.setToolTip(_translate("MainWindow", "Compile the current file (F8)"))
+        self.actionCompile.setShortcut(_translate("MainWindow", "F8"))
 
-from pyqode.core.widgets import TabWidget, ErrorsTable, InteractiveConsole
-from pyqode.cobol.widgets import OutlineTreeWidget, PicOffsetsTable
+from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
+from pyqode.core.widgets import ErrorsTable, TabWidget, InteractiveConsole
 from open_cobol_ide.view.widgets import RecentFilesListWidget
 from . import ide_rc

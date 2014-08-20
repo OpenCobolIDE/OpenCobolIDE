@@ -391,7 +391,6 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionCompile"/>
    <addaction name="actionRun"/>
   </widget>
   <widget class="QDockWidget" name="dockWidgetLogs">
@@ -666,24 +665,6 @@
     <bool>true</bool>
    </property>
   </action>
-  <action name="actionCompile">
-   <property name="icon">
-    <iconset theme="exec">
-     <normaloff>:/ide-icons/rc/applications-system.png</normaloff>:/ide-icons/rc/applications-system.png</iconset>
-   </property>
-   <property name="text">
-    <string>Compile</string>
-   </property>
-   <property name="toolTip">
-    <string>Compile the current file (F8)</string>
-   </property>
-   <property name="shortcut">
-    <string>F8</string>
-   </property>
-   <property name="iconVisibleInMenu">
-    <bool>true</bool>
-   </property>
-  </action>
   <action name="actionRun">
    <property name="icon">
     <iconset theme="media-playback-start" resource="ide.qrc">
@@ -704,7 +685,7 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="ide.qrc">
+    <iconset theme="help-about" resource="ide.qrc">
      <normaloff>:/ide-icons/rc/silex-64x64.png</normaloff>:/ide-icons/rc/silex-64x64.png</iconset>
    </property>
    <property name="text">
@@ -892,7 +873,7 @@
   </action>
   <action name="actionHelp">
    <property name="icon">
-    <iconset theme="help">
+    <iconset theme="help-contents">
      <normaloff/>
     </iconset>
    </property>
@@ -992,6 +973,24 @@
   <action name="actionMinimalView">
    <property name="text">
     <string>Minimal</string>
+   </property>
+  </action>
+  <action name="actionCompile">
+   <property name="icon">
+    <iconset theme="exec">
+     <normaloff>:/ide-icons/rc/applications-system.png</normaloff>:/ide-icons/rc/applications-system.png</iconset>
+   </property>
+   <property name="text">
+    <string>Compile</string>
+   </property>
+   <property name="toolTip">
+    <string>Compile the current file (F8)</string>
+   </property>
+   <property name="shortcut">
+    <string>F8</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

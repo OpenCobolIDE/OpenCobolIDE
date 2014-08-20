@@ -68,6 +68,7 @@ class EditController(Controller):
         editor.file.open(path)
         editor.cursorPositionChanged.connect(self._update_status_bar_labels)
         self.ui.tabWidgetEditors.add_code_edit(editor, name)
+        self.app.cobol.display_file_type(editor)
         self._update_status_bar_labels()
 
     def _editor_from_mimetype(self, mimetype):
@@ -92,8 +93,9 @@ class EditController(Controller):
                 self._mnu.actions())
 
     def _update_status_bar_labels(self):
-        l, c = TextHelper(self.current_editor).cursor_position()
-        self._lbl_cursor.setText('%d:%d' % (l + 1, c + 1))
-        self._lbl_encoding.setText(self.current_editor.file.encoding)
-        self._lbl_format.setText(
-            'Free format' if Settings().free_format else 'Fixed format')
+        if self.current_editor:
+            l, c = TextHelper(self.current_editor).cursor_position()
+            self._lbl_cursor.setText('%d:%d' % (l + 1, c + 1))
+            self._lbl_encoding.setText(self.current_editor.file.encoding)
+            self._lbl_format.setText(
+                'Free format' if Settings().free_format else 'Fixed format')

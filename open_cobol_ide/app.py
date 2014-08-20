@@ -10,12 +10,15 @@ import sys
 from pyqode.qt import QtWidgets
 
 from . import __version__
-from .controllers.edit import EditController
-from .controllers.file import FileController
-from .controllers.home import HomeController
-from .controllers.view import ViewController
+from .controllers import CobolController
+from .controllers import EditController
+from .controllers import FileController
+from .controllers import HelpController
+from .controllers import HomeController
+from .controllers import ViewController
 from .settings import Settings
 from .view.main_window import MainWindow
+from .compilers import check_compiler, CompilerNotFound
 
 
 def _logger():
@@ -24,6 +27,7 @@ def _logger():
 
 class Application:
     def __init__(self):
+        self._init_env()
         self.name = 'OpenCobolIDE'
         self.version = __version__
         self.title = '%s %s' % (self.name, self.version)
@@ -35,12 +39,22 @@ class Application:
         self.file = FileController(self)
         self.home = HomeController(self)
         self.edit = EditController(self)
+        self.cobol = CobolController(self)
+        self.help = HelpController(self)
+        self.win.show()
+        try:
+            check_compiler()
+        except CompilerNotFound as e:
+            QtWidgets.QMessageBox.warning(
+                self.win, 'Cobol compiler not found',
+                "Failed to find GnuCobol compiler!\n\n%s.\n\n"
+                "The IDE will continue to work but you won't be able to "
+                "compile any file" % e)
 
     def __del__(self):
         _logger().debug('del app')
 
     def run(self):
-        self.win.show()
         return self.app.exec_()
 
     @classmethod

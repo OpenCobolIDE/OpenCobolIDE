@@ -16,6 +16,7 @@
 """
 Gives an easy and safe access to the app settings
 """
+import json
 import os
 import sys
 from pyqode.core.qt import QtCore, QtGui
@@ -262,3 +263,36 @@ class Settings(object):
     # @cobol_standard.setter
     # def cobol_standard(self, value):
     #     self._settings.setValue('cobc_standard', int(value))
+
+    # Cache
+    def get_file_type(self, file_path):
+        """
+        Gets file type from cache.
+
+        Raises a KeyError if no file type were cached for the specified file
+        path.
+
+        :param file_path: path of the file to look up
+        :returns: The cached file type.
+
+        """
+        from .compilers import FileType
+        try:
+            map = json.loads(self._settings.value('cached_file_types'))
+        except TypeError:
+            map = {}
+        return FileType(map[file_path])
+
+    def set_file_type(self, path, ftype):
+        """
+        Cache encoding for the specified file path.
+
+        :param path: path of the file to cache
+        :param encoding: encoding to cache
+        """
+        try:
+            map = json.loads(self._settings.value('cached_file_types'))
+        except TypeError:
+            map = {}
+        map[path] = int(ftype)
+        self._settings.setValue('cached_file_types', json.dumps(map))

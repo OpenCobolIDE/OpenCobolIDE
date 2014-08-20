@@ -91,6 +91,8 @@ class FileController(Controller):
         fn, filter = QtWidgets.QFileDialog.getSaveFileName(
             self.main_window, "Save file as...",
             self.ui.tabWidgetEditors.currentWidget().file.path, filter)
+        if not fn:
+            return
         # ensure correct extension
         if os.path.splitext(fn)[1] == "":
             if filter == COBOL_FILES_FILTER:
