@@ -46,10 +46,10 @@ class ProgramType:
     format
     """
     #: Cobol program (executable compiled with -x switch)
-    Executable = (0, ['cobc', "-x", "-o %s", "%s"],
+    Executable = (0, ["cobc", "-x", "-o %s", "%s"],
                   EXECUTABLE_EXTENSION)
     #: Cobol subprogram (shared object/dll compiled without the -x switch)
-    Module = (1, ['cobc', "-o %s", "%s"],
+    Module = (1, ["cobc", "-o %s", "%s"],
               MODULE_EXTENSION)
 
     @staticmethod
@@ -63,7 +63,7 @@ class ProgramType:
                      baseCmdArgs[2] % output, baseCmdArgs[3] % input]
         else:
             args += [baseCmdArgs[1] % output,
-                    baseCmdArgs[2] % input]
+                     baseCmdArgs[2] % input]
         return args
 
 
@@ -72,21 +72,12 @@ def getAppTempDirectory():
     Returns a platform dependant temp fold
     """
     if sys.platform == "win32":
-        pth = os.path.join(os.path.expanduser("~"), "OpenCobolIDE")
-        if not os.path.exists(pth):
-            os.mkdir(pth)
-        pth = os.path.join(pth, "temp")
-        if not os.path.exists(pth):
-            os.mkdir(pth)
-        return pth
+        pth = os.path.join(os.path.expanduser("~"), "OpenCobolIDE", "temp")
     else:
-        pth = os.path.join(os.path.expanduser("~"), ".OpenCobolIDE")
-        if not os.path.exists(pth):
-            os.mkdir(pth)
-        pth = os.path.join(pth, "temp")
-        if not os.path.exists(pth):
-            os.mkdir(pth)
-        return pth
+        pth = os.path.join(os.path.expanduser("~"), ".OpenCobolIDE", "temp")
+    if not os.path.exists(pth):
+        os.makedirs(pth)
+    return pth
 
 
 EXE_TEMPLATE = """      ******************************************************************
