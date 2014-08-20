@@ -10,13 +10,20 @@ from pyqode.core import widgets
 from pyqode.qt import QtWidgets
 
 from .base import Controller
-from .. import constants
+from ..view.editors import CobolCodeEdit
 from ..settings import Settings
 from ..view.dialogs.new_file import DlgNewFile
 
 
 def _logger():
     return logging.getLogger(__name__)
+
+
+COBOL_FILES_FILTER = "Cobol files (%s)" % " ".join(
+    [ext.lower() for ext in CobolCodeEdit.extensions] +
+    CobolCodeEdit.extensions).replace(".", "*.")
+OTHER_FILES_FILTER = "Other text files (*)"
+FILTER_SEPARATOR = ";;"
 
 
 class FileController(Controller):
@@ -55,9 +62,9 @@ class FileController(Controller):
         """
         Prompts the user for a file to open and open it.
         """
-        filter = "%s%s%s" % (constants.COBOL_FILES_FILTER,
-                             constants.FILTER_SEPARATOR,
-                             constants.OTHER_FILES_FILTER)
+        filter = "%s%s%s" % (COBOL_FILES_FILTER,
+                             FILTER_SEPARATOR,
+                             OTHER_FILES_FILTER)
         path, status = QtWidgets.QFileDialog.getOpenFileName(
             self.main_window, 'Open a file', directory=Settings().last_path,
             filter=filter)
@@ -79,15 +86,14 @@ class FileController(Controller):
         self.app.file.recent_files_manager.open_file(path)
 
     def _save_as(self):
-        filter = "%s%s%s" % (constants.COBOL_FILES_FILTER,
-                            constants.FILTER_SEPARATOR,
-                            constants.OTHER_FILES_FILTER)
+        filter = "%s%s%s" % (COBOL_FILES_FILTER, FILTER_SEPARATOR,
+                             OTHER_FILES_FILTER)
         fn, filter = QtWidgets.QFileDialog.getSaveFileName(
             self.main_window, "Save file as...",
             self.ui.tabWidgetEditors.currentWidget().file.path, filter)
         # ensure correct extension
         if os.path.splitext(fn)[1] == "":
-            if filter == constants.COBOL_FILES_FILTER:
+            if filter == COBOL_FILES_FILTER:
                 fn += ".cbl"
             else:
                 fn += '.txt'

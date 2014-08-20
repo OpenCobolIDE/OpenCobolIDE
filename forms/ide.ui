@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1202</width>
-    <height>851</height>
+    <height>824</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -506,33 +506,14 @@
     <property name="title">
      <string>View</string>
     </property>
-    <widget class="QMenu" name="menuToolbars">
+    <widget class="QMenu" name="menuPerspective">
      <property name="title">
-      <string>Toolbars</string>
+      <string>Perspective</string>
      </property>
-     <addaction name="aShowFilesToolbar"/>
-     <addaction name="aShowCodeToolbar"/>
+     <addaction name="actionClassicView"/>
+     <addaction name="actionMinimalView"/>
     </widget>
-    <widget class="QMenu" name="menuDock_panels">
-     <property name="title">
-      <string>Windows</string>
-     </property>
-     <addaction name="aShowLogsWin"/>
-     <addaction name="aShowNavWin"/>
-    </widget>
-    <widget class="QMenu" name="menuApplication_log">
-     <property name="title">
-      <string>Application log</string>
-     </property>
-     <addaction name="actionShowAppLog"/>
-     <addaction name="actionDebug_level"/>
-     <addaction name="separator"/>
-     <addaction name="actionClearLog"/>
-    </widget>
-    <addaction name="menuToolbars"/>
-    <addaction name="menuDock_panels"/>
-    <addaction name="separator"/>
-    <addaction name="menuApplication_log"/>
+    <addaction name="menuPerspective"/>
     <addaction name="separator"/>
     <addaction name="actionFullscreen"/>
    </widget>
@@ -996,6 +977,21 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionMinimal">
+   <property name="text">
+    <string>Minimal</string>
+   </property>
+  </action>
+  <action name="actionClassicView">
+   <property name="text">
+    <string>Classic</string>
+   </property>
+  </action>
+  <action name="actionMinimalView">
+   <property name="text">
+    <string>Minimal</string>
    </property>
   </action>
  </widget>

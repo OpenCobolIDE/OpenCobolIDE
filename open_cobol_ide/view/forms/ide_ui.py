@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '/home/colin/Dev/OpenCobolIDE/forms/ide.ui'
 #
-# Created: Tue Aug 19 21:05:25 2014
+# Created: Wed Aug 20 12:18:57 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,8 +20,8 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
-        self.gridLayout.setSpacing(0)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout.setSpacing(0)
         self.gridLayout.setObjectName("gridLayout")
         self.stackedWidget = QtWidgets.QStackedWidget(self.centralwidget)
         self.stackedWidget.setObjectName("stackedWidget")
@@ -133,8 +133,8 @@ class Ui_MainWindow(object):
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.page_2)
-        self.gridLayout_2.setSpacing(6)
         self.gridLayout_2.setContentsMargins(6, 6, 6, 6)
+        self.gridLayout_2.setSpacing(6)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.tabWidgetEditors = TabWidget(self.page_2)
         self.tabWidgetEditors.setObjectName("tabWidgetEditors")
@@ -175,8 +175,8 @@ class Ui_MainWindow(object):
         self.tabProgramOutput = QtWidgets.QWidget()
         self.tabProgramOutput.setObjectName("tabProgramOutput")
         self.gridLayout_5 = QtWidgets.QGridLayout(self.tabProgramOutput)
-        self.gridLayout_5.setSpacing(6)
         self.gridLayout_5.setContentsMargins(6, 6, 6, 6)
+        self.gridLayout_5.setSpacing(6)
         self.gridLayout_5.setObjectName("gridLayout_5")
         self.consoleOutput = InteractiveConsole(self.tabProgramOutput)
         self.consoleOutput.setObjectName("consoleOutput")
@@ -187,7 +187,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1202, 27))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1202, 25))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -197,12 +197,8 @@ class Ui_MainWindow(object):
         self.mnuActiveEditor.setObjectName("mnuActiveEditor")
         self.menuView = QtWidgets.QMenu(self.menuBar)
         self.menuView.setObjectName("menuView")
-        self.menuToolbars = QtWidgets.QMenu(self.menuView)
-        self.menuToolbars.setObjectName("menuToolbars")
-        self.menuDock_panels = QtWidgets.QMenu(self.menuView)
-        self.menuDock_panels.setObjectName("menuDock_panels")
-        self.menuApplication_log = QtWidgets.QMenu(self.menuView)
-        self.menuApplication_log.setObjectName("menuApplication_log")
+        self.menuPerspective = QtWidgets.QMenu(self.menuView)
+        self.menuPerspective.setObjectName("menuPerspective")
         self.menuCobol = QtWidgets.QMenu(self.menuBar)
         self.menuCobol.setObjectName("menuCobol")
         self.menuProgramType = QtWidgets.QMenu(self.menuCobol)
@@ -355,6 +351,12 @@ class Ui_MainWindow(object):
         self.actionClearLog.setIcon(icon2)
         self.actionClearLog.setIconVisibleInMenu(True)
         self.actionClearLog.setObjectName("actionClearLog")
+        self.actionMinimal = QtWidgets.QAction(MainWindow)
+        self.actionMinimal.setObjectName("actionMinimal")
+        self.actionClassic_2 = QtWidgets.QAction(MainWindow)
+        self.actionClassic_2.setObjectName("actionClassic_2")
+        self.actionMinimal_2 = QtWidgets.QAction(MainWindow)
+        self.actionMinimal_2.setObjectName("actionMinimal_2")
         self.toolBarFile.addAction(self.actionNew)
         self.toolBarFile.addAction(self.actionOpen)
         self.toolBarFile.addSeparator()
@@ -373,18 +375,9 @@ class Ui_MainWindow(object):
         self.menuEdit.addAction(self.mnuActiveEditor.menuAction())
         self.menuEdit.addSeparator()
         self.menuEdit.addAction(self.actionPreferences)
-        self.menuToolbars.addAction(self.aShowFilesToolbar)
-        self.menuToolbars.addAction(self.aShowCodeToolbar)
-        self.menuDock_panels.addAction(self.aShowLogsWin)
-        self.menuDock_panels.addAction(self.aShowNavWin)
-        self.menuApplication_log.addAction(self.actionShowAppLog)
-        self.menuApplication_log.addAction(self.actionDebug_level)
-        self.menuApplication_log.addSeparator()
-        self.menuApplication_log.addAction(self.actionClearLog)
-        self.menuView.addAction(self.menuToolbars.menuAction())
-        self.menuView.addAction(self.menuDock_panels.menuAction())
-        self.menuView.addSeparator()
-        self.menuView.addAction(self.menuApplication_log.menuAction())
+        self.menuPerspective.addAction(self.actionClassic_2)
+        self.menuPerspective.addAction(self.actionMinimal_2)
+        self.menuView.addAction(self.menuPerspective.menuAction())
         self.menuView.addSeparator()
         self.menuView.addAction(self.actionFullscreen)
         self.menuProgramType.addAction(self.actionProgram)
@@ -423,9 +416,7 @@ class Ui_MainWindow(object):
         self.menuEdit.setTitle(_translate("MainWindow", "Edit"))
         self.mnuActiveEditor.setTitle(_translate("MainWindow", "Active editor"))
         self.menuView.setTitle(_translate("MainWindow", "View"))
-        self.menuToolbars.setTitle(_translate("MainWindow", "Toolbars"))
-        self.menuDock_panels.setTitle(_translate("MainWindow", "Windows"))
-        self.menuApplication_log.setTitle(_translate("MainWindow", "Application log"))
+        self.menuPerspective.setTitle(_translate("MainWindow", "Perspective"))
         self.menuCobol.setTitle(_translate("MainWindow", "Cobol"))
         self.menuProgramType.setTitle(_translate("MainWindow", "Program type"))
         self.menu.setTitle(_translate("MainWindow", "?"))
@@ -493,8 +484,11 @@ class Ui_MainWindow(object):
         self.actionShowAppLog.setText(_translate("MainWindow", "Show window"))
         self.actionShowAppLog.setToolTip(_translate("MainWindow", "Show/hide application log window"))
         self.actionClearLog.setText(_translate("MainWindow", "Clear"))
+        self.actionMinimal.setText(_translate("MainWindow", "Minimal"))
+        self.actionClassic_2.setText(_translate("MainWindow", "Classic"))
+        self.actionMinimal_2.setText(_translate("MainWindow", "Minimal"))
 
+from pyqode.core.widgets import TabWidget, ErrorsTable, InteractiveConsole
 from pyqode.cobol.widgets import OutlineTreeWidget, PicOffsetsTable
-from pyqode.core.widgets import InteractiveConsole, TabWidget, ErrorsTable
 from open_cobol_ide.view.widgets import RecentFilesListWidget
 from . import ide_rc
