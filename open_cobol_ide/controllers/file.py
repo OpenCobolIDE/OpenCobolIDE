@@ -13,7 +13,6 @@ from .base import Controller
 from .. import constants
 from ..settings import Settings
 from ..view.dialogs.new_file import DlgNewFile
-from ..view.editors import CobolCodeEdit, GenericCodeEdit
 
 
 def _logger():
@@ -25,9 +24,6 @@ class FileController(Controller):
     Controls file operations (new file, open, recent files, ...).
 
     """
-    #: the list of supported editor types
-    editor_types = [CobolCodeEdit, GenericCodeEdit]
-
     def __init__(self, app):
         super().__init__(app)
         self.recent_files_manager = widgets.RecentFilesManager(
@@ -49,12 +45,6 @@ class FileController(Controller):
             self.ui.tabWidgetEditors.save_current)
         self.ui.actionSaveAs.triggered.connect(self._save_as)
         self.ui.actionQuit.triggered.connect(self._on_quit)
-
-    def _editor_from_mimetype(self, mimetype):
-        for klass in self.editor_types:
-            if mimetype in klass.mimetypes:
-                return klass()
-        return self.editor_types[-1]()
 
     def request_new(self):
         path = DlgNewFile.create_new_file(self.main_window)
@@ -82,12 +72,9 @@ class FileController(Controller):
             # already in tab widget.
             self.ui.tabWidgetEditors.setCurrentIndex(index)
         else:
-            # pass
             _logger().debug('opening file path=%s, name=%s, mimetype=%s' %
                             (path, name, mimetype))
-            editor = self._editor_from_mimetype(mimetype)
-            editor.file.open(path)
-            self.ui.tabWidgetEditors.add_code_edit(editor, name)
+            self.app.edit.add_editor(path, name, mimetype)
         self.app.view.show_editors()
         self.app.file.recent_files_manager.open_file(path)
 
