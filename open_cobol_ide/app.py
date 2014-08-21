@@ -88,3 +88,6 @@ class Application:
                  '/usr/local/sbin', '/opt/bin', '/opt/sbin', '/opt/local/bin',
                  '/opt/local/sbin']
         os.environ['PATH'] = ':'.join(paths)
+
+    def exit(self):
+        self.app.closeAllWindows()

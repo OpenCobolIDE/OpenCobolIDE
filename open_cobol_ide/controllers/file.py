@@ -84,7 +84,6 @@ class FileController(Controller):
             self.app.edit.add_editor(path, name, mimetype)
         self.app.view.show_editors()
         self.app.file.recent_files_manager.open_file(path)
-        Settings().last_path = path
 
     def _save_as(self):
         filter = '%s%s%s' % (COBOL_FILES_FILTER, FILTER_SEPARATOR,
@@ -114,5 +113,5 @@ class FileController(Controller):
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                 QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.Yes:
             _logger().debug('quit action triggered')
-            QtWidgets.QApplication.instance().closeAllWindows()
+            self.app.exit()
 
