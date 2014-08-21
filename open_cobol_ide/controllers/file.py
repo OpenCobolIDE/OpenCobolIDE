@@ -84,6 +84,7 @@ class FileController(Controller):
             self.app.edit.add_editor(path, name, mimetype)
         self.app.view.show_editors()
         self.app.file.recent_files_manager.open_file(path)
+        Settings().last_path = path
 
     def _save_as(self):
         filter = "%s%s%s" % (COBOL_FILES_FILTER, FILTER_SEPARATOR,
@@ -104,6 +105,7 @@ class FileController(Controller):
         self.recent_files_manager.open_file(fn)
         self.ui.tabWidgetEditors.currentChanged.emit(
             self.ui.tabWidgetEditors.currentIndex())
+        Settings().last_path = fn
 
     def _on_quit(self):
         if QtWidgets.QMessageBox.question(
