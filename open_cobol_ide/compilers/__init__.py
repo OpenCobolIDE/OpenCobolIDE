@@ -64,12 +64,8 @@ def get_file_type(path, encoding):
         ftype = FileType.EXECUTABLE
         try:
             with open(path, 'r', encoding=encoding) as f:
-                lines = f.readlines()
-                for l in lines:
-                    # This is a subprogram
-                    if 'PROCEDURE DIVISION USING' in l.upper():
-                        ftype = FileType.MODULE
-                        break
+                if 'PROCEDURE DIVISION USING' in f.read().upper():
+                    ftype = FileType.MODULE
         except IOError or OSError:
             pass
     _logger().info('%s file type: %r', path, ftype)

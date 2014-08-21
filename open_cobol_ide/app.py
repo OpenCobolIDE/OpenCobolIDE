@@ -10,12 +10,8 @@ import sys
 from pyqode.qt import QtWidgets
 
 from . import __version__
-from .controllers import CobolController
-from .controllers import EditController
-from .controllers import FileController
-from .controllers import HelpController
-from .controllers import HomeController
-from .controllers import ViewController
+from .controllers import (CobolController, EditController, FileController,
+    HelpController, HomeController, ViewController)
 from .settings import Settings
 from .view.main_window import MainWindow
 from .compilers import check_compiler, CompilerNotFound
