@@ -115,7 +115,7 @@ class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
     @QtCore.Slot()
     def on_toolButton_clicked(self):
         ret = QtWidgets.QFileDialog.getExistingDirectory(
-            self, "Choose the program directory",
+            self, 'Choose the program directory',
             Settings().last_path)
         if ret:
             self.lineEditPath.setText(ret)

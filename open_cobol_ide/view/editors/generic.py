@@ -12,4 +12,4 @@ class GenericCodeEdit(widgets.GenericCodeEdit):
     def __init__(self, parent=None):
         super().__init__(
             parent, server_script=os.path.join(os.getcwd(), 'server.exe')
-            if hasattr(sys, "frozen") else server.__file__)
+            if hasattr(sys, 'frozen') else server.__file__)

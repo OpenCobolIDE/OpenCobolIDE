@@ -11,10 +11,10 @@ def _logger():
 
 def get_cobc_version():
     """ Returns the OpenCobol compiler version as a string """
-    cmd = ["cobc", "--version"]
+    cmd = ['cobc', '--version']
     try:
         _logger().debug('getting cobc version: %s' % ' '.join(cmd))
-        if sys.platform == "win32":
+        if sys.platform == 'win32':
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
             p = subprocess.Popen(cmd, shell=False, startupinfo=startupinfo,
@@ -25,7 +25,7 @@ def get_cobc_version():
                                  stderr=subprocess.PIPE)
     except OSError:
         _logger().exception('OpenCobol compiler not found')
-        return "Not installed"
+        return 'Not installed'
     else:
         stdout, stderr = p.communicate()
         stdout = str(stdout)
@@ -43,11 +43,11 @@ def check_env():
     :return:
     """
     version = get_cobc_version()
-    if version == "Not installed":
+    if version == 'Not installed':
         if sys.platform == 'win32':
-            expected_root_path = os.path.join(os.getcwd(), "OpenCobol")
-            expected_cobc_path = os.path.join(expected_root_path,
-                                              'bin', 'cobc.exe')
+            expected_root_path = os.path.join(os.getcwd(), 'OpenCobol')
+            expected_cobc_path = os.path.join(
+                expected_root_path, 'bin', 'cobc.exe')
             if not os.path.exists(expected_root_path):
                 _logger().warning('%s does not exists' % expected_root_path)
             elif not os.path.exists(expected_cobc_path):

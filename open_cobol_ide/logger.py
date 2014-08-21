@@ -47,7 +47,7 @@ def setup(version, debug):
     logger = logging.getLogger()
     formatter = logging.Formatter(
         '%(levelname)s::%(name)s::%(message)s',
-        "%Y-%m-%d %H:%M:%S")
+        '%Y-%m-%d %H:%M:%S')
     handlers = [logging.StreamHandler() ]
     logger.setLevel(level)
     for handler in handlers:

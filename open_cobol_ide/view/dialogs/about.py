@@ -29,7 +29,7 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
         self.tbwVersions.setColumnCount(1)
         self.tbwVersions.setRowCount(len(self.HEADERS))
         self.tbwVersions.setVerticalHeaderLabels(self.HEADERS)
-        self.tbwVersions.setHorizontalHeaderLabels(["Version"])
+        self.tbwVersions.setHorizontalHeaderLabels(['Version'])
         self.labelMain.setText(self.labelMain.text() % __version__)
         self.adjustSize()
         versions = [gnu_cobol.get_cobc_version(),

@@ -19,11 +19,11 @@ def _logger():
     return logging.getLogger(__name__)
 
 
-COBOL_FILES_FILTER = "Cobol files (%s)" % " ".join(
+COBOL_FILES_FILTER = 'Cobol files (%s)' % ' '.join(
     [ext.lower() for ext in CobolCodeEdit.extensions] +
-    CobolCodeEdit.extensions).replace(".", "*.")
-OTHER_FILES_FILTER = "Other text files (*)"
-FILTER_SEPARATOR = ";;"
+    CobolCodeEdit.extensions).replace('.', '*.')
+OTHER_FILES_FILTER = 'Other text files (*)'
+FILTER_SEPARATOR = ';;'
 
 
 class FileController(Controller):
@@ -62,7 +62,7 @@ class FileController(Controller):
         """
         Prompts the user for a file to open and open it.
         """
-        filter = "%s%s%s" % (COBOL_FILES_FILTER,
+        filter = '%s%s%s' % (COBOL_FILES_FILTER,
                              FILTER_SEPARATOR,
                              OTHER_FILES_FILTER)
         path, status = QtWidgets.QFileDialog.getOpenFileName(
@@ -87,17 +87,17 @@ class FileController(Controller):
         Settings().last_path = path
 
     def _save_as(self):
-        filter = "%s%s%s" % (COBOL_FILES_FILTER, FILTER_SEPARATOR,
+        filter = '%s%s%s' % (COBOL_FILES_FILTER, FILTER_SEPARATOR,
                              OTHER_FILES_FILTER)
         fn, filter = QtWidgets.QFileDialog.getSaveFileName(
-            self.main_window, "Save file as...",
+            self.main_window, 'Save file as...',
             self.ui.tabWidgetEditors.currentWidget().file.path, filter)
         if not fn:
             return
         # ensure correct extension
-        if os.path.splitext(fn)[1] == "":
+        if os.path.splitext(fn)[1] == '':
             if filter == COBOL_FILES_FILTER:
-                fn += ".cbl"
+                fn += '.cbl'
             else:
                 fn += '.txt'
         _logger().info('saving editor content as: %s', fn)
@@ -109,8 +109,8 @@ class FileController(Controller):
 
     def _on_quit(self):
         if QtWidgets.QMessageBox.question(
-                self.main_window, "Quit OpenCobolIDE?",
-                "Are you sure you want to quit OpenCobolIDE?",
+                self.main_window, 'Quit OpenCobolIDE?',
+                'Are you sure you want to quit OpenCobolIDE?',
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                 QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.Yes:
             _logger().debug('quit action triggered')

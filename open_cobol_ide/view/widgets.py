@@ -23,7 +23,7 @@ class RecentFilesListWidget(QtWidgets.QListWidget):
         self.customContextMenuRequested.connect(self.showContextMenu)
 
     def showContextMenu(self, pt):
-        actionRemove = QtWidgets.QAction("Remove from recent files list", self)
+        actionRemove = QtWidgets.QAction('Remove from recent files list', self)
         actionClear = QtWidgets.QAction('Clear recent files list', self)
         actionRemove.triggered.connect(self.remove_current_requested)
         actionClear.triggered.connect(self.clear_requested)

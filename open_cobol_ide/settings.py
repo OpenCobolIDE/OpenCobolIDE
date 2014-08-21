@@ -26,7 +26,7 @@ from pyqode.core.qt.QtCore import QSettings
 
 class Settings(object):
     def __init__(self):
-        self._settings = QSettings("OpenCobolIDE", "OpenCobolIDE")
+        self._settings = QSettings('OpenCobolIDE', 'OpenCobolIDE')
 
     def clear(self):
         self._settings.clear()
@@ -35,67 +35,67 @@ class Settings(object):
     # ------------------------------------------------------------------------
     @property
     def geometry(self):
-        v = self._settings.value("mainWindowGeometry")
+        v = self._settings.value('mainWindowGeometry')
         if v:
             return bytes(v)
         return None
 
     @geometry.setter
     def geometry(self, geometry):
-        self._settings.setValue("mainWindowGeometry", geometry)
+        self._settings.setValue('mainWindowGeometry', geometry)
 
     @property
     def state(self):
-        v = self._settings.value("mainWindowState")
+        v = self._settings.value('mainWindowState')
         if v:
             return bytes(v)
         return None
 
     @state.setter
     def state(self, state):
-        self._settings.setValue("mainWindowState", state)
+        self._settings.setValue('mainWindowState', state)
 
     @property
     def maximised(self):
-        return bool(int(self._settings.value("maximised", "0")))
+        return bool(int(self._settings.value('maximised', '0')))
 
     @maximised.setter
     def maximised(self, value):
-        self._settings.setValue("maximised", int(value))
+        self._settings.setValue('maximised', int(value))
 
     @property
     def fullscreen(self):
-        return bool(int(self._settings.value("fullscreen", "0")))
+        return bool(int(self._settings.value('fullscreen', '0')))
 
     @fullscreen.setter
     def fullscreen(self, value):
-        self._settings.setValue("fullscreen", int(value))
+        self._settings.setValue('fullscreen', int(value))
 
     @property
     def size(self):
-        return self._settings.value("size", QtCore.QSize(1200, 800))
+        return self._settings.value('size', QtCore.QSize(1200, 800))
 
     @size.setter
     def size(self, value):
-        self._settings.setValue("size", value)
+        self._settings.setValue('size', value)
 
     @property
     def outline_visible(self):
-        return bool(int(self._settings.value("navigationPanelVisible", "1")))
+        return bool(int(self._settings.value('navigationPanelVisible', '1')))
 
     @outline_visible.setter
     def outline_visible(self, value):
-        self._settings.setValue("navigationPanelVisible", int(value))
+        self._settings.setValue('navigationPanelVisible', int(value))
 
     @property
     def last_path(self):
         """
         Returns the last used open/save path
         """
-        default_value = ""
-        if sys.platform == "win32":
-            default_value = "c:\\"
-        return self._settings.value("lastUsedPath", default_value)
+        default_value = ''
+        if sys.platform == 'win32':
+            default_value = 'c:\\'
+        return self._settings.value('lastUsedPath', default_value)
 
     @last_path.setter
     def last_path(self, path):
@@ -105,7 +105,7 @@ class Settings(object):
         :param path: path string
         :type path: str or unicode
         """
-        self._settings.setValue("lastUsedPath", os.path.dirname(path))
+        self._settings.setValue('lastUsedPath', os.path.dirname(path))
 
     #
     # Editor settings settings
@@ -171,22 +171,22 @@ class Settings(object):
     #
     @property
     def dark_style(self):
-        return bool(int(self._settings.value("dark_style", "0")))
+        return bool(int(self._settings.value('dark_style', '0')))
 
     @dark_style.setter
     def dark_style(self, value):
-        self._settings.setValue("dark_style", value)
+        self._settings.setValue('dark_style', value)
 
     @property
     def font(self):
-        font = self._settings.value("fontName")
+        font = self._settings.value('fontName')
         if not font:
-            font = "Adobe Source Code"
+            font = 'Adobe Source Code'
         return font
 
     @font.setter
     def font(self, font):
-        self._settings.setValue("fontName", font)
+        self._settings.setValue('fontName', font)
 
     @property
     def font_size(self):
@@ -208,7 +208,7 @@ class Settings(object):
     # ----------------------
     @property
     def external_terminal(self):
-        return bool(int(self._settings.value('runInShell', "0")))
+        return bool(int(self._settings.value('runInShell', '0')))
 
     @external_terminal.setter
     def external_terminal(self, value):
@@ -219,12 +219,12 @@ class Settings(object):
         # works on gnome, what about KDE and how do I detect that?
         # at the moment just go with gnome, user can change that in the
         # settings dialog anyway
-        default_shell_cmd = "gnome-terminal -e"
-        return str(self._settings.value("shell", default_shell_cmd))
+        default_shell_cmd = 'gnome-terminal -e'
+        return str(self._settings.value('shell', default_shell_cmd))
 
     @external_terminal_command.setter
     def external_terminal_command(self, cmd):
-        self._settings.setValue("shell", cmd)
+        self._settings.setValue('shell', cmd)
 
     @property
     def custom_compiler_path(self):

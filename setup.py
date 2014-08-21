@@ -20,11 +20,11 @@ def read_version():
     """
     Reads the version without self importing
     """
-    with open("open_cobol_ide/__init__.py") as f:
+    with open('open_cobol_ide/__init__.py') as f:
         lines = f.read().splitlines()
         for l in lines:
-            if "__version__" in l:
-                return l.split("=")[1].strip().replace("'", '')
+            if '__version__' in l:
+                return l.split('=')[1].strip().replace("'", '')
 
 
 def run_as_root():
@@ -49,7 +49,7 @@ if int('%s%s' % sys.version_info[:2]) < 34:
 
 
 data_files = []
-if sys.platform == "linux" and run_as_root():
+if sys.platform == 'linux' and run_as_root():
     data_files.append(('/usr/share/applications',
                        ['share/open-cobol-ide.desktop']))
     data_files.append(('/usr/share/pixmaps', ['share/OpenCobolIDE.png']))
@@ -59,7 +59,7 @@ setup(
     name='OpenCobolIDE',
     version=read_version(),
     packages=[p for p in find_packages() if not 'test' in p],
-    keywords=["Cobol; OpenCobol; IDE"],
+    keywords=['Cobol; OpenCobol; IDE'],
     data_files=data_files,
     url='https://github.com/OpenCobolIDE/OpenCobolIDE',
     license='GPL v3',

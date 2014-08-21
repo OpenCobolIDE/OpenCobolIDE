@@ -47,9 +47,9 @@ class Application:
         except CompilerNotFound as e:
             QtWidgets.QMessageBox.warning(
                 self.win, 'Cobol compiler not found',
-                "Failed to find GnuCobol compiler!\n\n%s.\n\n"
+                'Failed to find GnuCobol compiler!\n\n%s.\n\n'
                 "The IDE will continue to work but you won't be able to "
-                "compile any file" % e)
+                'compile any file' % e)
 
     def __del__(self):
         _logger().debug('del app')
@@ -77,13 +77,13 @@ class Application:
         - set PATH to cobol library path only (erase previous values)
         """
         cwd = os.getcwd()
-        oc_root_pth = os.path.join(cwd, "OpenCobol")
-        os.environ["COB_CONFIG_DIR"] = os.path.join(oc_root_pth, "config")
-        os.environ["COB_COPY_DIR"] = os.path.join(oc_root_pth, "copy")
-        os.environ["COB_LIBRARY_PATH"] = os.path.join(oc_root_pth, "bin")
-        os.environ["COB_INCLUDE_PATH"] = os.path.join(oc_root_pth, "include")
-        os.environ["COB_LIB_PATH"] = os.path.join(oc_root_pth, "lib")
-        os.environ["PATH"] = os.environ["COB_LIBRARY_PATH"]
+        oc_root_pth = os.path.join(cwd, 'OpenCobol')
+        os.environ['COB_CONFIG_DIR'] = os.path.join(oc_root_pth, 'config')
+        os.environ['COB_COPY_DIR'] = os.path.join(oc_root_pth, 'copy')
+        os.environ['COB_LIBRARY_PATH'] = os.path.join(oc_root_pth, 'bin')
+        os.environ['COB_INCLUDE_PATH'] = os.path.join(oc_root_pth, 'include')
+        os.environ['COB_LIB_PATH'] = os.path.join(oc_root_pth, 'lib')
+        os.environ['PATH'] = os.environ['COB_LIBRARY_PATH']
 
     @staticmethod
     def _osx_init():
@@ -91,4 +91,4 @@ class Application:
         paths = ['/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin',
                  '/usr/local/sbin', '/opt/bin', '/opt/sbin', '/opt/local/bin',
                  '/opt/local/sbin']
-        os.environ["PATH"] = ':'.join(paths)
+        os.environ['PATH'] = ':'.join(paths)

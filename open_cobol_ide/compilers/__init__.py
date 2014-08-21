@@ -36,7 +36,7 @@ def check_compiler():
                   'non standard directory, you can specify that directory ' \
                   'in the preferences dialog (build & run tab).'
         else:
-            msg = "You have to install the package open-cobol using your " \
+            msg = 'You have to install the package open-cobol using your ' \
                   "distribution's package manager"
         raise CompilerNotFound(msg)
 
@@ -67,7 +67,7 @@ def get_file_type(path, encoding):
                 lines = f.readlines()
                 for l in lines:
                     # This is a subprogram
-                    if "PROCEDURE DIVISION USING" in l.upper():
+                    if 'PROCEDURE DIVISION USING' in l.upper():
                         ftype = FileType.MODULE
                         break
         except IOError or OSError:

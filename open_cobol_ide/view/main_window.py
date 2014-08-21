@@ -32,7 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.restore_state()
 
     def __del__(self):
-        _logger().debug("del main window")
+        _logger().debug('del main window')
 
     def save_state(self):
         s = Settings()

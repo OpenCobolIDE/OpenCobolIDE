@@ -14,8 +14,8 @@ class CobolController(Controller):
         group.addAction(self.ui.actionProgram)
         group.addAction(self.ui.actionSubprogram)
         icon = QtGui.QIcon.fromTheme(
-            "application-x-executable",
-            QtGui.QIcon(":/ide-icons/rc/application-x-executable.png"))
+            'application-x-executable',
+            QtGui.QIcon(':/ide-icons/rc/application-x-executable.png'))
         self.bt_compile = QtWidgets.QToolButton()
         self.bt_compile.clicked.connect(self.ui.actionCompile.triggered.emit)
         self.bt_compile.setIcon(icon)
