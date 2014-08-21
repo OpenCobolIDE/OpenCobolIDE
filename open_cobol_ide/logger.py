@@ -6,10 +6,14 @@ import logging
 import logging.handlers
 import os
 
+from .system import get_cache_directory
+
 
 def get_path():
-    return os.path.join(os.path.expanduser("~"), ".OpenCobolIDE", "log")
+    pth = os.path.join(get_cache_directory(), ".log")
+    return pth
 
+print(get_path())
 
 def setup_logging(version, debug):
     """
