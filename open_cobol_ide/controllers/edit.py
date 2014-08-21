@@ -86,12 +86,15 @@ class EditController(Controller):
             editor = self.ui.tabWidgetEditors.currentWidget()
             self.main_window.setWindowTitle(
                 '[%s] - %s' % (editor.file.path, self.app.title))
+            # update tools (outline and offsets table)
             self.ui.twNavigation.set_editor(editor)
             self.ui.tableWidgetOffsets.set_editor(editor)
+            # update current editor menu
             self.ui.mnuActiveEditor.clear()
             self._mnu = self.current_editor.get_context_menu()
             self.ui.mnuActiveEditor.addActions(
                 self._mnu.actions())
+            self.app.cobol.display_file_type(editor)
 
     def _update_status_bar_labels(self):
         if self.current_editor:
