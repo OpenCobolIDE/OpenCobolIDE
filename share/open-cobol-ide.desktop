@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=open-cobol-ide
+Name=OpenCobolIDE
 Comment=A simple lightweight cobol IDE based on OpenCobol
 Exec=open-cobol-ide
 Terminal=false

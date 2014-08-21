@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>900</width>
-    <height>700</height>
+    <width>1202</width>
+    <height>824</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -34,7 +34,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -391,7 +391,6 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionCompile"/>
    <addaction name="actionRun"/>
   </widget>
   <widget class="QDockWidget" name="dockWidgetLogs">
@@ -410,8 +409,9 @@
        </property>
        <widget class="QWidget" name="tabCompiler">
         <attribute name="icon">
-         <iconset resource="ide.qrc">
-          <normaloff>:/ide-icons/rc/emblem-important.png</normaloff>:/ide-icons/rc/emblem-important.png</iconset>
+         <iconset theme="emblem-important">
+          <normaloff/>
+         </iconset>
         </attribute>
         <attribute name="title">
          <string>Issues</string>
@@ -442,8 +442,9 @@
        </widget>
        <widget class="QWidget" name="tabProgramOutput">
         <attribute name="icon">
-         <iconset resource="ide.qrc">
-          <normaloff>:/ide-icons/rc/media-playback-start.png</normaloff>:/ide-icons/rc/media-playback-start.png</iconset>
+         <iconset theme="media-playback-start">
+          <normaloff/>
+         </iconset>
         </attribute>
         <attribute name="title">
          <string>Output</string>
@@ -460,24 +461,6 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tabAppLog">
-        <attribute name="icon">
-         <iconset resource="ide.qrc">
-          <normaloff>:/ide-icons/rc/silex-32x32.png</normaloff>:/ide-icons/rc/silex-32x32.png</iconset>
-        </attribute>
-        <attribute name="title">
-         <string>Application log</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QTextEdit" name="textEditLogs">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
       </widget>
      </item>
     </layout>
@@ -488,8 +471,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>900</width>
-     <height>23</height>
+     <width>1202</width>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -522,33 +505,14 @@
     <property name="title">
      <string>View</string>
     </property>
-    <widget class="QMenu" name="menuToolbars">
+    <widget class="QMenu" name="menuPerspective">
      <property name="title">
-      <string>Toolbars</string>
+      <string>Perspective</string>
      </property>
-     <addaction name="aShowFilesToolbar"/>
-     <addaction name="aShowCodeToolbar"/>
+     <addaction name="actionClassicView"/>
+     <addaction name="actionMinimalView"/>
     </widget>
-    <widget class="QMenu" name="menuDock_panels">
-     <property name="title">
-      <string>Windows</string>
-     </property>
-     <addaction name="aShowLogsWin"/>
-     <addaction name="aShowNavWin"/>
-    </widget>
-    <widget class="QMenu" name="menuApplication_log">
-     <property name="title">
-      <string>Application log</string>
-     </property>
-     <addaction name="actionShowAppLog"/>
-     <addaction name="actionDebug_level"/>
-     <addaction name="separator"/>
-     <addaction name="actionClearLog"/>
-    </widget>
-    <addaction name="menuToolbars"/>
-    <addaction name="menuDock_panels"/>
-    <addaction name="separator"/>
-    <addaction name="menuApplication_log"/>
+    <addaction name="menuPerspective"/>
     <addaction name="separator"/>
     <addaction name="actionFullscreen"/>
    </widget>
@@ -600,7 +564,7 @@
       <number>6</number>
      </property>
      <item row="0" column="0">
-      <widget class="QTreeWidget" name="twNavigation">
+      <widget class="OutlineTreeWidget" name="twNavigation">
        <attribute name="headerVisible">
         <bool>false</bool>
        </attribute>
@@ -630,7 +594,7 @@
    <widget class="QWidget" name="dockWidgetContents_3">
     <layout class="QGridLayout" name="gridLayout_8">
      <item row="0" column="0">
-      <widget class="QTableWidget" name="tableWidgetOffsets">
+      <widget class="PicOffsetsTable" name="tableWidgetOffsets">
        <property name="minimumSize">
         <size>
          <width>300</width>
@@ -701,24 +665,6 @@
     <bool>true</bool>
    </property>
   </action>
-  <action name="actionCompile">
-   <property name="icon">
-    <iconset theme="exec" resource="ide.qrc">
-     <normaloff>:/ide-icons/rc/applications-system.png</normaloff>:/ide-icons/rc/applications-system.png</iconset>
-   </property>
-   <property name="text">
-    <string>Compile</string>
-   </property>
-   <property name="toolTip">
-    <string>Compile the current file (F8)</string>
-   </property>
-   <property name="shortcut">
-    <string>F8</string>
-   </property>
-   <property name="iconVisibleInMenu">
-    <bool>true</bool>
-   </property>
-  </action>
   <action name="actionRun">
    <property name="icon">
     <iconset theme="media-playback-start" resource="ide.qrc">
@@ -739,7 +685,7 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="ide.qrc">
+    <iconset theme="help-about" resource="ide.qrc">
      <normaloff>:/ide-icons/rc/silex-64x64.png</normaloff>:/ide-icons/rc/silex-64x64.png</iconset>
    </property>
    <property name="text">
@@ -927,7 +873,7 @@
   </action>
   <action name="actionHelp">
    <property name="icon">
-    <iconset theme="help">
+    <iconset theme="help-contents">
      <normaloff/>
     </iconset>
    </property>
@@ -1014,18 +960,45 @@
     <bool>true</bool>
    </property>
   </action>
+  <action name="actionMinimal">
+   <property name="text">
+    <string>Minimal</string>
+   </property>
+  </action>
+  <action name="actionClassicView">
+   <property name="text">
+    <string>Classic</string>
+   </property>
+  </action>
+  <action name="actionMinimalView">
+   <property name="text">
+    <string>Minimal</string>
+   </property>
+  </action>
+  <action name="actionCompile">
+   <property name="icon">
+    <iconset theme="exec">
+     <normaloff>:/ide-icons/rc/applications-system.png</normaloff>:/ide-icons/rc/applications-system.png</iconset>
+   </property>
+   <property name="text">
+    <string>Compile</string>
+   </property>
+   <property name="toolTip">
+    <string>Compile the current file (F8)</string>
+   </property>
+   <property name="shortcut">
+    <string>F8</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
    <class>InteractiveConsole</class>
    <extends>QTextEdit</extends>
    <header>pyqode.core.widgets</header>
-  </customwidget>
-  <customwidget>
-   <class>TabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>pyqode.core.widgets</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>ErrorsTable</class>
@@ -1035,7 +1008,23 @@
   <customwidget>
    <class>RecentFilesListWidget</class>
    <extends>QListWidget</extends>
-   <header>oci/frontend/widgets</header>
+   <header>open_cobol_ide/view/widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>TabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>pyqode.core.widgets</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>OutlineTreeWidget</class>
+   <extends>QTreeWidget</extends>
+   <header>pyqode.cobol.widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>PicOffsetsTable</class>
+   <extends>QTableWidget</extends>
+   <header>pyqode.cobol.widgets</header>
   </customwidget>
  </customwidgets>
  <resources>

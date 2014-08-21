@@ -17,6 +17,7 @@ install:
  - sudo apt-get install open-cobol
  - sudo apt-get install python3-pyqt4;
  - pip install git+https://github.com/pyQode/pyqode.core.git@develop
+ - pip install git+https://github.com/pyQode/pyqode.cobol.git@develop
  # PyQt5 (won't be available untill travis upgrade to ubuntu 14.04
  - if [ $QT_API = "PyQt5" ]; then
    sudo apt-get install -qq python3-pyqt5 --fix-missing;

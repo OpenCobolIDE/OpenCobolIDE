@@ -20,11 +20,11 @@ def read_version():
     """
     Reads the version without self importing
     """
-    with open("oci/__init__.py") as f:
+    with open('open_cobol_ide/__init__.py') as f:
         lines = f.read().splitlines()
         for l in lines:
-            if "__version__" in l:
-                return l.split("=")[1].strip().replace('"', "")
+            if '__version__' in l:
+                return l.split('=')[1].strip().replace("'", '')
 
 
 def run_as_root():
@@ -38,7 +38,10 @@ with open('README.rst', 'r') as readme:
 
 # install requirements
 requirements = [
-    'pygments>=1.6', 'pyqode.core>=2.0.0', 'qdarkstyle>=1.11', 'chardet'
+    'pygments>=1.6',
+    'pyqode.core>=2.1.0',
+    'pyqode.cobol',
+    'qdarkstyle>=1.11',
 ]
 if int('%s%s' % sys.version_info[:2]) < 34:
     # python < 3.4 needs enum backport package
@@ -46,7 +49,7 @@ if int('%s%s' % sys.version_info[:2]) < 34:
 
 
 data_files = []
-if sys.platform == "linux" and run_as_root():
+if sys.platform == 'linux' and run_as_root():
     data_files.append(('/usr/share/applications',
                        ['share/open-cobol-ide.desktop']))
     data_files.append(('/usr/share/pixmaps', ['share/OpenCobolIDE.png']))
@@ -56,8 +59,7 @@ setup(
     name='OpenCobolIDE',
     version=read_version(),
     packages=[p for p in find_packages() if not 'test' in p],
-    keywords=["Cobol; OpenCobol; IDE"],
-    package_dir={'oci': 'oci', "oci_designer_plugins": "oci_designer_plugins"},
+    keywords=['Cobol; OpenCobol; IDE'],
     data_files=data_files,
     url='https://github.com/OpenCobolIDE/OpenCobolIDE',
     license='GPL v3',
@@ -65,11 +67,8 @@ setup(
     author_email='colin.duquesnoy@gmail.com',
     description='A simple cobol IDE',
     long_description=long_desc,
-    zip_safe=False,
     install_requires=requirements,
-    entry_points={'gui_scripts': ['open-cobol-ide = oci.main:main'],
-                  'pyqode_plugins': [
-                      'oci_widgets = oci_designer_plugins.cobol_plugin']},
+    entry_points={'gui_scripts': ['OpenCobolIDE = open_cobol_ide.main:main']},
     cmdclass=cmdclass,
     classifiers=[
         'Development Status :: 5 - Production/Stable',

@@ -25,7 +25,7 @@ AllowNoIcons=yes
 LicenseFile=LICENSE
 OutputDir=dist
 OutputBaseFilename=OpenCobolIDE-{#MyAppVersion}_Setup
-SetupIconFile=oci\frontend\ui\rc\silex-icon.ico
+SetupIconFile=forms\rc\silex-icon.ico
 Compression=lzma
 SolidCompression=yes
 
