@@ -3,43 +3,15 @@ This module contains all the classes related to logging the
 application messages.
 """
 import logging
-from pyqode.core.qt.QtCore import QObject, Signal
-from pyqode.core.qt.QtGui import QTextCursor
+import logging.handlers
+import os
 
 
-class TextEditWriter(QObject):
-    """
-    Writes to the text edit in a thread safe way
-
-    (using an internal signal to ensure QTextEdit.append will always be
-    called from the main gui thread)
-    """
-    _append_msg_requested = Signal(str)
-
-    def __init__(self, text_edit):
-        super().__init__()
-        self.text_edit = text_edit
-        self._append_msg_requested.connect(self._append)
-
-    def _append(self, message):
-        self.text_edit.append(message)
-        self.text_edit.moveCursor(QTextCursor.End)
-
-    def request_append(self, message):
-        self._append_msg_requested.emit(message)
+def get_path():
+    return os.path.join(os.path.expanduser("~"), ".OpenCobolIDE", "log")
 
 
-class TextEditHandler(logging.Handler):
-    def __init__(self, text_edit):
-        super().__init__()
-        self.writer = TextEditWriter(text_edit)
-
-    def emit(self, record):
-        assert isinstance(record, logging.LogRecord)
-        self.writer.request_append(self.formatter.format(record))
-
-
-def setup(version, debug):
+def setup_logging(version, debug):
     """
     Configures the logger
     """
@@ -48,7 +20,10 @@ def setup(version, debug):
     formatter = logging.Formatter(
         '%(levelname)s::%(name)s::%(message)s',
         '%Y-%m-%d %H:%M:%S')
-    handlers = [logging.StreamHandler() ]
+    handlers = [
+        logging.StreamHandler(),
+        logging.FileHandler(get_path(), mode='w')
+    ]
     logger.setLevel(level)
     for handler in handlers:
         handler.setFormatter(formatter)

@@ -13,7 +13,7 @@ def main():
     Application entry point.
 
     """
-    logger.setup(__version__, debug=True)
+    logger.setup_logging(__version__, debug=True)
     app = Application()
     ret_code = app.run()
     del app
