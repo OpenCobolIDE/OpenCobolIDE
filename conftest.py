@@ -9,12 +9,14 @@ from open_cobol_ide.app import Application
 from open_cobol_ide.logger import setup_logging
 
 setup_logging(__version__, debug=True)
-_app = Application()
+
+_app = None
 
 
 @pytest.fixture(scope="session")
 def app(request):
     global _app
+    _app = Application()
 
     def fin():
         global _app

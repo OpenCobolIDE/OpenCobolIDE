@@ -28,6 +28,9 @@ pip-log.txt
 .tox
 nosetests.xml
 
+# PEP8 tests
+.cache
+
 # Translations
 *.mo
 

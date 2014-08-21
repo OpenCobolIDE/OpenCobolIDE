@@ -4,10 +4,12 @@ python:
 env:
   - QT_API=PyQt4
   - QT_API=PyQt5
+  - PEP8=1
   - COV=1
 matrix:
   allow_failures:
       - env: COV=1
+      - env: PEP8=1
       - env: QT_API=PyQt5
 virtualenv:
   system_site_packages: true
@@ -32,4 +34,8 @@ script:
  - if [ $COV ]; then
    pip install pytest-cov;
    python3 runtests.py --cov open_cobol_ide;
+   fi
+ - if [ $PEP8 ]; then
+   pip install pytest-pep8;
+   python3 runtests.py --pep8 -m pep8;
    fi
