@@ -5,30 +5,16 @@ Setup script for OpenCobolIDE
 You will need to install pyqode.core.qt (or PyQt5) and OpenCobol on your own.
 
 """
-import os
 import sys
 from setuptools import setup, find_packages
+from open_cobol_ide import __version__
+
 try:
     from pyqt_distutils.build_ui import build_ui
     cmdclass = {'build_ui': build_ui}
 except ImportError:
     build_ui = None
     cmdclass = {}
-
-
-def read_version():
-    """
-    Reads the version without self importing
-    """
-    with open('open_cobol_ide/__init__.py') as f:
-        lines = f.read().splitlines()
-        for l in lines:
-            if '__version__' in l:
-                return l.split('=')[1].strip().replace("'", '')
-
-
-def run_as_root():
-    return os.getuid() == 0
 
 
 # get long description
@@ -49,7 +35,7 @@ if int('%s%s' % sys.version_info[:2]) < 34:
 
 
 data_files = []
-if sys.platform == 'linux' and run_as_root():
+if sys.platform == 'linux':
     data_files.append(('/usr/share/applications',
                        ['share/open-cobol-ide.desktop']))
     data_files.append(('/usr/share/pixmaps', ['share/OpenCobolIDE.png']))
@@ -57,7 +43,7 @@ if sys.platform == 'linux' and run_as_root():
 
 setup(
     name='OpenCobolIDE',
-    version=read_version(),
+    version=__version__,
     packages=[p for p in find_packages() if not 'test' in p],
     keywords=['Cobol; OpenCobol; IDE'],
     data_files=data_files,
