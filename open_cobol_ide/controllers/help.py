@@ -14,7 +14,7 @@ class HelpController(Controller):
 
     def _show_help_contents(self):
         QtGui.QDesktopServices.openUrl(
-            QtCore.QUrl("http://opencobolide.readthedocs.org/en/latest/"))
+            QtCore.QUrl('http://opencobolide.readthedocs.org/en/latest/'))
 
     def _show_about_dlg(self):
         dlg = DlgAbout(self.main_window)

@@ -10,7 +10,9 @@ def _logger():
 
 
 def get_cobc_version():
-    """ Returns the OpenCobol compiler version as a string """
+    """
+    Returns the OpenCobol compiler version as a string
+    """
     cmd = ['cobc', '--version']
     try:
         _logger().debug('getting cobc version: %s' % ' '.join(cmd))
@@ -51,7 +53,7 @@ def check_env():
             if not os.path.exists(expected_root_path):
                 _logger().warning('%s does not exists' % expected_root_path)
             elif not os.path.exists(expected_cobc_path):
-                _logger().warning('%s does not exisits' % expected_cobc_path)
+                _logger().warning('%s does not exists' % expected_cobc_path)
             else:
                 _logger().info('cobc.exe found but not usable.')
         return False
