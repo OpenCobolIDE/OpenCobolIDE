@@ -39,3 +39,8 @@ script:
    pip install pytest-pep8;
    python3 runtests.py --pep8 -m pep8;
    fi
+after_script:
+  - if [ $COV ]; then
+    sudo pip install --quiet coveralls;
+    coveralls;
+    fi
