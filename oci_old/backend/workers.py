@@ -1,9 +1,9 @@
 import os
 
-from oci import constants
-from oci.backend import compiler
-from oci.backend.parser import detect_file_type, parse_ast
-from oci.settings import Settings
+from oci_old import constants
+from oci_old.backend import compiler
+from oci_old.backend.parser import detect_file_type, parse_ast
+from oci_old.settings import Settings
 
 
 def checkFile(data):

@@ -505,6 +505,6 @@ class Ui_MainWindow(object):
         self.actionShowAppLog.setToolTip(_translate("MainWindow", "Show/hide application log window"))
         self.actionClearLog.setText(_translate("MainWindow", "Clear"))
 
-from oci.frontend.widgets import RecentFilesListWidget
+from oci_old.frontend.widgets import RecentFilesListWidget
 from pyqode.core.widgets import TabWidget, ErrorsTable, InteractiveConsole
 from . import ide_rc

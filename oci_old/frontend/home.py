@@ -2,8 +2,8 @@
 from pyqode.core import widgets
 from pyqode.core.qt import QtWidgets, QtCore, QtGui
 
-from oci import constants
-from oci.frontend import services
+from oci_old import constants
+from oci_old.frontend import services
 
 
 frame_recent_white = """

@@ -10,7 +10,7 @@ import logging
 import os
 from pyqode.core.modes import CheckerMessage
 from pyqode.core.qt import QtCore, QtWidgets, QtGui
-from oci.backend.compiler import parse_output
+from oci_old.backend.compiler import parse_output
 
 
 def _logger():

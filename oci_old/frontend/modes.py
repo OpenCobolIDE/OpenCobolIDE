@@ -26,10 +26,10 @@ from pyqode.core.qt.QtGui import QTextCursor, QIcon
 from pyqode.core.api import Mode, TextHelper, DelayJobRunner
 from pyqode.core.modes import CheckerMode, RightMarginMode
 
-from oci.backend import workers
-from oci.backend.parser import cmp_doc_node, parse_ast
-from oci.backend.pic_parser import get_field_infos
-from oci.settings import Settings
+from oci_old.backend import workers
+from oci_old.backend.parser import cmp_doc_node, parse_ast
+from oci_old.backend.pic_parser import get_field_infos
+from oci_old.settings import Settings
 
 
 class ToUpperMode(Mode):

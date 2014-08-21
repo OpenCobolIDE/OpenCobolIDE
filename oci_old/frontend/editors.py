@@ -29,12 +29,12 @@ from pyqode.core import modes
 from pyqode.core import api
 from pyqode.core import managers
 
-from oci import constants
-from oci.backend import server
-from oci.backend.parser import detect_file_type
-from oci.frontend import modes as cob_modes, services
-from oci.frontend import panels as cob_panels
-from oci.settings import Settings
+from oci_old import constants
+from oci_old.backend import server
+from oci_old.backend.parser import detect_file_type
+from oci_old.frontend import modes as cob_modes, services
+from oci_old.frontend import panels as cob_panels
+from oci_old.settings import Settings
 
 
 for ext in constants.COBOL_EXTENSIONS:

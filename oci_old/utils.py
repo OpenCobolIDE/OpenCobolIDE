@@ -4,7 +4,7 @@ This module contains utility functions
 import os
 from pyqode.core.qt import QtGui, QtCore, QtWidgets
 import sys
-from oci.settings import Settings
+from oci_old.settings import Settings
 
 
 AST_ICONS = {

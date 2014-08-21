@@ -26,7 +26,7 @@ maintained by the OpenCobolIDE organization: https://github.com/OpenCobolIDE/Pyt
 PLEASE, if you want to do any modification on the cobol.py script, do it
 on the fork then copy the script here!!!
 """
-from oci.backend.pic_parser.cobol import parse_cobol
+from oci_old.backend.pic_parser.cobol import parse_cobol
 
 
 class PicFieldInfo(object):

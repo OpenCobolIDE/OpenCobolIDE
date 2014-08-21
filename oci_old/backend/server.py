@@ -8,7 +8,7 @@ On Windows, this script is frozen by freeze_setup.py (cx_Freeze).
 """
 from pyqode.core import backend
 
-from oci.backend.workers import CobolAnalyserProvider
+from oci_old.backend.workers import CobolAnalyserProvider
 
 
 if __name__ == '__main__':

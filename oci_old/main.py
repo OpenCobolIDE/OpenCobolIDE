@@ -21,8 +21,8 @@ import logging
 logging.basicConfig(level=logging.INFO)
 import sys
 from pyqode.core.qt import QtWidgets
-from oci.utils import init_env
-from oci.frontend.main_window import MainWindow
+from oci_old.utils import init_env
+from oci_old.frontend.main_window import MainWindow
 
 
 def main():

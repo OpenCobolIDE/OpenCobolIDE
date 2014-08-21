@@ -20,8 +20,8 @@ Contains and functions to cobol source code analysis
 import logging
 import os
 import sys
-from oci import constants
-from oci.settings import Settings
+from oci_old import constants
+from oci_old.settings import Settings
 
 
 class Statement(object):

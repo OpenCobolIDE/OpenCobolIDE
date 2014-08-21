@@ -28,14 +28,14 @@ from pyqode.core.qt import QtCore, QtGui, QtWidgets
 from pyqode.core.qt.QtWidgets import QTreeWidgetItem
 from pyqode.core.qt.QtWidgets import QMessageBox
 
-import oci
-from oci import __version__, constants, utils
-from oci.settings import Settings
-from oci.backend import compiler
-from oci.backend.pic_parser import PicFieldInfo
-from oci.frontend import home, dialogs, editors, services, logger
-from oci.frontend import compiler as compiler_frontend
-from oci.frontend.ui import ide_ui
+import oci_old
+from oci_old import __version__, constants, utils
+from oci_old.settings import Settings
+from oci_old.backend import compiler
+from oci_old.backend.pic_parser import PicFieldInfo
+from oci_old.frontend import home, dialogs, editors, services, logger
+from oci_old.frontend import compiler as compiler_frontend
+from oci_old.frontend.ui import ide_ui
 
 
 def _logger():
@@ -269,7 +269,7 @@ class MainWindow(QtWidgets.QMainWindow, ide_ui.Ui_MainWindow):
     def on_actionDebug_level_triggered(self):
         state = self.actionDebug_level.isChecked()
         Settings().debugLog = state
-        l = logging.getLogger(oci.__name__)
+        l = logging.getLogger(oci_old.__name__)
         l.setLevel(logging.DEBUG if state else logging.INFO)
 
     @QtCore.Slot(int)

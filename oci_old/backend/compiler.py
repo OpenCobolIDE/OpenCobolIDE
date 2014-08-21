@@ -22,8 +22,8 @@ import shutil
 import os
 import subprocess
 import sys
-from oci import constants
-from oci.settings import Settings
+from oci_old import constants
+from oci_old.settings import Settings
 
 
 class InitializationFailed(Exception):
@@ -76,7 +76,7 @@ def get_all_commands(filename, encoding, filetype):
 
     :return: List of tuples.
     """
-    from oci.backend import parser
+    from oci_old.backend import parser
     deps = parser.parse_dependencies(filename, encoding)
     return ([cmd_for(path, fileType=pgmType) for path, pgmType in deps] +
             [cmd_for(filename, fileType=filetype)])

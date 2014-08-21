@@ -7,10 +7,10 @@ import logging
 from pyqode.core.qt.QtCore import QObject, Signal
 from pyqode.core.qt.QtGui import QTextCursor
 
-import oci
+import oci_old
 
-from oci import __version__
-from oci.settings import Settings
+from oci_old import __version__
+from oci_old.settings import Settings
 
 
 class TextEditWriter(QObject):
@@ -56,7 +56,7 @@ def setup(text_edit):
     :param text_edit: QTextEdit where to log messages
     """
     level = logging.DEBUG if Settings().debugLog else logging.INFO
-    loggers = [logging.getLogger(oci.__name__), logging.getLogger('pyqode')]
+    loggers = [logging.getLogger(oci_old.__name__), logging.getLogger('pyqode')]
     formatter = logging.Formatter(
         '%(levelname)s::%(name)s::%(message)s',
         "%Y-%m-%d %H:%M:%S")
@@ -72,5 +72,5 @@ def setup(text_edit):
 
 
 def close():
-    logging.getLogger(oci.__name__).handlers[:] = [logging.StreamHandler()]
+    logging.getLogger(oci_old.__name__).handlers[:] = [logging.StreamHandler()]
     logging.getLogger('pyqode').handlers[:] = [logging.StreamHandler()]

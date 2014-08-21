@@ -27,11 +27,11 @@ import qdarkstyle
 import pyqode.core
 import sys
 
-from oci.backend import compiler
-from oci import __version__
-from oci.constants import TEMPLATES, CobolStandard
-from oci.settings import Settings
-from oci.frontend.ui import dlg_about_ui, dlg_file_type_ui, dlg_preferences_ui
+from oci_old.backend import compiler
+from oci_old import __version__
+from oci_old.constants import TEMPLATES, CobolStandard
+from oci_old.settings import Settings
+from oci_old.frontend.ui import dlg_about_ui, dlg_file_type_ui, dlg_preferences_ui
 
 
 class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
