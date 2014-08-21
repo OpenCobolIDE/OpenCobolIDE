@@ -4,8 +4,11 @@ in functional tests.
 
 """
 import pytest
+from open_cobol_ide import __version__
 from open_cobol_ide.app import Application
+from open_cobol_ide.logger import setup_logging
 
+setup_logging(__version__, debug=True)
 _app = Application()
 
 

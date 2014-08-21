@@ -4,8 +4,10 @@ python:
 env:
   - QT_API=PyQt4
   - QT_API=PyQt5
+  - COV=1
 matrix:
   allow_failures:
+      - env: COV=1
       - env: QT_API=PyQt5
 virtualenv:
   system_site_packages: true
@@ -26,4 +28,8 @@ script:
  - pip install .
  - if [ $QT_API ]; then
    python3 runtests.py;
+   fi
+ - if [ $COV ]; then
+   pip install pytest-cov;
+   python3 runtests.py --cov open_cobol_ide;
    fi
