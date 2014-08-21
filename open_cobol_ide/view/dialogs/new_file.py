@@ -81,7 +81,7 @@ MODULE_TEMPLATE = """      *****************************************************
 
 """
 
-TEMPLATES = [EXE_TEMPLATE, MODULE_TEMPLATE, ""]
+TEMPLATES = [EXE_TEMPLATE, MODULE_TEMPLATE, '']
 
 
 class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
@@ -91,7 +91,9 @@ class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
             self.lineEditName.text() + self.comboBoxExtension.currentText())
 
     def template(self):
-        """ Gets the file template"""
+        """
+        Gets the file template
+        """
         return TEMPLATES[self.comboBoxType.currentIndex()]
 
     def __init__(self, parent):
