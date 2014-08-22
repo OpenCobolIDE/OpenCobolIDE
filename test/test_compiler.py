@@ -1,54 +1,34 @@
-# """
-# Tests the compiler module
-# """
-# import shutil
-#
-# from oci import constants
-# from oci.backend import compiler
-#
-#
-# def teardown_module():
-#     shutil.rmtree('test/testfiles/bin')
-#     shutil.rmtree('test/testfiles/path with spaces/bin')
-#
-#
-# def test_compile_exe():
-#     """
-#     Compiles an executable (.exe)
-#     """
-#     status, messages = compiler.compile('test/testfiles/HelloWorld.cbl',
-#                                         constants.ProgramType.Executable)
-#     assert status == 0
-#     assert len(messages) == 0
-#
-#
-# def test_compile_so():
-#     """
-#     Compiles a module (.so)
-#     """
-#     status, messages = compiler.compile(
-#         'test/testfiles/VIRTUAL-PRINTER.cbl',
-#         constants.ProgramType.Module)
-#     assert status == 0
-#     assert len(messages) == 0
-#
-#
-# def test_compile_path_with_spaces():
-#     """
-#     Compiles a file located in path that contains spaces (see bug #5)
-#     """
-#     status, messages = compiler.compile(
-#         'test/testfiles/path with spaces/HelloWorld.cbl',
-#         constants.ProgramType.Executable)
-#     assert status == 0
-#     assert len(messages) == 0
-#
-#
-# def test_compile_path_with_errors():
-#     """
-#     Compiles a file that contains errors
-#     """
-#     status, messages = compiler.compile('test/testfiles/MALFORMED.cbl',
-#                                         constants.ProgramType.Executable)
-#     assert status != 0
-#     assert len(messages)
+"""
+Tests the compiler module
+"""
+import re
+import pytest
+from open_cobol_ide import system
+from open_cobol_ide.compilers import GnuCobolCompiler, FileType
+
+
+def test_extensions():
+    exts = GnuCobolCompiler().extensions
+    if system.windows:
+        assert exts[0] == '.exe'
+        assert exts[1] == '.dll'
+    else:
+        assert exts[0] == ''
+        assert exts[1] == '.so'
+
+
+def test_is_working():
+    assert GnuCobolCompiler().is_working()
+
+
+def test_get_version():
+    prog = re.compile(r'^\d.\d.\d$')
+    assert prog.match(GnuCobolCompiler().get_version()) is not None
+
+
+@pytest.mark.parametrize('file_type, expected', [
+    (FileType.EXECUTABLE, '.exe' if system.windows else ''),
+    (FileType.MODULE, '.dll' if system.windows else '.so'),
+])
+def test_type_extension(file_type, expected):
+    assert GnuCobolCompiler().extension_for_type(file_type) == expected

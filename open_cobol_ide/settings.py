@@ -19,9 +19,9 @@ Gives an easy and safe access to the app settings
 import json
 import os
 import sys
-from pyqode.core.qt import QtCore, QtGui
+from pyqode.core.qt import QtCore
 from pyqode.core.qt.QtCore import QSettings
-# from .constants import CobolStandard
+from .compilers import GnuCobolStandard
 
 
 class Settings(object):
@@ -256,13 +256,14 @@ class Settings(object):
     def comment_indicator(self, value):
         self._settings.setValue('comment_indicator', value)
 
-    # @property
-    # def cobol_standard(self):
-    #     return CobolStandard(int(self._settings.value('cobc_standard', '0')))
-    #
-    # @cobol_standard.setter
-    # def cobol_standard(self, value):
-    #     self._settings.setValue('cobc_standard', int(value))
+    @property
+    def cobol_standard(self):
+        return GnuCobolStandard(int(self._settings.value(
+            'cobc_standard', '0')))
+
+    @cobol_standard.setter
+    def cobol_standard(self, value):
+        self._settings.setValue('cobc_standard', int(value))
 
     # Cache
     def get_file_type(self, file_path):

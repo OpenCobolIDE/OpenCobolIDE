@@ -1,8 +1,8 @@
 import logging
 import sys
 from enum import IntEnum
+from .gnu_cobol import GnuCobolCompiler
 from ..settings import Settings
-from . import gnu_cobol
 
 
 def _logger():
@@ -23,7 +23,7 @@ def check_compiler():
     :raises: CompilerNotFound if no compiler could be found.
 
     """
-    if not gnu_cobol.is_working():
+    if not GnuCobolCompiler().is_working():
         if sys.platform == 'win32':
             msg = 'OpenCobol is bundled with the IDE. Ensure that ' \
                   'the IDE is installed in a path without spaces and ' \

@@ -6,7 +6,8 @@ import qdarkstyle
 from pyqode.qt import QtCore, QtWidgets
 from ..forms import dlg_about_ui
 from ... import __version__
-from ...compilers import gnu_cobol
+from ...compilers import GnuCobolCompiler
+from open_cobol_ide.compilers.gnu_cobol import GnuCobolCompiler
 
 
 class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
@@ -32,7 +33,7 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
         self.tbwVersions.setHorizontalHeaderLabels(['Version'])
         self.labelMain.setText(self.labelMain.text() % __version__)
         self.adjustSize()
-        versions = [gnu_cobol.get_cobc_version(),
+        versions = [GnuCobolCompiler().get_version(),
                     QtCore.QT_VERSION_STR,
                     QtCore.PYQT_VERSION_STR,
                     pyqode.core.__version__,
