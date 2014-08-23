@@ -5,10 +5,21 @@ Integration test:
   - compile it
   - run the generated executable
 """
+import os
 from pyqode.qt.QtTest import QTest
+from open_cobol_ide import system
 from open_cobol_ide.controllers.view import Page
 
-path = 'test/testfiles/HelloWorld.cbl'
+path = os.path.join(os.getcwd(), 'test', 'testfiles', 'HelloWorld.cbl')
+compiled_path = os.path.join(
+    os.getcwd(), 'test', 'testfiles', 'bin',
+    'HelloWorld' + ('.exe' if system.windows else ''))
+
+expected_output = """%s
+Hello world
+
+Process finished with exit code 0""" % (compiled_path + ' ')
+print(expected_output)
 
 
 def test_functional(app):
@@ -25,6 +36,7 @@ def test_functional(app):
     app.cobol.compile()
     QTest.qWait(1000)
     app.cobol.ui.errorsTable.rowCount() == 1
-    # app.cobol.run()
-    # QTest.qWait(2000)
+    app.cobol.run()
+    QTest.qWait(1000)
+    assert app.win.ui.consoleOutput.toPlainText() == expected_output
 
