@@ -32,6 +32,7 @@ class CompilationThread(QtCore.QThread):
 class CobolController(Controller):
     def __init__(self, app):
         super().__init__(app)
+        self._compilation_thread = None
         group = QtWidgets.QActionGroup(self.main_window)
         group.addAction(self.ui.actionProgram)
         group.addAction(self.ui.actionSubprogram)
@@ -52,6 +53,7 @@ class CobolController(Controller):
         self.ui.actionRun.triggered.connect(self.run)
         self._run_requested = False
         self.ui.consoleOutput.process_finished.connect(self._on_run_finished)
+        self.ui.actionCancel.triggered.connect(self._on_action_cancel)
 
     def display_file_type(self, editor):
         try:
@@ -61,14 +63,16 @@ class CobolController(Controller):
         else:
             self.ui.actionProgram.setChecked(ftype == FileType.EXECUTABLE)
             self.ui.actionSubprogram.setChecked(ftype != FileType.EXECUTABLE)
-            self.ui.actionRun.setEnabled(ftype == FileType.EXECUTABLE)
+            self.ui.actionRun.setEnabled(ftype == FileType.EXECUTABLE and
+                                         not self.ui.consoleOutput.is_running)
 
     def _on_program_type_changed(self, action):
         try:
             if action == self.ui.actionProgram:
                 self.ui.tabWidgetEditors.currentWidget().file_type = \
                     FileType.EXECUTABLE
-                self.ui.actionRun.setEnabled(True)
+                self.ui.actionRun.setEnabled(
+                    not self.ui.consoleOutput.is_running)
             else:
                 self.ui.tabWidgetEditors.currentWidget().file_type = \
                     FileType.MODULE
@@ -92,14 +96,15 @@ class CobolController(Controller):
         self._compilation_thread.start()
 
     def _on_compilation_finished(self):
-        self.bt_compile.setEnabled(True)
-        self.ui.actionCompile.setEnabled(True)
-        self.ui.actionRun.setEnabled(
-            self.app.edit.current_editor.file_type == FileType.EXECUTABLE)
         if self._run_requested:
             self._run_requested = False
             if self._errors == 0:
                 self._run()
+        else:
+            self.bt_compile.setEnabled(True)
+            self.ui.actionCompile.setEnabled(True)
+            self.ui.actionRun.setEnabled(
+                self.app.edit.current_editor.file_type == FileType.EXECUTABLE)
 
     def _on_file_compiled(self, filename, status, messages):
         self.ui.dockWidgetLogs.show()
@@ -167,4 +172,14 @@ class CobolController(Controller):
                     self.ui.consoleOutput.start_process(program, cwd=wd)
 
     def _on_run_finished(self):
+        self.ui.actionCompile.setEnabled(True)
+        self.bt_compile.setEnabled(True)
         self.ui.actionRun.setEnabled(True)
+
+    def _on_action_cancel(self):
+        if self._compilation_thread:
+            self._compilation_thread.terminate()
+        self.ui.consoleOutput.stop_process()
+        self.ui.actionCompile.setEnabled(True)
+        self.ui.actionRun.setEnabled(
+            self.app.edit.current_editor.file_type == FileType.EXECUTABLE)

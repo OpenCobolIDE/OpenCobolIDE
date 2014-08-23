@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '/home/colin/Dev/OpenCobolIDE/forms/ide.ui'
 #
-# Created: Wed Aug 20 16:14:09 2014
+# Created: Sat Aug 23 20:45:27 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,8 +20,8 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setSpacing(0)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setObjectName("gridLayout")
         self.stackedWidget = QtWidgets.QStackedWidget(self.centralwidget)
         self.stackedWidget.setObjectName("stackedWidget")
@@ -133,8 +133,8 @@ class Ui_MainWindow(object):
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.page_2)
-        self.gridLayout_2.setContentsMargins(6, 6, 6, 6)
         self.gridLayout_2.setSpacing(6)
+        self.gridLayout_2.setContentsMargins(6, 6, 6, 6)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.tabWidgetEditors = TabWidget(self.page_2)
         self.tabWidgetEditors.setObjectName("tabWidgetEditors")
@@ -175,8 +175,8 @@ class Ui_MainWindow(object):
         self.tabProgramOutput = QtWidgets.QWidget()
         self.tabProgramOutput.setObjectName("tabProgramOutput")
         self.gridLayout_5 = QtWidgets.QGridLayout(self.tabProgramOutput)
-        self.gridLayout_5.setContentsMargins(6, 6, 6, 6)
         self.gridLayout_5.setSpacing(6)
+        self.gridLayout_5.setContentsMargins(6, 6, 6, 6)
         self.gridLayout_5.setObjectName("gridLayout_5")
         self.consoleOutput = InteractiveConsole(self.tabProgramOutput)
         self.consoleOutput.setObjectName("consoleOutput")
@@ -187,7 +187,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1202, 25))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1202, 27))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -356,6 +356,8 @@ class Ui_MainWindow(object):
         self.actionCompile.setIcon(icon)
         self.actionCompile.setIconVisibleInMenu(True)
         self.actionCompile.setObjectName("actionCompile")
+        self.actionCancel = QtWidgets.QAction(MainWindow)
+        self.actionCancel.setObjectName("actionCancel")
         self.toolBarFile.addAction(self.actionNew)
         self.toolBarFile.addAction(self.actionOpen)
         self.toolBarFile.addSeparator()
@@ -384,6 +386,8 @@ class Ui_MainWindow(object):
         self.menuCobol.addSeparator()
         self.menuCobol.addAction(self.actionCompile)
         self.menuCobol.addAction(self.actionRun)
+        self.menuCobol.addSeparator()
+        self.menuCobol.addAction(self.actionCancel)
         self.menu.addAction(self.actionHelp)
         self.menu.addAction(self.actionAbout)
         self.menuBar.addAction(self.menuFile.menuAction())
@@ -485,8 +489,9 @@ class Ui_MainWindow(object):
         self.actionCompile.setText(_translate("MainWindow", "Compile"))
         self.actionCompile.setToolTip(_translate("MainWindow", "Compile the current file (F8)"))
         self.actionCompile.setShortcut(_translate("MainWindow", "F8"))
+        self.actionCancel.setText(_translate("MainWindow", "Cancel"))
 
-from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
-from pyqode.core.widgets import ErrorsTable, TabWidget, InteractiveConsole
+from pyqode.core.widgets import TabWidget, InteractiveConsole, ErrorsTable
 from open_cobol_ide.view.widgets import RecentFilesListWidget
+from pyqode.cobol.widgets import OutlineTreeWidget, PicOffsetsTable
 from . import ide_rc

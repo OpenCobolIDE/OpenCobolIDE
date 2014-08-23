@@ -55,6 +55,7 @@ class ViewController(Controller):
         irun = QtGui.QIcon.fromTheme(
             'media-playback-start', QtGui.QIcon(
                 ':/ide-icons/rc/media-playback-start.png'))
+        icancel = QtGui.QIcon.fromTheme('process-stop')
         ifullscreen = QtGui.QIcon.fromTheme(
             'view-fullscreen', QtGui.QIcon(
                 ':/ide-icons/rc/view-fullscreen.png'))
@@ -100,6 +101,7 @@ class ViewController(Controller):
         self.ui.actionSave.setIcon(isave)
         self.ui.actionSaveAs.setIcon(isave_as)
         self.ui.actionRun.setIcon(irun)
+        self.ui.actionCancel.setIcon(icancel)
         self.ui.actionCompile.setIcon(icompile)
         self.ui.actionAbout.setIcon(iabout)
         self.ui.tabWidgetLogs.setTabIcon(0, iissue)
