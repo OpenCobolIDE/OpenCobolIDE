@@ -28,12 +28,9 @@ def get_file_type(path, encoding):
         ftype = Settings().get_file_type(path)
     except KeyError:
         ftype = FileType.EXECUTABLE
-        try:
-            with open(path, 'r', encoding=encoding) as f:
-                if 'PROCEDURE DIVISION USING' in f.read().upper():
-                    ftype = FileType.MODULE
-        except IOError or OSError:
-            pass
+        with open(path, 'r', encoding=encoding) as f:
+            if 'PROCEDURE DIVISION USING' in f.read().upper():
+                ftype = FileType.MODULE
     _logger().info('%s file type: %r', path, ftype)
     return ftype
 

@@ -5,8 +5,8 @@ import os
 import re
 import pytest
 from open_cobol_ide import system
-from open_cobol_ide.compiler import GnuCobolCompiler, FileType, \
-    GnuCobolStandard
+from open_cobol_ide.compiler import (
+    GnuCobolCompiler, FileType, GnuCobolStandard, get_file_type)
 from open_cobol_ide.settings import Settings
 
 
@@ -27,6 +27,14 @@ def test_is_working():
 def test_get_version():
     prog = re.compile(r'^\d.\d.\d$')
     assert prog.match(GnuCobolCompiler().get_version()) is not None
+
+
+@pytest.mark.parametrize('path, ftype', [
+    ('test/testfiles/TEST-PRINTER.cbl', FileType.EXECUTABLE),
+    ('test/testfiles/VIRTUAL-PRINTER.cbl', FileType.MODULE),
+])
+def test_get_file_type(path, ftype):
+    assert get_file_type(path, encoding='utf-8') == ftype
 
 
 @pytest.mark.parametrize('file_type, expected', [
@@ -95,7 +103,7 @@ def test_make_command_exe(free, std, ftype, expected_opts):
     settings.free_format = False
 
 
-@pytest.mark.parametrize('path, ftype, results, output_file_path', [
+@pytest.mark.parametrize('path, ftype, expected_results, output_file_path', [
     ('test/testfiles/HelloWorld.cbl', FileType.EXECUTABLE, (0, []),
      'test/testfiles/bin/HelloWorld' + exe_ext),
     ('test/testfiles/MALFORMED.cbl', FileType.EXECUTABLE,
@@ -103,8 +111,10 @@ def test_make_command_exe(free, std, ftype, expected_opts):
       [('syntax error, unexpected CONFIGURATION, expecting "end of file"', 2,
         11, 0, None, None, 'MALFORMED.cbl')]), ''),
 ])
-def test_compile(path, ftype, results, output_file_path):
-    assert GnuCobolCompiler().compile(path, ftype) == results
+def test_compile(path, ftype, expected_results, output_file_path):
+    results = GnuCobolCompiler().compile(path, ftype)
+    assert results[0] == expected_results[0]
+    assert len(results[1]) == len(expected_results[1])
     if output_file_path:
         assert os.path.exists(output_file_path)
         os.remove(output_file_path)
