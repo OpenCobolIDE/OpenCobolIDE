@@ -239,7 +239,7 @@ class GnuCobolCompiler:
                     status = CheckerMessages.ERROR
                 if 'warning' in error_type.lower():
                     status = CheckerMessages.WARNING
-                msg = (desc.strip(), status, int(line), 0,
+                msg = (desc.strip(), status, int(line) - 1, 0,
                        None, None, filename)
                 _logger().debug('message: %r', msg)
                 retval.append(msg)

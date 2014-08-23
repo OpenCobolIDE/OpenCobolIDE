@@ -109,7 +109,7 @@ def test_make_command_exe(free, std, ftype, expected_opts):
     ('test/testfiles/MALFORMED.cbl', FileType.EXECUTABLE,
      (1,
       [('syntax error, unexpected CONFIGURATION, expecting "end of file"', 2,
-        11, 0, None, None, 'MALFORMED.cbl')]), ''),
+        10, 0, None, None, 'MALFORMED.cbl')]), ''),
 ])
 def test_compile(path, ftype, expected_results, output_file_path):
     results = GnuCobolCompiler().compile(path, ftype)
