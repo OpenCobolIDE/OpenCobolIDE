@@ -20,7 +20,7 @@ import os
 import sys
 from pyqode.core.qt import QtCore, QtGui
 from pyqode.core.qt.QtCore import QSettings
-from oci_old.constants import CobolStandard
+from .constants import CobolStandard
 
 
 class Settings(object):

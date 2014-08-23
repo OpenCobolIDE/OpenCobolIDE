@@ -4,7 +4,7 @@ Controls the cobol specific action (compile, run and change program type)
 """
 from pyqode.qt import QtWidgets, QtGui
 from .base import Controller
-from ..compilers import FileType
+from ..compiler import FileType
 
 
 class CobolController(Controller):

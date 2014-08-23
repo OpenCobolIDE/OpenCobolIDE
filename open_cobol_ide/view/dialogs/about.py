@@ -6,8 +6,7 @@ import qdarkstyle
 from pyqode.qt import QtCore, QtWidgets
 from ..forms import dlg_about_ui
 from ... import __version__
-from ...compilers import GnuCobolCompiler
-from open_cobol_ide.compilers.gnu_cobol import GnuCobolCompiler
+from ...compiler import GnuCobolCompiler
 
 
 class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):

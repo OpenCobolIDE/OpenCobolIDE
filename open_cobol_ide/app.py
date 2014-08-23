@@ -11,10 +11,10 @@ from pyqode.qt import QtWidgets
 
 from . import __version__
 from .controllers import (CobolController, EditController, FileController,
-    HelpController, HomeController, ViewController)
+                          HelpController, HomeController, ViewController)
+from .compiler import check_compiler, CompilerNotFound
 from .settings import Settings
 from .view.main_window import MainWindow
-from .compilers import check_compiler, CompilerNotFound
 
 
 def _logger():

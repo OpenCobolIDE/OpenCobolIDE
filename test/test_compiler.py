@@ -4,7 +4,9 @@ Tests the compiler module
 import re
 import pytest
 from open_cobol_ide import system
-from open_cobol_ide.compilers import GnuCobolCompiler, FileType
+from open_cobol_ide.compiler import GnuCobolCompiler, FileType, \
+    GnuCobolStandard
+from open_cobol_ide.settings import Settings
 
 
 def test_extensions():
@@ -32,3 +34,67 @@ def test_get_version():
 ])
 def test_type_extension(file_type, expected):
     assert GnuCobolCompiler().extension_for_type(file_type) == expected
+
+
+exe_ext = GnuCobolCompiler().extension_for_type(FileType.EXECUTABLE)
+dll_ext = GnuCobolCompiler().extension_for_type(FileType.MODULE)
+
+@pytest.mark.parametrize('free, std, ftype, expected_opts',[
+    (False, GnuCobolStandard.default, FileType.EXECUTABLE, [
+        '-x',
+        '-o HelloWorld' + exe_ext,
+        '-std=default'
+    ]),
+    (True, GnuCobolStandard.default, FileType.EXECUTABLE, [
+        '-x',
+        '-o HelloWorld' + exe_ext,
+        '-std=default',
+        '-free'
+    ]),
+    (False, GnuCobolStandard.default, FileType.MODULE, [
+        '-o HelloWorld' + dll_ext,
+        '-std=default'
+    ]),
+    (True, GnuCobolStandard.default, FileType.MODULE, [
+        '-o HelloWorld' + dll_ext,
+        '-std=default',
+        '-free'
+    ]),
+    (False, GnuCobolStandard.mf, FileType.EXECUTABLE, [
+        '-x',
+        '-o HelloWorld' + exe_ext,
+        '-std=mf'
+    ]),
+    (True, GnuCobolStandard.mf, FileType.EXECUTABLE, [
+        '-x',
+        '-o HelloWorld' + exe_ext,
+        '-std=mf',
+        '-free'
+    ]),
+    (False, GnuCobolStandard.mf, FileType.MODULE, [
+        '-o HelloWorld' + dll_ext,
+        '-std=mf'
+    ]),
+    (True, GnuCobolStandard.mf, FileType.MODULE, [
+        '-o HelloWorld' + dll_ext,
+        '-std=mf',
+        '-free'
+    ])
+])
+def test_make_command_exe(free, std, ftype, expected_opts):
+    compiler = GnuCobolCompiler()
+    settings = Settings()
+    settings.free_format = free
+    settings.cobol_standard = std
+    pgm, options = compiler.make_command('HelloWorld.cbl', ftype)
+    assert pgm == 'cobc'
+    for o, eo in zip(options, expected_opts):
+        assert o == eo
+    settings.free_format = free
+    settings.cobol_standard = GnuCobolStandard.default
+    settings.free_format = False
+
+
+def test_compile():
+    assert GnuCobolCompiler().compile(
+        'test/testfiles/HelloWorld.cbl', FileType.EXECUTABLE) == 0

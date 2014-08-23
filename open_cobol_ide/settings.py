@@ -21,7 +21,7 @@ import os
 import sys
 from pyqode.core.qt import QtCore
 from pyqode.core.qt.QtCore import QSettings
-from .compilers import GnuCobolStandard
+from .compiler import FileType, GnuCobolStandard
 
 
 class Settings(object):
@@ -277,7 +277,6 @@ class Settings(object):
         :returns: The cached file type.
 
         """
-        from .compilers import FileType
         try:
             map = json.loads(self._settings.value('cached_file_types'))
         except TypeError:

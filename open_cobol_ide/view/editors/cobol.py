@@ -4,7 +4,7 @@ Contains the cobol code editor widget.
 """
 from pyqode.cobol.widgets import CobolCodeEdit as CodeEditBase
 
-from ...compilers import FileType, get_file_type
+from ...compiler import get_file_type
 from ...settings import Settings
 
 
