@@ -96,8 +96,17 @@ class EditController(Controller):
             self.ui.mnuActiveEditor.addActions(
                 self._mnu.actions())
             self.app.cobol.display_file_type(editor)
-            self.ui.actionRun.setEnabled(
-                self.app.edit.current_editor.file_type == FileType.EXECUTABLE)
+            try:
+                is_executable = (self.app.edit.current_editor.file_type ==
+                                 FileType.EXECUTABLE)
+            except AttributeError:
+                self.ui.actionCompile.setEnabled(False)
+                self.ui.actionRun.setEnabled(False)
+                self.app.cobol.bt_compile.setEnabled(False)
+            else:
+                self.ui.actionCompile.setEnabled(True)
+                self.app.cobol.bt_compile.setEnabled(True)
+                self.ui.actionRun.setEnabled(is_executable)
 
     def _update_status_bar_labels(self):
         if self.current_editor:
