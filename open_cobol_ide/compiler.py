@@ -45,7 +45,7 @@ def get_file_type(path):
         with open(path, 'r', encoding=encoding) as f:
             if 'PROCEDURE DIVISION USING' in f.read().upper():
                 ftype = FileType.MODULE
-    _logger().info('%s file type: %r', path, ftype)
+    _logger().info('file type: %r', ftype)
     return ftype
 
 
@@ -166,7 +166,7 @@ class GnuCobolCompiler:
                     _logger().warning(
                         '%s does not exists' % expected_cobc_path)
                 else:
-                    _logger().info('cobc.exe found but not usable.')
+                    _logger().warning('cobc.exe found but not usable.')
             return False
         _logger().info('OpenCobol compiler v.%s' % version)
         return True
@@ -184,6 +184,7 @@ class GnuCobolCompiler:
         :return: status, list of checker messages
 
         """
+        _logger().info('compiling %s' % file_path)
         path, filename = os.path.split(file_path)
         # ensure bin dir exists
         bin_dir = os.path.join(path, 'bin')
@@ -199,8 +200,8 @@ class GnuCobolCompiler:
         status = process.exitCode()
         messages = self.parse_output(
             process.readAllStandardOutput().data().decode('utf-8'),
-            filename)
-        _logger().debug(status, messages)
+            file_path)
+        _logger().debug('compile results: %r - %r', status, messages)
         return status, messages
 
     def make_command(self, input_file_name, file_type):
@@ -230,7 +231,7 @@ class GnuCobolCompiler:
         return 'cobc', options
 
     @staticmethod
-    def parse_output(compiler_output, filename):
+    def parse_output(compiler_output, file_path):
         """
         Parses the compiler output
 
@@ -242,20 +243,20 @@ class GnuCobolCompiler:
         """
         _logger().debug('parsing cobc output: %s' % compiler_output)
         retval = []
-        exp = r'%s:\d*:.*:.*$' % filename
+        exp = r'%s:\d*:.*:.*$' % os.path.split(file_path)[1]
         prog = re.compile(exp)
         # parse compilation results
         for l in compiler_output.splitlines():
             if prog.match(l):
                 _logger().debug('MATCHED')
                 status = CheckerMessages.INFO
-                filename, line, error_type, desc = l.split(":")
+                fn, line, error_type, desc = l.split(":")
                 if 'error' in error_type.lower():
                     status = CheckerMessages.ERROR
                 if 'warning' in error_type.lower():
                     status = CheckerMessages.WARNING
                 msg = (desc.strip(), status, int(line) - 1, 0,
-                       None, None, filename)
+                       None, None, file_path)
                 _logger().debug('message: %r', msg)
                 retval.append(msg)
         return retval

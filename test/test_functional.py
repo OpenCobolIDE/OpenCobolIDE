@@ -21,9 +21,10 @@ def test_functional(app):
     app.file.open_file(path)
     assert app.edit.current_editor.file.path == path
     assert app.view.ui.stackedWidget.currentIndex() == int(Page.EDIT)
+    QTest.qWait(500)
+    app.cobol.compile()
     QTest.qWait(1000)
-    # app.cobol.compile()
-    # QTest.qWait(5000)
+    app.cobol.ui.errorsTable.rowCount() == 1
     # app.cobol.run()
     # QTest.qWait(2000)
 

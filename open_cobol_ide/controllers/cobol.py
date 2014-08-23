@@ -2,9 +2,27 @@
 Controls the cobol specific action (compile, run and change program type)
 
 """
-from pyqode.qt import QtWidgets, QtGui
+import os
+from pyqode.core.modes import CheckerMessage, CheckerMessages
+from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
-from ..compiler import FileType, GnuCobolCompiler
+from ..compiler import FileType, GnuCobolCompiler, get_file_type
+
+
+class CompilationThread(QtCore.QThread):
+    file_compiled = QtCore.Signal(str, int, list)
+    finished = QtCore.Signal()
+
+    filename = ''
+
+    def run(self):
+        compiler = GnuCobolCompiler()
+        files = compiler.get_dependencies(self.filename, recursive=True)
+        files.insert(0, self.filename)
+        for f in files:
+            status, messages = compiler.compile(f, get_file_type(f))
+            self.file_compiled.emit(f, status, messages)
+        self.finished.emit()
 
 
 class CobolController(Controller):
@@ -17,7 +35,6 @@ class CobolController(Controller):
             'application-x-executable',
             QtGui.QIcon(':/ide-icons/rc/application-x-executable.png'))
         self.bt_compile = QtWidgets.QToolButton()
-        self.bt_compile.clicked.connect(self.ui.actionCompile.triggered.emit)
         self.bt_compile.setIcon(icon)
         self.bt_compile.setMenu(self.ui.menuProgramType)
         self.bt_compile.setToolTip(
@@ -26,6 +43,7 @@ class CobolController(Controller):
         self.ui.toolBarCode.insertWidget(self.ui.actionRun, self.bt_compile)
         group.triggered.connect(self._on_program_type_changed)
         self.bt_compile.clicked.connect(self.compile)
+        self.ui.actionCompile.triggered.connect(self.compile)
 
     def display_file_type(self, editor):
         try:
@@ -48,6 +66,27 @@ class CobolController(Controller):
             pass
 
     def compile(self):
-        GnuCobolCompiler().get_dependencies(
-            self.app.edit.current_editor.file.path)
-        print('compile')
+        self.ui.tabWidgetEditors.save_all()
+        self.ui.errorsTable.clear()
+        self._compilation_thread = CompilationThread()
+        self._compilation_thread.filename = \
+            self.app.edit.current_editor.file.path
+        self._compilation_thread.file_compiled.connect(self._on_file_compiled)
+        self._compilation_thread.start()
+
+    def _on_file_compiled(self, filename, status, messages):
+        self.ui.dockWidgetLogs.show()
+        if len(messages) == 0 and status == 0:
+            ext = GnuCobolCompiler().extension_for_type(get_file_type(
+                filename))
+            self.ui.errorsTable.add_message(
+                CheckerMessage(
+                    'Compilation succeeded: %s' %
+                    os.path.join(
+                        os.path.dirname(filename), 'bin',
+                        os.path.splitext(os.path.split(filename)[1])[0] + ext),
+                    CheckerMessages.INFO, -1,
+                    path=filename))
+        else:
+            for msg in messages:
+                self.ui.errorsTable.add_message(CheckerMessage(*msg))
