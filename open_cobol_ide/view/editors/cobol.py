@@ -11,7 +11,7 @@ from ...settings import Settings
 class CobolCodeEdit(CodeEditBase):
     @property
     def file_type(self):
-        return get_file_type(self.file.path, self.file.encoding)
+        return get_file_type(self.file.path)
 
     @file_type.setter
     def file_type(self, ftype):

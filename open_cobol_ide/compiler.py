@@ -16,15 +16,26 @@ def _logger():
     return logging.getLogger(__name__)
 
 
-def get_file_type(path, encoding):
+def _get_encoding(filename):
+    try:
+        encoding = Cache().get_file_encoding(filename)
+    except KeyError:
+        encoding = locale.getpreferredencoding()
+        _logger().warning(
+            'encoding for %s not found in cache, using locale preferred '
+            'encoding instead: %s', encoding)
+    return encoding
+
+
+def get_file_type(path):
     """
     Detects file type. If the file contains 'PROCEDURE DIVISION USING', then it
     is considered as a module else it is considered as an executable.
 
     :param path: file path
-    :param encoding: file encoding
     :return: FileType
     """
+    encoding = _get_encoding(path)
     _logger().debug('detecting file type: %s - %s', path, encoding)
     try:
         from .settings import Settings
@@ -250,13 +261,7 @@ class GnuCobolCompiler:
         return retval
 
     def get_dependencies(self, filename, recursive=True):
-        try:
-            encoding = Cache().get_file_encoding(filename)
-        except KeyError:
-            encoding = locale.getpreferredencoding()
-            _logger().warning(
-                'encoding for %s not found in cache, using locale preferred '
-                'encoding instead: %s', encoding)
+        encoding = _get_encoding(filename)
         directory = os.path.dirname(filename)
         dependencies = []
         prog = re.compile(r'CALL ".*"')

@@ -34,7 +34,7 @@ def test_get_version():
     ('test/testfiles/VIRTUAL-PRINTER.cbl', FileType.MODULE),
 ])
 def test_get_file_type(path, ftype):
-    assert get_file_type(path, encoding='utf-8') == ftype
+    assert get_file_type(path) == ftype
 
 
 @pytest.mark.parametrize('file_type, expected', [
