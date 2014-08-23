@@ -1,6 +1,7 @@
 """
 Tests the compiler module
 """
+import os
 import re
 import pytest
 from open_cobol_ide import system
@@ -38,45 +39,44 @@ def test_type_extension(file_type, expected):
 
 exe_ext = GnuCobolCompiler().extension_for_type(FileType.EXECUTABLE)
 dll_ext = GnuCobolCompiler().extension_for_type(FileType.MODULE)
-
 @pytest.mark.parametrize('free, std, ftype, expected_opts',[
     (False, GnuCobolStandard.default, FileType.EXECUTABLE, [
         '-x',
-        '-o HelloWorld' + exe_ext,
+        '-o %s' % os.path.join('bin', 'HelloWorld' + exe_ext),
         '-std=default'
     ]),
     (True, GnuCobolStandard.default, FileType.EXECUTABLE, [
         '-x',
-        '-o HelloWorld' + exe_ext,
+        '-o %s' % os.path.join('bin', 'HelloWorld' + exe_ext),
         '-std=default',
         '-free'
     ]),
     (False, GnuCobolStandard.default, FileType.MODULE, [
-        '-o HelloWorld' + dll_ext,
+        '-o %s' % os.path.join('bin', 'HelloWorld' + dll_ext),
         '-std=default'
     ]),
     (True, GnuCobolStandard.default, FileType.MODULE, [
-        '-o HelloWorld' + dll_ext,
+        '-o %s' % os.path.join('bin', 'HelloWorld' + dll_ext),
         '-std=default',
         '-free'
     ]),
     (False, GnuCobolStandard.mf, FileType.EXECUTABLE, [
         '-x',
-        '-o HelloWorld' + exe_ext,
+        '-o %s' % os.path.join('bin', 'HelloWorld' + exe_ext),
         '-std=mf'
     ]),
     (True, GnuCobolStandard.mf, FileType.EXECUTABLE, [
         '-x',
-        '-o HelloWorld' + exe_ext,
+        '-o %s' % os.path.join('bin', 'HelloWorld' + exe_ext),
         '-std=mf',
         '-free'
     ]),
     (False, GnuCobolStandard.mf, FileType.MODULE, [
-        '-o HelloWorld' + dll_ext,
+        '-o %s' % os.path.join('bin', 'HelloWorld' + dll_ext),
         '-std=mf'
     ]),
     (True, GnuCobolStandard.mf, FileType.MODULE, [
-        '-o HelloWorld' + dll_ext,
+        '-o %s' % os.path.join('bin', 'HelloWorld' + dll_ext),
         '-std=mf',
         '-free'
     ])
@@ -95,6 +95,16 @@ def test_make_command_exe(free, std, ftype, expected_opts):
     settings.free_format = False
 
 
-def test_compile():
-    assert GnuCobolCompiler().compile(
-        'test/testfiles/HelloWorld.cbl', FileType.EXECUTABLE) == 0
+@pytest.mark.parametrize('path, ftype, results, output_file_path', [
+    ('test/testfiles/HelloWorld.cbl', FileType.EXECUTABLE, (0, []),
+     'test/testfiles/bin/HelloWorld' + exe_ext),
+    ('test/testfiles/MALFORMED.cbl', FileType.EXECUTABLE,
+     (1,
+      [('syntax error, unexpected CONFIGURATION, expecting "end of file"', 2,
+        11, 0, None, None, 'MALFORMED.cbl')]), ''),
+])
+def test_compile(path, ftype, results, output_file_path):
+    assert GnuCobolCompiler().compile(path, ftype) == results
+    if output_file_path:
+        assert os.path.exists(output_file_path)
+        os.remove(output_file_path)

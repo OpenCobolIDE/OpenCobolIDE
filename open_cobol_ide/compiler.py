@@ -4,6 +4,7 @@ import re
 import subprocess
 import sys
 from enum import IntEnum
+from pyqode.core.modes import CheckerMessages
 from pyqode.qt import QtCore
 from . import system
 
@@ -162,28 +163,34 @@ class GnuCobolCompiler:
     def extension_for_type(self, file_type):
         return self.extensions[int(file_type)]
 
-    def compile(self, file_path, file_type, async_callback=None):
+    def compile(self, file_path, file_type):
+        """
+        Compiles a file. This is a blocking function, it returns only when
+        the compiler process finished.
+
+        :param file_path: Path of the file to compile.
+        :param file_type: File type (exe or dll)
+        :return: status, list of checker messages
+
+        """
         path, filename = os.path.split(file_path)
+        # ensure bin dir exists
+        bin_dir = os.path.join(path, 'bin')
+        if not os.path.exists(bin_dir):
+            os.makedirs(bin_dir)
+        # run command using qt process api, this is blocking.
         pgm, options = self.make_command(filename, file_type)
-        self._callback = async_callback
         self._process = QtCore.QProcess()
         self._process.setWorkingDirectory(path)
         self._process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
-        if async_callback:
-            self._process.finished.connect(self._on_finished)
         self._process.start(pgm, options)
-        if not async_callback:
-            self._process.waitForFinished()
-            return self.parse_output(self._read_process_output())
-
-    def _on_finished(self):
-        status, messages = self.parse_output(self._read_process_output())
-        self._callback(status, messages)
-
-    def _read_process_output(self):
-        # channels are merged, meaning that stderr has been redirected to
-        # stdout
-        return self._process.readAllStandardOutput().data().decode('utf-8')
+        self._process.waitForFinished()
+        status = self._process.exitCode()
+        messages = self.parse_output(
+            self._process.readAllStandardOutput().data().decode('utf-8'),
+            filename)
+        _logger().debug(status, messages)
+        return status, messages
 
     def make_command(self, input_file_name, file_type):
         """
@@ -203,7 +210,7 @@ class GnuCobolCompiler:
         if file_type == FileType.EXECUTABLE:
             options.append('-x')
         output_file_name += self.extension_for_type(file_type)
-        options.append('-o %s' % output_file_name)
+        options.append('-o %s' % (os.path.join('bin', output_file_name)))
         options.append('-std=%s' % str(settings.cobol_standard).replace(
             'GnuCobolStandard.', ''))
         if settings.free_format:
@@ -211,5 +218,32 @@ class GnuCobolCompiler:
         options.append(input_file_name)
         return 'cobc', options
 
-    def parse_output(self, compiler_output):
-        return compiler_output
+    def parse_output(self, compiler_output, filename):
+        """
+        Parses the compiler output
+
+        :param compiler_output: compiler output
+        :param filename: input filename
+        :return: list of tuples. Each tuple are made up of the arguments needed
+            to create a :class:`pyqode.core.modes.CheckerMessage`.
+
+        """
+        _logger().debug('parsing cobc output: %s' % compiler_output)
+        retval = []
+        exp = r'%s:\d*:.*:.*$' % filename
+        prog = re.compile(exp)
+        # parse compilation results
+        for l in compiler_output.splitlines():
+            if prog.match(l):
+                _logger().debug('MATCHED')
+                status = CheckerMessages.INFO
+                filename, line, error_type, desc = l.split(":")
+                if 'error' in error_type.lower():
+                    status = CheckerMessages.ERROR
+                if 'warning' in error_type.lower():
+                    status = CheckerMessages.WARNING
+                msg = (desc.strip(), status, int(line), 0,
+                       None, None, filename)
+                _logger().debug('message: %r', msg)
+                retval.append(msg)
+        return retval
