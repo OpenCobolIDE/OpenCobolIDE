@@ -5,6 +5,7 @@ Contains the EditController.
 from pyqode.core.api import TextHelper
 from pyqode.qt import QtCore, QtWidgets
 from .base import Controller
+from ..compiler import FileType
 from ..settings import Settings
 from ..view.editors import CobolCodeEdit, GenericCodeEdit
 
@@ -95,6 +96,8 @@ class EditController(Controller):
             self.ui.mnuActiveEditor.addActions(
                 self._mnu.actions())
             self.app.cobol.display_file_type(editor)
+            self.ui.actionRun.setEnabled(
+                self.app.edit.current_editor.file_type == FileType.EXECUTABLE)
 
     def _update_status_bar_labels(self):
         if self.current_editor:
