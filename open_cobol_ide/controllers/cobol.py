@@ -105,14 +105,12 @@ class CobolController(Controller):
         self.ui.dockWidgetLogs.show()
         self.ui.tabWidgetLogs.setCurrentIndex(0)
         if len(messages) == 0 and status == 0:
-            ext = GnuCobolCompiler().extension_for_type(get_file_type(
-                filename))
+            ext = GnuCobolCompiler().extension_for_type(get_file_type(filename))
+            name = os.path.splitext(os.path.split(filename)[1])[0]
+            path = os.path.join(os.path.dirname(filename), 'bin', name + ext)
             self.ui.errorsTable.add_message(
                 CheckerMessage(
-                    'Compilation succeeded: %s' %
-                    os.path.join(
-                        os.path.dirname(filename), 'bin',
-                        os.path.splitext(os.path.split(filename)[1])[0] + ext),
+                    'Compilation succeeded: %s' % path,
                     CheckerMessages.INFO, -1,
                     path=filename))
         else:
