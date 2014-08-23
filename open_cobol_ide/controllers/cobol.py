@@ -3,6 +3,7 @@ Controls the cobol specific action (compile, run and change program type)
 
 """
 import os
+from pyqode.core.api import TextHelper
 from pyqode.core.modes import CheckerMessage, CheckerMessages
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
@@ -44,6 +45,7 @@ class CobolController(Controller):
         group.triggered.connect(self._on_program_type_changed)
         self.bt_compile.clicked.connect(self.compile)
         self.ui.actionCompile.triggered.connect(self.compile)
+        self.ui.errorsTable.msg_activated.connect(self._goto_error_msg)
 
     def display_file_type(self, editor):
         try:
@@ -90,3 +92,8 @@ class CobolController(Controller):
         else:
             for msg in messages:
                 self.ui.errorsTable.add_message(CheckerMessage(*msg))
+
+    def _goto_error_msg(self, msg):
+        self.app.file.open_file(msg.path)
+        if msg.status:
+            TextHelper(self.app.edit.current_editor).goto_line(msg.line)
