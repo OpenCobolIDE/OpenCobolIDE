@@ -118,3 +118,12 @@ def test_compile(path, ftype, expected_results, output_file_path):
     if output_file_path:
         assert os.path.exists(output_file_path)
         os.remove(output_file_path)
+
+
+@pytest.mark.parametrize('filename, expected_results', [
+    ('test/testfiles/HelloWorld.cbl', []),
+    ('test/testfiles/TEST-PRINTER.cbl', ['test/testfiles/VIRTUAL-PRINTER.cbl'])
+])
+def test_get_dependencies(filename, expected_results):
+    results = GnuCobolCompiler().get_dependencies(filename)
+    assert results == expected_results

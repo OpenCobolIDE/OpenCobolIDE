@@ -1,9 +1,12 @@
+import locale
 import logging
 import os
 import re
 import subprocess
 import sys
 from enum import IntEnum
+from pyqode.cobol.widgets import CobolCodeEdit
+from pyqode.core.cache import Cache
 from pyqode.core.modes import CheckerMessages
 from pyqode.qt import QtCore
 from . import system
@@ -177,14 +180,14 @@ class GnuCobolCompiler:
             os.makedirs(bin_dir)
         # run command using qt process api, this is blocking.
         pgm, options = self.make_command(filename, file_type)
-        self._process = QtCore.QProcess()
-        self._process.setWorkingDirectory(path)
-        self._process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
-        self._process.start(pgm, options)
-        self._process.waitForFinished()
-        status = self._process.exitCode()
+        process = QtCore.QProcess()
+        process.setWorkingDirectory(path)
+        process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
+        process.start(pgm, options)
+        process.waitForFinished()
+        status = process.exitCode()
         messages = self.parse_output(
-            self._process.readAllStandardOutput().data().decode('utf-8'),
+            process.readAllStandardOutput().data().decode('utf-8'),
             filename)
         _logger().debug(status, messages)
         return status, messages
@@ -215,7 +218,8 @@ class GnuCobolCompiler:
         options.append(input_file_name)
         return 'cobc', options
 
-    def parse_output(self, compiler_output, filename):
+    @staticmethod
+    def parse_output(compiler_output, filename):
         """
         Parses the compiler output
 
@@ -244,3 +248,33 @@ class GnuCobolCompiler:
                 _logger().debug('message: %r', msg)
                 retval.append(msg)
         return retval
+
+    def get_dependencies(self, filename, recursive=True):
+        try:
+            encoding = Cache().get_file_encoding(filename)
+        except KeyError:
+            encoding = locale.getpreferredencoding()
+            _logger().warning(
+                'encoding for %s not found in cache, using locale preferred '
+                'encoding instead: %s', encoding)
+        directory = os.path.dirname(filename)
+        dependencies = []
+        prog = re.compile(r'CALL ".*"')
+        with open(filename, 'r', encoding=encoding) as f:
+            for line in f.readlines():
+                match = prog.search(line)
+                if match:
+                    start, end = match.span()
+                    txt = line[start:end]
+                    module_base_name = txt[txt.find('"'):].replace('"', '')
+                    # try to see if the module can be found in the current
+                    # directory
+                    for ext in CobolCodeEdit.all_extensions():
+                        pth = os.path.join(directory, module_base_name + ext)
+                        if os.path.exists(pth) and pth not in dependencies:
+                            dependencies.append(pth)
+                            if recursive:
+                                dependencies += self.get_dependencies(pth)
+        dependencies = list(set(dependencies))
+        _logger().debug('dependencies of %s: %r', filename, dependencies)
+        return dependencies

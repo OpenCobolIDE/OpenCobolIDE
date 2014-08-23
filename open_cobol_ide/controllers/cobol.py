@@ -4,7 +4,7 @@ Controls the cobol specific action (compile, run and change program type)
 """
 from pyqode.qt import QtWidgets, QtGui
 from .base import Controller
-from ..compiler import FileType
+from ..compiler import FileType, GnuCobolCompiler
 
 
 class CobolController(Controller):
@@ -25,6 +25,7 @@ class CobolController(Controller):
         self.bt_compile.setPopupMode(self.bt_compile.MenuButtonPopup)
         self.ui.toolBarCode.insertWidget(self.ui.actionRun, self.bt_compile)
         group.triggered.connect(self._on_program_type_changed)
+        self.bt_compile.clicked.connect(self.compile)
 
     def display_file_type(self, editor):
         try:
@@ -45,3 +46,8 @@ class CobolController(Controller):
                     FileType.MODULE
         except AttributeError:
             pass
+
+    def compile(self):
+        GnuCobolCompiler().get_dependencies(
+            self.app.edit.current_editor.file.path)
+        print('compile')
