@@ -220,8 +220,7 @@
             </property>
             <property name="icon">
              <iconset theme="document-new">
-              <normaloff/>
-             </iconset>
+              <normaloff>../../../.designer/backup</normaloff>../../../.designer/backup</iconset>
             </property>
            </widget>
           </item>
@@ -247,8 +246,7 @@
             </property>
             <property name="icon">
              <iconset theme="document-open">
-              <normaloff/>
-             </iconset>
+              <normaloff>../../../.designer/backup</normaloff>../../../.designer/backup</iconset>
             </property>
            </widget>
           </item>
@@ -437,8 +435,7 @@
        <widget class="QWidget" name="tabCompiler">
         <attribute name="icon">
          <iconset theme="emblem-important">
-          <normaloff/>
-         </iconset>
+          <normaloff>../../../.designer/backup</normaloff>../../../.designer/backup</iconset>
         </attribute>
         <attribute name="title">
          <string>Issues</string>
@@ -479,8 +476,7 @@
        <widget class="QWidget" name="tabProgramOutput">
         <attribute name="icon">
          <iconset theme="media-playback-start">
-          <normaloff/>
-         </iconset>
+          <normaloff>../../../.designer/backup</normaloff>../../../.designer/backup</iconset>
         </attribute>
         <attribute name="title">
          <string>Output</string>
@@ -550,14 +546,12 @@
     <property name="title">
      <string>View</string>
     </property>
-    <widget class="QMenu" name="menuPerspective">
+    <widget class="QMenu" name="menuWindows">
      <property name="title">
-      <string>Perspective</string>
+      <string>Windows</string>
      </property>
-     <addaction name="actionClassicView"/>
-     <addaction name="actionMinimalView"/>
     </widget>
-    <addaction name="menuPerspective"/>
+    <addaction name="menuWindows"/>
     <addaction name="separator"/>
     <addaction name="actionFullscreen"/>
    </widget>
@@ -598,6 +592,9 @@
      <width>300</width>
      <height>121</height>
     </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
     <string>Navigation</string>
@@ -850,7 +847,7 @@
   <action name="actionClear">
    <property name="icon">
     <iconset theme="edit-clear">
-     <normaloff>rc/edit-clear.png</normaloff>rc/edit-clear.png</iconset>
+     <normaloff>../../../.designer/backup/rc/edit-clear.png</normaloff>../../../.designer/backup/rc/edit-clear.png</iconset>
    </property>
    <property name="text">
     <string>Clear list</string>
@@ -930,8 +927,7 @@
   <action name="actionHelp">
    <property name="icon">
     <iconset theme="help-contents">
-     <normaloff/>
-    </iconset>
+     <normaloff>../../../.designer/backup</normaloff>../../../.designer/backup</iconset>
    </property>
    <property name="text">
     <string>Help</string>

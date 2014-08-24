@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '/home/colin/Dev/OpenCobolIDE/forms/ide.ui'
 #
-# Created: Sat Aug 23 20:45:27 2014
+# Created: Sun Aug 24 16:30:10 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -197,8 +197,8 @@ class Ui_MainWindow(object):
         self.mnuActiveEditor.setObjectName("mnuActiveEditor")
         self.menuView = QtWidgets.QMenu(self.menuBar)
         self.menuView.setObjectName("menuView")
-        self.menuPerspective = QtWidgets.QMenu(self.menuView)
-        self.menuPerspective.setObjectName("menuPerspective")
+        self.menuWindows = QtWidgets.QMenu(self.menuView)
+        self.menuWindows.setObjectName("menuWindows")
         self.menuCobol = QtWidgets.QMenu(self.menuBar)
         self.menuCobol.setObjectName("menuCobol")
         self.menuProgramType = QtWidgets.QMenu(self.menuCobol)
@@ -208,6 +208,7 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menuBar)
         self.dockWidgetNavPanel = QtWidgets.QDockWidget(MainWindow)
         self.dockWidgetNavPanel.setMinimumSize(QtCore.QSize(300, 121))
+        self.dockWidgetNavPanel.setFeatures(QtWidgets.QDockWidget.DockWidgetFloatable|QtWidgets.QDockWidget.DockWidgetMovable)
         self.dockWidgetNavPanel.setObjectName("dockWidgetNavPanel")
         self.dockWidgetContents_2 = QtWidgets.QWidget()
         self.dockWidgetContents_2.setObjectName("dockWidgetContents_2")
@@ -375,9 +376,7 @@ class Ui_MainWindow(object):
         self.menuEdit.addAction(self.mnuActiveEditor.menuAction())
         self.menuEdit.addSeparator()
         self.menuEdit.addAction(self.actionPreferences)
-        self.menuPerspective.addAction(self.actionClassicView)
-        self.menuPerspective.addAction(self.actionMinimalView)
-        self.menuView.addAction(self.menuPerspective.menuAction())
+        self.menuView.addAction(self.menuWindows.menuAction())
         self.menuView.addSeparator()
         self.menuView.addAction(self.actionFullscreen)
         self.menuProgramType.addAction(self.actionProgram)
@@ -418,7 +417,7 @@ class Ui_MainWindow(object):
         self.menuEdit.setTitle(_translate("MainWindow", "Edit"))
         self.mnuActiveEditor.setTitle(_translate("MainWindow", "Active editor"))
         self.menuView.setTitle(_translate("MainWindow", "View"))
-        self.menuPerspective.setTitle(_translate("MainWindow", "Perspective"))
+        self.menuWindows.setTitle(_translate("MainWindow", "Windows"))
         self.menuCobol.setTitle(_translate("MainWindow", "Cobol"))
         self.menuProgramType.setTitle(_translate("MainWindow", "Program type"))
         self.menu.setTitle(_translate("MainWindow", "?"))
@@ -491,7 +490,7 @@ class Ui_MainWindow(object):
         self.actionCompile.setShortcut(_translate("MainWindow", "F8"))
         self.actionCancel.setText(_translate("MainWindow", "Cancel"))
 
-from pyqode.core.widgets import TabWidget, InteractiveConsole, ErrorsTable
+from pyqode.core.widgets import InteractiveConsole, ErrorsTable, TabWidget
+from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
 from open_cobol_ide.view.widgets import RecentFilesListWidget
-from pyqode.cobol.widgets import OutlineTreeWidget, PicOffsetsTable
 from . import ide_rc

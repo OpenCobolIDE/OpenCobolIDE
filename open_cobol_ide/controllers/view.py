@@ -4,7 +4,7 @@ Contains the view manager.
 """
 import logging
 from enum import IntEnum
-from pyqode.qt import QtGui, QtWidgets
+from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
 from ..settings import Settings
 
@@ -41,9 +41,37 @@ class ViewController(Controller):
         self._perspective = 'default'
         self._nav_was_visible = True
         self._offset_was_visible = True
-        self.setupIcons()
+        self.setup_icons()
+        self.ui.tabWidgetEditors.setContextMenuPolicy(
+            QtCore.Qt.CustomContextMenu)
+        self.ui.tabWidgetEditors.customContextMenuRequested.connect(
+            self.show_main_menu_as_context_menu)
+        self.ui.tabWidgetEditors.tab_bar.double_clicked.connect(
+            self.toggle_perspective)
+        self.bt_mnu = QtWidgets.QToolButton()
+        self.main_window.addActions(self.make_main_menu().actions())
+        window_mnu = self.main_window.createPopupMenu()
+        self.ui.menuWindows.addActions(window_mnu.actions())
 
-    def setupIcons(self):
+    def toggle_perspective(self):
+        self.show_perspective(
+            'minimal' if Settings().perspective == 'default' else 'default')
+
+    def make_main_menu(self):
+        mnu = QtWidgets.QMenu(self.main_window)
+        mnu.addMenu(self.ui.menuFile)
+        mnu.addMenu(self.ui.menuEdit)
+        mnu.addMenu(self.ui.menuView)
+        mnu.addMenu(self.ui.menuCobol)
+        mnu.addMenu(self.ui.menu)
+        return mnu
+
+    def show_main_menu_as_context_menu(self, pos):
+        if Settings().perspective == 'minimal':
+            self.make_main_menu().exec_(
+                self.ui.tabWidgetEditors.mapToGlobal(pos))
+
+    def setup_icons(self):
         """
         Setup actions/buttons icons, loads them from the system icon theme on
         linux.
@@ -123,6 +151,7 @@ class ViewController(Controller):
         """
         self._perspective = perspective
         self._apply_perspective()
+        Settings().perspective = perspective
 
     def show_home_page(self):
         """
@@ -169,8 +198,10 @@ class ViewController(Controller):
             self.ui.statusbar.show()
             self.ui.toolBarFile.show()
             self.ui.toolBarCode.show()
+            self.app.cobol.corner_widget.setVisible(False)
         else:
             self.ui.menuBar.hide()
             self.ui.statusbar.hide()
             self.ui.toolBarCode.hide()
             self.ui.toolBarFile.hide()
+            self.app.cobol.corner_widget.setVisible(True)

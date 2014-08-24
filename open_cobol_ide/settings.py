@@ -99,6 +99,14 @@ class Settings(object):
         """
         self._settings.setValue('lastUsedPath', os.path.dirname(path))
 
+    @property
+    def perspective(self):
+        return self._settings.value('perspective', 'default')
+
+    @perspective.setter
+    def perspective(self, value):
+        self._settings.setValue('perspective', value)
+
     #
     # Editor settings settings
     #

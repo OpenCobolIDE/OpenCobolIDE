@@ -56,3 +56,65 @@ class RecentFilesListWidget(QtWidgets.QListWidget):
             QtCore.Qt.ArrowCursor)
         if item:
             self.setCurrentRow(self.row(item))
+
+
+class TabCornerWidget(QtWidgets.QWidget):
+    dropbtn_stylesheet = """
+
+    QToolButton  { /* all types of tool button */
+        background-color: transparent;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 0px;
+    }
+
+    QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
+     padding-right: 10px; /* make way for the popup button */
+    }
+
+    QToolButton[popupMode="2"] { /* only for MenuButtonPopup */
+     padding-right: 10px; /* make way for the popup button */
+    }
+
+    QToolButton:hover {
+        background-color: rgba(128, 128, 128, 20);
+        border: 1px solid transparent;
+    }
+
+    QToolButton:pressed  {
+        background-color: rgba(128, 128, 128, 40);
+        border: 1px solid transparent;
+    }
+
+    /* the subcontrols below are used only in the MenuButtonPopup mode */
+    QToolButton::menu-button  {
+        background-color: transparent;
+        border: 1px transparent black;
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+        /* 16px width + 4px for border = 20px allocated above */
+        width: 16px;
+    }
+
+    QToolButton::menu-arrow  {
+        image: url(:/ide-icons/rc/downarrow.png);
+    }
+
+    QToolButton::menu-arrow:open  {
+        top: 1px; left: 1px; /* shift it a bit */
+    }
+
+    """
+
+    def __init__(self, parent, bt_compile, bt_run):
+        super().__init__(parent)
+        assert isinstance(bt_compile, QtWidgets.QToolButton)
+        assert isinstance(bt_run, QtWidgets.QToolButton)
+        bt_compile.setPopupMode(bt_compile.DelayedPopup)
+        bt_compile.setStyleSheet(self.dropbtn_stylesheet)
+        bt_run.setStyleSheet(self.dropbtn_stylesheet)
+        layout = QtWidgets.QHBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(bt_compile)
+        layout.addWidget(bt_run)
+        self.setLayout(layout)

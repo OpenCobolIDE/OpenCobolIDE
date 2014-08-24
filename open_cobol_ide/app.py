@@ -34,14 +34,17 @@ class Application:
         self.app = QtWidgets.QApplication(sys.argv)
         self.win = MainWindow()
         self.win.setWindowTitle(self.title)
-        self.view = ViewController(self)
-        self.view.show_home_page()
         self.file = FileController(self)
+        self.view = ViewController(self)
         self.home = HomeController(self)
         self.edit = EditController(self)
         self.cobol = CobolController(self)
         self.help = HelpController(self)
+
         self.win.show()
+        self.view.show_perspective(Settings().perspective)
+        self.view.show_home_page()
+
         try:
             check_compiler()
         except CompilerNotFound as e:
