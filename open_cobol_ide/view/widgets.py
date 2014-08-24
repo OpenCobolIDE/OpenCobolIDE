@@ -20,9 +20,13 @@ class RecentFilesListWidget(QtWidgets.QListWidget):
         super().__init__(*args, **kwargs)
         self.setMouseTracking(True)
         self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.customContextMenuRequested.connect(self.showContextMenu)
+        self.customContextMenuRequested.connect(self.show_context_menu)
 
-    def showContextMenu(self, pt):
+    def show_context_menu(self, pt):
+        """
+        Shows the recent files list context menu which allow to remove an item
+        from the list or to clear the entire list.
+        """
         actionRemove = QtWidgets.QAction('Remove from recent files list', self)
         actionClear = QtWidgets.QAction('Clear recent files list', self)
         actionRemove.triggered.connect(self.remove_current_requested)

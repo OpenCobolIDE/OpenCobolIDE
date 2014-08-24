@@ -10,7 +10,13 @@ from ..settings import Settings
 
 
 class Page(IntEnum):
+    """
+    Enumerates the different pages of the application (corresponding to the
+    main stacked widget indices).
+    """
+    #: Home page
     HOME = 0
+    #: Edit page
     EDIT = 1
 
 
@@ -38,6 +44,10 @@ class ViewController(Controller):
         self.setupIcons()
 
     def setupIcons(self):
+        """
+        Setup actions/buttons icons, loads them from the system icon theme on
+        linux.
+        """
         iopen = QtGui.QIcon.fromTheme(
             'document-open', QtGui.QIcon(':/ide-icons/rc/document-open.png'))
         isave = QtGui.QIcon.fromTheme(
@@ -108,13 +118,22 @@ class ViewController(Controller):
         self.ui.tabWidgetLogs.setTabIcon(1, irun)
 
     def show_perspective(self, perspective):
+        """
+        TODO
+        """
         self._perspective = perspective
         self._apply_perspective()
 
-    def show_home(self):
+    def show_home_page(self):
+        """
+        Shows the home page.
+        """
         self.show_page(Page.HOME)
 
-    def show_editors(self):
+    def show_edit_page(self):
+        """
+        Show the edit page.
+        """
         self.show_page(Page.EDIT)
 
     def show_page(self, page):
@@ -142,6 +161,9 @@ class ViewController(Controller):
             self.ui.dockWidgetNavPanel.setVisible(Settings().outline_visible)
 
     def _apply_perspective(self):
+        """
+        TODO
+        """
         if self._perspective == 'default':
             self.ui.menuBar.show()
             self.ui.statusbar.show()

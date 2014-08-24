@@ -1,3 +1,7 @@
+"""
+This module contains function and classes for interfacing with the GnuCobol
+compiler.
+"""
 import locale
 import logging
 import os
@@ -17,6 +21,13 @@ def _logger():
 
 
 def _get_encoding(filename):
+    """
+    Gets a filename encoding from the pyqode.core cache. If the requested file
+    path could not be found in cache, the locale preferred encoding is used.
+
+    :param filename: path of the file in cache.
+    :return: cached encoding
+    """
     try:
         encoding = Cache().get_file_encoding(filename)
     except KeyError:
@@ -54,7 +65,6 @@ def check_compiler():
     Checks if a valid cobol compiler can be found.
 
     :raises: CompilerNotFound if no compiler could be found.
-
     """
     import sys
     if not GnuCobolCompiler().is_working():
@@ -79,9 +89,11 @@ class FileType(IntEnum):
     Enumerates the different source file types:
         - executable (.exe)
         - module (.dll)
-
     """
+    #: Executable file (produces an executable binary that can be run)
     EXECUTABLE = 0
+    #: Module file (produces a shared library that can be used from other
+    #: modules or executables)
     MODULE = 1
 
 
@@ -111,6 +123,7 @@ class GnuCobolCompiler:
     """
 
     def __init__(self):
+        #: platform specifc extensions, sorted per file type
         self.extensions = [
             # no extension for exe on linux and mac
             '.exe' if system.windows else '',
@@ -172,6 +185,12 @@ class GnuCobolCompiler:
         return True
 
     def extension_for_type(self, file_type):
+        """
+        Returns a platform specific extension for the specified file type.
+
+        :param file_type: file type
+        :return: extension
+        """
         return self.extensions[int(file_type)]
 
     def compile(self, file_path, file_type):
@@ -262,6 +281,15 @@ class GnuCobolCompiler:
         return retval
 
     def get_dependencies(self, filename, recursive=True):
+        """
+        Gets the dependencies of a cobol program/module.
+
+        :param filename: path of the file to analyse.
+        :param recursive: True to perform recursive analysis (analyses
+            dependencies of dependencies recursively).
+        :return: The set of dependencies that needs to be compiled to compile
+            and use the requested program/module.
+        """
         encoding = _get_encoding(filename)
         directory = os.path.dirname(filename)
         dependencies = []

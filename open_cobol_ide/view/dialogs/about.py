@@ -11,7 +11,8 @@ from ...compiler import GnuCobolCompiler
 
 class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
     """
-    About dialog. Shows the about text and the 3rd party libraries versions.
+    Shows the about text, the license, the authors list and the 3rd party
+    libraries versions.
     """
     HEADERS = [
         'OpenCobol',
@@ -22,6 +23,7 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
         'pygments',
         'QDarkStyle'
     ]
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)

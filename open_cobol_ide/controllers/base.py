@@ -41,4 +41,7 @@ class Controller:
         return self._app()
 
     def __init__(self, app):
+        """
+        :param app: Reference to the application instance
+        """
         self._app = weakref.ref(app)

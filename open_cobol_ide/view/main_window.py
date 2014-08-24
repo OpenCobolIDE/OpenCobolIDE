@@ -1,7 +1,10 @@
 """
-This module contains the code of the main window, which basically connects
-slots to signals and delegate the logic to the various managers of the
-application.
+This module contains the main window implementation.
+
+Most of the code for controlling the gui can be found in the controllers
+package, the main window here just sets up its ui and implement the save/restor
+state logic as well as the close event handling (give user a chance to save its
+work or not).
 
 """
 import logging
@@ -15,16 +18,6 @@ def _logger():
 
 
 class MainWindow(QtWidgets.QMainWindow):
-    def restore_state(self):
-        s = Settings()
-        if s.geometry:
-            self.restoreGeometry(s.geometry)
-        if s.state:
-            self.restoreState(s.state)
-        self.wasMaximised = s.maximised
-        self.prevSize = s.size
-        self.ui.actionFullscreen.setChecked(s.fullscreen)
-
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
@@ -34,7 +27,23 @@ class MainWindow(QtWidgets.QMainWindow):
     def __del__(self):
         _logger().debug('del main window')
 
+    def restore_state(self):
+        """
+        Restores the main window state from the saved state (in the settings).
+        """
+        s = Settings()
+        if s.geometry:
+            self.restoreGeometry(s.geometry)
+        if s.state:
+            self.restoreState(s.state)
+        self.wasMaximised = s.maximised
+        self.prevSize = s.size
+        self.ui.actionFullscreen.setChecked(s.fullscreen)
+
     def save_state(self):
+        """
+        Saves the window state and geometry to the settings.
+        """
         s = Settings()
         s.geometry = self.saveGeometry()
         s.state = self.saveState()
@@ -45,6 +54,9 @@ class MainWindow(QtWidgets.QMainWindow):
             s.fullscreen = self.isFullScreen()
 
     def closeEvent(self, event):
+        """
+        Handle close event, gives the user a chance to save its work or not.
+        """
         self.ui.tabWidgetEditors.closeEvent(event)
         if event.isAccepted():
             self.save_state()

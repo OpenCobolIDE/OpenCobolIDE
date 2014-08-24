@@ -9,6 +9,12 @@ from ...settings import Settings
 
 
 class CobolCodeEdit(CodeEditBase):
+    """
+    Cobol code editor. We specialise the pyqode.cobol code edit to add support
+    for our settings system and for some custom properties (such as the
+    file type).
+
+    """
     @property
     def file_type(self):
         return get_file_type(self.file.path)

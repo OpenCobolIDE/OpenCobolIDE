@@ -1,23 +1,27 @@
 """
-This module contains all the classes related to logging the
-application messages.
+This module contains the functions needed to setup the logging module for the
+application.
 """
 import logging
-import logging.handlers
 import os
-
 from .system import get_cache_directory
 
 
 def get_path():
+    """
+    Gets the log file path
+    """
     pth = os.path.join(get_cache_directory(), ".log")
     return pth
 
-print(get_path())
 
 def setup_logging(version, debug):
     """
-    Configures the logger
+    Configures the logger, adds a stream handler and a file handler.
+
+    :param version: version of the application
+    :param debug: True to enable debug log level, otherwise the info log
+        level is used.
     """
     level = logging.DEBUG if debug else logging.INFO
     logger = logging.getLogger()
@@ -33,5 +37,4 @@ def setup_logging(version, debug):
         handler.setFormatter(formatter)
     for handler in handlers:
         logger.addHandler(handler)
-
     logging.getLogger('open_cobol_ide').info('version: %s' % version)

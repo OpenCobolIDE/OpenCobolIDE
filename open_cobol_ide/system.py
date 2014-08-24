@@ -23,6 +23,11 @@ def _mkdir(func):
 
 @_mkdir
 def get_cache_directory():
+    """
+    Gets the platform specific cache directory (where we store the log file and
+    the temporary files create by the linter).
+    :return: platform specific cache directory.
+    """
     if windows:
         return os.path.join(os.path.expanduser("~"), 'OpenCobolIDE', '.cache')
     elif darwin:

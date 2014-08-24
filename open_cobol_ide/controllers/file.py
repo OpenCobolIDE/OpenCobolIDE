@@ -19,11 +19,15 @@ def _logger():
     return logging.getLogger(__name__)
 
 
+#: Cobol files file (for open/save dialogs)
 COBOL_FILES_FILTER = 'Cobol files (%s)' % ' '.join(
     [ext.lower() for ext in CobolCodeEdit.extensions] +
     CobolCodeEdit.extensions).replace('.', '*.')
+#: Other files file (ALL files)
 OTHER_FILES_FILTER = 'Other text files (*)'
+#: filter separator
 FILTER_SEPARATOR = ';;'
+FILTER = FILTER_SEPARATOR.join([COBOL_FILES_FILTER, OTHER_FILES_FILTER])
 
 
 class FileController(Controller):
@@ -50,10 +54,15 @@ class FileController(Controller):
         self.ui.actionNew.triggered.connect(self.request_new)
         self.ui.actionSave.triggered.connect(
             self.ui.tabWidgetEditors.save_current)
-        self.ui.actionSaveAs.triggered.connect(self._save_as)
-        self.ui.actionQuit.triggered.connect(self._on_quit)
+        self.ui.actionSaveAs.triggered.connect(self.save_as)
+        self.ui.actionQuit.triggered.connect(self.quit)
 
     def request_new(self):
+        """
+        Requests the creation of a new file, show the new file wizard and open
+        if wizard completed sucessfully.
+
+        """
         path = DlgNewFile.create_new_file(self.main_window)
         if path:
             self.open_file(path)
@@ -62,16 +71,19 @@ class FileController(Controller):
         """
         Prompts the user for a file to open and open it.
         """
-        filter = '%s%s%s' % (COBOL_FILES_FILTER,
-                             FILTER_SEPARATOR,
-                             OTHER_FILES_FILTER)
         path, status = QtWidgets.QFileDialog.getOpenFileName(
             self.main_window, 'Open a file', directory=Settings().last_path,
-            filter=filter)
+            filter=FILTER)
         if status:
             self.open_file(path)
 
     def open_file(self, path):
+        """
+        Open a file in the edit view. If there is an editor already open for
+        the requested file, we simply give it the focus.
+
+        :param path: path of the file to open.
+        """
         name = os.path.split(path)[1]
         mimetype = mimetypes.guess_type(path)[0]
         index = self.ui.tabWidgetEditors.index_from_filename(path)
@@ -82,15 +94,16 @@ class FileController(Controller):
             _logger().debug('opening file path=%s, name=%s, mimetype=%s' %
                             (path, name, mimetype))
             self.app.edit.add_editor(path, name, mimetype)
-        self.app.view.show_editors()
+        self.app.view.show_edit_page()
         self.app.file.recent_files_manager.open_file(path)
 
-    def _save_as(self):
-        filter = '%s%s%s' % (COBOL_FILES_FILTER, FILTER_SEPARATOR,
-                             OTHER_FILES_FILTER)
+    def save_as(self):
+        """
+        Saves the currend editor content as.
+        """
         fn, filter = QtWidgets.QFileDialog.getSaveFileName(
             self.main_window, 'Save file as...',
-            self.ui.tabWidgetEditors.currentWidget().file.path, filter)
+            self.ui.tabWidgetEditors.currentWidget().file.path, FILTER)
         if not fn:
             return
         # ensure correct extension
@@ -106,7 +119,10 @@ class FileController(Controller):
             self.ui.tabWidgetEditors.currentIndex())
         Settings().last_path = fn
 
-    def _on_quit(self):
+    def quit(self):
+        """
+        Quits the application, but contrarily asks the user first.
+        """
         if QtWidgets.QMessageBox.question(
                 self.main_window, 'Quit OpenCobolIDE?',
                 'Are you sure you want to quit OpenCobolIDE?',
@@ -114,4 +130,3 @@ class FileController(Controller):
                 QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.Yes:
             _logger().debug('quit action triggered')
             self.app.exit()
-

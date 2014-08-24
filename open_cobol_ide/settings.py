@@ -1,20 +1,5 @@
-# Copyright (c) <2013-2014> Colin Duquesnoy
-#
-# This file is part of OpenCobolIDE.
-#
-# OpenCobolIDE is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-#
-# OpenCobolIDE is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along with
-# OpenCobolIDE. If not, see http://www.gnu.org/licenses/.
 """
-Gives an easy and safe access to the app settings
+This module contains a class for accessing the application settings.
 """
 import json
 import os
@@ -25,10 +10,17 @@ from .compiler import FileType, GnuCobolStandard
 
 
 class Settings(object):
+    """
+    Wraps QSettings to give an intuitive and easy access to the application
+    settings (thought getter/setter properties).
+    """
     def __init__(self):
         self._settings = QSettings('OpenCobolIDE', 'OpenCobolIDE')
 
     def clear(self):
+        """
+        Clear the settings.
+        """
         self._settings.clear()
 
     # Geometry and state (visible windows, ...) + working settings (last path)
@@ -285,10 +277,10 @@ class Settings(object):
 
     def set_file_type(self, path, ftype):
         """
-        Cache encoding for the specified file path.
+        Cache the file type of the specified file.
 
         :param path: path of the file to cache
-        :param encoding: encoding to cache
+        :param ftype: file type to cache
         """
         try:
             map = json.loads(self._settings.value('cached_file_types'))

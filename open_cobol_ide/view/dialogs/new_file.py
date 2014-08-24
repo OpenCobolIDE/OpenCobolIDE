@@ -85,17 +85,12 @@ TEMPLATES = [EXE_TEMPLATE, MODULE_TEMPLATE, '']
 
 
 class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
-    def path(self):
-        return os.path.join(
-            self.lineEditPath.text(),
-            self.lineEditName.text() + self.comboBoxExtension.currentText())
+    """
+    New file dialog. Prompts the user for a file template, a file name and
+    the path were to create the file.
 
-    def template(self):
-        """
-        Gets the file template
-        """
-        return TEMPLATES[self.comboBoxType.currentIndex()]
-
+    To use this dialog, use the ``create_new_file`` convenience method.
+    """
     def __init__(self, parent):
         super().__init__(parent)
         self.setupUi(self)
@@ -105,6 +100,21 @@ class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
         self.lineEditPath.setCompleter(completer)
         self.lineEditPath.setText(os.path.expanduser("~"))
         self.prev_pth = ""
+
+    def path(self):
+        """
+        Returns the path of the file to create.
+        :return: new file path
+        """
+        return os.path.join(
+            self.lineEditPath.text(),
+            self.lineEditName.text() + self.comboBoxExtension.currentText())
+
+    def template(self):
+        """
+        Gets the selected file template
+        """
+        return TEMPLATES[self.comboBoxType.currentIndex()]
 
     @QtCore.Slot(str)
     def on_lineEditName_textChanged(self, txt):

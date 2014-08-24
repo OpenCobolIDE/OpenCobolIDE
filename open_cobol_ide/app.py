@@ -6,9 +6,7 @@ various managers and gui parts together.
 import logging
 import os
 import sys
-
 from pyqode.qt import QtWidgets
-
 from . import __version__
 from .controllers import (CobolController, EditController, FileController,
                           HelpController, HomeController, ViewController)
@@ -22,8 +20,14 @@ def _logger():
 
 
 class Application:
+    """
+    Sets up the Qt Application, the main window and the various controllers.
+
+    The application class contains references to the main window user interface
+    and to the various controllers so that they can collaborate each others.
+    """
     def __init__(self):
-        self._init_env()
+        self.init_env()
         self.name = 'OpenCobolIDE'
         self.version = __version__
         self.title = '%s %s' % (self.name, self.version)
@@ -31,7 +35,7 @@ class Application:
         self.win = MainWindow()
         self.win.setWindowTitle(self.title)
         self.view = ViewController(self)
-        self.view.show_home()
+        self.view.show_home_page()
         self.file = FileController(self)
         self.home = HomeController(self)
         self.edit = EditController(self)
@@ -51,10 +55,17 @@ class Application:
         _logger().debug('del app')
 
     def run(self):
+        """
+        Run the Qt main loop.
+        """
         return self.app.exec_()
 
     @classmethod
-    def _init_env(cls):
+    def init_env(cls):
+        """
+        Inits the environment
+        :return:
+        """
         if sys.platform == 'win32':
             cls._windows_init()
         elif sys.platform == 'darwin':
@@ -83,11 +94,21 @@ class Application:
 
     @staticmethod
     def _osx_init():
-        # there are some missing paths, see github issue #40
+        """
+        Mac OSX specific initialisation, adds missing path to the PATH
+        environment variable (see github issue #40).
+
+        """
+        #
         paths = ['/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin',
                  '/usr/local/sbin', '/opt/bin', '/opt/sbin', '/opt/local/bin',
                  '/opt/local/sbin']
         os.environ['PATH'] = ':'.join(paths)
 
     def exit(self):
+        """
+        Closes all top level windows and quits the application (without
+        prompting the user, if you need to prompt the user, use
+        Application.file.quit())
+        """
         self.app.closeAllWindows()

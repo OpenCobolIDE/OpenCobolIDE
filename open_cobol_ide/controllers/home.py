@@ -10,6 +10,9 @@ from ..settings import Settings
 
 
 class HomePageWhite:
+    """
+    Contains the stylesheets for a white (default) theme.
+    """
     frame_recent = """
     QFrame
     {
@@ -39,6 +42,9 @@ class HomePageWhite:
 
 
 class HomePageDark:
+    """
+    Contains the stylesheets for a dark theme.
+    """
     frame_recent = """border: 1px solid rgb(80, 80, 80);
     border-radius: 5px;
     """
@@ -77,6 +83,9 @@ class HomeController(Controller):
             self._remove_current_recent_file)
 
     def _apply_style(self):
+        """
+        Applies the theme as defined in the Settings.
+        """
         if Settings().dark_style:
             style = HomePageDark
         else:
@@ -86,9 +95,16 @@ class HomeController(Controller):
         self.ui.listWidgetRecents.setStyleSheet(style.list_recent)
 
     def _clear_recents(self):
+        """
+        Clears the recent files menu and list.
+        """
         self.app.file.recent_files_manager.clear()
 
     def _remove_current_recent_file(self):
+        """
+        Removes the current item in the recent files list (both from the list
+        and the menu).
+        """
         filename = self.ui.listWidgetRecents.currentItem().data(
             QtCore.Qt.UserRole)
         files = self.app.file.recent_files_manager.get_recent_files()
@@ -97,6 +113,9 @@ class HomeController(Controller):
         self.app.file.menu_recents.update_actions()
 
     def _update_recents(self):
+        """
+        Updates the recent files list.
+        """
         self.ui.listWidgetRecents.clear()
         for file in self.app.file.recent_files_manager.get_recent_files():
             item = QtWidgets.QListWidgetItem()
@@ -113,6 +132,9 @@ class HomeController(Controller):
             self.ui.listWidgetRecents.addItem(item)
 
     def _on_recent_item_clicked(self, item):
+        """
+        Opens the file that was clicked.
+        :param item: clicked item.
+        """
         filename = item.data(QtCore.Qt.UserRole)
         self.app.file.open_file(filename)
-

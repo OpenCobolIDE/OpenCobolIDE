@@ -2,34 +2,54 @@
 Controls the cobol specific action (compile, run and change program type)
 
 """
+import logging
 import os
+import subprocess
+import sys
 from pyqode.core.api import TextHelper
 from pyqode.core.modes import CheckerMessage, CheckerMessages
 from pyqode.qt import QtCore, QtGui, QtWidgets
-import sys
-import subprocess
 from .base import Controller
 from ..compiler import FileType, GnuCobolCompiler, get_file_type
-from open_cobol_ide.settings import Settings
+from ..settings import Settings
 
 
 class CompilationThread(QtCore.QThread):
+    """
+    Compiles a file and all its dependencies in a background thread.
+
+    """
+    #: signal emitted when a file has compile. Parameters are the file path,
+    #: the compiler exit code and the list of possible errors messages.
     file_compiled = QtCore.Signal(str, int, list)
+    #: signal emitted when the thread finished.
     finished = QtCore.Signal()
 
-    filename = ''
+    #: path of the file to compile
+    file_path = ''
 
     def run(self):
+        """
+        Compiles the file and all its dependencies.
+        """
         compiler = GnuCobolCompiler()
-        files = compiler.get_dependencies(self.filename, recursive=True)
-        files.insert(0, self.filename)
+        files = compiler.get_dependencies(self.file_path, recursive=True)
+        files.insert(0, self.file_path)
         for f in files:
             status, messages = compiler.compile(f, get_file_type(f))
             self.file_compiled.emit(f, status, messages)
         self.finished.emit()
 
 
+def _logger():
+    return logging.getLogger(__name__)
+
+
 class CobolController(Controller):
+    """
+    Controls the cobol menu (compile, run, file type).
+
+    """
     def __init__(self, app):
         super().__init__(app)
         self._compilation_thread = None
@@ -53,9 +73,14 @@ class CobolController(Controller):
         self.ui.actionRun.triggered.connect(self.run)
         self._run_requested = False
         self.ui.consoleOutput.process_finished.connect(self._on_run_finished)
-        self.ui.actionCancel.triggered.connect(self._on_action_cancel)
+        self.ui.actionCancel.triggered.connect(self.cancel)
 
     def display_file_type(self, editor):
+        """
+        Displays the current editor file type (changes the checked action in
+        the file type drop down menu).
+
+        """
         try:
             ftype = editor.file_type
         except AttributeError:
@@ -67,6 +92,9 @@ class CobolController(Controller):
                                          not self.ui.consoleOutput.is_running)
 
     def _on_program_type_changed(self, action):
+        """
+        Updates current editor file type and enables/disables run action.
+        """
         try:
             if action == self.ui.actionProgram:
                 self.ui.tabWidgetEditors.currentWidget().file_type = \
@@ -81,14 +109,21 @@ class CobolController(Controller):
             pass
 
     def compile(self):
+        """
+        Compiles the current editor
+        """
+        # ensures all editors are saved before compiling
+        self.ui.tabWidgetEditors.save_all()
+        # disable actions
         self.bt_compile.setDisabled(True)
         self.ui.actionCompile.setDisabled(True)
         self.ui.actionRun.setDisabled(True)
-        self.ui.tabWidgetEditors.save_all()
+        # reset errors
         self.ui.errorsTable.clear()
         self._errors = 0
+        # prepare and start compilation thread
         self._compilation_thread = CompilationThread()
-        self._compilation_thread.filename = \
+        self._compilation_thread.file_path = \
             self.app.edit.current_editor.file.path
         self._compilation_thread.file_compiled.connect(self._on_file_compiled)
         self._compilation_thread.finished.connect(
@@ -96,6 +131,11 @@ class CobolController(Controller):
         self._compilation_thread.start()
 
     def _on_compilation_finished(self):
+        """
+        Runs the current file if the compilation came from a run request,
+        otherwise enables actions/buttons.
+
+        """
         if self._run_requested:
             self._run_requested = False
             if self._errors == 0:
@@ -107,6 +147,9 @@ class CobolController(Controller):
                 self.app.edit.current_editor.file_type == FileType.EXECUTABLE)
 
     def _on_file_compiled(self, filename, status, messages):
+        """
+        Displays compilation status in errors table.
+        """
         self.ui.dockWidgetLogs.show()
         self.ui.tabWidgetLogs.setCurrentIndex(0)
         if len(messages) == 0 and status == 0:
@@ -124,6 +167,9 @@ class CobolController(Controller):
                 self.ui.errorsTable.add_message(CheckerMessage(*msg))
 
     def _goto_error_msg(self, msg):
+        """
+        Opens an editor and goes to the error line.
+        """
         self.app.file.open_file(msg.path)
         if msg.status:
             TextHelper(self.app.edit.current_editor).goto_line(msg.line)
@@ -136,7 +182,29 @@ class CobolController(Controller):
         self._run_requested = True
         self.compile()
 
+    def _run_in_external_terminal(self, program, wd):
+        """
+        Runs a program in an external terminal.
+
+        :param program: program to run
+        :param wd: working directory
+        """
+        self.ui.consoleOutput.append(
+            "Launched in external terminal")
+        if sys.platform == "win32":
+            subprocess.Popen(
+                program, cwd=wd,
+                creationflags=subprocess.CREATE_NEW_CONSOLE)
+        else:
+            subprocess.Popen(
+                Settings().external_terminal_command.split(' ') +
+                [program], cwd=wd)
+
     def _run(self):
+        """
+        Runs the current editor program.
+        :return:
+        """
         # compilation has finished, we can run the program that corresponds
         # to the current editor file
         editor = self.app.edit.current_editor
@@ -154,18 +222,11 @@ class CobolController(Controller):
                     wd, os.path.splitext(editor.file.name)[0] +
                     GnuCobolCompiler().extension_for_type(file_type))
                 if not os.path.exists(program):
+                    _logger().warning('cannot run %s, file does not exists',
+                                      program)
                     return
                 if Settings().external_terminal:
-                    self.ui.consoleOutput.append(
-                        "Launched in external terminal")
-                    if sys.platform == "win32":
-                        subprocess.Popen(
-                            program, cwd=wd,
-                            creationflags=subprocess.CREATE_NEW_CONSOLE)
-                    else:
-                        subprocess.Popen(
-                            Settings().external_terminal_command.split(' ') +
-                            [program], cwd=wd)
+                    self._run_in_external_terminal(program, wd)
                 else:
                     self.ui.consoleOutput.setFocus(True)
                     self.ui.actionRun.setEnabled(False)
@@ -176,7 +237,10 @@ class CobolController(Controller):
         self.bt_compile.setEnabled(True)
         self.ui.actionRun.setEnabled(True)
 
-    def _on_action_cancel(self):
+    def cancel(self):
+        """
+        Cancels current any ongoing operations (run/compile).
+        """
         if self._compilation_thread:
             self._compilation_thread.terminate()
         self.ui.consoleOutput.stop_process()
