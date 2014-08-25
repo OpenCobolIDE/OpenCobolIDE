@@ -64,9 +64,9 @@ class TabCornerWidget(QtWidgets.QWidget):
     QToolButton  { /* all types of tool button */
         background-color: transparent;
         border: 1px solid transparent;
-        border-radius: 3px;
-        padding: 0px;
-        padding-right: 10px;
+        border-radius: 11px;
+        padding: 2px;
+        margin-bottom: 1px;
     }
 
     QToolButton:hover {
@@ -104,7 +104,10 @@ class TabCornerWidget(QtWidgets.QWidget):
         assert isinstance(bt_compile, QtWidgets.QToolButton)
         assert isinstance(bt_run, QtWidgets.QToolButton)
         bt_compile.setPopupMode(bt_compile.DelayedPopup)
-        bt_compile.setStyleSheet(self.dropbtn_stylesheet)
+        bt_compile.setStyleSheet(self.dropbtn_stylesheet + """
+        QToolButton{
+        padding-right: 10px; /* make way for the popup button */
+        }""")
         bt_run.setStyleSheet(self.dropbtn_stylesheet)
         layout = QtWidgets.QHBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
