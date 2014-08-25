@@ -6,7 +6,7 @@ various managers and gui parts together.
 import logging
 import os
 import sys
-from pyqode.qt import QtWidgets
+from pyqode.qt import QtWidgets, QT_API, PYQT5_API, PYSIDE_API
 from . import __version__
 from .controllers import (CobolController, EditController, FileController,
                           HelpController, HomeController, ViewController)
@@ -45,6 +45,8 @@ class Application:
         self.view.show_perspective(Settings().perspective)
         self.view.show_home_page()
 
+        self.update_app_style()
+
         try:
             check_compiler()
         except CompilerNotFound as e:
@@ -56,6 +58,23 @@ class Application:
 
     def __del__(self):
         _logger().debug('del app')
+
+    def update_app_style(self):
+        if Settings().dark_style:
+            try:
+                import qdarkstyle
+            except ImportError:
+                pass
+            else:
+                qt_api = os.environ[QT_API]
+                if qt_api == os.environ[QT_API] == PYQT5_API:
+                    self.app.setStyleSheet(
+                        qdarkstyle.load_stylesheet_pyqt5())
+                else:
+                    self.app.setStyleSheet(
+                        qdarkstyle.load_stylesheet(qt_api == PYSIDE_API))
+                return
+        self.app.setStyleSheet('')
 
     def run(self):
         """

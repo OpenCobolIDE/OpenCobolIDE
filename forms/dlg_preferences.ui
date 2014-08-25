@@ -20,16 +20,16 @@
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <property name="leftMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <property name="topMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <property name="rightMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <property name="bottomMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <item row="0" column="0">
     <widget class="QWidget" name="widget" native="true">
@@ -67,7 +67,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <property name="usesScrollButtons">
          <bool>true</bool>
@@ -383,33 +383,13 @@
            <widget class="QLineEdit" name="lineEditRunTerm"/>
           </item>
           <item row="3" column="0">
-           <widget class="QCheckBox" name="checkBoxCompileBeforeRun">
-            <property name="text">
-             <string>Recompile before run</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QCheckBox" name="checkBoxAutoDetectDeps">
-            <property name="text">
-             <string>Autodetect dependencies</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
            <widget class="QCheckBox" name="checkBoxCustomPath">
             <property name="text">
              <string>Custom compiler path</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
+          <item row="3" column="1">
            <widget class="QLineEdit" name="lineEditCompilerPath"/>
           </item>
          </layout>

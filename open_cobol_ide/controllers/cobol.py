@@ -34,8 +34,8 @@ class CompilationThread(QtCore.QThread):
         Compiles the file and all its dependencies.
         """
         compiler = GnuCobolCompiler()
-        files = compiler.get_dependencies(self.file_path, recursive=True)
-        files.insert(0, self.file_path)
+        files = [self.file_path]
+        files += compiler.get_dependencies(self.file_path, recursive=True)
         for f in files:
             status, messages = compiler.compile(f, get_file_type(f))
             self.file_compiled.emit(f, status, messages)

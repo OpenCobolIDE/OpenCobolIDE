@@ -159,3 +159,4 @@ class EditController(Controller):
             editor = self.ui.tabWidgetEditors.widget(i)
             update_editor_settings(editor)
             editor.rehighlight()
+        self.app.update_app_style()
