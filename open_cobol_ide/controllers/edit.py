@@ -100,6 +100,7 @@ class EditController(Controller):
             if mimetype in klass.mimetypes:
                 return klass()
         editor = self.editor_types[-1]()
+        return editor
 
     def _current_changed(self, new_index):
         """
@@ -160,3 +161,4 @@ class EditController(Controller):
             update_editor_settings(editor)
             editor.rehighlight()
         self.app.update_app_style()
+        self.app.home.update_style()

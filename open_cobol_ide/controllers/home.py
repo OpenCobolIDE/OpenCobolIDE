@@ -70,7 +70,7 @@ class HomeController(Controller):
     """
     def __init__(self, app):
         super().__init__(app)
-        self._apply_style()
+        self.update_style()
         self._update_recents()
         self.app.file.recent_files_manager.updated.connect(
             self._update_recents)
@@ -82,7 +82,7 @@ class HomeController(Controller):
         self.ui.listWidgetRecents.remove_current_requested.connect(
             self._remove_current_recent_file)
 
-    def _apply_style(self):
+    def update_style(self):
         """
         Applies the theme as defined in the Settings.
         """
