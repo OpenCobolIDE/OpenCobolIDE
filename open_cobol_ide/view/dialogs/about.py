@@ -44,3 +44,6 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
         for i, version in enumerate(versions):
             item = QtWidgets.QTableWidgetItem(version)
             self.tbwVersions.setItem(i, 0, item)
+
+    def keyPressEvent(self, e):
+        self.close()
