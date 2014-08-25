@@ -12,6 +12,7 @@ def update_editor_settings(editor):
     editor.font_size = settings.font_size
     editor.show_whitespaces = settings.show_whitespaces
     editor.syntax_highlighter.color_scheme = ColorScheme(settings.color_scheme)
+    editor.panels.get('FoldingPanel').native_look = not settings.dark_style
     try:
         # cobol editor specific settings
         editor.comment_indicator = settings.comment_indicator
