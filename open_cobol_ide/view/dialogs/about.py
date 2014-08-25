@@ -15,7 +15,7 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
     libraries versions.
     """
     HEADERS = [
-        'OpenCobol',
+        'GnuCobol',
         'Qt',
         'PyQt',
         'pyqode.core',
