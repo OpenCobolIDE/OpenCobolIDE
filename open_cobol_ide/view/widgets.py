@@ -64,16 +64,9 @@ class TabCornerWidget(QtWidgets.QWidget):
     QToolButton  { /* all types of tool button */
         background-color: transparent;
         border: 1px solid transparent;
-        border-radius: 8px;
+        border-radius: 3px;
         padding: 0px;
-    }
-
-    QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
-     padding-right: 10px; /* make way for the popup button */
-    }
-
-    QToolButton[popupMode="2"] { /* only for MenuButtonPopup */
-     padding-right: 10px; /* make way for the popup button */
+        padding-right: 10px;
     }
 
     QToolButton:hover {
@@ -90,14 +83,14 @@ class TabCornerWidget(QtWidgets.QWidget):
     QToolButton::menu-button  {
         background-color: transparent;
         border: 1px transparent black;
-        border-top-right-radius: 6px;
-        border-bottom-right-radius: 6px;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
         /* 16px width + 4px for border = 20px allocated above */
         width: 16px;
     }
 
     QToolButton::menu-arrow  {
-        image: url(:/ide-icons/rc/downarrow.png);
+        image: url(":/pyqode-icons/rc/arrow_down_off.png");
     }
 
     QToolButton::menu-arrow:open  {
