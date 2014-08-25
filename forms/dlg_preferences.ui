@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>447</width>
-    <height>393</height>
+    <width>424</width>
+    <height>489</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -67,7 +67,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>4</number>
+         <number>0</number>
         </property>
         <property name="usesScrollButtons">
          <bool>true</bool>
@@ -75,60 +75,28 @@
         <property name="documentMode">
          <bool>false</bool>
         </property>
-        <widget class="QWidget" name="tabView">
+        <widget class="QWidget" name="tabEditor">
          <attribute name="title">
-          <string>View</string>
+          <string>Editor</string>
          </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <widget class="QCheckBox" name="checkBoxViewLineNumber">
-            <property name="text">
-             <string>Display line numbers</string>
+           <widget class="QGroupBox" name="groupBox_3">
+            <property name="title">
+             <string>View</string>
             </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBoxViewMargins">
-            <property name="text">
-             <string>Display margins</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBoxViewMenuBar">
-            <property name="text">
-             <string>Display Menu bar</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBoxViewStatus">
-            <property name="text">
-             <string>Display Status bar</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBoxViewToolBar">
-            <property name="text">
-             <string>Display Tool bar </string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBoxViewControlPanel">
-            <property name="text">
-             <string>Display control panel (compile and run button inside editor)</string>
-            </property>
+            <layout class="QFormLayout" name="formLayout_4">
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="checkBoxViewLineNumber">
+               <property name="text">
+                <string>Display line numbers</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item>
@@ -137,6 +105,9 @@
              <string>Highlighting</string>
             </property>
             <layout class="QFormLayout" name="formLayout">
+             <property name="fieldGrowthPolicy">
+              <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+             </property>
              <item row="0" column="0">
               <widget class="QCheckBox" name="checkBoxHighlightCurrentLine">
                <property name="text">
@@ -148,16 +119,6 @@
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QCheckBox" name="checkBoxHighlightBraces">
-               <property name="text">
-                <string>Highlight matching braces</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
               <widget class="QCheckBox" name="checkBoxHighlightWhitespaces">
                <property name="text">
                 <string>Highlight whitespaces</string>
@@ -170,17 +131,7 @@
             </layout>
            </widget>
           </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="tabEditor">
-         <attribute name="title">
-          <string>Editor</string>
-         </attribute>
-         <layout class="QGridLayout" name="gridLayout">
-          <property name="sizeConstraint">
-           <enum>QLayout::SetDefaultConstraint</enum>
-          </property>
-          <item row="0" column="0" colspan="2">
+          <item>
            <widget class="QGroupBox" name="groupBox_2">
             <property name="title">
              <string>Indentation</string>
@@ -205,19 +156,6 @@
                  </property>
                 </widget>
                </item>
-               <item>
-                <spacer name="horizontalSpacer">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
               </layout>
              </item>
              <item row="1" column="0">
@@ -233,29 +171,7 @@
             </layout>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QGroupBox" name="groupBox_3">
-            <property name="title">
-             <string>File saving</string>
-            </property>
-            <layout class="QFormLayout" name="formLayout_4">
-             <property name="fieldGrowthPolicy">
-              <enum>QFormLayout::FieldsStayAtSizeHint</enum>
-             </property>
-             <item row="0" column="0">
-              <widget class="QCheckBox" name="checkBoxEditorSaveOnFocusOut">
-               <property name="text">
-                <string>Save on editor focus out</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="2" column="0">
+          <item>
            <widget class="QGroupBox" name="groupBox_4">
             <property name="title">
              <string>Code completion</string>
@@ -280,25 +196,12 @@
                  </property>
                 </widget>
                </item>
-               <item>
-                <spacer name="horizontalSpacer_2">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
               </layout>
              </item>
             </layout>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item>
            <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -519,69 +422,6 @@
           <property name="fieldGrowthPolicy">
            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
           </property>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="checkBoxFreeFormat">
-            <property name="toolTip">
-             <string>Code and compile with free format support</string>
-            </property>
-            <property name="text">
-             <string>Free Format support</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>Left margin position:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QSpinBox" name="spinBoxLeftMargin">
-            <property name="toolTip">
-             <string>Position of the left margin (starting from 0)</string>
-            </property>
-            <property name="maximum">
-             <number>256</number>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string>Right margin position</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QSpinBox" name="spinBoxRightMargin">
-            <property name="toolTip">
-             <string>Position of the right margin (starting from 0)</string>
-            </property>
-            <property name="maximum">
-             <number>256</number>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>Comment indicator:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="lineEditCommentIndicator">
-            <property name="font">
-             <font>
-              <family>Monospace</family>
-             </font>
-            </property>
-            <property name="text">
-             <string>*&gt;</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_8">
             <property name="text">
@@ -626,6 +466,35 @@
               <string>mf</string>
              </property>
             </item>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="checkBoxFreeFormat">
+            <property name="toolTip">
+             <string>Code and compile with free format support</string>
+            </property>
+            <property name="text">
+             <string>Free Format support</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Comment indicator:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="lineEditCommentIndicator">
+            <property name="font">
+             <font>
+              <family>Monospace</family>
+             </font>
+            </property>
+            <property name="text">
+             <string>*&gt;</string>
+            </property>
            </widget>
           </item>
          </layout>

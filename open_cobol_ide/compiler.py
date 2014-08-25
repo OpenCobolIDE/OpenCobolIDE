@@ -214,6 +214,7 @@ class GnuCobolCompiler:
         process = QtCore.QProcess()
         process.setWorkingDirectory(path)
         process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
+        _logger().debug('command: %s %s', pgm, ' '.join(options))
         process.start(pgm, options)
         process.waitForFinished()
         status = process.exitCode()

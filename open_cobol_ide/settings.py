@@ -15,7 +15,7 @@ class Settings(object):
     settings (thought getter/setter properties).
     """
     def __init__(self):
-        self._settings = QSettings('OpenCobolIDE', 'OpenCobolIDE')
+        self._settings = QSettings('OpenCobolIDE', 'OpenCobolIDE4')
 
     def clear(self):
         """
@@ -127,14 +127,6 @@ class Settings(object):
         self._settings.setValue('highlightCurrentLine', int(value))
 
     @property
-    def highlight_matching(self):
-        return bool(int(self._settings.value('highlightMatchingBraces', '1')))
-
-    @highlight_matching.setter
-    def highlight_matching(self, value):
-        self._settings.setValue('highlightMatchingBraces', int(value))
-
-    @property
     def show_whitespaces(self):
         return bool(int(self._settings.value('highlightWhitespaces', '0')))
 
@@ -159,11 +151,11 @@ class Settings(object):
         self._settings.setValue('enableAutoIndent', int(value))
 
     @property
-    def code_completion_trigger(self):
+    def code_completion_trigger_len(self):
         return int(self._settings.value('ccTriggerLen', '1'))
 
-    @code_completion_trigger.setter
-    def code_completion_trigger(self, value):
+    @code_completion_trigger_len.setter
+    def code_completion_trigger_len(self, value):
         self._settings.setValue('ccTriggerLen', value)
 
     #
@@ -175,13 +167,13 @@ class Settings(object):
 
     @dark_style.setter
     def dark_style(self, value):
-        self._settings.setValue('dark_style', value)
+        self._settings.setValue('dark_style', int(value))
 
     @property
     def font(self):
         font = self._settings.value('fontName')
         if not font:
-            font = 'Adobe Source Code'
+            font = 'Source Code Pro'
         return font
 
     @font.setter

@@ -248,6 +248,8 @@ class CobolController(Controller):
                     return
                 if Settings().external_terminal:
                     self._run_in_external_terminal(program, wd)
+                    for item in self.bt_run + [self.ui.actionRun]:
+                        item.setEnabled(True)
                 else:
                     self.ui.consoleOutput.setFocus(True)
                     for item in self.bt_run + [self.ui.actionRun]:

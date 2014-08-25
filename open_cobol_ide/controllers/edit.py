@@ -6,8 +6,10 @@ from pyqode.core.api import TextHelper
 from pyqode.qt import QtCore, QtWidgets
 from .base import Controller
 from ..compiler import FileType
+from ..view.dialogs.preferences import DlgPreferences
 from ..settings import Settings
-from ..view.editors import CobolCodeEdit, GenericCodeEdit
+from ..view.editors import CobolCodeEdit, GenericCodeEdit, \
+    update_editor_settings
 
 
 class EditController(Controller):
@@ -32,6 +34,7 @@ class EditController(Controller):
             self._current_changed)
         self.ui.tableWidgetOffsets.show_requested.connect(
             self.ui.dockWidgetOffsets.show)
+        self.ui.actionPreferences.triggered.connect(self.edit_preferences)
 
         self._setup_status_bar()
 
@@ -84,6 +87,9 @@ class EditController(Controller):
         self.ui.tabWidgetEditors.setTabToolTip(index, path)
         editor.cursorPositionChanged.connect(self._update_status_bar_labels)
         self._update_status_bar_labels()
+        update_editor_settings(editor)
+        editor.rehighlight()
+        return editor
 
     def _editor_from_mimetype(self, mimetype):
         """
@@ -93,7 +99,7 @@ class EditController(Controller):
         for klass in self.editor_types:
             if mimetype in klass.mimetypes:
                 return klass()
-        return self.editor_types[-1]()
+        editor = self.editor_types[-1]()
 
     def _current_changed(self, new_index):
         """
@@ -146,3 +152,10 @@ class EditController(Controller):
             self._lbl_encoding.setText(self.current_editor.file.encoding)
             self._lbl_format.setText(
                 'Free format' if Settings().free_format else 'Fixed format')
+
+    def edit_preferences(self):
+        DlgPreferences.edit_preferences(self.main_window)
+        for i in range(self.ui.tabWidgetEditors.count()):
+            editor = self.ui.tabWidgetEditors.widget(i)
+            update_editor_settings(editor)
+            editor.rehighlight()
