@@ -18,15 +18,15 @@
       *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        FILE SECTION.
       *-----------------------
-       WORKING-STORAGE SECTION
+       WORKING-STORAGE SECTION.
       *-----------------------
        PROCEDURE DIVISION.
       *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        MAIN-PROCEDURE.
-           *>
-           *> The main procedure of the program
-           *>
-           DISPLAY "Hello world"
-           STOP RUN.
+      **
+      * The main procedure of the program
+      **
+            DISPLAY "Hello world"
+            STOP RUN.
       ** add other procedures here
        END PROGRAM YOUR-PROGRAM-NAME.
