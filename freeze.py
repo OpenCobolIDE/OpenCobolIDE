@@ -23,6 +23,8 @@ import os
 import shutil
 import sys
 from cx_Freeze import setup, Executable
+from open_cobol_ide import __version__
+from pyqode.cobol.backend import server
 
 
 # Clean up
@@ -35,34 +37,21 @@ if os.path.exists('dist'):
 windows = sys.platform == 'win32'
 osx = sys.platform == 'darwin'
 
-app_script = 'open-cobol-ide'
+app_script = 'OpenCobolIDE'
 app_name = 'OpenCobolIDE'
 app_exe = 'OpenCobolIDE.exe' if windows else 'OpenCobolIDE'
-srv_script = 'oci/backend/server.py'
-srv_name = 'ociserver'
-srv_exe = 'ociserver.exe' if windows else 'ociserver'
+srv_script = server.__file__
+srv_name = 'cobol-backend'
+srv_exe = 'cobol-backend.exe' if windows else 'cobol-backend'
 
 app_icon = 'forms/rc/silex-icon.ico' if windows else None
-
-
-# Get App version
-def read_version():
-    """
-    Reads the version without self importing
-    """
-    with open('oci/__init__.py') as f:
-        lines = f.read().splitlines()
-        for l in lines:
-            if '__version__' in l:
-                return l.split('=')[1].strip().replace('"', '')
-__version__ = read_version()
 
 
 if len(sys.argv) == 1:
     sys.argv.append('build')
 
 options = {
-    'namespace_packages': ['pyqode.core'],
+    'namespace_packages': ['pyqode'],
     # freeze the pygments default style along with our executable
     'includes': [
         'pygments.styles.default',

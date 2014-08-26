@@ -7,7 +7,7 @@ import sys
 
 windows = sys.platform == 'win32'
 darwin = sys.platform == 'darwin'
-
+linux = sys.platform == 'linux'
 
 def _mkdir(func):
     @functools.wraps(func)
@@ -29,9 +29,9 @@ def get_cache_directory():
     :return: platform specific cache directory.
     """
     if windows:
-        return os.path.join(os.path.expanduser("~"), 'OpenCobolIDE', '.cache')
+        return os.path.join(os.path.expanduser("~"), 'OpenCobolIDE', 'cache')
     elif darwin:
         # todo: check if there is a better place for caching file on mac
-        return os.path.join(os.path.expanduser("~"), '.OpenCobolIDE', '.cache')
+        return os.path.join(os.path.expanduser("~"), 'OpenCobolIDE', 'cache')
     else:
         return os.path.join(os.path.expanduser("~"), '.cache', '.OpenCobolIDE')

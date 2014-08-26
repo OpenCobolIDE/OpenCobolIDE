@@ -122,7 +122,11 @@ def test_compile(path, ftype, expected_results, output_file_path):
 
 @pytest.mark.parametrize('filename, expected_results', [
     ('test/testfiles/HelloWorld.cbl', []),
-    ('test/testfiles/TEST-PRINTER.cbl', ['test/testfiles/VIRTUAL-PRINTER.cbl'])
+    ('test/testfiles/TEST-PRINTER.cbl',
+     ['test/testfiles/VIRTUAL-PRINTER.cbl'] if system.linux else
+     ['test/testfiles/VIRTUAL-PRINTER.cbl',
+      'test/testfiles/VIRTUAL-PRINTER.CBL']
+    )
 ])
 def test_get_dependencies(filename, expected_results):
     results = GnuCobolCompiler().get_dependencies(filename)

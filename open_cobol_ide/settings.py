@@ -7,6 +7,7 @@ import sys
 from pyqode.core.qt import QtCore
 from pyqode.core.qt.QtCore import QSettings
 from .compiler import FileType, GnuCobolStandard
+from open_cobol_ide import system
 
 
 class Settings(object):
@@ -101,7 +102,8 @@ class Settings(object):
 
     @property
     def perspective(self):
-        return self._settings.value('perspective', 'default')
+        return self._settings.value(
+            'perspective', 'default' if not system.darwin else 'minimal')
 
     @perspective.setter
     def perspective(self, value):
@@ -211,7 +213,8 @@ class Settings(object):
         # works on gnome, what about KDE and how do I detect that?
         # at the moment just go with gnome, user can change that in the
         # settings dialog anyway
-        default_shell_cmd = 'gnome-terminal -e'
+        default_shell_cmd = ('gnome-terminal -e' if not system.darwin else
+                             'open')
         return str(self._settings.value('shell', default_shell_cmd))
 
     @external_terminal_command.setter

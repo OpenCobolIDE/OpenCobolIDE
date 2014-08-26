@@ -34,7 +34,7 @@ def _get_encoding(filename):
         encoding = locale.getpreferredencoding()
         _logger().warning(
             'encoding for %s not found in cache, using locale preferred '
-            'encoding instead: %s', encoding)
+            'encoding instead: %s', filename, encoding)
     return encoding
 
 

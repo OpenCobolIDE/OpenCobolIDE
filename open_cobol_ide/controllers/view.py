@@ -6,6 +6,7 @@ import logging
 from enum import IntEnum
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
+from open_cobol_ide import system
 from ..settings import Settings
 
 
@@ -52,6 +53,9 @@ class ViewController(Controller):
         self.main_window.addActions(self.make_main_menu().actions())
         window_mnu = self.main_window.createPopupMenu()
         self.ui.menuWindows.addActions(window_mnu.actions())
+        if system.darwin:
+            self.ui.toolBarCode.setIconSize(QtCore.QSize(20, 20))
+            self.ui.toolBarFile.setIconSize(QtCore.QSize(20, 20))
 
     def toggle_perspective(self):
         self.show_perspective(
@@ -204,4 +208,4 @@ class ViewController(Controller):
             self.ui.statusbar.hide()
             self.ui.toolBarCode.hide()
             self.ui.toolBarFile.hide()
-            self.app.cobol.corner_widget.setVisible(True)
+            self.app.cobol.corner_widget.setVisible(not system.darwin)
