@@ -4,10 +4,11 @@ System utility module (get system info, platform specific path,...).
 import functools
 import os
 import sys
+import platform
 
-windows = sys.platform == 'win32'
-darwin = sys.platform == 'darwin'
-linux = sys.platform == 'linux'
+windows = platform.system() == 'Windows'
+darwin = platform.system() == 'Darwin'
+linux = platform.system() == 'Linux'
 
 def _mkdir(func):
     @functools.wraps(func)
