@@ -108,7 +108,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
     def edit_preferences(cls, parent):
         dlg = cls(parent)
         if dlg.exec_() != dlg.Accepted:
-            raise Exception()
+            raise ValueError()
         settings = Settings()
         settings.display_lines = dlg.checkBoxViewLineNumber.isChecked()
         settings.highlight_caret = dlg.checkBoxHighlightCurrentLine.isChecked()

@@ -3,7 +3,7 @@ Contains the EditController.
 
 """
 from pyqode.core.api import TextHelper
-from pyqode.qt import QtCore, QtWidgets
+from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
 from ..compiler import FileType
 from ..view.dialogs.preferences import DlgPreferences
@@ -35,7 +35,9 @@ class EditController(Controller):
         self.ui.tableWidgetOffsets.show_requested.connect(
             self.ui.dockWidgetOffsets.show)
         self.ui.actionPreferences.triggered.connect(self.edit_preferences)
-
+        self.ui.actionPreferences.setShortcut(QtGui.QKeySequence.Preferences)
+        if self.ui.actionPreferences.shortcut().toString().strip() == '':
+            self.ui.actionPreferences.setShortcut('F2')
         self._setup_status_bar()
 
     def _setup_status_bar(self):
@@ -155,10 +157,15 @@ class EditController(Controller):
                 'Free format' if Settings().free_format else 'Fixed format')
 
     def edit_preferences(self):
-        DlgPreferences.edit_preferences(self.main_window)
-        for i in range(self.ui.tabWidgetEditors.count()):
-            editor = self.ui.tabWidgetEditors.widget(i)
-            update_editor_settings(editor)
-            editor.rehighlight()
-        self.app.update_app_style()
-        self.app.home.update_style()
+        try:
+            DlgPreferences.edit_preferences(self.main_window)
+        except ValueError:
+            # dialog canceled
+            pass
+        else:
+            for i in range(self.ui.tabWidgetEditors.count()):
+                editor = self.ui.tabWidgetEditors.widget(i)
+                update_editor_settings(editor)
+                editor.rehighlight()
+            self.app.update_app_style()
+            self.app.home.update_style()
