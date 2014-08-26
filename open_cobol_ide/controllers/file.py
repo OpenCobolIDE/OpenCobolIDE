@@ -45,8 +45,16 @@ class FileController(Controller):
         self.menu_recents.open_requested.connect(self.open_file)
         self.menu_recents.clear_requested.connect(
             self.recent_files_manager.clear)
-        self.ui.menuFile.insertMenu(self.ui.actionQuit, self.menu_recents)
-        self.ui.menuFile.insertSeparator(self.ui.actionQuit)
+        self.ui.menuFile.clear()
+        self.ui.menuFile.addAction(self.ui.actionNew)
+        self.ui.menuFile.addAction(self.ui.actionOpen)
+        self.ui.menuFile.addSeparator()
+        self.ui.menuFile.addMenu(self.menu_recents)
+        self.ui.menuFile.addSeparator()
+        self.ui.menuFile.addAction(self.ui.actionSave)
+        self.ui.menuFile.addAction(self.ui.actionSaveAs)
+        self.ui.menuFile.addSeparator()
+        self.ui.menuFile.addAction(self.ui.actionQuit)
         self.menu_recents.update_actions()
         self.recent_files_manager.updated.connect(
             self.menu_recents.update_actions)
