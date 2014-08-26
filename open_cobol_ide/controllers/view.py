@@ -149,6 +149,10 @@ class ViewController(Controller):
         self.ui.tabWidgetLogs.setTabIcon(0, iissue)
         self.ui.tabWidgetLogs.setTabIcon(1, irun)
 
+        self.ui.actionAbout.setMenuRole(QtWidgets.QAction.AboutRole)
+        self.ui.actionPreferences.setMenuRole(QtWidgets.QAction.PreferencesRole)
+        self.ui.actionQuit.setMenuRole(QtWidgets.QAction.QuitRole)
+
     def show_perspective(self, perspective):
         """
         TODO
