@@ -110,19 +110,16 @@ class CobolController(Controller):
         """
         Updates current editor file type and enables/disables run action.
         """
-        try:
-            if action == self.ui.actionProgram:
-                self.ui.tabWidgetEditors.currentWidget().file_type = \
-                    FileType.EXECUTABLE
-                for item in self.bt_run + [self.ui.actionRun]:
-                    item.setEnabled(not self.ui.consoleOutput.is_running)
-            else:
-                self.ui.tabWidgetEditors.currentWidget().file_type = \
-                    FileType.MODULE
-                for item in self.bt_run + [self.ui.actionRun]:
-                    item.setEnabled(False)
-        except AttributeError:
-            pass
+        if action == self.ui.actionProgram:
+            self.ui.tabWidgetEditors.currentWidget().file_type = \
+                FileType.EXECUTABLE
+            for item in self.bt_run + [self.ui.actionRun]:
+                item.setEnabled(not self.ui.consoleOutput.is_running)
+        else:
+            self.ui.tabWidgetEditors.currentWidget().file_type = \
+                FileType.MODULE
+            for item in self.bt_run + [self.ui.actionRun]:
+                item.setEnabled(False)
 
     def compile(self):
         """
@@ -223,32 +220,28 @@ class CobolController(Controller):
         # compilation has finished, we can run the program that corresponds
         # to the current editor file
         editor = self.app.edit.current_editor
-        try:
-            file_type = editor.file_type
-        except AttributeError:
-            pass
-        else:
-            if file_type == FileType.EXECUTABLE:
-                self.ui.tabWidgetLogs.setCurrentIndex(1)
-                self.ui.dockWidgetLogs.show()
-                self.ui.consoleOutput.clear()
-                wd = os.path.join(os.path.dirname(editor.file.path), 'bin')
-                program = os.path.join(
-                    wd, os.path.splitext(editor.file.name)[0] +
-                    GnuCobolCompiler().extension_for_type(file_type))
-                if not os.path.exists(program):
-                    _logger().warning('cannot run %s, file does not exists',
-                                      program)
-                    return
-                if Settings().external_terminal:
-                    self._run_in_external_terminal(program, wd)
-                    for item in self.bt_run + [self.ui.actionRun]:
-                        item.setEnabled(True)
-                else:
-                    self.ui.consoleOutput.setFocus(True)
-                    for item in self.bt_run + [self.ui.actionRun]:
-                        item.setEnabled(False)
-                    self.ui.consoleOutput.start_process(program, cwd=wd)
+        file_type = editor.file_type
+        if file_type == FileType.EXECUTABLE:
+            self.ui.tabWidgetLogs.setCurrentIndex(1)
+            self.ui.dockWidgetLogs.show()
+            self.ui.consoleOutput.clear()
+            wd = os.path.join(os.path.dirname(editor.file.path), 'bin')
+            program = os.path.join(
+                wd, os.path.splitext(editor.file.name)[0] +
+                GnuCobolCompiler().extension_for_type(file_type))
+            if not os.path.exists(program):
+                _logger().warning('cannot run %s, file does not exists',
+                                  program)
+                return
+            if Settings().external_terminal:
+                self._run_in_external_terminal(program, wd)
+                for item in self.bt_run + [self.ui.actionRun]:
+                    item.setEnabled(True)
+            else:
+                self.ui.consoleOutput.setFocus(True)
+                for item in self.bt_run + [self.ui.actionRun]:
+                    item.setEnabled(False)
+                self.ui.consoleOutput.start_process(program, cwd=wd)
 
     def _on_run_finished(self):
         self.enable_compile(True)

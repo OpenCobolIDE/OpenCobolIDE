@@ -5,6 +5,7 @@ omit =
     *_ui.py
     *_rc.py
     *open_cobol_ide/view/*
+    *main.py
 
 [report]
 # Regexes for lines to exclude from consideration
@@ -20,10 +21,13 @@ exclude_lines =
     # Don't complain if non-runnable code isn't run:
     if __name__ == .__main__.:
     def main\(\)
+    def run\(self\):
 
     # Don't complain about platform specific code
     if sys.platform
     if hasattr\(sys, 'frozen'\):
+    if windows
+    if darwin
 
     # Don't complain if non importable code is not run
     except ImportError:
@@ -31,3 +35,25 @@ exclude_lines =
     # Don't complain about _logger function being not called
     logging.getLogger
     _logger
+
+    # not parsing app arguments when doing test, this code will never get
+    executed
+    if parse_args
+    for f in files:
+
+    # platform specific functions cannot be tested on travis
+    init_env
+    _windows_init
+    _osx_init
+
+    # Tests are always performed with a working compiler
+    def is_working
+    except CompilerNotFound
+    raise CompilerNotFound
+     msg = 'You have to install the package open-cobol using your '
+     except OSError:
+     return 'Not installed'
+
+    # PySide not tested
+    PYSIDE_API
+

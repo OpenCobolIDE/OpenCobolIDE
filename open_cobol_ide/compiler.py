@@ -269,12 +269,13 @@ class GnuCobolCompiler:
         for l in compiler_output.splitlines():
             if prog.match(l):
                 _logger().debug('MATCHED')
-                status = CheckerMessages.INFO
+                status = CheckerMessages.WARNING
                 fn, line, error_type, desc = l.split(":")
                 if 'error' in error_type.lower():
                     status = CheckerMessages.ERROR
-                if 'warning' in error_type.lower():
-                    status = CheckerMessages.WARNING
+                # there does not seems to be any 'warning' messages output
+                # if 'warning' in error_type.lower():
+                #     status = CheckerMessages.WARNING
                 msg = (desc.strip(), status, int(line) - 1, 0,
                        None, None, file_path)
                 _logger().debug('message: %r', msg)
