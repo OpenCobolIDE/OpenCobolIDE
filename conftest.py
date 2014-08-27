@@ -16,7 +16,7 @@ _app = None
 @pytest.fixture(scope="session")
 def app(request):
     global _app
-    _app = Application()
+    _app = Application(parse_args=False)
 
     def fin():
         global _app

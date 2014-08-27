@@ -27,11 +27,16 @@ class Application:
     The application class contains references to the main window user interface
     and to the various controllers so that they can collaborate each others.
     """
-    def __init__(self):
+    def __init__(self, parse_args=True):
         self.init_env()
-        args = self.parse_args()
-        logger.setup_logging(__version__, debug=args.verbose)
-        _logger().debug('command line args: %r' % args)
+        if parse_args:
+            args = self.parse_args()
+            verbose = args.verbose
+            files = args.files
+        else:
+            verbose = False
+            files = []
+        logger.setup_logging(__version__, debug=verbose)
         self.name = 'OpenCobolIDE'
         self.version = __version__
         self.title = '%s %s' % (self.name, self.version)
@@ -60,7 +65,8 @@ class Application:
                 "The IDE will continue to work but you won't be able to "
                 'compile any file' % e)
 
-        for f in args.files:
+        # open specified files
+        for f in files:
             self.file.open_file(f)
 
     def __del__(self):
