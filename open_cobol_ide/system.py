@@ -33,7 +33,7 @@ def get_cache_directory():
     if windows:
         return os.path.join(os.path.expanduser("~"), 'OpenCobolIDE', 'cache')
     elif darwin:
-        # todo: check if there is a better place for caching file on mac
-        return os.path.join(os.path.expanduser("~"), 'OpenCobolIDE', 'cache')
+        return os.path.join(os.path.expanduser("~"), 'Library',
+                            'Application Support', 'OpenCobolIDE', 'cache')
     else:
         return os.path.join(os.path.expanduser("~"), '.cache', '.OpenCobolIDE')
