@@ -197,6 +197,8 @@ class ViewController(Controller):
             self.ui.dockWidgetLogs.hide()
             self.ui.dockWidgetNavPanel.hide()
             self.ui.dockWidgetOffsets.hide()
+            if self.ui.consoleOutput.is_running:
+                self.ui.consoleOutput.stop_process()
         else:
             self._apply_perspective()
             self.ui.dockWidgetNavPanel.setVisible(Settings().outline_visible)
