@@ -151,7 +151,7 @@ class Application:
     def parse_args(self):
         parser = argparse.ArgumentParser(
             description='Simple and lightweight COBOL IDE.')
-        parser.add_argument('files', type=str, nargs='+',
+        parser.add_argument('files', type=str, nargs='*',
                             help='List of files to open, if any')
         parser.add_argument('--verbose', dest='verbose', action='store_true',
                             help='Verbose mode will enable debug and info '
