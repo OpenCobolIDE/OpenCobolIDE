@@ -60,8 +60,8 @@ class Application:
                 "The IDE will continue to work but you won't be able to "
                 'compile any file' % e)
 
-        if args.file and os.path.exists(args.file):
-            self.file.open_file(args.file)
+        for f in args.files:
+            self.file.open_file(f)
 
     def __del__(self):
         _logger().debug('del app')
@@ -145,9 +145,9 @@ class Application:
     def parse_args(self):
         parser = argparse.ArgumentParser(
             description='Simple and lightweight COBOL IDE.')
-        parser.add_argument('file', type=str, nargs='?',
-                            help='File to open, if any')
+        parser.add_argument('files', type=str, nargs='+',
+                            help='List of files to open, if any')
         parser.add_argument('--verbose', dest='verbose', action='store_true',
-                           help='Verbose mode will enable debug and info '
-                                'messages to be shown in the application log')
+                            help='Verbose mode will enable debug and info '
+                                 'messages to be shown in the application log')
         return parser.parse_args()
