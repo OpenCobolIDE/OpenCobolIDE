@@ -8,10 +8,9 @@ import subprocess
 import sys
 from pyqode.core.api import TextHelper
 from pyqode.core.modes import CheckerMessage, CheckerMessages
-from pyqode.qt import QtCore, QtGui, QtWidgets
+from pyqode.qt import QtCore, QtWidgets
 from .base import Controller
 from ..compiler import FileType, GnuCobolCompiler, get_file_type
-from ..view.widgets import TabCornerWidget
 from ..settings import Settings
 
 
@@ -68,10 +67,6 @@ class CobolController(Controller):
         self._run_requested = False
         self.ui.consoleOutput.process_finished.connect(self._on_run_finished)
         self.ui.actionCancel.triggered.connect(self.cancel)
-        self.corner_widget = TabCornerWidget(
-            self.ui.tabWidgetEditors, self.create_bt_compile(),
-            self.create_bt_run())
-        self.ui.tabWidgetEditors.setCornerWidget(self.corner_widget)
 
     def create_bt_compile(self):
         bt_compile = QtWidgets.QToolButton()
@@ -81,6 +76,7 @@ class CobolController(Controller):
         bt_compile.setPopupMode(bt_compile.DelayedPopup)
         bt_compile.clicked.connect(self.compile)
         self.bt_compile.append(bt_compile)
+        bt_compile.setEnabled(self.ui.actionCompile.isEnabled())
         return bt_compile
 
     def create_bt_run(self):
@@ -90,6 +86,7 @@ class CobolController(Controller):
         bt.setToolTip(self.ui.actionRun.toolTip())
         bt.clicked.connect(self.run)
         self.bt_run.append(bt)
+        bt.setEnabled(self.ui.actionRun.isEnabled())
         return bt
 
     def display_file_type(self, editor):

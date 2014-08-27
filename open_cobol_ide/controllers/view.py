@@ -7,6 +7,7 @@ from enum import IntEnum
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
 from open_cobol_ide import system
+from open_cobol_ide.view.widgets import TabCornerWidget
 from ..settings import Settings
 
 
@@ -53,6 +54,7 @@ class ViewController(Controller):
         self.main_window.addActions(self.make_main_menu().actions())
         window_mnu = self.main_window.createPopupMenu()
         self.ui.menuWindows.addActions(window_mnu.actions())
+        self._widget = None
         if system.darwin:
             self.ui.toolBarCode.setIconSize(QtCore.QSize(20, 20))
             self.ui.toolBarFile.setIconSize(QtCore.QSize(20, 20))
@@ -206,10 +208,21 @@ class ViewController(Controller):
             self.ui.statusbar.show()
             self.ui.toolBarFile.show()
             self.ui.toolBarCode.show()
-            self.app.cobol.corner_widget.setVisible(False)
+            self.ui.tabWidgetEditors.setCornerWidget(None)
+            self._widget = None
         else:
             self.ui.menuBar.hide()
             self.ui.statusbar.hide()
             self.ui.toolBarCode.hide()
             self.ui.toolBarFile.hide()
-            self.app.cobol.corner_widget.setVisible(not system.darwin)
+            if not system.darwin:
+                if self._widget is None:
+                    self._widget = TabCornerWidget(
+                        self.ui.tabWidgetEditors,
+                        self.app.cobol.create_bt_compile(),
+                        self.app.cobol.create_bt_run())
+                    self._widget.show()
+                    self.ui.tabWidgetEditors.setCornerWidget(self._widget)
+            else:
+                self.ui.tabWidgetEditors.setCornerWidget(None)
+                self._widget = None
