@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/Dev/OpenCobolIDE/forms/dlg_file_type.ui'
+# Form implementation generated from reading ui file '/home/colin/Dev/misc/OpenCobolIDE/forms/dlg_file_type.ui'
 #
-# Created: Mon Aug 18 18:44:08 2014
+# Created: Wed Aug 27 16:17:07 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from pyqode.core.qt import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(356, 144)
+        Dialog.resize(356, 160)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/ide-icons/rc/silex-64x64.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Dialog.setWindowIcon(icon)
@@ -82,13 +82,21 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "New file"))
-        self.label.setText(_translate("Dialog", "Type"))
+        self.label.setText(_translate("Dialog", "Template:"))
+        self.comboBoxType.setToolTip(_translate("Dialog", "New file template (program, module or empty)"))
+        self.comboBoxType.setStatusTip(_translate("Dialog", "New file template (program, module or empty)"))
         self.comboBoxType.setItemText(0, _translate("Dialog", "Program"))
         self.comboBoxType.setItemText(1, _translate("Dialog", "Module"))
         self.comboBoxType.setItemText(2, _translate("Dialog", "Empty"))
         self.labelDir.setText(_translate("Dialog", "Directory"))
+        self.lineEditPath.setToolTip(_translate("Dialog", "Directory of the file to create"))
+        self.lineEditPath.setStatusTip(_translate("Dialog", "Directory of the file to create"))
+        self.toolButton.setToolTip(_translate("Dialog", "Browse file system"))
+        self.toolButton.setStatusTip(_translate("Dialog", "Browse file system"))
         self.toolButton.setText(_translate("Dialog", "..."))
         self.labelName.setText(_translate("Dialog", "Name"))
+        self.lineEditName.setToolTip(_translate("Dialog", "Program name (without path and without extension)"))
+        self.lineEditName.setStatusTip(_translate("Dialog", "Program name (without path and without extension)"))
         self.comboBoxExtension.setItemText(0, _translate("Dialog", ".cbl"))
         self.comboBoxExtension.setItemText(1, _translate("Dialog", ".cob"))
         self.comboBoxExtension.setItemText(2, _translate("Dialog", ".pco"))

@@ -25,16 +25,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout" rowstretch="0" columnstretch="0">
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
+    <property name="margin">
      <number>0</number>
     </property>
     <property name="spacing">
@@ -215,6 +206,12 @@
               <height>0</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>Create a new file</string>
+            </property>
+            <property name="statusTip">
+             <string>Create a new file</string>
+            </property>
             <property name="text">
              <string>New</string>
             </property>
@@ -301,16 +298,7 @@
              <property name="spacing">
               <number>0</number>
              </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
+             <property name="margin">
               <number>0</number>
              </property>
              <item>
@@ -327,6 +315,12 @@
                  <width>400</width>
                  <height>0</height>
                 </size>
+               </property>
+               <property name="toolTip">
+                <string>Recent files</string>
+               </property>
+               <property name="statusTip">
+                <string>Recent files</string>
                </property>
               </widget>
              </item>
@@ -365,16 +359,7 @@
       </widget>
       <widget class="QWidget" name="page_2">
        <layout class="QGridLayout" name="gridLayout_2">
-        <property name="leftMargin">
-         <number>6</number>
-        </property>
-        <property name="topMargin">
-         <number>6</number>
-        </property>
-        <property name="rightMargin">
-         <number>6</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>6</number>
         </property>
         <property name="spacing">
@@ -430,7 +415,7 @@
      <item row="1" column="0">
       <widget class="QTabWidget" name="tabWidgetLogs">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="tabCompiler">
         <attribute name="icon">
@@ -444,16 +429,7 @@
          <string>Show compiler log</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_4">
-         <property name="leftMargin">
-          <number>6</number>
-         </property>
-         <property name="topMargin">
-          <number>6</number>
-         </property>
-         <property name="rightMargin">
-          <number>6</number>
-         </property>
-         <property name="bottomMargin">
+         <property name="margin">
           <number>6</number>
          </property>
          <item row="0" column="0">
@@ -463,6 +439,9 @@
              <width>0</width>
              <height>0</height>
             </size>
+           </property>
+           <property name="statusTip">
+            <string>The list of errors found in your program</string>
            </property>
            <column/>
            <column/>
@@ -482,23 +461,21 @@
          <string>Output</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_5">
-         <property name="leftMargin">
-          <number>6</number>
-         </property>
-         <property name="topMargin">
-          <number>6</number>
-         </property>
-         <property name="rightMargin">
-          <number>6</number>
-         </property>
-         <property name="bottomMargin">
+         <property name="margin">
           <number>6</number>
          </property>
          <property name="spacing">
           <number>6</number>
          </property>
          <item row="0" column="0">
-          <widget class="InteractiveConsole" name="consoleOutput"/>
+          <widget class="InteractiveConsole" name="consoleOutput">
+           <property name="toolTip">
+            <string>Program output</string>
+           </property>
+           <property name="statusTip">
+            <string>Program output</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -513,7 +490,7 @@
      <x>0</x>
      <y>0</y>
      <width>1202</width>
-     <height>27</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -533,6 +510,12 @@
      <string>Edit</string>
     </property>
     <widget class="QMenu" name="mnuActiveEditor">
+     <property name="toolTip">
+      <string>Active editor context menu</string>
+     </property>
+     <property name="statusTip">
+      <string>Active editor context menu</string>
+     </property>
      <property name="title">
       <string>Active editor</string>
      </property>
@@ -604,20 +587,17 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QGridLayout" name="gridLayout_7">
-     <property name="leftMargin">
-      <number>6</number>
-     </property>
-     <property name="topMargin">
-      <number>6</number>
-     </property>
-     <property name="rightMargin">
-      <number>6</number>
-     </property>
-     <property name="bottomMargin">
+     <property name="margin">
       <number>6</number>
      </property>
      <item row="0" column="0">
       <widget class="OutlineTreeWidget" name="twNavigation">
+       <property name="toolTip">
+        <string>Show the current editor structure</string>
+       </property>
+       <property name="statusTip">
+        <string>Show the current editor structure</string>
+       </property>
        <attribute name="headerVisible">
         <bool>false</bool>
        </attribute>
@@ -653,6 +633,12 @@
          <width>300</width>
          <height>0</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Show PIC fields offsets</string>
+       </property>
+       <property name="statusTip">
+        <string>Show PIC fields offsets</string>
        </property>
        <property name="dragDropOverwriteMode">
         <bool>false</bool>
@@ -709,7 +695,10 @@
     <string>Quit</string>
    </property>
    <property name="toolTip">
-    <string>Exit application (Ctrl+Q)</string>
+    <string>Exit application</string>
+   </property>
+   <property name="statusTip">
+    <string>Exit application</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
@@ -727,7 +716,10 @@
     <string>Run</string>
    </property>
    <property name="toolTip">
-    <string>Run the current file (F5)</string>
+    <string>Run the current editor program</string>
+   </property>
+   <property name="statusTip">
+    <string>Run the current editor program</string>
    </property>
    <property name="shortcut">
     <string>F5</string>
@@ -745,7 +737,10 @@
     <string>About OpenCobolIDE</string>
    </property>
    <property name="toolTip">
-    <string>About OpenCobol IDE (F1)</string>
+    <string>About OpenCobolIDE</string>
+   </property>
+   <property name="statusTip">
+    <string>About OpenCobolIDE</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -760,7 +755,10 @@
     <string>Save</string>
    </property>
    <property name="toolTip">
-    <string>Save current file (Ctrl+S)</string>
+    <string>Save the current editor</string>
+   </property>
+   <property name="statusTip">
+    <string>Save the current editor</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -778,7 +776,10 @@
     <string>Save as</string>
    </property>
    <property name="toolTip">
-    <string>Save current file as (Ctrl+Shift+S)</string>
+    <string>Save the current editor as</string>
+   </property>
+   <property name="statusTip">
+    <string>Save the current editor as</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
@@ -799,7 +800,10 @@
     <string>Fullscreen</string>
    </property>
    <property name="toolTip">
-    <string>Toggle fullscreen (F12)</string>
+    <string>Toggle fullscreen</string>
+   </property>
+   <property name="statusTip">
+    <string>Toggle fullscreen</string>
    </property>
    <property name="shortcut">
     <string>F11</string>
@@ -817,7 +821,10 @@
     <string>New</string>
    </property>
    <property name="toolTip">
-    <string>New file (Ctrl+N)</string>
+    <string>New file</string>
+   </property>
+   <property name="statusTip">
+    <string>Create a new file</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -835,7 +842,10 @@
     <string>Open</string>
    </property>
    <property name="toolTip">
-    <string>Open a file (Ctrl+O)</string>
+    <string>Open a file</string>
+   </property>
+   <property name="statusTip">
+    <string>Open a file</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -859,56 +869,6 @@
     <bool>true</bool>
    </property>
   </action>
-  <action name="aShowFilesToolbar">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Files</string>
-   </property>
-   <property name="toolTip">
-    <string>Show/Hide the files toolbar</string>
-   </property>
-  </action>
-  <action name="aShowCodeToolbar">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Code</string>
-   </property>
-   <property name="toolTip">
-    <string>Show/Hide code toolbar</string>
-   </property>
-  </action>
-  <action name="aShowLogsWin">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Logs</string>
-   </property>
-   <property name="toolTip">
-    <string>Show/Hide logs window</string>
-   </property>
-   <property name="shortcut">
-    <string>F9</string>
-   </property>
-  </action>
-  <action name="aShowNavWin">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Navigation</string>
-   </property>
-   <property name="toolTip">
-    <string>Show/Hide navigation panel</string>
-   </property>
-   <property name="shortcut">
-    <string>F10</string>
-   </property>
-  </action>
   <action name="actionPreferences">
    <property name="icon">
     <iconset theme="preferences-system" resource="ide.qrc">
@@ -918,6 +878,9 @@
     <string>Preferences</string>
    </property>
    <property name="toolTip">
+    <string>Edit the application settings</string>
+   </property>
+   <property name="statusTip">
     <string>Edit the application settings</string>
    </property>
    <property name="iconVisibleInMenu">
@@ -931,6 +894,12 @@
    </property>
    <property name="text">
     <string>Help</string>
+   </property>
+   <property name="toolTip">
+    <string>Show help content</string>
+   </property>
+   <property name="statusTip">
+    <string>Show help content</string>
    </property>
    <property name="shortcut">
     <string>F1</string>
@@ -949,6 +918,12 @@
    <property name="text">
     <string>Executable</string>
    </property>
+   <property name="toolTip">
+    <string>Make an executable program (*.exe)</string>
+   </property>
+   <property name="statusTip">
+    <string>Make an executable program (*.exe)</string>
+   </property>
   </action>
   <action name="actionSubprogram">
    <property name="checkable">
@@ -957,74 +932,11 @@
    <property name="text">
     <string>Module</string>
    </property>
-  </action>
-  <action name="actionDebug">
-   <property name="text">
-    <string>Debug</string>
-   </property>
-  </action>
-  <action name="actionInfos">
-   <property name="text">
-    <string>Infos</string>
-   </property>
-  </action>
-  <action name="actionWarnings">
-   <property name="text">
-    <string>Warnings</string>
-   </property>
-  </action>
-  <action name="actionErrors">
-   <property name="text">
-    <string>Errors</string>
-   </property>
-  </action>
-  <action name="actionDebug_level">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Debug Log Level</string>
-   </property>
    <property name="toolTip">
-    <string>Activate debug messages</string>
+    <string>Make a module program (*.dll)</string>
    </property>
-  </action>
-  <action name="actionShowAppLog">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Show window</string>
-   </property>
-   <property name="toolTip">
-    <string>Show/hide application log window</string>
-   </property>
-  </action>
-  <action name="actionClearLog">
-   <property name="icon">
-    <iconset resource="ide.qrc">
-     <normaloff>:/ide-icons/rc/edit-clear.png</normaloff>:/ide-icons/rc/edit-clear.png</iconset>
-   </property>
-   <property name="text">
-    <string>Clear</string>
-   </property>
-   <property name="iconVisibleInMenu">
-    <bool>true</bool>
-   </property>
-  </action>
-  <action name="actionMinimal">
-   <property name="text">
-    <string>Minimal</string>
-   </property>
-  </action>
-  <action name="actionClassicView">
-   <property name="text">
-    <string>Classic</string>
-   </property>
-  </action>
-  <action name="actionMinimalView">
-   <property name="text">
-    <string>Minimal</string>
+   <property name="statusTip">
+    <string>Make a module program (*.dll)</string>
    </property>
   </action>
   <action name="actionCompile">
@@ -1036,7 +948,10 @@
     <string>Compile</string>
    </property>
    <property name="toolTip">
-    <string>Compile the current file (F8)</string>
+    <string>Compile the current editor</string>
+   </property>
+   <property name="statusTip">
+    <string>Compile the current editor</string>
    </property>
    <property name="shortcut">
     <string>F8</string>
@@ -1048,6 +963,12 @@
   <action name="actionCancel">
    <property name="text">
     <string>Cancel</string>
+   </property>
+   <property name="toolTip">
+    <string>Cancel the current operation (compile or run)</string>
+   </property>
+   <property name="statusTip">
+    <string>Cancel the current operation (compile or run)</string>
    </property>
   </action>
  </widget>
