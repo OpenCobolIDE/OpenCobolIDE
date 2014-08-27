@@ -135,16 +135,14 @@ class EditController(Controller):
                                  FileType.EXECUTABLE)
             except AttributeError:
                 self.ui.menuCobol.setEnabled(False)
-                for bt in self.app.cobol.bt_compile:
-                    bt.setEnabled(False)
-                self.ui.actionRun.setEnabled(False)
+                self.app.cobol.enable_compile(False)
+                self.app.cobol.enable_run(False)
             else:
                 self.ui.menuCobol.setEnabled(True)
-                for bt in self.app.cobol.bt_compile + [self.ui.actionCompile]:
-                    bt.setEnabled(not self.ui.consoleOutput.is_running)
-                for bt in self.app.cobol.bt_run + [self.ui.actionRun]:
-                    bt.setEnabled(is_executable and
-                                  not self.ui.consoleOutput.is_running)
+                self.app.cobol.enable_compile(
+                    not self.ui.consoleOutput.is_running)
+                self.app.cobol.enable_run(
+                    is_executable and not self.ui.consoleOutput.is_running)
 
     def _update_status_bar_labels(self):
         """

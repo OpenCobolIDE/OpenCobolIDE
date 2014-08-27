@@ -131,10 +131,8 @@ class CobolController(Controller):
         # ensures all editors are saved before compiling
         self.ui.tabWidgetEditors.save_all()
         # disable actions
-        for bt in self.bt_compile + [self.ui.actionCompile]:
-            bt.setDisabled(True)
-        for item in self.bt_run + [self.ui.actionRun]:
-            item.setDisabled(True)
+        self.enable_compile(False)
+        self.enable_run(False)
         # reset errors
         self.ui.errorsTable.clear()
         self._errors = 0
@@ -158,11 +156,9 @@ class CobolController(Controller):
             if self._errors == 0:
                 self._run()
         else:
-            for bt in self.bt_compile + [self.ui.actionCompile]:
-                bt.setEnabled(True)
-            for item in self.bt_run + [self.ui.actionRun]:
-                item.setEnabled(self.app.edit.current_editor.file_type ==
-                                FileType.EXECUTABLE)
+            self.enable_compile(True)
+            self.enable_run(
+                self.app.edit.current_editor.file_type == FileType.EXECUTABLE)
 
     def _on_file_compiled(self, filename, status, messages):
         """
@@ -255,10 +251,16 @@ class CobolController(Controller):
                     self.ui.consoleOutput.start_process(program, cwd=wd)
 
     def _on_run_finished(self):
-        for bt in self.bt_compile + [self.ui.actionCompile]:
-            bt.setEnabled(True)
+        self.enable_compile(True)
+        self.enable_run(True)
+
+    def enable_compile(self, enable):
+        for item in self.bt_compile + [self.ui.actionCompile]:
+            item.setEnabled(enable)
+
+    def enable_run(self, enable):
         for item in self.bt_run + [self.ui.actionRun]:
-            item.setEnabled(True)
+            item.setEnabled(enable)
 
     def cancel(self):
         """
@@ -267,8 +269,6 @@ class CobolController(Controller):
         if self._compilation_thread:
             self._compilation_thread.terminate()
         self.ui.consoleOutput.stop_process()
-        for item in self.bt_compile + [self.ui.actionCompile]:
-            item.setEnabled(True)
-        for item in self.bt_run + [self.ui.actionRun]:
-            item.setEnabled(self.app.edit.current_editor.file_type ==
-                            FileType.EXECUTABLE)
+        self.enable_compile(True)
+        self.enable_run(self.app.edit.current_editor.file_type ==
+                        FileType.EXECUTABLE)
