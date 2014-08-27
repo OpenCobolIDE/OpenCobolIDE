@@ -6,8 +6,8 @@ import logging
 from enum import IntEnum
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
-from open_cobol_ide import system
-from open_cobol_ide.view.widgets import TabCornerWidget
+from .. import system
+from ..view.widgets import TabCornerWidget
 from ..settings import Settings
 
 
@@ -87,7 +87,8 @@ class ViewController(Controller):
         isave = QtGui.QIcon.fromTheme(
             'document-save', QtGui.QIcon(':/ide-icons/rc/document-save.png'))
         isave_as = QtGui.QIcon.fromTheme(
-            'document-save-as', QtGui.QIcon(':/ide-icons/rc/document-save-as.png'))
+            'document-save-as', QtGui.QIcon(
+                ':/ide-icons/rc/document-save-as.png'))
         inew = QtGui.QIcon.fromTheme(
             'document-new',
             QtGui.QIcon(':/ide-icons/rc/document-new.png'))
@@ -152,7 +153,8 @@ class ViewController(Controller):
         self.ui.tabWidgetLogs.setTabIcon(1, irun)
 
         self.ui.actionAbout.setMenuRole(QtWidgets.QAction.AboutRole)
-        self.ui.actionPreferences.setMenuRole(QtWidgets.QAction.PreferencesRole)
+        self.ui.actionPreferences.setMenuRole(
+            QtWidgets.QAction.PreferencesRole)
         self.ui.actionQuit.setMenuRole(QtWidgets.QAction.QuitRole)
 
     def show_perspective(self, perspective):

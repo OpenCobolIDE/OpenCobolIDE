@@ -47,7 +47,9 @@ def test_type_extension(file_type, expected):
 
 exe_ext = GnuCobolCompiler().extension_for_type(FileType.EXECUTABLE)
 dll_ext = GnuCobolCompiler().extension_for_type(FileType.MODULE)
-@pytest.mark.parametrize('free, std, ftype, expected_opts',[
+
+
+@pytest.mark.parametrize('free, std, ftype, expected_opts', [
     (False, GnuCobolStandard.default, FileType.EXECUTABLE, [
         '-x',
         '-o %s' % os.path.join('bin', 'HelloWorld' + exe_ext),
@@ -125,8 +127,7 @@ def test_compile(path, ftype, expected_results, output_file_path):
     ('test/testfiles/TEST-PRINTER.cbl',
      ['test/testfiles/VIRTUAL-PRINTER.cbl'] if system.linux else
      ['test/testfiles/VIRTUAL-PRINTER.cbl',
-      'test/testfiles/VIRTUAL-PRINTER.CBL']
-    )
+      'test/testfiles/VIRTUAL-PRINTER.CBL'])
 ])
 def test_get_dependencies(filename, expected_results):
     results = GnuCobolCompiler().get_dependencies(filename)

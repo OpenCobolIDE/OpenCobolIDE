@@ -53,7 +53,7 @@ class RecentFilesListWidget(QtWidgets.QListWidget):
         item = self.itemAt(e.pos())
         super().mouseMoveEvent(e)
         self.setCursor(QtCore.Qt.PointingHandCursor if item else
-            QtCore.Qt.ArrowCursor)
+                       QtCore.Qt.ArrowCursor)
         if item:
             self.setCurrentRow(self.row(item))
 

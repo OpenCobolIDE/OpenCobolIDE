@@ -7,7 +7,7 @@ import sys
 from pyqode.core.qt import QtCore
 from pyqode.core.qt.QtCore import QSettings
 from .compiler import FileType, GnuCobolStandard
-from open_cobol_ide import system
+from . import system
 
 
 class Settings(object):
@@ -231,7 +231,6 @@ class Settings(object):
         sep = ';' if sys.platform == 'win32' else ':'
         os.environ['PATH'] += sep + value
         self._settings.setValue('customCompilerPath', value)
-
 
     # Cobol settings
     # ----------------------

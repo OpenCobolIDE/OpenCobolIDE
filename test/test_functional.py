@@ -39,4 +39,3 @@ def test_functional(app):
     app.cobol.run()
     QTest.qWait(1000)
     assert app.win.ui.consoleOutput.toPlainText() == expected_output
-
