@@ -37,7 +37,7 @@ if int('%s%s' % sys.version_info[:2]) < 34:
 data_files = []
 if sys.platform == 'linux':
     data_files.append(('/usr/share/applications',
-                       ['share/open-cobol-ide.desktop']))
+                       ['share/OpenCobolIDE.desktop']))
     data_files.append(('/usr/share/pixmaps', ['share/OpenCobolIDE.png']))
 
 

@@ -117,7 +117,8 @@ class EditController(Controller):
         else:
             editor = self.ui.tabWidgetEditors.currentWidget()
             self.main_window.setWindowTitle(
-                '[%s] - %s' % (editor.file.path, self.app.title))
+                '%s [%s] - %s' % (
+                    editor.file.name, editor.file.path, self.app.title))
             # update tools (outline and offsets table)
             self.ui.twNavigation.set_editor(editor)
             self.ui.tableWidgetOffsets.set_editor(editor)

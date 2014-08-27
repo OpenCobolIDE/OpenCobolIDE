@@ -3,11 +3,12 @@ This module contains the ide application. This is where we glue the
 various managers and gui parts together.
 
 """
+import argparse
 import logging
 import os
 import sys
 from pyqode.qt import QtWidgets, QT_API, PYQT5_API, PYSIDE_API
-from . import __version__
+from . import __version__, logger
 from .controllers import (CobolController, EditController, FileController,
                           HelpController, HomeController, ViewController)
 from .compiler import check_compiler, CompilerNotFound
@@ -28,6 +29,9 @@ class Application:
     """
     def __init__(self):
         self.init_env()
+        args = self.parse_args()
+        logger.setup_logging(__version__, debug=args.verbose)
+        _logger().debug('command line args: %r' % args)
         self.name = 'OpenCobolIDE'
         self.version = __version__
         self.title = '%s %s' % (self.name, self.version)
@@ -55,6 +59,9 @@ class Application:
                 'Failed to find GnuCobol compiler!\n\n%s.\n\n'
                 "The IDE will continue to work but you won't be able to "
                 'compile any file' % e)
+
+        if args.file and os.path.exists(args.file):
+            self.file.open_file(args.file)
 
     def __del__(self):
         _logger().debug('del app')
@@ -134,3 +141,13 @@ class Application:
         Application.file.quit())
         """
         self.app.closeAllWindows()
+
+    def parse_args(self):
+        parser = argparse.ArgumentParser(
+            description='Simple and lightweight COBOL IDE.')
+        parser.add_argument('file', type=str, nargs='?',
+                            help='File to open, if any')
+        parser.add_argument('--verbose', dest='verbose', action='store_true',
+                           help='Verbose mode will enable debug and info '
+                                'messages to be shown in the application log')
+        return parser.parse_args()
