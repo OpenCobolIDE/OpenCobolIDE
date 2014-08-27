@@ -12,6 +12,7 @@ from . import __version__, logger
 from .controllers import (CobolController, EditController, FileController,
                           HelpController, HomeController, ViewController)
 from .compiler import check_compiler, CompilerNotFound
+from open_cobol_ide import system
 from .settings import Settings
 from .view.main_window import MainWindow
 
@@ -29,7 +30,7 @@ class Application:
     """
     def __init__(self, parse_args=True):
         self.init_env()
-        if parse_args:
+        if parse_args and not system.darwin:
             args = self.parse_args()
             verbose = args.verbose
             files = args.files
