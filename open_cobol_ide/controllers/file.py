@@ -7,7 +7,8 @@ import mimetypes
 import os
 
 from pyqode.core import widgets
-from pyqode.qt import QtWidgets
+from pyqode.cobol.api import icons
+from pyqode.qt import QtWidgets, QtGui
 
 from .base import Controller
 from ..view.editors import CobolCodeEdit
@@ -30,6 +31,13 @@ FILTER_SEPARATOR = ';;'
 FILTER = FILTER_SEPARATOR.join([COBOL_FILES_FILTER, OTHER_FILES_FILTER])
 
 
+class FileIconProvider(QtWidgets.QFileIconProvider):
+    def icon(self, file_infos):
+        if '.%s' % file_infos.suffix() in CobolCodeEdit.all_extensions():
+            return QtGui.QIcon(icons.ICON_MIMETYPE)
+        return super().icon(file_infos)
+
+
 class FileController(Controller):
     """
     Controls file operations (new file, open, recent files, ...).
@@ -41,7 +49,8 @@ class FileController(Controller):
             'OpenCobolIDE', 'OpenCobolIDE4')
         self.menu_recents = widgets.MenuRecentFiles(
             self.ui.menuFile, title='Recents',
-            recent_files_manager=self.recent_files_manager)
+            recent_files_manager=self.recent_files_manager,
+            icon_provider=FileIconProvider())
         self.menu_recents.open_requested.connect(self.open_file)
         self.menu_recents.clear_requested.connect(
             self.recent_files_manager.clear)
