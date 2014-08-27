@@ -157,6 +157,9 @@ class ViewController(Controller):
             QtWidgets.QAction.PreferencesRole)
         self.ui.actionQuit.setMenuRole(QtWidgets.QAction.QuitRole)
 
+        if system.darwin:
+            self.ui.menu.setTitle('Help')
+
     def show_perspective(self, perspective):
         """
         TODO
