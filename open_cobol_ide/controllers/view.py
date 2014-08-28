@@ -39,6 +39,7 @@ class ViewController(Controller):
 
     def __init__(self, app):
         super().__init__(app)
+        QtGui.QIcon.setThemeName(Settings().icon_theme)
         self._page = -1
         self._perspective = 'default'
         self._nav_was_visible = True
@@ -116,24 +117,6 @@ class ViewController(Controller):
         iabout = QtGui.QIcon.fromTheme(
             'help-about', QtGui.QIcon(':/ide-icons/rc/dialog-information.png'))
 
-        if Settings().dark_style:
-            iopen = QtGui.QIcon(':/ide-icons/rc/document-open.png')
-            isave = QtGui.QIcon(':/ide-icons/rc/document-save.png')
-            isave_as = QtGui.QIcon(':/ide-icons/rc/document-save-as.png')
-            inew = QtGui.QIcon(':/ide-icons/rc/document-new.png')
-            icompile = QtGui.QIcon(
-                ':/ide-icons/rc/application-x-executable.png')
-            irun = QtGui.QIcon(
-                ':/ide-icons/rc/media-playback-start.png')
-            ifullscreen = QtGui.QIcon(
-                ':/ide-icons/rc/view-fullscreen.png')
-            iquit = QtGui.QIcon(':/ide-icons/rc/system-log-out.png')
-            iclear = QtGui.QIcon(':/ide-icons/rc/edit-clear.png')
-            ihelp = QtGui.QIcon(':/ide-icons/rc/help.png')
-            ipreferences = QtGui.QIcon(
-                ':/ide-icons/rc/Preferences-system.png')
-            iabout = QtGui.QIcon(':/ide-icons/rc/dialog-information.png')
-
         self.ui.actionPreferences.setIcon(ipreferences)
         self.ui.actionHelp.setIcon(ihelp)
         self.ui.actionClear.setIcon(iclear)
@@ -151,7 +134,6 @@ class ViewController(Controller):
         self.ui.actionAbout.setIcon(iabout)
         self.ui.tabWidgetLogs.setTabIcon(0, iissue)
         self.ui.tabWidgetLogs.setTabIcon(1, irun)
-
         self.ui.actionAbout.setMenuRole(QtWidgets.QAction.AboutRole)
         self.ui.actionPreferences.setMenuRole(
             QtWidgets.QAction.PreferencesRole)

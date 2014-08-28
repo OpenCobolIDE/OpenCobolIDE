@@ -3,8 +3,9 @@ System utility module (get system info, platform specific path,...).
 """
 import functools
 import os
-import sys
 import platform
+from pyqode.qt import QtGui
+
 
 windows = platform.system() == 'Windows'
 darwin = platform.system() == 'Darwin'
@@ -37,3 +38,18 @@ def get_cache_directory():
                             'Application Support', 'OpenCobolIDE', 'cache')
     else:
         return os.path.join(os.path.expanduser("~"), '.cache', '.OpenCobolIDE')
+
+
+def icon_themes():
+    themes = []
+    for path in QtGui.QIcon.themeSearchPaths():
+        try:
+            dirs = os.listdir(path)
+        except OSError:
+            pass
+        else:
+            for d in dirs:
+                pth = os.path.join(path, d)
+                if os.path.isdir(pth):
+                    themes.append(d)
+    return themes

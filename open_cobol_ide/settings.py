@@ -172,6 +172,14 @@ class Settings(object):
         self._settings.setValue('dark_style', int(value))
 
     @property
+    def icon_theme(self):
+        return self._settings.value('icon_theme', 'default')
+
+    @icon_theme.setter
+    def icon_theme(self, value):
+        self._settings.setValue('icon_theme', value)
+
+    @property
     def font(self):
         font = self._settings.value('fontName')
         if not font:

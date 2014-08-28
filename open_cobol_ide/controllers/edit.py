@@ -168,3 +168,4 @@ class EditController(Controller):
                 editor.rehighlight()
             self.app.update_app_style()
             self.app.home.update_style()
+            QtGui.QIcon.setThemeName(Settings().icon_theme)

@@ -2,6 +2,7 @@ import sys
 from pyqode.core.api.syntax_highlighter import PYGMENTS_STYLES
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from ...compiler import GnuCobolStandard
+from open_cobol_ide import system
 from ...settings import Settings
 from ...view.forms import dlg_preferences_ui
 
@@ -10,6 +11,18 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
     def __init__(self, parent):
         super().__init__(parent)
         self.setupUi(self)
+        themes = system.icon_themes()
+        if themes:
+            self.comboBoxIconTheme.addItems(themes)
+        else:
+            self.comboBoxIconTheme.hide()
+            self.lblIconTheme.hide()
+        self.tabBuildAndRun.setWindowIcon(QtGui.QIcon.fromTheme(
+            'exec',
+            QtGui.QIcon(':/ide-icons/rc/application-x-executable.png')))
+        self.tabStyle.setWindowIcon(QtGui.QIcon.fromTheme(
+            'applications-graphics',
+            QtGui.QIcon(':/ide-icons/rc/applications-graphics.png')))
         self.buttonBox.button(self.buttonBox.Reset).clicked.connect(self.reset)
         self.buttonBox.button(self.buttonBox.RestoreDefaults).clicked.connect(
             self.restore_defaults)
@@ -19,14 +32,29 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditCompilerPath.setEnabled)
         self.reset(all_tabs=True)
 
+    def _update_icon_theme(self, c):
+        index = self.comboBoxIconTheme.findText(c)
+        self.comboBoxIconTheme.setCurrentIndex(index)
+
     @QtCore.Slot(bool)
-    def on_radioButtonColorWhite_toggled(self, state):
+    def on_radioButtonColorWhite_toggled(self, native):
+        # choose an icon them that goes well with the selected style
+        if not native:
+            candidates = ['Faenza-Darkest', 'nouveGnomeGray', 'matefaenzadark',
+                          'gnome', 'oxygen']
+            available = system.icon_themes()
+            for c in candidates:
+                if c in available:
+                    self._update_icon_theme(c)
+                    break
+        else:
+            self._update_icon_theme('default')
+        # choose a a color scheme that goes well with the selected style
         for i in range(self.listWidgetColorSchemes.count()):
-            if (state and
-                    self.listWidgetColorSchemes.item(i).text() == 'qt'):
+            if (native and self.listWidgetColorSchemes.item(i).text() == 'qt'):
                 self.listWidgetColorSchemes.setCurrentRow(i)
                 break
-            elif (not state and
+            elif (not native and
                     self.listWidgetColorSchemes.item(i).text() == 'darcula'):
                 self.listWidgetColorSchemes.setCurrentRow(i)
                 break
@@ -55,6 +83,9 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             rb = (self.radioButtonColorDark if settings.dark_style else
                   self.radioButtonColorWhite)
             rb.setChecked(True)
+            index = self.comboBoxIconTheme.findText(settings.icon_theme)
+            if index != -1:
+                self.comboBoxIconTheme.setCurrentIndex(index)
             self.fontComboBox.setCurrentFont(QtGui.QFont(settings.font))
             self.spinBoxFontSize.setValue(settings.font_size)
             self.listWidgetColorSchemes.clear()
@@ -91,6 +122,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.code_completion_trigger_len = 1
         if index == 1:
             settings.dark_style = False
+            settings.icon_theme = 'default'
             settings.font = 'Source Code Pro'
             settings.fontSize = 10
             settings.colorScheme = 'qt'
@@ -132,3 +164,4 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.comment_indicator = dlg.lineEditCommentIndicator.text()
         settings.cobol_standard = GnuCobolStandard(
             dlg.comboBoxStandard.currentIndex())
+        settings.icon_theme = dlg.comboBoxIconTheme.currentText()
