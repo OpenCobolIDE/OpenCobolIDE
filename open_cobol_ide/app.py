@@ -37,7 +37,7 @@ class Application:
         else:
             verbose = False
             files = []
-        logger.setup_logging(__version__, debug=verbose)
+        logger.setup_logging(__version__, debug=verbose or Settings().verbose)
         self.name = 'OpenCobolIDE'
         self.version = __version__
         self.title = '%s %s' % (self.name, self.version)

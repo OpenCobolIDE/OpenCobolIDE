@@ -81,6 +81,12 @@ class HomeController(Controller):
         self.ui.listWidgetRecents.clear_requested.connect(self._clear_recents)
         self.ui.listWidgetRecents.remove_current_requested.connect(
             self._remove_current_recent_file)
+        self.ui.pageHome.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.ui.pageHome.customContextMenuRequested.connect(
+            self._show_main_menu)
+
+    def _show_main_menu(self, pos):
+        self.app.view.make_main_menu().exec_(self.ui.pageHome.mapToGlobal(pos))
 
     def update_style(self):
         """

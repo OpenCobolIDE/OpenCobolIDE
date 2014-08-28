@@ -109,6 +109,14 @@ class Settings(object):
     def perspective(self, value):
         self._settings.setValue('perspective', value)
 
+    @property
+    def verbose(self):
+        return bool(int(self._settings.value('verbose', '0')))
+
+    @verbose.setter
+    def verbose(self, value):
+        self._settings.setValue('verbose', int(value))
+
     #
     # Editor settings settings
     #

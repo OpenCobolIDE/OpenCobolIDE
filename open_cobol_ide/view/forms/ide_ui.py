@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/Dev/misc/OpenCobolIDE/forms/ide.ui'
+# Form implementation generated from reading ui file '/home/colin/Dev/OpenCobolIDE/forms/ide.ui'
 #
-# Created: Wed Aug 27 16:17:06 2014
+# Created: Thu Aug 28 21:42:06 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,14 +20,14 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setSpacing(0)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setObjectName("gridLayout")
         self.stackedWidget = QtWidgets.QStackedWidget(self.centralwidget)
         self.stackedWidget.setObjectName("stackedWidget")
-        self.page = QtWidgets.QWidget()
-        self.page.setObjectName("page")
-        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.page)
+        self.pageHome = QtWidgets.QWidget()
+        self.pageHome.setObjectName("pageHome")
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.pageHome)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_5.addItem(spacerItem)
@@ -38,7 +38,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addItem(spacerItem1)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.label_3 = QtWidgets.QLabel(self.page)
+        self.label_3 = QtWidgets.QLabel(self.pageHome)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -58,7 +58,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_9.addItem(spacerItem3)
-        self.line_2 = QtWidgets.QFrame(self.page)
+        self.line_2 = QtWidgets.QFrame(self.pageHome)
         self.line_2.setMinimumSize(QtCore.QSize(400, 0))
         self.line_2.setFrameShape(QtWidgets.QFrame.HLine)
         self.line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
@@ -72,7 +72,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_8.setObjectName("horizontalLayout_8")
         spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_8.addItem(spacerItem5)
-        self.btNewFile = QtWidgets.QPushButton(self.page)
+        self.btNewFile = QtWidgets.QPushButton(self.pageHome)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -83,7 +83,7 @@ class Ui_MainWindow(object):
         self.btNewFile.setIcon(icon)
         self.btNewFile.setObjectName("btNewFile")
         self.horizontalLayout_8.addWidget(self.btNewFile)
-        self.btOpenFile = QtWidgets.QPushButton(self.page)
+        self.btOpenFile = QtWidgets.QPushButton(self.pageHome)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -103,7 +103,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem7)
-        self.frameRecents = QtWidgets.QFrame(self.page)
+        self.frameRecents = QtWidgets.QFrame(self.pageHome)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -129,12 +129,12 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.addLayout(self.horizontalLayout_5)
         spacerItem9 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_5.addItem(spacerItem9)
-        self.stackedWidget.addWidget(self.page)
+        self.stackedWidget.addWidget(self.pageHome)
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.page_2)
-        self.gridLayout_2.setContentsMargins(6, 6, 6, 6)
         self.gridLayout_2.setSpacing(6)
+        self.gridLayout_2.setContentsMargins(6, 6, 6, 6)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.tabWidgetEditors = TabWidget(self.page_2)
         self.tabWidgetEditors.setObjectName("tabWidgetEditors")
@@ -175,8 +175,8 @@ class Ui_MainWindow(object):
         self.tabProgramOutput = QtWidgets.QWidget()
         self.tabProgramOutput.setObjectName("tabProgramOutput")
         self.gridLayout_5 = QtWidgets.QGridLayout(self.tabProgramOutput)
-        self.gridLayout_5.setContentsMargins(6, 6, 6, 6)
         self.gridLayout_5.setSpacing(6)
+        self.gridLayout_5.setContentsMargins(6, 6, 6, 6)
         self.gridLayout_5.setObjectName("gridLayout_5")
         self.consoleOutput = InteractiveConsole(self.tabProgramOutput)
         self.consoleOutput.setObjectName("consoleOutput")
@@ -187,7 +187,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1202, 25))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1202, 27))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -358,7 +358,7 @@ class Ui_MainWindow(object):
         self.menuBar.addAction(self.menu.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
         self.tabWidgetLogs.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -462,6 +462,6 @@ class Ui_MainWindow(object):
         self.actionCancel.setStatusTip(_translate("MainWindow", "Cancel the current operation (compile or run)"))
 
 from pyqode.core.widgets import InteractiveConsole, ErrorsTable, TabWidget
-from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
 from open_cobol_ide.view.widgets import RecentFilesListWidget
+from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
 from . import ide_rc

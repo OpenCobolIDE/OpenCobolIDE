@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/Dev/misc/OpenCobolIDE/forms/dlg_about.ui'
+# Form implementation generated from reading ui file '/home/colin/Dev/OpenCobolIDE/forms/dlg_about.ui'
 #
-# Created: Wed Aug 27 16:17:07 2014
+# Created: Thu Aug 28 21:53:25 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -108,10 +108,22 @@ class Ui_Dialog(object):
         self.tbwVersions.verticalHeader().setStretchLastSection(True)
         self.gridLayout.addWidget(self.tbwVersions, 0, 0, 1, 1)
         self.tabWidget.addTab(self.tab_4, "")
+        self.tab_5 = QtWidgets.QWidget()
+        self.tab_5.setObjectName("tab_5")
+        self.gridLayout_4 = QtWidgets.QGridLayout(self.tab_5)
+        self.gridLayout_4.setObjectName("gridLayout_4")
+        self.checkBoxVerbose = QtWidgets.QCheckBox(self.tab_5)
+        self.checkBoxVerbose.setObjectName("checkBoxVerbose")
+        self.gridLayout_4.addWidget(self.checkBoxVerbose, 0, 0, 1, 1)
+        self.textEditLog = QtWidgets.QTextEdit(self.tab_5)
+        self.textEditLog.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
+        self.textEditLog.setObjectName("textEditLog")
+        self.gridLayout_4.addWidget(self.textEditLog, 1, 0, 1, 1)
+        self.tabWidget.addTab(self.tab_5, "")
         self.verticalLayout.addWidget(self.tabWidget)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(4)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
@@ -131,11 +143,11 @@ class Ui_Dialog(object):
         self.textBrowser.setHtml(_translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Cantarell\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:600; text-decoration: underline; color:#414141;\">Main Authors:</span></p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Ubuntu\'; font-size:11pt; color:#414141;\">Colin Duquesnoy  &lt;</span><a href=\"mailto:colin.duquesnoy@gmail\"><span style=\" font-family:\'Ubuntu\'; font-size:11pt; text-decoration: underline; color:#2768ff;\">colin.duquesnoy@gmail</span></a><a href=\"mailto:colin.duquesnoy@gmail\"><span style=\" font-family:\'Ubuntu\'; font-size:11pt; text-decoration: underline; color:#414141;\">&gt;</span></a></p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:600; text-decoration: underline; color:#414141;\">Contributors: </span></p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Ubuntu\'; font-size:11pt; color:#414141;\">- </span><a href=\"mailto:thiry.celi@gmail.com\"><span style=\" font-family:\'Ubuntu\'; font-size:11pt; text-decoration: underline; color:#2768ff;\">Céline Thiry</span></a><span style=\" font-family:\'Ubuntu\'; font-size:11pt; color:#414141;\"> : application icon designer</span></p></body></html>"))
+"</style></head><body style=\" font-family:\'Cantarell\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Ubuntu\'; font-weight:600; text-decoration: underline; color:#414141;\">Main Authors:</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Ubuntu\'; color:#414141;\">Colin Duquesnoy  &lt;</span><a href=\"mailto:colin.duquesnoy@gmail\"><span style=\" font-family:\'Ubuntu\'; text-decoration: underline; color:#2768ff;\">colin.duquesnoy@gmail</span></a><a href=\"mailto:colin.duquesnoy@gmail\"><span style=\" font-family:\'Ubuntu\'; text-decoration: underline; color:#414141;\">&gt;</span></a></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Ubuntu\'; font-weight:600; text-decoration: underline; color:#414141;\">Contributors: </span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Ubuntu\'; color:#414141;\">- </span><a href=\"mailto:thiry.celi@gmail.com\"><span style=\" font-family:\'Ubuntu\'; text-decoration: underline; color:#2768ff;\">Céline Thiry</span></a><span style=\" font-family:\'Ubuntu\'; color:#414141;\"> : application icon designer</span></p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", "Authors"))
         self.plainTextEdit.setPlainText(_translate("Dialog", "                     GNU GENERAL PUBLIC LICENSE\n"
 "                       Version 3, 29 June 2007\n"
@@ -830,5 +842,8 @@ class Ui_Dialog(object):
         item = self.tbwVersions.horizontalHeaderItem(0)
         item.setText(_translate("Dialog", "Version"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("Dialog", "3rd Party Libraries"))
+        self.checkBoxVerbose.setStatusTip(_translate("Dialog", "Enable verbose mode (require a restart of the application)."))
+        self.checkBoxVerbose.setText(_translate("Dialog", "Verbose"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), _translate("Dialog", "Log"))
 
 from . import ide_rc
