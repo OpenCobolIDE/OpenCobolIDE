@@ -124,7 +124,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.dark_style = False
             settings.icon_theme = 'default'
             settings.font = 'Source Code Pro'
-            settings.fontSize = 10
+            settings.font_size = 11
             settings.colorScheme = 'qt'
         if index == 2:
             settings.external_terminal = False

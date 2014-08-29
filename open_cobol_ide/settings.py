@@ -16,7 +16,7 @@ class Settings(object):
     settings (thought getter/setter properties).
     """
     def __init__(self):
-        self._settings = QSettings('OpenCobolIDE', 'OpenCobolIDE4')
+        self._settings = QSettings('OpenCobolIDE4', 'OpenCobolIDE4')
 
     def clear(self):
         """
@@ -103,7 +103,7 @@ class Settings(object):
     @property
     def perspective(self):
         return self._settings.value(
-            'perspective', 'default' if not system.darwin else 'minimal')
+            'perspective', 'default')
 
     @perspective.setter
     def perspective(self, value):
@@ -200,7 +200,7 @@ class Settings(object):
 
     @property
     def font_size(self):
-        return int(self._settings.value('fontSize', '10'))
+        return int(self._settings.value('fontSize', '11'))
 
     @font_size.setter
     def font_size(self, value):
