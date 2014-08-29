@@ -11,5 +11,4 @@ def main():
     """
     app = Application()
     ret_code = app.run()
-    del app
     return ret_code

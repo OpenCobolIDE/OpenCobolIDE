@@ -24,9 +24,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.restore_state()
 
-    def __del__(self):
-        _logger().debug('del main window')
-
     def restore_state(self):
         """
         Restores the main window state from the saved state (in the settings).
@@ -57,6 +54,8 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         Handle close event, gives the user a chance to save its work or not.
         """
+        _logger().debug('CLOSING')
         self.ui.tabWidgetEditors.closeEvent(event)
         if event.isAccepted():
             self.save_state()
+            _logger().debug('CLOSED')

@@ -71,6 +71,13 @@ class Application:
             self.file.open_file(f)
 
     def __del__(self):
+        self.view = None
+        self.cobol = None
+        self.edit = None
+        self.file = None
+        self.win = None
+        self.home = None
+        self.help = None
         _logger().debug('del app')
 
     def update_app_style(self):
