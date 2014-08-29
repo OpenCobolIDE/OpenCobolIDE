@@ -148,14 +148,15 @@ class CobolController(Controller):
         otherwise enables actions/buttons.
 
         """
+        self.enable_compile(True)
+        self.enable_run(
+            self.app.edit.current_editor.file_type == FileType.EXECUTABLE)
         if self._run_requested:
             self._run_requested = False
             if self._errors == 0:
+                self.enable_compile(False)
+                self.enable_run(False)
                 self._run()
-        else:
-            self.enable_compile(True)
-            self.enable_run(
-                self.app.edit.current_editor.file_type == FileType.EXECUTABLE)
 
     def _on_file_compiled(self, filename, status, messages):
         """
@@ -191,6 +192,7 @@ class CobolController(Controller):
         """
         Compiles and run the current editor.
         """
+        self.ui.consoleOutput.clear()
         self._run_requested = True
         self.compile()
 
