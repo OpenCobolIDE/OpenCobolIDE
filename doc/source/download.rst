@@ -16,7 +16,7 @@ OpenCobolIDE depends on the following packages:
     - chardet
 
 GNU/Linux
-#########
+---------
 
 Install pyqt5, open-cobol and pip using your package manager, then run the following commands::
 
@@ -27,12 +27,12 @@ If you are on Archlinux, you can install OpenCobolIDE and all its dependencies f
 
 
 Windows
-#######
+-------
 
 There is a windows installer available here: https://launchpad.net/cobcide/+download
 
 Mac OSX
-#######
+-------
 
 There is a dmg image available here: https://launchpad.net/cobcide/+download
 

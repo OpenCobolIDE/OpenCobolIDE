@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>447</width>
-    <height>393</height>
+    <width>558</width>
+    <height>479</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,16 +20,16 @@
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <property name="leftMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <property name="topMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <property name="rightMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <property name="bottomMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <item row="0" column="0">
     <widget class="QWidget" name="widget" native="true">
@@ -67,7 +67,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>4</number>
+         <number>2</number>
         </property>
         <property name="usesScrollButtons">
          <bool>true</bool>
@@ -75,60 +75,38 @@
         <property name="documentMode">
          <bool>false</bool>
         </property>
-        <widget class="QWidget" name="tabView">
-         <attribute name="title">
-          <string>View</string>
+        <widget class="QWidget" name="tabEditor">
+         <attribute name="icon">
+          <iconset resource="ide.qrc">
+           <normaloff>:/ide-icons/rc/cobol-mimetype.png</normaloff>:/ide-icons/rc/cobol-mimetype.png</iconset>
          </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <attribute name="title">
+          <string>Editor</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <widget class="QCheckBox" name="checkBoxViewLineNumber">
-            <property name="text">
-             <string>Display line numbers</string>
+           <widget class="QGroupBox" name="groupBox_3">
+            <property name="title">
+             <string>View</string>
             </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBoxViewMargins">
-            <property name="text">
-             <string>Display margins</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBoxViewMenuBar">
-            <property name="text">
-             <string>Display Menu bar</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBoxViewStatus">
-            <property name="text">
-             <string>Display Status bar</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBoxViewToolBar">
-            <property name="text">
-             <string>Display Tool bar </string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBoxViewControlPanel">
-            <property name="text">
-             <string>Display control panel (compile and run button inside editor)</string>
-            </property>
+            <layout class="QFormLayout" name="formLayout_4">
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="checkBoxViewLineNumber">
+               <property name="toolTip">
+                <string>Show/Hide line numbers</string>
+               </property>
+               <property name="statusTip">
+                <string>Show/Hide line numbers</string>
+               </property>
+               <property name="text">
+                <string>Display line numbers</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item>
@@ -137,8 +115,17 @@
              <string>Highlighting</string>
             </property>
             <layout class="QFormLayout" name="formLayout">
+             <property name="fieldGrowthPolicy">
+              <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+             </property>
              <item row="0" column="0">
               <widget class="QCheckBox" name="checkBoxHighlightCurrentLine">
+               <property name="toolTip">
+                <string>Highlight caret line</string>
+               </property>
+               <property name="statusTip">
+                <string>Highlight caret line</string>
+               </property>
                <property name="text">
                 <string>Highlight current line</string>
                </property>
@@ -148,17 +135,13 @@
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QCheckBox" name="checkBoxHighlightBraces">
-               <property name="text">
-                <string>Highlight matching braces</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
               <widget class="QCheckBox" name="checkBoxHighlightWhitespaces">
+               <property name="toolTip">
+                <string>Show visual whitespaces</string>
+               </property>
+               <property name="statusTip">
+                <string>Show visual whitespaces</string>
+               </property>
                <property name="text">
                 <string>Highlight whitespaces</string>
                </property>
@@ -170,17 +153,7 @@
             </layout>
            </widget>
           </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="tabEditor">
-         <attribute name="title">
-          <string>Editor</string>
-         </attribute>
-         <layout class="QGridLayout" name="gridLayout">
-          <property name="sizeConstraint">
-           <enum>QLayout::SetDefaultConstraint</enum>
-          </property>
-          <item row="0" column="0" colspan="2">
+          <item>
            <widget class="QGroupBox" name="groupBox_2">
             <property name="title">
              <string>Indentation</string>
@@ -197,6 +170,12 @@
               <layout class="QHBoxLayout" name="horizontalLayout">
                <item>
                 <widget class="QSpinBox" name="spinBoxEditorTabLen">
+                 <property name="toolTip">
+                  <string>Tab length (number of spaces)</string>
+                 </property>
+                 <property name="statusTip">
+                  <string>Tab length (number of spaces)</string>
+                 </property>
                  <property name="maximum">
                   <number>99</number>
                  </property>
@@ -205,23 +184,16 @@
                  </property>
                 </widget>
                </item>
-               <item>
-                <spacer name="horizontalSpacer">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
               </layout>
              </item>
              <item row="1" column="0">
               <widget class="QCheckBox" name="checkBoxEditorAutoIndent">
+               <property name="toolTip">
+                <string>Enable/Disable automatic indentation</string>
+               </property>
+               <property name="statusTip">
+                <string>Enable/Disable automatic indentation</string>
+               </property>
                <property name="text">
                 <string>Enable automatic indentation</string>
                </property>
@@ -233,29 +205,7 @@
             </layout>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QGroupBox" name="groupBox_3">
-            <property name="title">
-             <string>File saving</string>
-            </property>
-            <layout class="QFormLayout" name="formLayout_4">
-             <property name="fieldGrowthPolicy">
-              <enum>QFormLayout::FieldsStayAtSizeHint</enum>
-             </property>
-             <item row="0" column="0">
-              <widget class="QCheckBox" name="checkBoxEditorSaveOnFocusOut">
-               <property name="text">
-                <string>Save on editor focus out</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="2" column="0">
+          <item>
            <widget class="QGroupBox" name="groupBox_4">
             <property name="title">
              <string>Code completion</string>
@@ -275,30 +225,23 @@
               <layout class="QHBoxLayout" name="horizontalLayout_2">
                <item>
                 <widget class="QSpinBox" name="spinBoxEditorCCTriggerLen">
+                 <property name="toolTip">
+                  <string>Number of characters needed to trigger auto completion</string>
+                 </property>
+                 <property name="statusTip">
+                  <string>Number of characters needed to trigger auto completion</string>
+                 </property>
                  <property name="value">
                   <number>1</number>
                  </property>
                 </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_2">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
                </item>
               </layout>
              </item>
             </layout>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item>
            <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -313,9 +256,12 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="tab">
+        <widget class="QWidget" name="tabStyle">
+         <attribute name="icon">
+          <iconset theme="applications-graphics"/>
+         </attribute>
          <attribute name="title">
-          <string>Font &amp;&amp; Colors</string>
+          <string>Style</string>
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
@@ -323,49 +269,82 @@
             <property name="title">
              <string>Global style</string>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <layout class="QVBoxLayout" name="verticalLayout_2">
              <item>
-              <spacer name="horizontalSpacer_3">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item>
+                <spacer name="horizontalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioButtonColorWhite">
+                 <property name="toolTip">
+                  <string>Use native style</string>
+                 </property>
+                 <property name="statusTip">
+                  <string>Use native style</string>
+                 </property>
+                 <property name="text">
+                  <string>Native</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioButtonColorDark">
+                 <property name="toolTip">
+                  <string>Use a global dark style (using QDarkStyleSheet)</string>
+                 </property>
+                 <property name="statusTip">
+                  <string>Use a global dark style (using QDarkStyleSheet)</string>
+                 </property>
+                 <property name="text">
+                  <string>Dark</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_4">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButtonColorWhite">
-               <property name="text">
-                <string>White</string>
+              <layout class="QFormLayout" name="layoutIconTheme">
+               <property name="topMargin">
+                <number>0</number>
                </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="radioButtonColorDark">
-               <property name="text">
-                <string>Dark</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_4">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
+               <item row="0" column="0">
+                <widget class="QLabel" name="lblIconTheme">
+                 <property name="text">
+                  <string>Icon theme</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="comboBoxIconTheme"/>
+               </item>
+              </layout>
              </item>
             </layout>
            </widget>
@@ -394,6 +373,12 @@
               <layout class="QHBoxLayout" name="horizontalLayout_4">
                <item>
                 <widget class="QFontComboBox" name="fontComboBox">
+                 <property name="toolTip">
+                  <string>Change editor font</string>
+                 </property>
+                 <property name="statusTip">
+                  <string>Change editor font</string>
+                 </property>
                  <property name="fontFilters">
                   <set>QFontComboBox::MonospacedFonts</set>
                  </property>
@@ -424,6 +409,12 @@
               <layout class="QHBoxLayout" name="horizontalLayout_5">
                <item>
                 <widget class="QSpinBox" name="spinBoxFontSize">
+                 <property name="toolTip">
+                  <string>Change editor font size</string>
+                 </property>
+                 <property name="statusTip">
+                  <string>Change editor font size</string>
+                 </property>
                  <property name="value">
                   <number>10</number>
                  </property>
@@ -454,14 +445,24 @@
             </property>
             <layout class="QGridLayout" name="gridLayout_4">
              <item row="0" column="0">
-              <widget class="QListWidget" name="listWidgetColorSchemes"/>
+              <widget class="QListWidget" name="listWidgetColorSchemes">
+               <property name="toolTip">
+                <string>Pygments color schemes.</string>
+               </property>
+               <property name="statusTip">
+                <string>Pygments color schemes.</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="tab_2">
+        <widget class="QWidget" name="tabBuildAndRun">
+         <attribute name="icon">
+          <iconset theme="exec"/>
+         </attribute>
          <attribute name="title">
           <string>Build &amp;&amp; Run</string>
          </attribute>
@@ -471,47 +472,57 @@
           </property>
           <item row="2" column="0">
            <widget class="QCheckBox" name="checkBoxRunExtTerm">
+            <property name="toolTip">
+             <string>Enable/Disable running program in an external terminal</string>
+            </property>
+            <property name="statusTip">
+             <string>Enable/Disable running program in an external terminal</string>
+            </property>
             <property name="text">
              <string>Run in external terminal</string>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLineEdit" name="lineEditRunTerm"/>
+           <widget class="QLineEdit" name="lineEditRunTerm">
+            <property name="toolTip">
+             <string>External terminal command (filename is appended at the end of the command)</string>
+            </property>
+            <property name="statusTip">
+             <string>External terminal command</string>
+            </property>
+           </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QCheckBox" name="checkBoxCompileBeforeRun">
-            <property name="text">
-             <string>Recompile before run</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QCheckBox" name="checkBoxAutoDetectDeps">
-            <property name="text">
-             <string>Autodetect dependencies</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
            <widget class="QCheckBox" name="checkBoxCustomPath">
+            <property name="toolTip">
+             <string>Enable/Disable custom compiler path</string>
+            </property>
+            <property name="statusTip">
+             <string>Enable/Disable custom compiler path</string>
+            </property>
             <property name="text">
              <string>Custom compiler path</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
-           <widget class="QLineEdit" name="lineEditCompilerPath"/>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="lineEditCompilerPath">
+            <property name="toolTip">
+             <string>Path to the compiler (should not include the executable name, only the directory path)</string>
+            </property>
+            <property name="statusTip">
+             <string>Path to the compiler (should not include the executable name, only the directory path)</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
         <widget class="QWidget" name="tab_Cobol">
+         <attribute name="icon">
+          <iconset resource="ide.qrc">
+           <normaloff>:/ide-icons/rc/silex-64x64.png</normaloff>:/ide-icons/rc/silex-64x64.png</iconset>
+         </attribute>
          <attribute name="title">
           <string>Cobol</string>
          </attribute>
@@ -519,69 +530,6 @@
           <property name="fieldGrowthPolicy">
            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
           </property>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="checkBoxFreeFormat">
-            <property name="toolTip">
-             <string>Code and compile with free format support</string>
-            </property>
-            <property name="text">
-             <string>Free Format support</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>Left margin position:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QSpinBox" name="spinBoxLeftMargin">
-            <property name="toolTip">
-             <string>Position of the left margin (starting from 0)</string>
-            </property>
-            <property name="maximum">
-             <number>256</number>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string>Right margin position</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QSpinBox" name="spinBoxRightMargin">
-            <property name="toolTip">
-             <string>Position of the right margin (starting from 0)</string>
-            </property>
-            <property name="maximum">
-             <number>256</number>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>Comment indicator:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="lineEditCommentIndicator">
-            <property name="font">
-             <font>
-              <family>Monospace</family>
-             </font>
-            </property>
-            <property name="text">
-             <string>*&gt;</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_8">
             <property name="text">
@@ -628,6 +576,35 @@
             </item>
            </widget>
           </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="checkBoxFreeFormat">
+            <property name="toolTip">
+             <string>Code and compile with free format support</string>
+            </property>
+            <property name="text">
+             <string>Free Format support</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Comment indicator:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="lineEditCommentIndicator">
+            <property name="font">
+             <font>
+              <family>Monospace</family>
+             </font>
+            </property>
+            <property name="text">
+             <string>*&gt;</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </widget>
@@ -635,7 +612,7 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="0">
     <layout class="QGridLayout" name="gridLayout_3">
      <property name="leftMargin">
       <number>9</number>
@@ -660,6 +637,19 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="1" column="0">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
