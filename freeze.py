@@ -12,12 +12,6 @@ from open_cobol_ide import __version__
 from pyqode.cobol.backend import server
 
 
-# Clean up
-if os.path.exists('build'):
-    shutil.rmtree(os.path.join(os.getcwd(), 'build'))
-if os.path.exists('dist'):
-    shutil.rmtree(os.path.join(os.getcwd(), 'dist'))
-
 # Detect system
 windows = sys.platform == 'win32'
 osx = sys.platform == 'darwin'
@@ -29,7 +23,7 @@ srv_script = server.__file__
 srv_name = 'cobol-backend'
 srv_exe = 'cobol-backend.exe' if windows else 'cobol-backend'
 
-app_icon = 'forms/rc/silex-icon.ico' if windows else None
+app_icon = 'forms/rc/silex-icon.ico' if windows else 'share/silex-icon.icns'
 
 
 if len(sys.argv) == 1:
@@ -52,7 +46,8 @@ print(
     '#####################################################################\n')
 setup(name=app_name,
       version=__version__,
-      options={'build_exe': options, 'bdist_mac': {'iconfile': app_icon}},
+      options={'build_exe': options, 'bdist_mac': {
+          'iconfile': app_icon, 'custom_info_plist': 'share/Info.plist'}},
       executables=[
           Executable(app_script,
                      targetName=app_exe,
