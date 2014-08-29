@@ -35,7 +35,7 @@ def get_cache_directory():
         return os.path.join(os.path.expanduser("~"), 'OpenCobolIDE', 'cache')
     elif darwin:
         return os.path.join(os.path.expanduser("~"), 'Library',
-                            'Application Support', 'OpenCobolIDE', 'cache')
+                            'Caches', 'OpenCobolIDE')
     else:
         return os.path.join(os.path.expanduser("~"), '.cache', '.OpenCobolIDE')
 
