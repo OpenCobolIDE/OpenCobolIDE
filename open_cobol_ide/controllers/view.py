@@ -59,6 +59,18 @@ class ViewController(Controller):
         if system.darwin:
             self.ui.toolBarCode.setIconSize(QtCore.QSize(20, 20))
             self.ui.toolBarFile.setIconSize(QtCore.QSize(20, 20))
+            self.ui.toolBarFile.setStyleSheet(
+                '''QToolButton
+                {
+                     background-color: rgba(255, 255,255,0);
+                }
+                ''')
+            self.ui.toolBarCode.setStyleSheet(
+                '''QToolButton
+                {
+                     background-color: rgba(255, 255,255,0);
+                }
+                ''')
 
     def toggle_perspective(self):
         self.show_perspective(
