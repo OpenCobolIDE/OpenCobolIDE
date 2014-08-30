@@ -68,6 +68,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings = Settings()
         if self.tabWidget.currentIndex() == 0 or all_tabs:
             # Editor Tab
+            self.checkBoxShowErrors.setChecked(settings.show_errors)
             self.checkBoxViewLineNumber.setChecked(settings.display_lines)
             self.checkBoxHighlightCurrentLine.setChecked(
                 settings.highlight_caret)
@@ -114,6 +115,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings = Settings()
         index = self.tabWidget.currentIndex()
         if index == 0:
+            settings.show_error = True
             settings.display_lines = True
             settings.highlight_caret = True
             settings.show_whitespaces = False
@@ -165,3 +167,4 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.cobol_standard = GnuCobolStandard(
             dlg.comboBoxStandard.currentIndex())
         settings.icon_theme = dlg.comboBoxIconTheme.currentText()
+        settings.show_errors = dlg.checkBoxShowErrors.isChecked()

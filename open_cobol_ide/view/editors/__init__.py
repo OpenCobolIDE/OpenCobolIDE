@@ -23,5 +23,6 @@ def update_editor_settings(editor):
             settings.code_completion_trigger_len
         editor.line_nbr_panel.enabled = settings.display_lines
         editor.line_nbr_panel.setVisible(settings.display_lines)
+        editor.linter_mode.enabled = settings.show_errors
     except AttributeError:
         editor.syntax_highlighter.pygments_style = settings.color_scheme

@@ -16,7 +16,7 @@ class Settings(object):
     settings (thought getter/setter properties).
     """
     def __init__(self):
-        self._settings = QSettings('OpenCobolIDE4', 'OpenCobolIDE4')
+        self._settings = QSettings('OpenCobolIDE', 'OpenCobolIDE4')
 
     def clear(self):
         """
@@ -167,6 +167,14 @@ class Settings(object):
     @code_completion_trigger_len.setter
     def code_completion_trigger_len(self, value):
         self._settings.setValue('ccTriggerLen', value)
+
+    @property
+    def show_errors(self):
+        return bool(int(self._settings.value('showErrors', '1')))
+
+    @show_errors.setter
+    def show_errors(self, value):
+        self._settings.setValue('showErrors', int(value))
 
     #
     # Editor style settings
