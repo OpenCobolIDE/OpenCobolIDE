@@ -51,6 +51,7 @@ class ViewController(Controller):
             self.show_main_menu_as_context_menu)
         self.ui.tabWidgetEditors.tab_bar.double_clicked.connect(
             self.toggle_perspective)
+        self.ui.actionFullscreen.triggered.connect(self.toggle_fullscreen)
         self.bt_mnu = QtWidgets.QToolButton()
         self.main_window.addActions(self.make_main_menu().actions())
         window_mnu = self.main_window.createPopupMenu()
@@ -70,6 +71,7 @@ class ViewController(Controller):
                      background-color: rgba(255, 255,255,0);
                 }
                 ''')
+        self.ui.actionFullscreen.setChecked(self.main_window.isFullScreen())
 
     def toggle_perspective(self):
         self.show_perspective(
@@ -223,3 +225,9 @@ class ViewController(Controller):
                     w.control_panel.setVisible(True)
                 except AttributeError:
                     pass
+
+    def toggle_fullscreen(self):
+        if self.ui.actionFullscreen.isChecked():
+            self.main_window.showFullScreen()
+        else:
+            self.main_window.showNormal()
