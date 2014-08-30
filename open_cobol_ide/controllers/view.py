@@ -209,11 +209,17 @@ class ViewController(Controller):
             self.ui.toolBarFile.show()
             self.ui.toolBarCode.show()
             for w in self.ui.tabWidgetEditors._widgets:
-                w.control_panel.setVisible(False)
+                try:
+                    w.control_panel.setVisible(False)
+                except AttributeError:
+                    pass
         else:
             self.ui.menuBar.hide()
             self.ui.statusbar.hide()
             self.ui.toolBarCode.hide()
             self.ui.toolBarFile.hide()
             for w in self.ui.tabWidgetEditors._widgets:
-                w.control_panel.setVisible(True)
+                try:
+                    w.control_panel.setVisible(True)
+                except AttributeError:
+                    pass
