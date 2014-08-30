@@ -55,7 +55,6 @@ class ViewController(Controller):
         self.main_window.addActions(self.make_main_menu().actions())
         window_mnu = self.main_window.createPopupMenu()
         self.ui.menuWindows.addActions(window_mnu.actions())
-        self._widget = None
         if system.darwin:
             self.ui.toolBarCode.setIconSize(QtCore.QSize(20, 20))
             self.ui.toolBarFile.setIconSize(QtCore.QSize(20, 20))
@@ -209,21 +208,12 @@ class ViewController(Controller):
             self.ui.statusbar.show()
             self.ui.toolBarFile.show()
             self.ui.toolBarCode.show()
-            self.ui.tabWidgetEditors.setCornerWidget(None)
-            self._widget = None
+            for w in self.ui.tabWidgetEditors._widgets:
+                w.control_panel.setVisible(False)
         else:
             self.ui.menuBar.hide()
             self.ui.statusbar.hide()
             self.ui.toolBarCode.hide()
             self.ui.toolBarFile.hide()
-            if not system.darwin:
-                if self._widget is None:
-                    self._widget = TabCornerWidget(
-                        self.ui.tabWidgetEditors,
-                        self.app.cobol.create_bt_compile(),
-                        self.app.cobol.create_bt_run())
-                    self._widget.show()
-                    self.ui.tabWidgetEditors.setCornerWidget(self._widget)
-            else:
-                self.ui.tabWidgetEditors.setCornerWidget(None)
-                self._widget = None
+            for w in self.ui.tabWidgetEditors._widgets:
+                w.control_panel.setVisible(True)

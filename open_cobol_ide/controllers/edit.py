@@ -100,6 +100,9 @@ class EditController(Controller):
         """
         for klass in self.editor_types:
             if mimetype in klass.mimetypes:
+                if klass == CobolCodeEdit:
+                    return klass(self.app.cobol.create_bt_compile(),
+                                 self.app.cobol.create_bt_run())
                 return klass()
         editor = self.editor_types[-1]()
         return editor
