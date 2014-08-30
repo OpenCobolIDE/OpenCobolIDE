@@ -17,10 +17,10 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         else:
             self.comboBoxIconTheme.hide()
             self.lblIconTheme.hide()
-        self.tabBuildAndRun.setWindowIcon(QtGui.QIcon.fromTheme(
+        self.tabWidget.setTabIcon(2, QtGui.QIcon.fromTheme(
             'exec',
             QtGui.QIcon(':/ide-icons/rc/application-x-executable.png')))
-        self.tabStyle.setWindowIcon(QtGui.QIcon.fromTheme(
+        self.tabWidget.setTabIcon(1, QtGui.QIcon.fromTheme(
             'applications-graphics',
             QtGui.QIcon(':/ide-icons/rc/applications-graphics.png')))
         self.buttonBox.button(self.buttonBox.Reset).clicked.connect(self.reset)
