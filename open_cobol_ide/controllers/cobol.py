@@ -73,7 +73,7 @@ class CobolController(Controller):
         bt_compile.setIcon(self.ui.actionCompile.icon())
         bt_compile.setMenu(self.ui.menuProgramType)
         bt_compile.setToolTip(self.ui.actionCompile.toolTip())
-        bt_compile.setPopupMode(bt_compile.DelayedPopup)
+        bt_compile.setPopupMode(bt_compile.MenuButtonPopup)
         bt_compile.clicked.connect(self.compile)
         self.bt_compile.append(bt_compile)
         bt_compile.setEnabled(self.ui.actionCompile.isEnabled())
