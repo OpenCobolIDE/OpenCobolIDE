@@ -1,8 +1,10 @@
+import os
 import sys
-from pyqode.core.api.syntax_highlighter import PYGMENTS_STYLES
-from pyqode.qt import QtCore, QtGui, QtWidgets
+from pyqode.core.api.syntax_highlighter import PYGMENTS_STYLES, ColorScheme
+from pyqode.qt import QtCore, QtGui, QtWidgets, QT_API, PYQT5_API, PYSIDE_API
 from ...compiler import GnuCobolStandard
 from open_cobol_ide import system
+from open_cobol_ide.view.editors import update_editor_settings
 from ...settings import Settings
 from ...view.forms import dlg_preferences_ui
 
@@ -30,6 +32,39 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditRunTerm.setEnabled)
         self.checkBoxCustomPath.stateChanged.connect(
             self.lineEditCompilerPath.setEnabled)
+        self.listWidgetColorSchemes.currentItemChanged.connect(
+            self.update_color_scheme_preview)
+        self.plainTextEdit.setPlainText('''      * Author:
+      * Date:
+      * Purpose:
+      * Tectonics: cobc
+       IDENTIFICATION DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+       PROGRAM-ID. YOUR-PROGRAM-NAME.
+       ENVIRONMENT DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+       CONFIGURATION SECTION.
+      *-----------------------
+       INPUT-OUTPUT SECTION.
+      *-----------------------
+       DATA DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+       FILE SECTION.
+      *-----------------------
+       WORKING-STORAGE SECTION.
+      *-----------------------
+       PROCEDURE DIVISION.
+      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+       MAIN-PROCEDURE.
+      **
+      * The main procedure of the program
+      **
+            DISPLAY "Hello world"
+            STOP RUN.
+      ** add other procedures here
+       END PROGRAM YOUR-PROGRAM-NAME.
+
+        ''', '', '')
         self.reset(all_tabs=True)
 
     def _update_icon_theme(self, c):
@@ -51,13 +86,19 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self._update_icon_theme('default')
         # choose a a color scheme that goes well with the selected style
         for i in range(self.listWidgetColorSchemes.count()):
-            if (native and self.listWidgetColorSchemes.item(i).text() == 'qt'):
+            if (native and self.listWidgetColorSchemes.item(i).text() ==
+                    'qt'):
                 self.listWidgetColorSchemes.setCurrentRow(i)
                 break
             elif (not native and
-                    self.listWidgetColorSchemes.item(i).text() == 'darcula'):
+                    self.listWidgetColorSchemes.item(i).text() ==
+                          'darcula'):
                 self.listWidgetColorSchemes.setCurrentRow(i)
                 break
+
+    def update_color_scheme_preview(self, item):
+        self.plainTextEdit.syntax_highlighter.color_scheme = ColorScheme(
+            item.text())
 
     def setupUi(self, Dialog):
         super().setupUi(Dialog)

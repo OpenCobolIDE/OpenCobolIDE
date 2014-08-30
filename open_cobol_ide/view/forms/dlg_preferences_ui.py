@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '/home/colin/Dev/OpenCobolIDE/forms/dlg_preferences.ui'
 #
-# Created: Sat Aug 30 19:39:04 2014
+# Created: Sat Aug 30 23:51:20 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from pyqode.core.qt import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(714, 630)
+        Dialog.resize(894, 760)
         icon = QtGui.QIcon.fromTheme("preferences-system")
         Dialog.setWindowIcon(icon)
         self.gridLayout_2 = QtWidgets.QGridLayout(Dialog)
@@ -180,8 +180,16 @@ class Ui_Dialog(object):
         self.gridLayout_4 = QtWidgets.QGridLayout(self.groupBox_7)
         self.gridLayout_4.setObjectName("gridLayout_4")
         self.listWidgetColorSchemes = QtWidgets.QListWidget(self.groupBox_7)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.listWidgetColorSchemes.sizePolicy().hasHeightForWidth())
+        self.listWidgetColorSchemes.setSizePolicy(sizePolicy)
         self.listWidgetColorSchemes.setObjectName("listWidgetColorSchemes")
         self.gridLayout_4.addWidget(self.listWidgetColorSchemes, 0, 0, 1, 1)
+        self.plainTextEdit = CobolCodeEdit(self.groupBox_7)
+        self.plainTextEdit.setObjectName("plainTextEdit")
+        self.gridLayout_4.addWidget(self.plainTextEdit, 0, 1, 1, 1)
         self.verticalLayout_3.addWidget(self.groupBox_7)
         icon = QtGui.QIcon.fromTheme("applications-graphics")
         self.tabWidget.addTab(self.tabStyle, icon, "")
@@ -240,7 +248,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.addWidget(self.tabWidget, 1, 0, 1, 1)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -317,4 +325,5 @@ class Ui_Dialog(object):
         self.checkBoxFreeFormat.setText(_translate("Dialog", "Free format"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_Cobol), _translate("Dialog", "Cobol"))
 
+from pyqode.cobol.widgets import CobolCodeEdit
 from . import ide_rc
