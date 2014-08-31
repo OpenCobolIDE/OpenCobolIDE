@@ -85,7 +85,7 @@ class Application:
             try:
                 import qdarkstyle
             except ImportError:
-                pass
+                Settings().dark_style = False
             else:
                 qt_api = os.environ[QT_API]
                 if qt_api == os.environ[QT_API] == PYQT5_API:

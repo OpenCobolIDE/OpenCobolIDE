@@ -1,7 +1,6 @@
 import pyqode.core
 import pyqode.cobol
 import pygments
-import qdarkstyle
 
 from pyqode.qt import QtCore, QtWidgets
 from ..forms import dlg_about_ui
@@ -38,13 +37,19 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
         self.tbwVersions.setHorizontalHeaderLabels(['Version'])
         self.labelMain.setText(self.labelMain.text() % __version__)
         self.adjustSize()
+        try:
+            import qdarkstyle
+        except ImportError:
+            qdarkstyle_version = 'Not installed'
+        else:
+            qdarkstyle_version = qdarkstyle.__version__
         versions = [GnuCobolCompiler().get_version(),
                     QtCore.QT_VERSION_STR,
                     QtCore.PYQT_VERSION_STR,
                     pyqode.core.__version__,
                     pyqode.cobol.__version__,
                     pygments.__version__,
-                    qdarkstyle.__version__]
+                    qdarkstyle_version]
         for i, version in enumerate(versions):
             item = QtWidgets.QTableWidgetItem(version)
             self.tbwVersions.setItem(i, 0, item)
