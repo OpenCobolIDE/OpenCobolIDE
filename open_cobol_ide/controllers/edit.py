@@ -165,10 +165,10 @@ class EditController(Controller):
             # dialog canceled
             pass
         else:
+            self.app.update_app_style()
+            self.app.home.update_style()
+            QtGui.QIcon.setThemeName(Settings().icon_theme)
             for i in range(self.ui.tabWidgetEditors.count()):
                 editor = self.ui.tabWidgetEditors.widget(i)
                 update_editor_settings(editor)
                 editor.rehighlight()
-            self.app.update_app_style()
-            self.app.home.update_style()
-            QtGui.QIcon.setThemeName(Settings().icon_theme)
