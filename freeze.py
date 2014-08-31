@@ -10,6 +10,7 @@ import sys
 from cx_Freeze import setup, Executable
 from open_cobol_ide import __version__
 from pyqode.cobol.backend import server
+from pyqode.core.api.syntax_highlighter import get_all_styles
 
 
 # Detect system
@@ -29,15 +30,24 @@ app_icon = 'forms/rc/silex-icon.ico' if windows else 'share/silex-icon.icns'
 if len(sys.argv) == 1:
     sys.argv.append('build')
 
+pygments_styles = []
+for s in get_all_styles():
+    module = 'pygments.styles.%s' % s
+    try:
+        __import__(module)
+    except ImportError:
+        pass
+    else:
+        pygments_styles.append(module)
+
+print('pygment styles', pygments_styles)
+
 options = {
     'namespace_packages': ['pyqode'],
     # freeze the pygments default style along with our executable
     'includes': [
-        'pygments.styles.default',
-        'pygments.styles.monokai',
-        'pygments.styles.native',
         'pkg_resources'
-    ]
+    ] + pygments_styles
 }
 
 
