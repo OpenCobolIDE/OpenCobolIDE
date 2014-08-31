@@ -130,6 +130,15 @@ Screenshots
 .. image:: doc/source/_static/CompilerOutput.png
     :align: center
 
+* Minimal view:
+
+.. image:: doc/source/_static/Minimal.png
+    :align: center
+
+* Code folding:
+
+.. image:: doc/source/_static/Folding.png
+    :align: center
 
 * Offset calculator
 
@@ -141,6 +150,8 @@ Screenshots
 
 .. image:: doc/source/_static/Dark.png
     :align: center
+
+
 
 
 .. _chardet: https://pypi.python.org/pypi/chardet
