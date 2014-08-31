@@ -132,7 +132,7 @@ Screenshots
 
 * Minimal view:
 
-.. image:: doc/source/_static/Minimal.png
+.. image:: doc/source/_static/MinimalView.png
     :align: center
 
 * Code folding:
