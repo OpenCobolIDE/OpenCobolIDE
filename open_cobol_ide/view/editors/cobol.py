@@ -3,7 +3,7 @@ Contains the cobol code editor widget.
 
 """
 from pyqode.qt import QtGui, QtWidgets
-from pyqode.core.api import Panel
+from pyqode.core.api import Panel, ColorScheme
 from pyqode.cobol.widgets import CobolCodeEdit as CodeEditBase
 
 from ...compiler import get_file_type
@@ -21,9 +21,11 @@ class CobolCodeEdit(CodeEditBase):
 
     def __init__(self, bt_compile, bt_run, parent=None):
         super().__init__(parent)
+        self.syntax_highlighter.color_scheme = ColorScheme(Settings().color_scheme)
         self.linter_mode = self.modes.append(CobolLinterMode())
-        self.control_panel = self.panels.append(
-            ControlPanel(bt_compile, bt_run), ControlPanel.Position.RIGHT)
+        self.control_panel = ControlPanel(bt_compile, bt_run)
+        self.control_panel.setVisible(Settings().perspective == 'minimal')
+        self.panels.append(self.control_panel, ControlPanel.Position.RIGHT)
 
     @property
     def file_type(self):
