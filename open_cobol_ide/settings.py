@@ -49,6 +49,24 @@ class Settings(object):
         self._settings.setValue('mainWindowState', state)
 
     @property
+    def preferences_width(self):
+        v = int(self._settings.value('preferences_width', '800'))
+        return v
+
+    @preferences_width.setter
+    def preferences_width(self, width):
+        self._settings.setValue('preferences_width', int(width))
+
+    @property
+    def preferences_height(self):
+        v = int(self._settings.value('preferences_height', '400'))
+        return v
+
+    @preferences_height.setter
+    def preferences_height(self, height):
+        self._settings.setValue('preferences_height', int(height))
+
+    @property
     def maximised(self):
         return bool(int(self._settings.value('maximised', '0')))
 

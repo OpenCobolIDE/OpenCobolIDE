@@ -147,6 +147,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.checkBoxCustomPath.setChecked(
                 settings.custom_compiler_path != '')
             self.lineEditCompilerPath.setText(settings.custom_compiler_path)
+            self.lineEditCompilerPath.setEnabled(self.checkBoxCustomPath.isChecked())
         if self.tabWidget.currentIndex() == 3 or all_tabs:
             self.checkBoxFreeFormat.setChecked(settings.free_format)
             self.lineEditCommentIndicator.setText(settings.comment_indicator)
@@ -181,9 +182,20 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
 
     @classmethod
     def edit_preferences(cls, parent):
+        def restore_state(dlg):
+            s = Settings()
+            dlg.resize(s.preferences_width, s.preferences_height)
+
+        def save_state(dlg):
+            s = Settings()
+            s.preferences_width = dlg.width()
+            s.preferences_height = dlg.height()
+
         dlg = cls(parent)
+        restore_state(dlg)
         if dlg.exec_() != dlg.Accepted:
             raise ValueError()
+        save_state(dlg)
         settings = Settings()
         settings.display_lines = dlg.checkBoxViewLineNumber.isChecked()
         settings.highlight_caret = dlg.checkBoxHighlightCurrentLine.isChecked()
