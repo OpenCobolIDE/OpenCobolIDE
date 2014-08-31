@@ -67,6 +67,9 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         ''', '', '')
         self.reset(all_tabs=True)
 
+    def stop_backend(self):
+        self.plainTextEdit.backend.stop()
+
     def _update_icon_theme(self, c):
         index = self.comboBoxIconTheme.findText(c)
         self.comboBoxIconTheme.setCurrentIndex(index)
@@ -193,7 +196,9 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
 
         dlg = cls(parent)
         restore_state(dlg)
-        if dlg.exec_() != dlg.Accepted:
+        ret_val = dlg.exec_()
+        dlg.stop_backend()
+        if ret_val != dlg.Accepted:
             raise ValueError()
         save_state(dlg)
         settings = Settings()
