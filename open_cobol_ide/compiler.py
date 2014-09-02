@@ -2,6 +2,7 @@
 This module contains function and classes for interfacing with the GnuCobol
 compiler.
 """
+import glob
 import locale
 import logging
 import os
@@ -14,6 +15,7 @@ from pyqode.core.cache import Cache
 from pyqode.core.modes import CheckerMessages
 from pyqode.qt import QtCore
 from . import system
+import shutil
 
 
 def _logger():
@@ -193,6 +195,17 @@ class GnuCobolCompiler:
         """
         return self.extensions[int(file_type)]
 
+    def make_bin_dir(self, path):
+        bin_dir = os.path.join(path, 'bin')
+        if not os.path.exists(bin_dir):
+            os.makedirs(bin_dir)
+        if sys.platform == "win32":
+            # copy the dll
+            files = glob.glob(os.path.join(os.environ["COB_LIBRARY_PATH"],
+                                           "*.dll"))
+            for f in files:
+                shutil.copy(f, bin_dir)
+
     def compile(self, file_path, file_type):
         """
         Compiles a file. This is a blocking function, it returns only when
@@ -206,10 +219,7 @@ class GnuCobolCompiler:
         _logger().info('compiling %s' % file_path)
         path, filename = os.path.split(file_path)
         # ensure bin dir exists
-        bin_dir = os.path.join(path, 'bin')
-        if not os.path.exists(bin_dir):
-            os.makedirs(bin_dir)
-        # run command using qt process api, this is blocking.
+        self.make_bin_dir(path)# run command using qt process api, this is blocking.
         pgm, options = self.make_command(filename, file_type)
         process = QtCore.QProcess()
         process.setWorkingDirectory(path)
