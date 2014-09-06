@@ -17,7 +17,7 @@ OpenCobolIDE is a simple and lightweight cobol IDE based on the GnuCobol
 compiler.
 
 
-The software is written in Python using `PyQt5`_ and `pyQode`_
+The software is written in Python using `PyQt5`_ (or `PyQt4`_) and `pyQode`_
 
 Features:
 ---------
@@ -69,6 +69,11 @@ Install pyqt5, open-cobol and pip using your package manager, then run the follo
 
 If you are using Archlinux, you can install OpenCobolIDE and all its
 dependencies from the AUR: https://aur.archlinux.org/packages/OpenCobolIDE/
+
+*Note that if you have both PyQt5 and PyQt4 on your system, the IDE will use
+PyQt5 by default. To force the use of PyQt4, you should set the
+``QT_API`` environment variable to ``pyqt4``.*
+
 
 Windows
 #######
