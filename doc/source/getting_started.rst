@@ -1,20 +1,20 @@
 Getting started
 ===============
-
 .. note:: All the screenshots were taken on Gnome 3 desktop.
-          You will have different looks and feels on other OS/DE.
+          You will have different looks and feels on other operating systems or
+          desktop environments.
 
-This is the first window you will see when running OpenCobolIDE. This is your
-home page.
+OpenCobolIDE is **simple and lightweight** IDE. It works on a single
+file basis (i.e. it has no concept of project): *you create/open a file,
+compile it then run it.*
+
 
 .. image:: _static/Home.png
     :align: center
 
-From there you can create new files or open existing one. OpenCobolIDE is
-**simple and lightweight** IDE. It works on a single file basis (i.e. it
-has no concept of project):
-
-    *You create/open a file, compile it then run it.*
+This is the first window you will see when running OpenCobolIDE, called the
+*home page*. From there you can create new files or open existing one.
+You can also access the application menu by right clicking on any empty area.
 
 
 Create a new file
@@ -30,7 +30,11 @@ Create a new file
 - fill up the following information:
 
     - Type:
-        Specify the type of file to create. You can choose from
+        Specify the type of file to create. Depending on your choice the
+        default code template that is created will changed. Note that you
+        can changed the file type later on after creating the file.
+
+        You can choose from:
 
             - program:
                 A *program* is an **executable**.
@@ -47,9 +51,6 @@ Create a new file
             - empty:
                 create an empty file.
 
-        The type can be changed later. It used now to setup the default
-        code skeleton, to simplify your life ;)
-
     - Name:
         file name without extension (you can choose the extension in the
         drop down list)
@@ -58,8 +59,8 @@ Create a new file
         directory where the file will be created.
 
 
-.. warning:: Modules source code must be in the same directory as the parent
-             program source code to work properly.
+.. warning:: The source code of a module must be located in the same directory
+             as the calling program's source code to work properly.
 
 Open a file
 -----------
@@ -78,68 +79,62 @@ Here is the main window of OpenCobolIDE:
 .. image:: _static/MainWindow.png
     :align: center
 
-It is made up of 4 important parts:
+It is made up of 5 distinct parts:
 
-1) the text editor tabs:
+1. menu and toolbar zone:
+
+    The menu contains all the actions that can be performed in the application.
+    Note that the menu is hidden when you switch to the minimal perspective.
+    In that case, you can show it by right clicking next to the last editor
+    tab (in the empty area).
+
+2. code editors tab widget:
 
     This is where you type your code.
 
-2) the **navigation** panel (movable and closable):
+3. the **Navigation** panel (movable and closable):
 
-    This panel show you the structure of your code and let you navigate
-    quickly inside your document.
+    This panel shows the document structure. It is fully synced with the code
+    folding panel (inside the current editor).
 
-3) The **Log** panel (movable and closable):
+4. the **Log** panel (movable and closable):
 
-    This panel show various log and output.
+    This panel shows the list of errors found in your program and you program
+    output.
 
     It is made up of the following tabs:
 
-    - Compilation output:
-        textual output of the cobol compiler
-    - Issues:
-        the list of issues
-    - Output:
-        the program output (when you run it). The output console is
-        interactive and accepts stdin.
-    - Application log:
-        the application log, for debugging purpose. This window is not
-        visible when you start the IDE.
-        You can show it by checking: `menu -> View -> Appplication log -> Show window`
+    - Issues: the list of issues
+    - Output: the program output (when you run it).
 
-4) the status bar:
+        .. note:: The output console is interactive and accepts stdin but does
+                  not support cobol ``SCREEN SECTION``.
+                  If you're using the screen section, you should run your
+                  program in an external terminal *(Preferences->Build And
+                  Run)*
 
-Since version 2.4, the status bar has become an important part of the
-application as it now contains the preferences button and the general menu
-as a drop down menu button:
+5. the status bar:
 
-    .. image:: _static/Menu.png
-        :align: center
+    The status bar shows menu/actions description on the left and current editor
+    information on the right (free/fixed format, cursor position,
+    file encoding).
 
-You can click on the button to show the preferences dialog or click on the
-arrow to reveal the general menu (Open, New, View, Help, ...).
+
 
 Compile a file
 --------------
 
-To compile a file, press **F8** or press the compile button (inside the
-editor). This will compile the current file but also the referenced modules.
+To compile a file, press **F8** or press the compile button.
 
-The compiler output will automatically be shown:
-
-.. image:: _static/CompilerOutput.png
-    :align: center
+This will compile the current file as well as its dependencies.
 
 You can double click on an entry in the issues table to quickly go to the
-problematic line in the code editor (if the file hasn't been open,
+problematic line in the editor (if the file hasn't been open,
 OpenCobolIDE will gently open it for you).
 
 To change the program type you must press the down arrow next to the compile
-button. Doing this will reveal a drop down menu that let you choose the program
+button. Doing this will reveal a drop down menu where you can choose the program
 type:
-
-.. image:: _static/CompilerMenu.png
-    :align: center
 
 
 Run a compiled program
@@ -149,10 +144,6 @@ Press **F5** or click the run button (inside the editor) to run the file.
 
 The program will run in the *Output* window which is interactive (support for
 stdin has been tested and works with the **ACCEPT** keyword).
-
-
-.. image:: _static/PgmOutput.png
-    :align: center
 
 
 .. note:: It will recompile the file and all its dependencies before running
@@ -178,14 +169,35 @@ Switching to a full dark style
 
 Since version 2.2, OpenCobolIDE comes with a dark style sheet.
 
-To activate it, open the preferences dialog (edit->preferences). Then go to the
-style page and click on the *Dark style* radio button.
+To activate it, open the preferences dialog (Edit->Preferences). Then go to the
+*Style* page and click on the *Dark* radio button.
 
 .. image:: _static/Settings.png
     :align: center
 
 
-Your IDE shoul look like that:
+Your IDE should look like that:
 
 .. image:: _static/Dark.png
     :align: center
+
+
+.. note:: Switching the dark style on will change the editor color scheme.
+
+.. note:: Since v4.0, you can also change the icon them on linux.
+
+Switching between classic view and minimal view
+------------------------------------------------
+
+Version 4.0 allow you to switch between a classic view (where the menu and
+toolbars are visible) to a minimal view by double clicking on an editor tab.
+
+The minimal view looks like that:
+
+
+.. image:: _static/MinimalViewWithNumbers.png
+    :align: center
+
+To access the application menu, just click next to the last open editor (1).
+To compile and run the file, use the buttons located inside the editor widget
+(2).
