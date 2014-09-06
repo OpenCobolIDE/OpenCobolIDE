@@ -4,8 +4,12 @@ python:
 env:
   - QT_API=PyQt4
   - QT_API=PyQt5
+  - PEP8=1
+  - COV=1
 matrix:
   allow_failures:
+      - env: COV=1
+      - env: PEP8=1
       - env: QT_API=PyQt5
 virtualenv:
   system_site_packages: true
@@ -17,6 +21,7 @@ install:
  - sudo apt-get install open-cobol
  - sudo apt-get install python3-pyqt4;
  - pip install git+https://github.com/pyQode/pyqode.core.git@develop
+ - pip install git+https://github.com/pyQode/pyqode.cobol.git@develop
  # PyQt5 (won't be available untill travis upgrade to ubuntu 14.04
  - if [ $QT_API = "PyQt5" ]; then
    sudo apt-get install -qq python3-pyqt5 --fix-missing;
@@ -26,3 +31,16 @@ script:
  - if [ $QT_API ]; then
    python3 runtests.py;
    fi
+ - if [ $COV ]; then
+   pip install pytest-cov;
+   python3 runtests.py --cov open_cobol_ide;
+   fi
+ - if [ $PEP8 ]; then
+   pip install pytest-pep8;
+   python3 runtests.py --pep8 -m pep8;
+   fi
+after_script:
+  - if [ $COV ]; then
+    sudo pip install --quiet coveralls;
+    coveralls;
+    fi

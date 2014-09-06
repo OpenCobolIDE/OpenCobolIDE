@@ -1,9 +1,9 @@
 OpenCobolIDE
 ------------
-.. image:: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE.png?branch=develop
+.. image:: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE.png?branch=master
     :target: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE
     :alt: Travis-CI build status
-    
+
 .. image:: https://pypip.in/d/OpenCobolIDE/badge.png
     :target: https://crate.io/packages/OpenCobolIDE/
     :alt: Number of PyPI downloads
@@ -13,7 +13,7 @@ OpenCobolIDE
     :alt: Latest PyPI version
 
 
-OpenCobolIDE is a simple and lightweight cobol IDE based on the OpenCobol
+OpenCobolIDE is a simple and lightweight cobol IDE based on the GnuCobol
 compiler.
 
 
@@ -22,16 +22,18 @@ The software is written in Python using `PyQt5`_ and `pyQode`_
 Features:
 ---------
 
-- syntax highlighting
-- code completion
-- code folding -> temporarely removed for performance reasons
-- navigable tree view of division, sections, paragraphs etc.
-- calculates the offsets of selected record definitions
-- compile as program (.exe) or as subprogram (.so/.dll)
-- run the program from the editor or from a configurable external terminal
-- also open other text files
+- native (fast) cobol syntax highlighter
+- cobol code completion
+- cobol code folding
+- navigable tree view of division, sections, paragraphs etc (fully synchronised
+  with the code folding panel)
+- smart auto indentation
+- tool for computing PIC fields offsets
+- compile as a program (.exe) or as a subprogram (.so/.dll)
+- run the program from the editor or from a configurable external terminal (
+  necessary if you are using the SCREEN section).
 - dark color schemes and theme
-- cross platform: work on **GNU/Linux**, **Windows** and **Mac OSX**
+- cross platform: works on **GNU/Linux**, **Windows** and **Mac OSX**
 
 
 License
@@ -43,15 +45,14 @@ OpenCobolIDE is released under the **GPL** version 3
 Requirements
 ------------
 
-The project depends on the following packages:
-
+- `GnuCobol`_
 - `Python3`_
-- `setuptools`_
 - `PyQt4`_ or `PyQt5`_
-- `OpenCobol`_
+- `setuptools`_
+- `pyqode.qt`_
 - `pyqode.core`_
-- `Pygments`_ **>= 1.6**
-- `chardet`_
+- `pyqode.cobol`_
+- `Pygments`_
 - `qdarkstyle`_
 
 
@@ -66,8 +67,8 @@ Install pyqt5, open-cobol and pip using your package manager, then run the follo
     sudo pip3 install OpenCobolIDE
 
 
-If you are on Archlinux, you can install OpenCobolIDE and all its dependencies from the AUR: https://aur.archlinux.org/packages/open-cobol-ide/
-
+If you are using Archlinux, you can install OpenCobolIDE and all its
+dependencies from the AUR: https://aur.archlinux.org/packages/OpenCobolIDE/
 
 Windows
 #######
@@ -79,18 +80,16 @@ Mac OSX
 
 There is a dmg image available here: https://launchpad.net/cobcide/+download
 
-The only thing you have to do is:
-
-- to install OpenCobol compiler, e.g. using homebrew::
+Before running the app, you first have to install the GnuCobol compiler, e.g.
+using homebrew::
 
     brew install open-cobol
 
-- run the OpenCobolIDE app
 
-If you installed the compiler in a non-standard path and it is not recognized, you
-can specify and the path to the compiler in the preferences dialog under the ``Build & Run`` section
-(make sure to only specify the directory where the compiler can be found, not the full path).
-
+If you installed the compiler in a non-standard path and it is not recognized
+by the IDE, you can specify the path to the compiler in the preferences
+dialog under the ``Build & Run`` section (make sure to only specify the
+directory where the compiler can be found, not the full path).
 
 
 Resources
@@ -131,6 +130,15 @@ Screenshots
 .. image:: doc/source/_static/CompilerOutput.png
     :align: center
 
+* Minimal view:
+
+.. image:: doc/source/_static/MinimalView.png
+    :align: center
+
+* Code folding:
+
+.. image:: doc/source/_static/Folding.png
+    :align: center
 
 * Offset calculator
 
@@ -144,17 +152,21 @@ Screenshots
     :align: center
 
 
-.. _qdarkstyle: https://github.com/ColinDuquesnoy/QDarkStyleSheet
-.. _pyQode: https://github.com/pyQode/
+
+
+.. _chardet: https://pypi.python.org/pypi/chardet
 .. _PyQt4: http://www.riverbankcomputing.co.uk/software/pyqt/download
 .. _Downloads: https://github.com/OpenCobolIDE/OpenCobolIDE/releases
 .. _Source repository: https://github.com/OpenCobolIDE/OpenCobolIDE/
 .. _Issue tracker: https://github.com/OpenCobolIDE/OpenCobolIDE/issues?state=open
-.. _`Documentation`: http://opencobolide.readthedocs.org/en/latest/
-.. _chardet: https://pypi.python.org/pypi/chardet
+.. _Documentation: http://opencobolide.readthedocs.org/en/latest/
 .. _Pygments: http://pygments.org/
 .. _pyqode.core: https://github.com/pyQode/pyqode.core/
-.. _OpenCobol: http://opencobol.org/
+.. _pyqode.cobol: https://github.com/pyQode/pyqode.cobol/
+.. _pyqode.qt: https://github.com/pyQode/pyqode.qt/
+.. _GnuCobol: http://sourceforge.net/projects/open-cobol/
 .. _setuptools: https://pypi.python.org/pypi/setuptools
 .. _Python3: http://python.org/
 .. _PyQt5: http://www.riverbankcomputing.co.uk/software/pyqt/download
+.. _qdarkstyle: https://github.com/ColinDuquesnoy/QDarkStyleSheet
+.. _pyQode: https://github.com/pyQode/

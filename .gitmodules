@@ -1,0 +1,3 @@
+[submodule "OpenCobol"]
+	path = OpenCobol
+	url = ../OpenCobol-Win32-MinGW.git

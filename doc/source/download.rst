@@ -9,21 +9,27 @@ Requirements:
 OpenCobolIDE depends on the following packages:
 
     - Python 3
-    - PyQt5
+    - PyQt5 or PyQt4
     - OpenCobol
     - pyqode.core
-    - pygments >= 1.6
-    - chardet
+    - pyqode.cobol
+    - pygments
 
 GNU/Linux
 ---------
 
-Install pyqt5, open-cobol and pip using your package manager, then run the following commands::
+Install pyqt5, open-cobol and pip using your package manager, then run the
+following commands::
 
     sudo pip3 install OpenCobolIDE
 
 
-If you are on Archlinux, you can install OpenCobolIDE and all its dependencies from the AUR: https://aur.archlinux.org/packages/open-cobol-ide/
+If you are on Archlinux, you can install OpenCobolIDE and all its dependencies
+from the AUR: https://aur.archlinux.org/packages/open-cobol-ide/
+
+.. note:: if you have both PyQt5 and PyQt4 on your system, the IDE will use
+          PyQt5 by default. To force the use of PyQt4, you should set the
+          ``QT_API`` environment variable to ``pyqt4``.
 
 
 Windows

@@ -7,13 +7,36 @@ accomplished, please visit the `issues page on github`_.
 Next Version
 ------------
 
-We don't have any plans for the next release. Please report bugs and share
-your thoughts to make OpenCobolIDE better!
+We plan to improve the code template mechanism to let you define your own code
+template that will be used for new file creation. We might also add a small
+macro system to automatically fill up details such as author, date, and so
+on...
 
 Changelog
 ---------
 
-2.4.0
+4.0.0
++++++
+
+The entire application has been rewritten.
+
+The cobol code editor widget has been moved to the pyqode.cobol package.
+
+New features:
+    - code folding
+    - improved auto indentation (after if/else/perform)
+    - reworked user interface: the default view (from v2) is back as the
+      default view but you can switch to the minimal view (from v3) by double
+      clicking an editor tab (see issue #47)
+    - navigation panel is now fully synced with code folding panel of the
+      current editor
+    - you can now cancel a build/run action
+    - new syntax highlighter which is about 3 times faster than the previous
+      highlighter
+    - more keywords in code completion
+    - ability to disable the linter (see issue #46)
+
+3.0.0
 +++++
 
 New features:
