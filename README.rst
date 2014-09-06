@@ -11,6 +11,10 @@ OpenCobolIDE
 .. image:: https://pypip.in/v/OpenCobolIDE/badge.png
     :target: https://crate.io/packages/OpenCobolIDE/
     :alt: Latest PyPI version
+    
+.. image:: https://coveralls.io/repos/OpenCobolIDE/OpenCobolIDE/badge.png?branch=master     
+   :target: https://coveralls.io/r/OpenCobolIDE/OpenCobolIDE?branch=master       
+   :alt: Coverage Status                       
 
 
 OpenCobolIDE is a simple and lightweight cobol IDE based on the GnuCobol
