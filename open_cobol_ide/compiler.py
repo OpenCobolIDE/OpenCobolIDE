@@ -225,6 +225,8 @@ class GnuCobolCompiler:
         process.setWorkingDirectory(path)
         process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
         _logger().debug('command: %s %s', pgm, ' '.join(options))
+        _logger().debug('working directory: %s', path)
+        _logger().debug('system environment: %s', process.systemEnvironment())
         process.start(pgm, options)
         process.waitForFinished()
         status = process.exitCode()
