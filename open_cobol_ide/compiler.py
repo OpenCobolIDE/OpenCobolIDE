@@ -228,9 +228,14 @@ class GnuCobolCompiler:
         process.start(pgm, options)
         process.waitForFinished()
         status = process.exitCode()
-        messages = self.parse_output(
-            process.readAllStandardOutput().data().decode('utf-8'),
-            file_path)
+        output = process.readAllStandardOutput().data().decode('utf-8')
+        messages = self.parse_output(output, file_path)
+        if status != 0 and not len(messages):
+            # compilation failed but the parser failed to extract cobol related
+            # messages, there might be an issue at the C level or at the
+            # linker level
+            messages.append((output, CheckerMessages.ERROR, - 1, 0,
+                             None, None, file_path))
         _logger().debug('compile results: %r - %r', status, messages)
         return status, messages
 
