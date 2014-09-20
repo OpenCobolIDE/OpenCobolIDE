@@ -47,19 +47,17 @@ install:
 script:
  - pip install .
  - cobc --version
- - if [ $QT_API ]; then
-   python3 runtests.py;
-   fi
  - if [ $COV ]; then
-   pip install pytest-cov;
-   python3 runtests.py --cov open_cobol_ide;
-   fi
- - if [ $PEP8 ]; then
-   pip install pytest-pep8;
-   python3 runtests.py --pep8 -m pep8;
+       pip install pytest-cov;
+       python3 runtests.py --cov open_cobol_ide;
+   elif [ $PEP8 ]; then
+       pip install pytest-pep8;
+       python3 runtests.py --pep8 -m pep8;
+   else
+       python3 runtests.py;
    fi
 after_script:
-  - if [ $COV ]; then
-    sudo pip install --quiet coveralls;
-    coveralls;
-    fi
+ - if [ $COV ]; then
+       sudo pip install --quiet coveralls;
+       coveralls;
+   fi
