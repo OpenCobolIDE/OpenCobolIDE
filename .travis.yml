@@ -13,7 +13,7 @@ matrix:
       - env: COV=1 QT_API=pyqt4 OPEN_COBOL=1
       - env: PEP8=1 QT_API=pyqt4 OPEN_COBOL=1
       - env: QT_API=pyqt5 OPEN_COBOL=1
-      - env: QT_API=pyqt5 OPEN_COBOL=1
+      - env: QT_API=pyqt5 OPEN_COBOL=2
 virtualenv:
   system_site_packages: true
 before_install:
