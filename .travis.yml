@@ -27,15 +27,15 @@ install:
        sudo apt-get install python3-pyqt4;
    fi
  - if [ $QT_API = "pyqt5" ]; then
-       sudo apt-get install open-cobol
+       sudo apt-get install open-cobol;
    else
-       sudo apt-get install subversion
-       svn checkout svn://svn.code.sf.net/p/open-cobol/code/trunk open-cobol-code
-       cd open-cobol-code
-       svn switch ^/branches/gnu-cobol-2.0
-       ./configure
-       make -s
-       sudo make -s install
+       sudo apt-get install subversion;
+       svn checkout svn://svn.code.sf.net/p/open-cobol/code/trunk open-cobol-code;
+       cd open-cobol-code;
+       svn switch ^/branches/gnu-cobol-2.0;
+       ./configure;
+       make -s;
+       sudo make -s install;
    fi
  - pip install git+https://github.com/pyQode/pyqode.core.git@develop
  - pip install git+https://github.com/pyQode/pyqode.cobol.git@develop
