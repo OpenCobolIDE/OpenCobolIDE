@@ -219,7 +219,8 @@ class GnuCobolCompiler:
         _logger().info('compiling %s' % file_path)
         path, filename = os.path.split(file_path)
         # ensure bin dir exists
-        self.make_bin_dir(path)# run command using qt process api, this is blocking.
+        self.make_bin_dir(path)
+        # run command using qt process api, this is blocking.
         pgm, options = self.make_command(filename, file_type)
         process = QtCore.QProcess()
         process.setWorkingDirectory(path)

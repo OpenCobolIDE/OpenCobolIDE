@@ -21,7 +21,8 @@ class CobolCodeEdit(CodeEditBase):
 
     def __init__(self, bt_compile, bt_run, parent=None):
         super().__init__(parent)
-        self.syntax_highlighter.color_scheme = ColorScheme(Settings().color_scheme)
+        self.syntax_highlighter.color_scheme = ColorScheme(
+            Settings().color_scheme)
         self.linter_mode = self.modes.append(CobolLinterMode())
         self.control_panel = ControlPanel(bt_compile, bt_run)
         self.control_panel.setVisible(Settings().perspective == 'minimal')

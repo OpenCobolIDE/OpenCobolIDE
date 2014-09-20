@@ -94,8 +94,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                 self.listWidgetColorSchemes.setCurrentRow(i)
                 break
             elif (not native and
-                    self.listWidgetColorSchemes.item(i).text() ==
-                          'darcula'):
+                    self.listWidgetColorSchemes.item(i).text() == 'darcula'):
                 self.listWidgetColorSchemes.setCurrentRow(i)
                 break
 
@@ -150,11 +149,13 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.checkBoxCustomPath.setChecked(
                 settings.custom_compiler_path != '')
             self.lineEditCompilerPath.setText(settings.custom_compiler_path)
-            self.lineEditCompilerPath.setEnabled(self.checkBoxCustomPath.isChecked())
+            self.lineEditCompilerPath.setEnabled(
+                self.checkBoxCustomPath.isChecked())
         if self.tabWidget.currentIndex() == 3 or all_tabs:
             self.checkBoxFreeFormat.setChecked(settings.free_format)
             self.lineEditCommentIndicator.setText(settings.comment_indicator)
-            self.comboBoxStandard.setCurrentIndex(int(settings.cobol_standard))
+            self.comboBoxStandard.setCurrentIndex(
+                int(settings.cobol_standard))
 
     def restore_defaults(self):
         settings = Settings()
