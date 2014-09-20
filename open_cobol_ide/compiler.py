@@ -259,7 +259,8 @@ class GnuCobolCompiler:
         if file_type == FileType.EXECUTABLE:
             options.append('-x')
         output_file_name += self.extension_for_type(file_type)
-        options.append('-o %s' % (os.path.join('bin', output_file_name)))
+        options.append('-o')
+        options.append(os.path.join('bin', output_file_name))
         options.append('-std=%s' % str(settings.cobol_standard).replace(
             'GnuCobolStandard.', ''))
         if settings.free_format:
@@ -280,7 +281,7 @@ class GnuCobolCompiler:
         """
         _logger().debug('parsing cobc output: %s' % compiler_output)
         retval = []
-        exp = r'%s:\d*:.*:.*$' % os.path.split(file_path)[1]
+        exp = r'%s: *\d*:.*:.*$' % os.path.split(file_path)[1]
         prog = re.compile(exp)
         # parse compilation results
         for l in compiler_output.splitlines():
