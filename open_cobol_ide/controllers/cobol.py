@@ -211,7 +211,7 @@ class CobolController(Controller):
                 creationflags=subprocess.CREATE_NEW_CONSOLE)
         else:
             subprocess.Popen(
-                Settings().external_terminal_command.split(' ') +
+                Settings().external_terminal_command.strip().split(' ') +
                 [program], cwd=wd)
 
     def _run(self):
