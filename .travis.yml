@@ -38,11 +38,14 @@ install:
        ./configure;
        make -s;
        sudo make -s install;
+       cd ..;
    fi
- - pip install git+https://github.com/pyQode/pyqode.core.git@develop
- - pip install git+https://github.com/pyQode/pyqode.cobol.git@develop
+ - pip install --quiet git+https://github.com/pyQode/pyqode.qt.git@develop
+ - pip install --quiet git+https://github.com/pyQode/pyqode.core.git@develop
+ - pip install --quiet git+https://github.com/pyQode/pyqode.cobol.git@develop
 script:
  - pip install .
+ - cobc --version
  - if [ $QT_API ]; then
    python3 runtests.py;
    fi
