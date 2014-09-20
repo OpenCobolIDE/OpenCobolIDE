@@ -39,6 +39,7 @@ install:
        make -s;
        sudo make -s install;
        cd ..;
+       export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
    fi
  - pip install --quiet git+https://github.com/pyQode/pyqode.qt.git@develop
  - pip install --quiet git+https://github.com/pyQode/pyqode.core.git@develop
