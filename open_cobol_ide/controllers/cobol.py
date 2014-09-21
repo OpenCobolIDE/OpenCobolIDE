@@ -11,6 +11,7 @@ from pyqode.core.modes import CheckerMessage, CheckerMessages
 from pyqode.qt import QtCore, QtWidgets
 from .base import Controller
 from ..compiler import FileType, GnuCobolCompiler, get_file_type
+from open_cobol_ide import system
 from ..settings import Settings
 
 
@@ -210,9 +211,10 @@ class CobolController(Controller):
                 program, cwd=wd,
                 creationflags=subprocess.CREATE_NEW_CONSOLE)
         else:
-            subprocess.Popen(
-                Settings().external_terminal_command.strip().split(' ') +
-                [program], cwd=wd)
+            cmd = (Settings().external_terminal_command.strip().split(' ') +
+                   ['"%s %s"' % (system.which('pyqode-console'), program)])
+            # os.system(' '.join(cmd))
+            subprocess.Popen(' '.join(cmd), cwd=wd, shell=True)
 
     def _run(self):
         """
