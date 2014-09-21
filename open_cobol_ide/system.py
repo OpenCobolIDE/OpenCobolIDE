@@ -5,6 +5,7 @@ import functools
 import os
 import platform
 from pyqode.qt import QtGui
+import sys
 
 
 windows = platform.system() == 'Windows'
@@ -41,9 +42,16 @@ def which(program):
         if is_exe(program):
             return program
     else:
-        for path in os.environ["PATH"].split(os.pathsep):
+        dirs = os.environ["PATH"].split(os.pathsep)
+        dirs.append(os.path.join(os.path.dirname(sys.executable), 'Scripts'))
+        dirs.append(os.getcwd())
+        for path in dirs:
+            if windows:
+                pgm = '%s.exe' % program
+            else:
+                pgm = program
             path = path.strip('"')
-            exe_file = os.path.join(path, program)
+            exe_file = os.path.join(path, pgm)
             if is_exe(exe_file):
                 return exe_file
 

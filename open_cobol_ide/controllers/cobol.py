@@ -206,13 +206,14 @@ class CobolController(Controller):
         """
         self.ui.consoleOutput.append(
             "Launched in external terminal")
+        pyqode_console = system.which('pyqode-console')
         if sys.platform == "win32":
             subprocess.Popen(
-                program, cwd=wd,
+                [pyqode_console, program], cwd=wd,
                 creationflags=subprocess.CREATE_NEW_CONSOLE)
         else:
             cmd = (Settings().external_terminal_command.strip().split(' ') +
-                   ['"%s %s"' % (system.which('pyqode-console'), program)])
+                   ['"%s %s"' % (pyqode_console, program)])
             # os.system(' '.join(cmd))
             subprocess.Popen(' '.join(cmd), cwd=wd, shell=True)
 

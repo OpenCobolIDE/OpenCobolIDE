@@ -8,6 +8,7 @@ import os
 import shutil
 import sys
 from cx_Freeze import setup, Executable
+from pyqode.core.tools import console
 from open_cobol_ide import __version__
 from pyqode.cobol.backend import server
 from pyqode.core.api.syntax_highlighter import get_all_styles
@@ -23,6 +24,10 @@ app_exe = 'OpenCobolIDE.exe' if windows else 'OpenCobolIDE'
 srv_script = server.__file__
 srv_name = 'cobol-backend'
 srv_exe = 'cobol-backend.exe' if windows else 'cobol-backend'
+
+console_script = console.__file__
+console_name = 'pyqode-console'
+console_exe = 'pyqode-console.exe' if windows else 'pyqode-console'
 
 app_icon = 'forms/rc/silex-icon.ico' if windows else 'share/silex-icon.icns'
 
@@ -63,6 +68,7 @@ setup(name=app_name,
                      targetName=app_exe,
                      icon=app_icon if windows else None,
                      base='Win32GUI' if windows else None),
+          Executable(console_script, targetName=console_exe),
           Executable(srv_script, targetName=srv_exe)])
 
 if windows:
