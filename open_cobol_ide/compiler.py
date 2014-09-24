@@ -58,7 +58,7 @@ def get_file_type(path):
         with open(path, 'r', encoding=encoding) as f:
             if 'PROCEDURE DIVISION USING' in f.read().upper():
                 ftype = FileType.MODULE
-    _logger().info('file type: %r', ftype)
+    _logger().debug('file type: %r', ftype)
     return ftype
 
 
@@ -225,14 +225,15 @@ class GnuCobolCompiler:
         process = QtCore.QProcess()
         process.setWorkingDirectory(path)
         process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
-        _logger().debug('command: %s %s', pgm, ' '.join(options))
-        _logger().debug('working directory: %s', path)
-        _logger().debug('system environment: %s', process.systemEnvironment())
+        _logger().info('command: %s %s', pgm, ' '.join(options))
+        _logger().info('working directory: %s', path)
+        _logger().info('system environment: %s', process.systemEnvironment())
         process.start(pgm, options)
         process.waitForFinished()
         status = process.exitCode()
         output = process.readAllStandardOutput().data().decode('utf-8')
         messages = self.parse_output(output, file_path)
+        _logger().info('output: %s', output)
         if status != 0 and not len(messages):
             # compilation failed but the parser failed to extract cobol related
             # messages, there might be an issue at the C level or at the
@@ -264,6 +265,7 @@ class GnuCobolCompiler:
         options.append(os.path.join('bin', output_file_name))
         options.append('-std=%s' % str(settings.cobol_standard).replace(
             'GnuCobolStandard.', ''))
+        options += settings.compiler_flags
         if settings.free_format:
             options.append('-free')
         options.append(input_file_name)

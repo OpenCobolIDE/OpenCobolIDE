@@ -278,7 +278,8 @@ class Settings(object):
 
     @property
     def custom_compiler_path(self):
-        return self._settings.value('customCompilerPath', '')
+        default = system.which('cobc')
+        return self._settings.value('customCompilerPath', default)
 
     @custom_compiler_path.setter
     def custom_compiler_path(self, value):
@@ -286,6 +287,19 @@ class Settings(object):
         sep = ';' if sys.platform == 'win32' else ':'
         os.environ['PATH'] += sep + value
         self._settings.setValue('customCompilerPath', value)
+
+    @property
+    def compiler_flags(self):
+        lst = eval(self._settings.value('compilerFlags', '[]'))
+        ret_val = []
+        for v in lst:
+            if v:
+                ret_val.append(v)
+        return ret_val
+
+    @compiler_flags.setter
+    def compiler_flags(self, value):
+        self._settings.setValue('compilerFlags', repr(value))
 
     # Cobol settings
     # ----------------------

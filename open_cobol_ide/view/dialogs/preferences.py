@@ -10,6 +10,8 @@ from ...view.forms import dlg_preferences_ui
 
 
 class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
+    flags_in_checkbox = ['-g', '-ftrace', '-ftraceall', '-fdebugging-line',
+                         '-static']
     def __init__(self, parent):
         super().__init__(parent)
         self.setupUi(self)
@@ -109,8 +111,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
 
     def reset(self, all_tabs=False):
         settings = Settings()
+        # Editor
         if self.tabWidget.currentIndex() == 0 or all_tabs:
-            # Editor Tab
             self.checkBoxShowErrors.setChecked(settings.show_errors)
             self.checkBoxViewLineNumber.setChecked(settings.display_lines)
             self.checkBoxHighlightCurrentLine.setChecked(
@@ -122,8 +124,9 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                 settings.enable_autoindent)
             self.spinBoxEditorCCTriggerLen.setValue(
                 settings.code_completion_trigger_len)
+            self.lineEditCommentIndicator.setText(settings.comment_indicator)
+        # Style
         if self.tabWidget.currentIndex() == 1 or all_tabs:
-            # Font & Color tab
             rb = (self.radioButtonColorDark if settings.dark_style else
                   self.radioButtonColorWhite)
             rb.setChecked(True)
@@ -140,26 +143,40 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                     current_index = self.listWidgetColorSchemes.count() - 1
             if current_index:
                 self.listWidgetColorSchemes.setCurrentRow(current_index)
-        # Build & run tab
-        if self.tabWidget.currentIndex() == 2 or all_tabs:
+        # Run
+        if self.tabWidget.currentIndex() == 3 or all_tabs:
             self.checkBoxRunExtTerm.setChecked(settings.external_terminal)
             self.lineEditRunTerm.setVisible(sys.platform != 'win32')
             self.lineEditRunTerm.setEnabled(settings.external_terminal)
             self.lineEditRunTerm.setText(settings.external_terminal_command)
+        # compiler
+        if self.tabWidget.currentIndex() == 2 or all_tabs:
+            self.checkBoxFreeFormat.setChecked(settings.free_format)
+            self.comboBoxStandard.setCurrentIndex(
+                int(settings.cobol_standard))
             self.checkBoxCustomPath.setChecked(
-                settings.custom_compiler_path != '')
+                settings.custom_compiler_path != system.which('cobc'))
             self.lineEditCompilerPath.setText(settings.custom_compiler_path)
             self.lineEditCompilerPath.setEnabled(
                 self.checkBoxCustomPath.isChecked())
-        if self.tabWidget.currentIndex() == 3 or all_tabs:
-            self.checkBoxFreeFormat.setChecked(settings.free_format)
-            self.lineEditCommentIndicator.setText(settings.comment_indicator)
-            self.comboBoxStandard.setCurrentIndex(
-                int(settings.cobol_standard))
+            flags = Settings().compiler_flags
+            self.cb_debugging_line.setChecked(
+                self.cb_debugging_line.text() in flags)
+            self.cb_ftrace.setChecked(self.cb_ftrace.text() in flags)
+            self.cb_ftraceall.setChecked(self.cb_ftraceall.text() in flags)
+            self.cb_g.setChecked(self.cb_g.text() in flags)
+            self.cb_static.setChecked(self.cb_static.text() in flags)
+            for v in self.flags_in_checkbox:
+                try:
+                    flags.remove(v)
+                except ValueError:
+                    pass
+            self.le_compiler_flags.setText(' '.join(flags))
 
     def restore_defaults(self):
         settings = Settings()
         index = self.tabWidget.currentIndex()
+        # Editor
         if index == 0:
             settings.show_error = True
             settings.display_lines = True
@@ -168,20 +185,24 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.tab_len = 4
             settings.enable_autoindent = True
             settings.code_completion_trigger_len = 1
-        if index == 1:
+            settings.comment_indicator = '*> '
+        # Style
+        elif index == 1:
             settings.dark_style = False
             settings.icon_theme = 'default'
             settings.font = 'Source Code Pro'
             settings.font_size = 11
             settings.colorScheme = 'qt'
-        if index == 2:
+        # run
+        elif index == 3:
             settings.external_terminal = False
             settings.external_terminal_command = None
-            settings.custom_compiler_path = ''
-        if index == 3:
+        # compiler
+        elif index == 2:
             settings.free_format = False
             settings.cobol_standard = GnuCobolStandard.default
-            settings.comment_indicator = '*>'
+            settings.custom_compiler_path = ''
+            settings.compiler_flags = []
         self.reset()
 
     @classmethod
@@ -227,3 +248,9 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             dlg.comboBoxStandard.currentIndex())
         settings.icon_theme = dlg.comboBoxIconTheme.currentText()
         settings.show_errors = dlg.checkBoxShowErrors.isChecked()
+
+        cb_flags = [dlg.cb_g, dlg.cb_ftrace, dlg.cb_ftraceall,
+                    dlg.cb_debugging_line, dlg.cb_static]
+        flags = [cb.text() for cb in cb_flags if cb.isChecked()]
+        flags += dlg.le_compiler_flags.text().split(' ')
+        settings.compiler_flags = flags
