@@ -2,6 +2,7 @@
 Contains the EditController.
 
 """
+import logging
 from pyqode.core.api import TextHelper
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
@@ -10,6 +11,10 @@ from ..view.dialogs.preferences import DlgPreferences
 from ..settings import Settings
 from ..view.editors import CobolCodeEdit, GenericCodeEdit, \
     update_editor_settings
+
+
+def _logger():
+    return logging.getLogger(__name__)
 
 
 class EditController(Controller):
@@ -39,6 +44,10 @@ class EditController(Controller):
         if self.ui.actionPreferences.shortcut().toString().strip() == '':
             self.ui.actionPreferences.setShortcut('F2')
         self._setup_status_bar()
+        self.ui.tabWidgetEditors.tab_closed.connect(self._on_tab_closed)
+
+    def _on_tab_closed(self, tab):
+        _logger().info('editor closed: %s', tab.file.path)
 
     def _setup_status_bar(self):
         """
@@ -81,7 +90,7 @@ class EditController(Controller):
         :param mimetype: mimetype of the file to open.
         :return:
         """
-        # pass
+        _logger().info('add editor: %s', path)
         editor = self._editor_from_mimetype(mimetype)
         status = editor.file.open(path)
         index = self.ui.tabWidgetEditors.add_code_edit(editor, name)
@@ -147,6 +156,7 @@ class EditController(Controller):
                     not self.ui.consoleOutput.is_running)
                 self.app.cobol.enable_run(
                     is_executable and not self.ui.consoleOutput.is_running)
+            _logger().info('current editor changed: %s', editor.file.path)
 
     def _update_status_bar_labels(self):
         """
@@ -164,8 +174,9 @@ class EditController(Controller):
             DlgPreferences.edit_preferences(self.main_window)
         except ValueError:
             # dialog canceled
-            pass
+            _logger().info('settings dialog canceled')
         else:
+            _logger().info('applying settings')
             self.app.update_app_style()
             self.app.home.update_style()
             QtGui.QIcon.setThemeName(Settings().icon_theme)

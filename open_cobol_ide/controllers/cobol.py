@@ -208,16 +208,19 @@ class CobolController(Controller):
             "Launched in external terminal")
         pyqode_console = system.which('pyqode-console')
         if system.windows:
-            subprocess.Popen(
-                [pyqode_console, program], cwd=wd,
-                creationflags=subprocess.CREATE_NEW_CONSOLE)
+            cmd = [pyqode_console, program]
+            subprocess.Popen(cmd, cwd=wd,
+                             creationflags=subprocess.CREATE_NEW_CONSOLE)
         elif system.darwin:
-            subprocess.Popen(['open', program], cwd=wd)
+            cmd = ['open', program]
+            subprocess.Popen(cmd, cwd=wd)
         else:
             cmd = (Settings().external_terminal_command.strip().split(' ') +
                    ['"%s %s"' % (pyqode_console, program)])
             # os.system(' '.join(cmd))
             subprocess.Popen(' '.join(cmd), cwd=wd, shell=True)
+        _logger().info('running program in external terminal: %s',
+                       ' '.join(cmd))
 
     def _run(self):
         """
@@ -245,6 +248,7 @@ class CobolController(Controller):
                 self.enable_run(True)
                 self.enable_compile(True)
             else:
+                _logger().info('running program')
                 self.ui.consoleOutput.setFocus(True)
                 for item in self.bt_run + [self.ui.actionRun]:
                     item.setEnabled(False)
