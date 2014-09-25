@@ -3,7 +3,7 @@ Contains the EditController.
 
 """
 import logging
-from pyqode.core.api import TextHelper
+from pyqode.core.api import TextHelper, ColorScheme
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
 from ..compiler import FileType
@@ -45,6 +45,8 @@ class EditController(Controller):
             self.ui.actionPreferences.setShortcut('F2')
         self._setup_status_bar()
         self.ui.tabWidgetEditors.tab_closed.connect(self._on_tab_closed)
+        self.ui.consoleOutput.apply_color_scheme(
+            ColorScheme(Settings().color_scheme))
 
     def _on_tab_closed(self, tab):
         _logger().info('editor closed: %s', tab.file.path)
@@ -183,4 +185,6 @@ class EditController(Controller):
             for i in range(self.ui.tabWidgetEditors.count()):
                 editor = self.ui.tabWidgetEditors.widget(i)
                 update_editor_settings(editor)
+                self.ui.consoleOutput.apply_color_scheme(
+                    ColorScheme(Settings().color_scheme))
                 editor.rehighlight()
