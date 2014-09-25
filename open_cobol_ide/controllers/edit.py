@@ -94,6 +94,7 @@ class EditController(Controller):
         """
         _logger().info('add editor: %s', path)
         editor = self._editor_from_mimetype(mimetype)
+        update_editor_settings(editor)
         status = editor.file.open(path)
         index = self.ui.tabWidgetEditors.add_code_edit(editor, name)
         if status:
@@ -101,8 +102,6 @@ class EditController(Controller):
         self.ui.tabWidgetEditors.setTabToolTip(index, path)
         editor.cursorPositionChanged.connect(self._update_status_bar_labels)
         self._update_status_bar_labels()
-        update_editor_settings(editor)
-        editor.rehighlight()
         return editor
 
     def _editor_from_mimetype(self, mimetype):
