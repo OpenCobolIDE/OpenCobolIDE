@@ -20,13 +20,17 @@ class CobolCodeEdit(CodeEditBase):
     """
 
     def __init__(self, bt_compile, bt_run, parent=None):
+        self._buttons = (bt_compile, bt_run)
         super().__init__(parent)
         self.syntax_highlighter.color_scheme = ColorScheme(
             Settings().color_scheme)
         self.linter_mode = self.modes.append(CobolLinterMode())
-        self.control_panel = ControlPanel(bt_compile, bt_run)
+
+    def _setup_panels(self):
+        self.control_panel = ControlPanel(*self._buttons)
         self.control_panel.setVisible(Settings().perspective == 'minimal')
         self.panels.append(self.control_panel, ControlPanel.Position.RIGHT)
+        super()._setup_panels()
 
     @property
     def file_type(self):
