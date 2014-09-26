@@ -28,7 +28,8 @@ New features:
       cobol editor.
     - performance improvement: avoid useless re-highlight on open
     - update to pyqode 2.3 (add occurrences highlighting, global checker,
-      better selections and smart backspace)
+      better selections, smart backspace, auto complete of quotes and
+      parentheses, ...)
 
 4.0.0
 +++++
