@@ -15,6 +15,22 @@ on...
 Changelog
 ---------
 
+4.1.0
++++++
+
+New features:
+    - add support for GnuCobol 2.0 on GNU/Linux
+    - add a way to specify global compiler switches (-g, -ftrace,...)
+    - improve detection of external terminal on GNU/Linux
+    - make use of pyqode-console to prompt for a key press at the end of the
+      program when run in an external terminal (Windows + GNU/Linux)
+    - style improvement: the internal terminal will use the same colors as the
+      cobol editor.
+    - performance improvement: avoid useless re-highlight on open
+    - update to pyqode 2.3 (add occurrences highlighting, global checker,
+      better selections, smart backspace, auto complete of quotes and
+      parentheses, ...)
+
 4.0.0
 +++++
 

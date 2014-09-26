@@ -11,6 +11,7 @@ from pyqode.core.modes import CheckerMessage, CheckerMessages
 from pyqode.qt import QtCore, QtWidgets
 from .base import Controller
 from ..compiler import FileType, GnuCobolCompiler, get_file_type
+from open_cobol_ide import system
 from ..settings import Settings
 
 
@@ -205,14 +206,21 @@ class CobolController(Controller):
         """
         self.ui.consoleOutput.append(
             "Launched in external terminal")
-        if sys.platform == "win32":
-            subprocess.Popen(
-                program, cwd=wd,
-                creationflags=subprocess.CREATE_NEW_CONSOLE)
+        pyqode_console = system.which('pyqode-console')
+        if system.windows:
+            cmd = [pyqode_console, program]
+            subprocess.Popen(cmd, cwd=wd,
+                             creationflags=subprocess.CREATE_NEW_CONSOLE)
+        elif system.darwin:
+            cmd = ['open', program]
+            subprocess.Popen(cmd, cwd=wd)
         else:
-            subprocess.Popen(
-                Settings().external_terminal_command.split(' ') +
-                [program], cwd=wd)
+            cmd = (Settings().external_terminal_command.strip().split(' ') +
+                   ['"%s %s"' % (pyqode_console, program)])
+            # os.system(' '.join(cmd))
+            subprocess.Popen(' '.join(cmd), cwd=wd, shell=True)
+        _logger().info('running program in external terminal: %s',
+                       ' '.join(cmd))
 
     def _run(self):
         """
@@ -240,6 +248,7 @@ class CobolController(Controller):
                 self.enable_run(True)
                 self.enable_compile(True)
             else:
+                _logger().info('running program')
                 self.ui.consoleOutput.setFocus(True)
                 for item in self.bt_run + [self.ui.actionRun]:
                     item.setEnabled(False)

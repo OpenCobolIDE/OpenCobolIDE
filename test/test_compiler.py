@@ -52,41 +52,41 @@ dll_ext = GnuCobolCompiler().extension_for_type(FileType.MODULE)
 @pytest.mark.parametrize('free, std, ftype, expected_opts', [
     (False, GnuCobolStandard.default, FileType.EXECUTABLE, [
         '-x',
-        '-o %s' % os.path.join('bin', 'HelloWorld' + exe_ext),
+        '-o', '%s' % os.path.join('bin', 'HelloWorld' + exe_ext),
         '-std=default'
     ]),
     (True, GnuCobolStandard.default, FileType.EXECUTABLE, [
         '-x',
-        '-o %s' % os.path.join('bin', 'HelloWorld' + exe_ext),
+        '-o', '%s' % os.path.join('bin', 'HelloWorld' + exe_ext),
         '-std=default',
         '-free'
     ]),
     (False, GnuCobolStandard.default, FileType.MODULE, [
-        '-o %s' % os.path.join('bin', 'HelloWorld' + dll_ext),
+        '-o', '%s' % os.path.join('bin', 'HelloWorld' + dll_ext),
         '-std=default'
     ]),
     (True, GnuCobolStandard.default, FileType.MODULE, [
-        '-o %s' % os.path.join('bin', 'HelloWorld' + dll_ext),
+        '-o', '%s' % os.path.join('bin', 'HelloWorld' + dll_ext),
         '-std=default',
         '-free'
     ]),
     (False, GnuCobolStandard.mf, FileType.EXECUTABLE, [
         '-x',
-        '-o %s' % os.path.join('bin', 'HelloWorld' + exe_ext),
+        '-o', '%s' % os.path.join('bin', 'HelloWorld' + exe_ext),
         '-std=mf'
     ]),
     (True, GnuCobolStandard.mf, FileType.EXECUTABLE, [
         '-x',
-        '-o %s' % os.path.join('bin', 'HelloWorld' + exe_ext),
+        '-o', '%s' % os.path.join('bin', 'HelloWorld' + exe_ext),
         '-std=mf',
         '-free'
     ]),
     (False, GnuCobolStandard.mf, FileType.MODULE, [
-        '-o %s' % os.path.join('bin', 'HelloWorld' + dll_ext),
+        '-o', '%s' % os.path.join('bin', 'HelloWorld' + dll_ext),
         '-std=mf'
     ]),
     (True, GnuCobolStandard.mf, FileType.MODULE, [
-        '-o %s' % os.path.join('bin', 'HelloWorld' + dll_ext),
+        '-o', '%s' % os.path.join('bin', 'HelloWorld' + dll_ext),
         '-std=mf',
         '-free'
     ])
@@ -116,7 +116,7 @@ def test_make_command_exe(free, std, ftype, expected_opts):
 def test_compile(path, ftype, expected_results, output_file_path):
     results = GnuCobolCompiler().compile(path, ftype)
     assert results[0] == expected_results[0]
-    assert len(results[1]) == len(expected_results[1])
+    assert len(results[1]) >= len(expected_results[1])
     if output_file_path:
         assert os.path.exists(output_file_path)
         os.remove(output_file_path)

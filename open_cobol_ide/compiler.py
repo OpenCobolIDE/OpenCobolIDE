@@ -58,7 +58,7 @@ def get_file_type(path):
         with open(path, 'r', encoding=encoding) as f:
             if 'PROCEDURE DIVISION USING' in f.read().upper():
                 ftype = FileType.MODULE
-    _logger().info('file type: %r', ftype)
+    _logger().debug('file type: %r', ftype)
     return ftype
 
 
@@ -219,18 +219,27 @@ class GnuCobolCompiler:
         _logger().info('compiling %s' % file_path)
         path, filename = os.path.split(file_path)
         # ensure bin dir exists
-        self.make_bin_dir(path)# run command using qt process api, this is blocking.
+        self.make_bin_dir(path)
+        # run command using qt process api, this is blocking.
         pgm, options = self.make_command(filename, file_type)
         process = QtCore.QProcess()
         process.setWorkingDirectory(path)
         process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
-        _logger().debug('command: %s %s', pgm, ' '.join(options))
+        _logger().info('command: %s %s', pgm, ' '.join(options))
+        _logger().debug('working directory: %s', path)
+        _logger().debug('system environment: %s', process.systemEnvironment())
         process.start(pgm, options)
         process.waitForFinished()
         status = process.exitCode()
-        messages = self.parse_output(
-            process.readAllStandardOutput().data().decode('utf-8'),
-            file_path)
+        output = process.readAllStandardOutput().data().decode('utf-8')
+        messages = self.parse_output(output, file_path)
+        _logger().info('output: %s', output)
+        if status != 0 and not len(messages):
+            # compilation failed but the parser failed to extract cobol related
+            # messages, there might be an issue at the C level or at the
+            # linker level
+            messages.append((output, CheckerMessages.ERROR, - 1, 0,
+                             None, None, file_path))
         _logger().debug('compile results: %r - %r', status, messages)
         return status, messages
 
@@ -252,9 +261,11 @@ class GnuCobolCompiler:
         if file_type == FileType.EXECUTABLE:
             options.append('-x')
         output_file_name += self.extension_for_type(file_type)
-        options.append('-o %s' % (os.path.join('bin', output_file_name)))
+        options.append('-o')
+        options.append(os.path.join('bin', output_file_name))
         options.append('-std=%s' % str(settings.cobol_standard).replace(
             'GnuCobolStandard.', ''))
+        options += settings.compiler_flags
         if settings.free_format:
             options.append('-free')
         options.append(input_file_name)
@@ -273,7 +284,7 @@ class GnuCobolCompiler:
         """
         _logger().debug('parsing cobc output: %s' % compiler_output)
         retval = []
-        exp = r'%s:\d*:.*:.*$' % os.path.split(file_path)[1]
+        exp = r'%s: *\d*:.*:.*$' % os.path.split(file_path)[1]
         prog = re.compile(exp)
         # parse compilation results
         for l in compiler_output.splitlines():

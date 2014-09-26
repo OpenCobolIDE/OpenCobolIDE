@@ -2,15 +2,18 @@ language: python
 python:
   - "3.2"
 env:
-  - QT_API=PyQt4
-  - QT_API=PyQt5
-  - PEP8=1
-  - COV=1
+  - QT_API=pyqt4 OPEN_COBOL=1
+  - QT_API=pyqt4 OPEN_COBOL=2
+  - QT_API=pyqt5 OPEN_COBOL=1
+  - QT_API=pyqt5 OPEN_COBOL=2
+  - PEP8=1 QT_API=pyqt4 OPEN_COBOL=1
+  - COV=1 QT_API=pyqt4 OPEN_COBOL=1
 matrix:
   allow_failures:
-      - env: COV=1
-      - env: PEP8=1
-      - env: QT_API=PyQt5
+      - env: COV=1 QT_API=pyqt4 OPEN_COBOL=1
+      - env: PEP8=1 QT_API=pyqt4 OPEN_COBOL=1
+      - env: QT_API=pyqt5 OPEN_COBOL=1
+      - env: QT_API=pyqt5 OPEN_COBOL=2
 virtualenv:
   system_site_packages: true
 before_install:
@@ -18,29 +21,43 @@ before_install:
  - "sh -e /etc/init.d/xvfb start"
  - sudo apt-get update
 install:
- - sudo apt-get install open-cobol
- - sudo apt-get install python3-pyqt4;
- - pip install git+https://github.com/pyQode/pyqode.core.git@develop
- - pip install git+https://github.com/pyQode/pyqode.cobol.git@develop
- # PyQt5 (won't be available untill travis upgrade to ubuntu 14.04
- - if [ $QT_API = "PyQt5" ]; then
-   sudo apt-get install -qq python3-pyqt5 --fix-missing;
+ - if [ $QT_API = "pyqt5" ]; then
+       sudo apt-get install -qq python3-pyqt5 --fix-missing;
+   else
+       sudo apt-get install python3-pyqt4;
    fi
+ - if [ $OPEN_COBOL = "1" ]; then
+       sudo apt-get install open-cobol;
+   else
+       sudo apt-get install libgmp3-dev libltdl-dev libdb-dev;
+       sudo apt-get install subversion;
+       svn checkout svn://svn.code.sf.net/p/open-cobol/code/trunk open-cobol-code;
+       cd open-cobol-code;
+       svn switch ^/branches/gnu-cobol-2.0;
+       ls;
+       ./configure;
+       make -s;
+       sudo make -s install;
+       cd ..;
+       export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib;
+   fi
+ - pip install --quiet git+https://github.com/pyQode/pyqode.qt.git@develop
+ - pip install --quiet git+https://github.com/pyQode/pyqode.core.git@develop
+ - pip install --quiet git+https://github.com/pyQode/pyqode.cobol.git@develop
 script:
  - pip install .
- - if [ $QT_API ]; then
-   python3 runtests.py;
-   fi
+ - cobc --version
  - if [ $COV ]; then
-   pip install pytest-cov;
-   python3 runtests.py --cov open_cobol_ide;
-   fi
- - if [ $PEP8 ]; then
-   pip install pytest-pep8;
-   python3 runtests.py --pep8 -m pep8;
+       pip install pytest-cov;
+       python3 runtests.py --cov open_cobol_ide;
+   elif [ $PEP8 ]; then
+       pip install pytest-pep8;
+       python3 runtests.py --pep8 -m pep8;
+   else
+       python3 runtests.py;
    fi
 after_script:
-  - if [ $COV ]; then
-    sudo pip install --quiet coveralls;
-    coveralls;
-    fi
+ - if [ $COV ]; then
+       sudo pip install --quiet coveralls;
+       coveralls;
+   fi

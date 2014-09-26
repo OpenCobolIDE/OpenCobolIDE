@@ -17,11 +17,12 @@ def lint(request_data):
     :return: status, messages
     """
     code = request_data['code']
+    path = request_data['path']
     tmp_pth = os.path.join(get_cache_directory(), 'temp.cbl')
     with open(tmp_pth, 'w') as f:
         f.write(code)
     compiler = GnuCobolCompiler()
-    _, messages = compiler.compile(tmp_pth, get_file_type(tmp_pth))
+    _, messages = compiler.compile(tmp_pth, get_file_type(path))
     return True, messages
 
 

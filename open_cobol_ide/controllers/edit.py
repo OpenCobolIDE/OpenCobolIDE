@@ -2,7 +2,8 @@
 Contains the EditController.
 
 """
-from pyqode.core.api import TextHelper
+import logging
+from pyqode.core.api import TextHelper, ColorScheme
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
 from ..compiler import FileType
@@ -10,6 +11,10 @@ from ..view.dialogs.preferences import DlgPreferences
 from ..settings import Settings
 from ..view.editors import CobolCodeEdit, GenericCodeEdit, \
     update_editor_settings
+
+
+def _logger():
+    return logging.getLogger(__name__)
 
 
 class EditController(Controller):
@@ -39,6 +44,12 @@ class EditController(Controller):
         if self.ui.actionPreferences.shortcut().toString().strip() == '':
             self.ui.actionPreferences.setShortcut('F2')
         self._setup_status_bar()
+        self.ui.tabWidgetEditors.tab_closed.connect(self._on_tab_closed)
+        self.ui.consoleOutput.apply_color_scheme(
+            ColorScheme(Settings().color_scheme))
+
+    def _on_tab_closed(self, tab):
+        _logger().info('editor closed: %s', tab.file.path)
 
     def _setup_status_bar(self):
         """
@@ -81,16 +92,16 @@ class EditController(Controller):
         :param mimetype: mimetype of the file to open.
         :return:
         """
-        # pass
+        _logger().info('add editor: %s', path)
         editor = self._editor_from_mimetype(mimetype)
-        editor.file.open(path)
+        update_editor_settings(editor)
+        status = editor.file.open(path)
         index = self.ui.tabWidgetEditors.add_code_edit(editor, name)
-        self.app.cobol.display_file_type(editor)
+        if status:
+            self.app.cobol.display_file_type(editor)
         self.ui.tabWidgetEditors.setTabToolTip(index, path)
         editor.cursorPositionChanged.connect(self._update_status_bar_labels)
         self._update_status_bar_labels()
-        update_editor_settings(editor)
-        editor.rehighlight()
         return editor
 
     def _editor_from_mimetype(self, mimetype):
@@ -146,6 +157,7 @@ class EditController(Controller):
                     not self.ui.consoleOutput.is_running)
                 self.app.cobol.enable_run(
                     is_executable and not self.ui.consoleOutput.is_running)
+            _logger().info('current editor changed: %s', editor.file.path)
 
     def _update_status_bar_labels(self):
         """
@@ -163,12 +175,15 @@ class EditController(Controller):
             DlgPreferences.edit_preferences(self.main_window)
         except ValueError:
             # dialog canceled
-            pass
+            _logger().info('settings dialog canceled')
         else:
+            _logger().info('applying settings')
             self.app.update_app_style()
             self.app.home.update_style()
             QtGui.QIcon.setThemeName(Settings().icon_theme)
             for i in range(self.ui.tabWidgetEditors.count()):
                 editor = self.ui.tabWidgetEditors.widget(i)
                 update_editor_settings(editor)
+                self.ui.consoleOutput.apply_color_scheme(
+                    ColorScheme(Settings().color_scheme))
                 editor.rehighlight()

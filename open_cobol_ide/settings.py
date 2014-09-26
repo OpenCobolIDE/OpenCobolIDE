@@ -255,7 +255,20 @@ class Settings(object):
         # works on gnome, what about KDE and how do I detect that?
         # at the moment just go with gnome, user can change that in the
         # settings dialog anyway
-        default_shell_cmd = ('gnome-terminal -e' if not system.darwin else
+        def get_terminal():
+            """
+            Gets the authentication program used to run command as root (on linux only).
+
+            The function try to use one of the following programs:
+                - gksu
+                - kdesu
+
+            """
+            for program in ['gnome-terminal', 'xfce4-terminal', 'konsole']:
+                if system.which(program) is not None:
+                    return program
+            return 'gnome-terminal'
+        default_shell_cmd = ('%s -e' % get_terminal() if not system.darwin else
                              'open')
         return str(self._settings.value('shell', default_shell_cmd))
 
@@ -265,7 +278,8 @@ class Settings(object):
 
     @property
     def custom_compiler_path(self):
-        return self._settings.value('customCompilerPath', '')
+        default = system.which('cobc')
+        return self._settings.value('customCompilerPath', default)
 
     @custom_compiler_path.setter
     def custom_compiler_path(self, value):
@@ -273,6 +287,19 @@ class Settings(object):
         sep = ';' if sys.platform == 'win32' else ':'
         os.environ['PATH'] += sep + value
         self._settings.setValue('customCompilerPath', value)
+
+    @property
+    def compiler_flags(self):
+        lst = eval(self._settings.value('compilerFlags', '[]'))
+        ret_val = []
+        for v in lst:
+            if v:
+                ret_val.append(v)
+        return ret_val
+
+    @compiler_flags.setter
+    def compiler_flags(self, value):
+        self._settings.setValue('compilerFlags', repr(value))
 
     # Cobol settings
     # ----------------------
