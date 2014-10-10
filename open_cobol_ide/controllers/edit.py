@@ -29,13 +29,13 @@ class EditController(Controller):
         """
         :rtype: pyqode.cobol.widgets.CobolCodeEdit
         """
-        return self.ui.tabWidgetEditors.currentWidget()
+        return self.ui.tabWidgetEditors.current_widget()
 
     def __init__(self, app):
         super().__init__(app)
         self.ui.tabWidgetEditors.last_tab_closed.connect(
             self.app.view.show_home_page)
-        self.ui.tabWidgetEditors.currentChanged.connect(
+        self.ui.tabWidgetEditors.current_changed.connect(
             self._current_changed)
         self.ui.tableWidgetOffsets.show_requested.connect(
             self.ui.dockWidgetOffsets.show)
@@ -44,12 +44,8 @@ class EditController(Controller):
         if self.ui.actionPreferences.shortcut().toString().strip() == '':
             self.ui.actionPreferences.setShortcut('F2')
         self._setup_status_bar()
-        self.ui.tabWidgetEditors.tab_closed.connect(self._on_tab_closed)
         self.ui.consoleOutput.apply_color_scheme(
             ColorScheme(Settings().color_scheme))
-
-    def _on_tab_closed(self, tab):
-        _logger().info('editor closed: %s', tab.file.path)
 
     def _setup_status_bar(self):
         """
@@ -83,7 +79,7 @@ class EditController(Controller):
         self.ui.statusbar.setStyleSheet(
             'QStatusBar::item { border: 0px solid black };')
 
-    def add_editor(self, path, name, mimetype):
+    def add_editor(self, path):
         """
         Adds an editor widget to the main tab widget.
 
@@ -92,30 +88,18 @@ class EditController(Controller):
         :param mimetype: mimetype of the file to open.
         :return:
         """
-        _logger().info('add editor: %s', path)
-        editor = self._editor_from_mimetype(mimetype)
+        editor = self.ui.tabWidgetEditors.open_document(
+            path, self.app.cobol.create_bt_compile(),
+            self.app.cobol.create_bt_run())
+        editor.app = self.app
         update_editor_settings(editor)
-        status = editor.file.open(path)
-        index = self.ui.tabWidgetEditors.add_code_edit(editor, name)
-        if status:
-            self.app.cobol.display_file_type(editor)
-        self.ui.tabWidgetEditors.setTabToolTip(index, path)
+        try:
+            editor.set_buttons()
+        except AttributeError:
+            pass
+        self.app.cobol.display_file_type(editor)
         editor.cursorPositionChanged.connect(self._update_status_bar_labels)
         self._update_status_bar_labels()
-        return editor
-
-    def _editor_from_mimetype(self, mimetype):
-        """
-        Creates an editor instance from a mimetype.
-        :param mimetype: mimetype
-        """
-        for klass in self.editor_types:
-            if mimetype in klass.mimetypes:
-                if klass == CobolCodeEdit:
-                    return klass(self.app.cobol.create_bt_compile(),
-                                 self.app.cobol.create_bt_run())
-                return klass()
-        editor = self.editor_types[-1]()
         return editor
 
     def _current_changed(self, new_index):
@@ -129,7 +113,7 @@ class EditController(Controller):
             self.main_window.setWindowTitle(
                 self.app.title)
         else:
-            editor = self.ui.tabWidgetEditors.currentWidget()
+            editor = self.ui.tabWidgetEditors.current_widget()
             self.main_window.setWindowTitle(
                 '%s [%s] - %s' % (
                     editor.file.name, editor.file.path, self.app.title))
@@ -181,8 +165,8 @@ class EditController(Controller):
             self.app.update_app_style()
             self.app.home.update_style()
             QtGui.QIcon.setThemeName(Settings().icon_theme)
-            for i in range(self.ui.tabWidgetEditors.count()):
-                editor = self.ui.tabWidgetEditors.widget(i)
+            for editor in self.ui.tabWidgetEditors.widgets(
+                    include_clones=True):
                 update_editor_settings(editor)
                 self.ui.consoleOutput.apply_color_scheme(
                     ColorScheme(Settings().color_scheme))

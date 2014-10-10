@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/Dev/OpenCobolIDE/forms/ide.ui'
+# Form implementation generated from reading ui file '/home/colin/Documents/OpenCobolIDE/forms/ide.ui'
 #
-# Created: Thu Aug 28 21:42:06 2014
-#      by: PyQt5 UI code generator 5.3.1
+# Created: Fri Oct 10 17:04:53 2014
+#      by: PyQt5 UI code generator 5.3.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -461,7 +461,7 @@ class Ui_MainWindow(object):
         self.actionCancel.setToolTip(_translate("MainWindow", "Cancel the current operation (compile or run)"))
         self.actionCancel.setStatusTip(_translate("MainWindow", "Cancel the current operation (compile or run)"))
 
-from pyqode.core.widgets import InteractiveConsole, ErrorsTable, TabWidget
-from open_cobol_ide.view.widgets import RecentFilesListWidget
+from open_cobol_ide.view.widgets import TabWidget, RecentFilesListWidget
 from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
+from pyqode.core.widgets import InteractiveConsole, ErrorsTable
 from . import ide_rc

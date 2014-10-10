@@ -27,6 +27,7 @@ class CobolCodeEdit(CodeEditBase):
             Settings().color_scheme)
         self.linter_mode = self.modes.append(CobolLinterMode())
         self.auto_complete = self.modes.append(modes.AutoCompleteMode())
+        self.app = None
 
     def _setup_panels(self):
         self.control_panel = ControlPanel(*self._buttons)
@@ -41,6 +42,13 @@ class CobolCodeEdit(CodeEditBase):
     @file_type.setter
     def file_type(self, ftype):
         Settings().set_file_type(self.file.path, ftype)
+
+    def clone(self):
+        clone = self.__class__(
+            self.app.cobol.create_bt_compile(),
+            self.app.cobol.create_bt_run(), parent=self.parent())
+        clone.app = self.app
+        return clone
 
 
 class ControlPanel(Panel):
@@ -96,6 +104,12 @@ class ControlPanel(Panel):
         bt_compile.setStyleSheet(self.dropbtn_stylesheet)
         bt_run.setStyleSheet(self.dropbtn_stylesheet)
         self.setLayout(layout)
+
+    def setVisible(self, visible):
+        super().setVisible(visible)
+        if self.editor:
+            for c in self.editor.clones:
+                c.panels.get(self.__class__).setVisible(visible)
 
     def paintEvent(self, event):
         """ Fills the panel background. """

@@ -49,7 +49,7 @@ class ViewController(Controller):
             QtCore.Qt.CustomContextMenu)
         self.ui.tabWidgetEditors.customContextMenuRequested.connect(
             self.show_main_menu_as_context_menu)
-        self.ui.tabWidgetEditors.tab_bar.double_clicked.connect(
+        self.ui.tabWidgetEditors.tab_bar_double_clicked.connect(
             self.toggle_perspective)
         self.ui.actionFullscreen.triggered.connect(self.toggle_fullscreen)
         self.bt_mnu = QtWidgets.QToolButton()
@@ -210,7 +210,7 @@ class ViewController(Controller):
             self.ui.statusbar.show()
             self.ui.toolBarFile.show()
             self.ui.toolBarCode.show()
-            for w in self.ui.tabWidgetEditors._widgets:
+            for w in self.ui.tabWidgetEditors.widgets():
                 try:
                     w.control_panel.setVisible(False)
                 except AttributeError:
@@ -220,7 +220,7 @@ class ViewController(Controller):
             self.ui.statusbar.hide()
             self.ui.toolBarCode.hide()
             self.ui.toolBarFile.hide()
-            for w in self.ui.tabWidgetEditors._widgets:
+            for w in self.ui.tabWidgetEditors.widgets(include_clones=True):
                 try:
                     w.control_panel.setVisible(True)
                 except AttributeError:

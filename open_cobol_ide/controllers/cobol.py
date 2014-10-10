@@ -112,12 +112,12 @@ class CobolController(Controller):
         Updates current editor file type and enables/disables run action.
         """
         if action == self.ui.actionProgram:
-            self.ui.tabWidgetEditors.currentWidget().file_type = \
+            self.ui.tabWidgetEditors.current_widget().file_type = \
                 FileType.EXECUTABLE
             for item in self.bt_run + [self.ui.actionRun]:
                 item.setEnabled(not self.ui.consoleOutput.is_running)
         else:
-            self.ui.tabWidgetEditors.currentWidget().file_type = \
+            self.ui.tabWidgetEditors.current_widget().file_type = \
                 FileType.MODULE
             for item in self.bt_run + [self.ui.actionRun]:
                 item.setEnabled(False)

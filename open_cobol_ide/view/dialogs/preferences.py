@@ -101,8 +101,9 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                 break
 
     def update_color_scheme_preview(self, item):
-        self.plainTextEdit.syntax_highlighter.color_scheme = ColorScheme(
-            item.text())
+        if item:
+            self.plainTextEdit.syntax_highlighter.color_scheme = ColorScheme(
+                item.text())
 
     def setupUi(self, Dialog):
         super().setupUi(Dialog)
@@ -137,6 +138,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.spinBoxFontSize.setValue(settings.font_size)
             self.listWidgetColorSchemes.clear()
             current_index = None
+            self.listWidgetColorSchemes.clear()
             for style in PYGMENTS_STYLES:
                 self.listWidgetColorSchemes.addItem(style)
                 if style == settings.color_scheme:
