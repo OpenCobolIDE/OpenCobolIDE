@@ -33,10 +33,10 @@ class EditController(Controller):
 
     def __init__(self, app):
         super().__init__(app)
-        self.ui.tabWidgetEditors.last_tab_closed.connect(
-            self.app.view.show_home_page)
         self.ui.tabWidgetEditors.current_changed.connect(
             self._current_changed)
+        self.ui.tabWidgetEditors.last_tab_closed.connect(
+            self._on_last_tab_closed)
         self.ui.tableWidgetOffsets.show_requested.connect(
             self.ui.dockWidgetOffsets.show)
         self.ui.actionPreferences.triggered.connect(self.edit_preferences)
@@ -102,17 +102,19 @@ class EditController(Controller):
         self._update_status_bar_labels()
         return editor
 
+    def _on_last_tab_closed(self):
+        self.main_window.setWindowTitle(
+                self.app.title)
+        self.ui.twNavigation.set_editor(None)
+        self.app.view.show_home_page()
+
     def _current_changed(self, new_index):
         """
         Updates ui when the current editor changed.
 
         :param new_index: index of the new current editor.
         """
-        if new_index == -1:
-            # no more editors, just reset the window title
-            self.main_window.setWindowTitle(
-                self.app.title)
-        else:
+        if new_index != -1:
             editor = self.ui.tabWidgetEditors.current_widget()
             self.main_window.setWindowTitle(
                 '%s [%s] - %s' % (

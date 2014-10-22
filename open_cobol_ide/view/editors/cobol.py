@@ -29,6 +29,11 @@ class CobolCodeEdit(CodeEditBase):
         self.auto_complete = self.modes.append(modes.AutoCompleteMode())
         self.app = None
 
+    def close(self, clear=True):
+        super().close(clear=clear)
+        self.app.cobol.compile_buttons.remove(self._buttons[0])
+        self.app.cobol.run_buttons.remove(self._buttons[1])
+
     def _setup_panels(self):
         self.control_panel = ControlPanel(*self._buttons)
         self.control_panel.setVisible(Settings().perspective == 'minimal')

@@ -57,10 +57,10 @@ class CobolController(Controller):
         group = QtWidgets.QActionGroup(self.main_window)
         group.addAction(self.ui.actionProgram)
         group.addAction(self.ui.actionSubprogram)
-        self.bt_compile = []
-        self.bt_run = []
+        self.compile_buttons = []
+        self.run_buttons = []
         self.create_bt_compile()
-        self.ui.toolBarCode.insertWidget(self.ui.actionRun, self.bt_compile[0])
+        self.ui.toolBarCode.insertWidget(self.ui.actionRun, self.compile_buttons[0])
         group.triggered.connect(self._on_program_type_changed)
         self.ui.actionCompile.triggered.connect(self.compile)
         self.ui.errorsTable.msg_activated.connect(self._goto_error_msg)
@@ -76,7 +76,7 @@ class CobolController(Controller):
         bt_compile.setToolTip(self.ui.actionCompile.toolTip())
         bt_compile.setPopupMode(bt_compile.MenuButtonPopup)
         bt_compile.clicked.connect(self.compile)
-        self.bt_compile.append(bt_compile)
+        self.compile_buttons.append(bt_compile)
         bt_compile.setEnabled(self.ui.actionCompile.isEnabled())
         return bt_compile
 
@@ -86,7 +86,7 @@ class CobolController(Controller):
         bt.setIcon(icon)
         bt.setToolTip(self.ui.actionRun.toolTip())
         bt.clicked.connect(self.run)
-        self.bt_run.append(bt)
+        self.run_buttons.append(bt)
         bt.setEnabled(self.ui.actionRun.isEnabled())
         return bt
 
@@ -103,7 +103,7 @@ class CobolController(Controller):
         else:
             self.ui.actionProgram.setChecked(ftype == FileType.EXECUTABLE)
             self.ui.actionSubprogram.setChecked(ftype != FileType.EXECUTABLE)
-            for item in self.bt_run + [self.ui.actionRun]:
+            for item in self.run_buttons + [self.ui.actionRun]:
                 item.setEnabled(ftype == FileType.EXECUTABLE and
                                 not self.ui.consoleOutput.is_running)
 
@@ -114,12 +114,12 @@ class CobolController(Controller):
         if action == self.ui.actionProgram:
             self.ui.tabWidgetEditors.current_widget().file_type = \
                 FileType.EXECUTABLE
-            for item in self.bt_run + [self.ui.actionRun]:
+            for item in self.run_buttons + [self.ui.actionRun]:
                 item.setEnabled(not self.ui.consoleOutput.is_running)
         else:
             self.ui.tabWidgetEditors.current_widget().file_type = \
                 FileType.MODULE
-            for item in self.bt_run + [self.ui.actionRun]:
+            for item in self.run_buttons + [self.ui.actionRun]:
                 item.setEnabled(False)
 
     def compile(self):
@@ -250,7 +250,7 @@ class CobolController(Controller):
             else:
                 _logger().info('running program')
                 self.ui.consoleOutput.setFocus(True)
-                for item in self.bt_run + [self.ui.actionRun]:
+                for item in self.run_buttons + [self.ui.actionRun]:
                     item.setEnabled(False)
                 self.ui.consoleOutput.start_process(program, cwd=wd)
 
@@ -259,11 +259,11 @@ class CobolController(Controller):
         self.enable_run(True)
 
     def enable_compile(self, enable):
-        for item in self.bt_compile + [self.ui.actionCompile]:
+        for item in self.compile_buttons + [self.ui.actionCompile]:
             item.setEnabled(enable)
 
     def enable_run(self, enable):
-        for item in self.bt_run + [self.ui.actionRun]:
+        for item in self.run_buttons + [self.ui.actionRun]:
             item.setEnabled(enable)
 
     def cancel(self):
