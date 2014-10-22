@@ -70,7 +70,7 @@ class Application:
         for f in files:
             self.file.open_file(f)
 
-    def __del__(self):
+    def close(self):
         self.view = None
         self.cobol = None
         self.edit = None
@@ -78,7 +78,6 @@ class Application:
         self.win = None
         self.home = None
         self.help = None
-        _logger().debug('del app')
 
     def update_app_style(self):
         if Settings().dark_style:
@@ -155,6 +154,7 @@ class Application:
         Application.file.quit())
         """
         self.app.closeAllWindows()
+        self.close()
 
     def parse_args(self):
         parser = argparse.ArgumentParser(

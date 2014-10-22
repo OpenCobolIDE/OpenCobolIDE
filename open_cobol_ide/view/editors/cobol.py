@@ -31,8 +31,9 @@ class CobolCodeEdit(CodeEditBase):
 
     def close(self, clear=True):
         super().close(clear=clear)
-        self.app.cobol.compile_buttons.remove(self._buttons[0])
-        self.app.cobol.run_buttons.remove(self._buttons[1])
+        self.app().cobol.compile_buttons.remove(self._buttons[0])
+        self.app().cobol.run_buttons.remove(self._buttons[1])
+        self.app = None
 
     def _setup_panels(self):
         self.control_panel = ControlPanel(*self._buttons)
@@ -50,8 +51,8 @@ class CobolCodeEdit(CodeEditBase):
 
     def clone(self):
         clone = self.__class__(
-            self.app.cobol.create_bt_compile(),
-            self.app.cobol.create_bt_run(), parent=self.parent())
+            self.app().cobol.create_bt_compile(),
+            self.app().cobol.create_bt_run(), parent=self.parent())
         clone.app = self.app
         return clone
 

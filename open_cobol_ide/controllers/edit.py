@@ -3,6 +3,7 @@ Contains the EditController.
 
 """
 import logging
+import weakref
 from pyqode.core.api import TextHelper, ColorScheme
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
@@ -91,7 +92,7 @@ class EditController(Controller):
         editor = self.ui.tabWidgetEditors.open_document(
             path, self.app.cobol.create_bt_compile(),
             self.app.cobol.create_bt_run())
-        editor.app = self.app
+        editor.app = weakref.ref(self.app)
         update_editor_settings(editor)
         try:
             editor.set_buttons()
