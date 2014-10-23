@@ -1044,8 +1044,8 @@
   </customwidget>
   <customwidget>
    <class>TabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>pyqode.core.widgets</header>
+   <extends>QSplitter</extends>
+   <header>open_cobol_ide.view.widgets</header>
    <container>1</container>
   </customwidget>
   <customwidget>

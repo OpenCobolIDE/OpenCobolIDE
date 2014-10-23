@@ -11,4 +11,5 @@ def main():
     """
     app = Application()
     ret_code = app.run()
+    app.close()
     return ret_code

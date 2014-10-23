@@ -33,8 +33,11 @@ FILTER = FILTER_SEPARATOR.join([COBOL_FILES_FILTER, OTHER_FILES_FILTER])
 
 class FileIconProvider(QtWidgets.QFileIconProvider):
     def icon(self, file_infos):
-        if '.%s' % file_infos.suffix() in CobolCodeEdit.all_extensions():
-            return QtGui.QIcon(icons.ICON_MIMETYPE)
+        try:
+            if '.%s' % file_infos.suffix() in CobolCodeEdit.all_extensions():
+                return QtGui.QIcon(icons.ICON_MIMETYPE)
+        except AttributeError:
+            pass
         return super().icon(file_infos)
 
 
@@ -73,6 +76,8 @@ class FileController(Controller):
             self.ui.tabWidgetEditors.save_current)
         self.ui.actionSaveAs.triggered.connect(self.save_as)
         self.ui.actionQuit.triggered.connect(self.quit)
+        self.ui.tabWidgetEditors.register_code_edit(CobolCodeEdit)
+        self.ui.tabWidgetEditors.icon_provider_klass = FileIconProvider
 
     def request_new(self):
         """
@@ -101,16 +106,7 @@ class FileController(Controller):
 
         :param path: path of the file to open.
         """
-        name = os.path.split(path)[1]
-        mimetype = mimetypes.guess_type(path)[0]
-        index = self.ui.tabWidgetEditors.index_from_filename(path)
-        if index != -1:
-            # already in tab widget.
-            self.ui.tabWidgetEditors.setCurrentIndex(index)
-        else:
-            _logger().debug('opening file path=%s, name=%s, mimetype=%s' %
-                            (path, name, mimetype))
-            self.app.edit.add_editor(path, name, mimetype)
+        self.app.edit.add_editor(path)
         self.app.view.show_edit_page()
         self.app.file.recent_files_manager.open_file(path)
 
@@ -118,22 +114,8 @@ class FileController(Controller):
         """
         Saves the currend editor content as.
         """
-        fn, filter = QtWidgets.QFileDialog.getSaveFileName(
-            self.main_window, 'Save file as...',
-            self.ui.tabWidgetEditors.currentWidget().file.path, FILTER)
-        if not fn:
-            return
-        # ensure correct extension
-        if os.path.splitext(fn)[1] == '':
-            if filter == COBOL_FILES_FILTER:
-                fn += '.cbl'
-            else:
-                fn += '.txt'
-        _logger().info('saving editor content as: %s', fn)
-        self.ui.tabWidgetEditors.save_current(path=fn)
+        fn = self.ui.tabWidgetEditors.save_current_as()
         self.recent_files_manager.open_file(fn)
-        self.ui.tabWidgetEditors.currentChanged.emit(
-            self.ui.tabWidgetEditors.currentIndex())
         Settings().last_path = fn
 
     def quit(self):
