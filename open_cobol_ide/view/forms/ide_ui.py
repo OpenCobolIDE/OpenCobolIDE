@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '/home/colin/Desktop/OpenCobolIDE/forms/ide.ui'
 #
-# Created: Thu Oct 30 19:11:24 2014
+# Created: Thu Oct 30 19:48:04 2014
 #      by: PyQt5 UI code generator 5.3.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -212,19 +212,20 @@ class Ui_MainWindow(object):
         self.menu.setObjectName("menu")
         MainWindow.setMenuBar(self.menuBar)
         self.dockWidgetNavPanel = QtWidgets.QDockWidget(MainWindow)
-        self.dockWidgetNavPanel.setMinimumSize(QtCore.QSize(300, 121))
+        self.dockWidgetNavPanel.setMinimumSize(QtCore.QSize(300, 211))
         self.dockWidgetNavPanel.setFeatures(QtWidgets.QDockWidget.AllDockWidgetFeatures)
         self.dockWidgetNavPanel.setObjectName("dockWidgetNavPanel")
         self.dockWidgetContents_2 = QtWidgets.QWidget()
         self.dockWidgetContents_2.setObjectName("dockWidgetContents_2")
         self.gridLayout_7 = QtWidgets.QGridLayout(self.dockWidgetContents_2)
-        self.gridLayout_7.setContentsMargins(6, 6, 6, 6)
+        self.gridLayout_7.setContentsMargins(3, 3, 3, 3)
+        self.gridLayout_7.setSpacing(3)
         self.gridLayout_7.setObjectName("gridLayout_7")
         self.twNavigation = OutlineTreeWidget(self.dockWidgetContents_2)
         self.twNavigation.setObjectName("twNavigation")
         self.twNavigation.headerItem().setText(0, "1")
         self.twNavigation.header().setVisible(False)
-        self.gridLayout_7.addWidget(self.twNavigation, 0, 0, 1, 1)
+        self.gridLayout_7.addWidget(self.twNavigation, 1, 0, 1, 1)
         self.dockWidgetNavPanel.setWidget(self.dockWidgetContents_2)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidgetNavPanel)
         self.dockWidgetOffsets = QtWidgets.QDockWidget(MainWindow)
@@ -233,6 +234,8 @@ class Ui_MainWindow(object):
         self.dockWidgetContents_3 = QtWidgets.QWidget()
         self.dockWidgetContents_3.setObjectName("dockWidgetContents_3")
         self.gridLayout_8 = QtWidgets.QGridLayout(self.dockWidgetContents_3)
+        self.gridLayout_8.setContentsMargins(3, 3, 3, 3)
+        self.gridLayout_8.setSpacing(3)
         self.gridLayout_8.setObjectName("gridLayout_8")
         self.tableWidgetOffsets = PicOffsetsTable(self.dockWidgetContents_3)
         self.tableWidgetOffsets.setMinimumSize(QtCore.QSize(300, 0))
@@ -260,11 +263,35 @@ class Ui_MainWindow(object):
         self.dockWidgetFileSystem.setObjectName("dockWidgetFileSystem")
         self.dockWidgetContents_4 = QtWidgets.QWidget()
         self.dockWidgetContents_4.setObjectName("dockWidgetContents_4")
-        self.gridLayout_6 = QtWidgets.QGridLayout(self.dockWidgetContents_4)
-        self.gridLayout_6.setObjectName("gridLayout_6")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.dockWidgetContents_4)
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setContentsMargins(3, 0, 3, 3)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setSpacing(0)
+        self.horizontalLayout_2.setContentsMargins(-1, 0, -1, -1)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        spacerItem10 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem10)
+        self.btFSLock = QtWidgets.QPushButton(self.dockWidgetContents_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btFSLock.sizePolicy().hasHeightForWidth())
+        self.btFSLock.setSizePolicy(sizePolicy)
+        self.btFSLock.setText("")
+        icon = QtGui.QIcon.fromTheme("system-lock-screen")
+        self.btFSLock.setIcon(icon)
+        self.btFSLock.setIconSize(QtCore.QSize(16, 16))
+        self.btFSLock.setCheckable(True)
+        self.btFSLock.setChecked(False)
+        self.btFSLock.setFlat(True)
+        self.btFSLock.setObjectName("btFSLock")
+        self.horizontalLayout_2.addWidget(self.btFSLock)
+        self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.tvFileSystem = FileSystemTreeView(self.dockWidgetContents_4)
         self.tvFileSystem.setObjectName("tvFileSystem")
-        self.gridLayout_6.addWidget(self.tvFileSystem, 0, 0, 1, 1)
+        self.verticalLayout.addWidget(self.tvFileSystem)
         self.dockWidgetFileSystem.setWidget(self.dockWidgetContents_4)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidgetFileSystem)
         self.actionQuit = QtWidgets.QAction(MainWindow)
@@ -436,6 +463,7 @@ class Ui_MainWindow(object):
         item = self.tableWidgetOffsets.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "PIC"))
         self.dockWidgetFileSystem.setWindowTitle(_translate("MainWindow", "File system"))
+        self.btFSLock.setToolTip(_translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Lock</span> current file path to prevent the view from changing when the current editor changes.</p></body></html>"))
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
         self.actionQuit.setToolTip(_translate("MainWindow", "Exit application"))
         self.actionQuit.setStatusTip(_translate("MainWindow", "Exit application"))
@@ -491,7 +519,7 @@ class Ui_MainWindow(object):
         self.actionCancel.setStatusTip(_translate("MainWindow", "Cancel the current operation (compile or run)"))
         self.actionReport_a_bug.setText(_translate("MainWindow", "Report a bug"))
 
-from open_cobol_ide.view.widgets import TabWidget, RecentFilesListWidget
 from pyqode.core.widgets import ErrorsTable, FileSystemTreeView, InteractiveConsole
-from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
+from open_cobol_ide.view.widgets import TabWidget, RecentFilesListWidget
+from pyqode.cobol.widgets import OutlineTreeWidget, PicOffsetsTable
 from . import ide_rc

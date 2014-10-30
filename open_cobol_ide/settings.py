@@ -359,3 +359,11 @@ class Settings(object):
             map = {}
         map[path] = int(ftype)
         self._settings.setValue('cached_file_types', json.dumps(map))
+
+    @property
+    def lock_fs_path(self):
+        return str(self._settings.value('lock_fs_path', ''))
+
+    @lock_fs_path.setter
+    def lock_fs_path(self, value):
+        self._settings.setValue('lock_fs_path', str(value))
