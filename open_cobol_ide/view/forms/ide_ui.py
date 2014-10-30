@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '/home/colin/Desktop/OpenCobolIDE/forms/ide.ui'
 #
-# Created: Thu Oct 30 15:34:00 2014
+# Created: Thu Oct 30 15:41:16 2014
 #      by: PyQt5 UI code generator 5.3.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -209,7 +209,7 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menuBar)
         self.dockWidgetNavPanel = QtWidgets.QDockWidget(MainWindow)
         self.dockWidgetNavPanel.setMinimumSize(QtCore.QSize(300, 121))
-        self.dockWidgetNavPanel.setFeatures(QtWidgets.QDockWidget.DockWidgetFloatable|QtWidgets.QDockWidget.DockWidgetMovable)
+        self.dockWidgetNavPanel.setFeatures(QtWidgets.QDockWidget.AllDockWidgetFeatures)
         self.dockWidgetNavPanel.setObjectName("dockWidgetNavPanel")
         self.dockWidgetContents_2 = QtWidgets.QWidget()
         self.dockWidgetContents_2.setObjectName("dockWidgetContents_2")
@@ -467,7 +467,7 @@ class Ui_MainWindow(object):
         self.actionCancel.setStatusTip(_translate("MainWindow", "Cancel the current operation (compile or run)"))
         self.actionReport_a_bug.setText(_translate("MainWindow", "Report a bug"))
 
-from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
-from pyqode.core.widgets import ErrorsTable, InteractiveConsole
 from open_cobol_ide.view.widgets import RecentFilesListWidget, TabWidget
+from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
+from pyqode.core.widgets import InteractiveConsole, ErrorsTable
 from . import ide_rc
