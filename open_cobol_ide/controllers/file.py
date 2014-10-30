@@ -79,13 +79,15 @@ class FileController(Controller):
         self.ui.tabWidgetEditors.register_code_edit(CobolCodeEdit)
         self.ui.tabWidgetEditors.icon_provider_klass = FileIconProvider
 
-    def request_new(self):
+    def request_new(self, path=None):
         """
         Requests the creation of a new file, show the new file wizard and open
         if wizard completed sucessfully.
 
         """
-        path = DlgNewFile.create_new_file(self.main_window)
+        if path and os.path.isfile(path):
+            path = os.path.abspath(os.path.join(path, os.pardir))
+        path = DlgNewFile.create_new_file(self.main_window, path=path)
         if path:
             self.open_file(path)
 

@@ -3,6 +3,7 @@ Contains the EditController.
 
 """
 import logging
+import os
 import weakref
 from pyqode.core.api import TextHelper, ColorScheme
 from pyqode.qt import QtCore, QtGui, QtWidgets
@@ -12,6 +13,7 @@ from ..view.dialogs.preferences import DlgPreferences
 from ..settings import Settings
 from ..view.editors import CobolCodeEdit, GenericCodeEdit, \
     update_editor_settings
+from ..view.widgets import FSContextMenu
 
 
 def _logger():
@@ -51,11 +53,13 @@ class EditController(Controller):
         self.ui.tvFileSystem.setHeaderHidden(True)
         for i in range(1, 4):
             self.ui.tvFileSystem.hideColumn(i)
-        self.ui.tvFileSystem.fs_model_proxy.ignored_directories.append('bin')
+        self.ui.tvFileSystem.ignore_directories('bin')
+        self.ui.tvFileSystem.set_context_menu(FSContextMenu(self.app))
 
     def _on_tvFileSystem_activated(self, index):
         path = self.ui.tvFileSystem.filePath(index)
-        self.app.file.open_file(path)
+        if os.path.isfile(path):
+            self.app.file.open_file(path)
 
     def _setup_status_bar(self):
         """

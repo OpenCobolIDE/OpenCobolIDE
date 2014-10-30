@@ -1,8 +1,10 @@
 """
 Widgets in this module are used as promoted widgets in Qt Designer
 """
+import os
 from pyqode.core.qt import QtCore, QtGui, QtWidgets
 from pyqode.core.widgets import SplittableCodeEditTabWidget
+from pyqode.core.widgets import FileSystemContextMenu
 
 
 class RecentFilesListWidget(QtWidgets.QListWidget):
@@ -129,3 +131,37 @@ class TabWidget(SplittableCodeEditTabWidget):
         splitter = super().split(widget, orientation)
         splitter.tab_bar_double_clicked.connect(
             self.tab_bar_double_clicked.emit)
+
+
+class FSContextMenu(FileSystemContextMenu):
+    def __init__(self, app):
+        super().__init__()
+        self.app = app
+
+    def _init_actions(self):
+        self.new_menu = QtWidgets.QMenu('New', self)
+        self.new_menu.setIcon(QtGui.QIcon.fromTheme('document-new'))
+        self.action_new_file = self.new_menu.addAction('Cobol File')
+        self.action_new_file.setIcon(QtGui.QIcon(
+            ':/ide-icons/rc/cobol-mimetype.png'))
+        self.action_new_file.triggered.connect(self._on_new_file_triggered)
+        self.action_mkdir = self.new_menu.addAction('Directory')
+        self.action_mkdir.triggered.connect(self._on_mkdir_triggered)
+        self.action_mkdir.setIcon(QtGui.QIcon.fromTheme('folder'))
+        self.addMenu(self.new_menu)
+        self.addSeparator()
+        super()._init_actions()
+
+    def _on_new_file_triggered(self):
+        self.app.file.request_new(
+            self.tree_view.filePath(self.tree_view.currentIndex()))
+
+    def _on_mkdir_triggered(self):
+        name, status = QtWidgets.QInputDialog.getText(
+            self.tree_view, 'New directory', 'New directory name: ')
+        if status:
+            path = self.tree_view.filePath(self.tree_view.currentIndex())
+            if os.path.isfile(path):
+                path = os.path.abspath(os.path.join(path, os.pardir))
+            dest = os.path.join(path, name)
+            os.mkdir(dest)

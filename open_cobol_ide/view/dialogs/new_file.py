@@ -91,14 +91,17 @@ class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
 
     To use this dialog, use the ``create_new_file`` convenience method.
     """
-    def __init__(self, parent):
+    def __init__(self, parent, path):
         super().__init__(parent)
         self.setupUi(self)
         self.enable_ok()
         completer = QtWidgets.QCompleter(self)
         completer.setModel(QtWidgets.QDirModel(completer))
         self.lineEditPath.setCompleter(completer)
-        self.lineEditPath.setText(os.path.expanduser("~"))
+        if not path:
+            self.lineEditPath.setText(os.path.expanduser("~"))
+        else:
+            self.lineEditPath.setText(path)
         self.prev_pth = ""
 
     def path(self):
@@ -141,7 +144,7 @@ class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
         self.prev_pth = pth
 
     @classmethod
-    def create_new_file(cls, parent):
+    def create_new_file(cls, parent, path=None):
         """
         Creates a new file. Shows the new file dialog and creates the file
         on disk if the dialog has been accepted and the destination does not
@@ -151,7 +154,7 @@ class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
         :return: Path or None if the dialog has been cancelled.
 
         """
-        dlg = cls(parent)
+        dlg = cls(parent, path=path)
         if dlg.exec_() == dlg.Accepted:
             path = dlg.path()
             if os.path.exists(path):

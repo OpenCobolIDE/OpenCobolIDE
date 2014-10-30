@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '/home/colin/Desktop/OpenCobolIDE/forms/ide.ui'
 #
-# Created: Thu Oct 30 15:45:19 2014
+# Created: Thu Oct 30 19:11:24 2014
 #      by: PyQt5 UI code generator 5.3.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -195,10 +195,14 @@ class Ui_MainWindow(object):
         self.menuEdit = QtWidgets.QMenu(self.menuBar)
         self.menuEdit.setObjectName("menuEdit")
         self.mnuActiveEditor = QtWidgets.QMenu(self.menuEdit)
+        icon = QtGui.QIcon.fromTheme("accessories-text-editor")
+        self.mnuActiveEditor.setIcon(icon)
         self.mnuActiveEditor.setObjectName("mnuActiveEditor")
         self.menuView = QtWidgets.QMenu(self.menuBar)
         self.menuView.setObjectName("menuView")
         self.menuWindows = QtWidgets.QMenu(self.menuView)
+        icon = QtGui.QIcon.fromTheme("window")
+        self.menuWindows.setIcon(icon)
         self.menuWindows.setObjectName("menuWindows")
         self.menuCobol = QtWidgets.QMenu(self.menuBar)
         self.menuCobol.setObjectName("menuCobol")
@@ -264,7 +268,7 @@ class Ui_MainWindow(object):
         self.dockWidgetFileSystem.setWidget(self.dockWidgetContents_4)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidgetFileSystem)
         self.actionQuit = QtWidgets.QAction(MainWindow)
-        icon = QtGui.QIcon.fromTheme("window-close")
+        icon = QtGui.QIcon.fromTheme("application-exit")
         self.actionQuit.setIcon(icon)
         self.actionQuit.setIconVisibleInMenu(True)
         self.actionQuit.setObjectName("actionQuit")
@@ -322,18 +326,26 @@ class Ui_MainWindow(object):
         self.actionProgram = QtWidgets.QAction(MainWindow)
         self.actionProgram.setCheckable(True)
         self.actionProgram.setChecked(True)
+        icon = QtGui.QIcon.fromTheme("application-x-executable")
+        self.actionProgram.setIcon(icon)
         self.actionProgram.setObjectName("actionProgram")
         self.actionSubprogram = QtWidgets.QAction(MainWindow)
         self.actionSubprogram.setCheckable(True)
+        icon = QtGui.QIcon.fromTheme("package-x-generic")
+        self.actionSubprogram.setIcon(icon)
         self.actionSubprogram.setObjectName("actionSubprogram")
         self.actionCompile = QtWidgets.QAction(MainWindow)
-        icon = QtGui.QIcon.fromTheme("exec")
+        icon = QtGui.QIcon.fromTheme("application-x-executable")
         self.actionCompile.setIcon(icon)
         self.actionCompile.setIconVisibleInMenu(True)
         self.actionCompile.setObjectName("actionCompile")
         self.actionCancel = QtWidgets.QAction(MainWindow)
+        icon = QtGui.QIcon.fromTheme("dialog-cancel")
+        self.actionCancel.setIcon(icon)
         self.actionCancel.setObjectName("actionCancel")
         self.actionReport_a_bug = QtWidgets.QAction(MainWindow)
+        icon = QtGui.QIcon.fromTheme("tools-report-bug")
+        self.actionReport_a_bug.setIcon(icon)
         self.actionReport_a_bug.setObjectName("actionReport_a_bug")
         self.toolBarFile.addAction(self.actionNew)
         self.toolBarFile.addAction(self.actionOpen)
@@ -479,7 +491,7 @@ class Ui_MainWindow(object):
         self.actionCancel.setStatusTip(_translate("MainWindow", "Cancel the current operation (compile or run)"))
         self.actionReport_a_bug.setText(_translate("MainWindow", "Report a bug"))
 
-from open_cobol_ide.view.widgets import RecentFilesListWidget, TabWidget
+from open_cobol_ide.view.widgets import TabWidget, RecentFilesListWidget
+from pyqode.core.widgets import ErrorsTable, FileSystemTreeView, InteractiveConsole
 from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
-from pyqode.core.widgets import FileSystemTreeView, ErrorsTable, InteractiveConsole
 from . import ide_rc
