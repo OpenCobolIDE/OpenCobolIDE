@@ -129,6 +129,7 @@ class ViewController(Controller):
             QtGui.QIcon(':/ide-icons/rc/Preferences-system.png'))
         iabout = QtGui.QIcon.fromTheme(
             'help-about', QtGui.QIcon(':/ide-icons/rc/dialog-information.png'))
+        icon_report_bug = QtGui.QIcon.fromTheme('tools-report-bug')
 
         self.ui.actionPreferences.setIcon(ipreferences)
         self.ui.actionHelp.setIcon(ihelp)
@@ -151,6 +152,7 @@ class ViewController(Controller):
         self.ui.actionPreferences.setMenuRole(
             QtWidgets.QAction.PreferencesRole)
         self.ui.actionQuit.setMenuRole(QtWidgets.QAction.QuitRole)
+        self.ui.actionReport_a_bug.setIcon(icon_report_bug)
 
         if system.darwin:
             self.ui.menu.setTitle('Help')

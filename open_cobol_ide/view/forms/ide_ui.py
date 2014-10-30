@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/Documents/OpenCobolIDE/forms/ide.ui'
+# Form implementation generated from reading ui file '/home/colin/Desktop/OpenCobolIDE/forms/ide.ui'
 #
-# Created: Fri Oct 10 17:04:53 2014
+# Created: Thu Oct 30 15:34:00 2014
 #      by: PyQt5 UI code generator 5.3.2
 #
 # WARNING! All changes made in this file will be lost!
 
-from pyqode.core.qt import QtCore, QtGui, QtWidgets
+from pyqode.qt import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -20,8 +20,8 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
-        self.gridLayout.setSpacing(0)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout.setSpacing(0)
         self.gridLayout.setObjectName("gridLayout")
         self.stackedWidget = QtWidgets.QStackedWidget(self.centralwidget)
         self.stackedWidget.setObjectName("stackedWidget")
@@ -133,10 +133,11 @@ class Ui_MainWindow(object):
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.page_2)
-        self.gridLayout_2.setSpacing(6)
         self.gridLayout_2.setContentsMargins(6, 6, 6, 6)
+        self.gridLayout_2.setSpacing(6)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.tabWidgetEditors = TabWidget(self.page_2)
+        self.tabWidgetEditors.setOrientation(QtCore.Qt.Horizontal)
         self.tabWidgetEditors.setObjectName("tabWidgetEditors")
         self.gridLayout_2.addWidget(self.tabWidgetEditors, 0, 0, 1, 1)
         self.stackedWidget.addWidget(self.page_2)
@@ -175,8 +176,8 @@ class Ui_MainWindow(object):
         self.tabProgramOutput = QtWidgets.QWidget()
         self.tabProgramOutput.setObjectName("tabProgramOutput")
         self.gridLayout_5 = QtWidgets.QGridLayout(self.tabProgramOutput)
-        self.gridLayout_5.setSpacing(6)
         self.gridLayout_5.setContentsMargins(6, 6, 6, 6)
+        self.gridLayout_5.setSpacing(6)
         self.gridLayout_5.setObjectName("gridLayout_5")
         self.consoleOutput = InteractiveConsole(self.tabProgramOutput)
         self.consoleOutput.setObjectName("consoleOutput")
@@ -187,7 +188,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1202, 27))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1202, 34))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -321,6 +322,8 @@ class Ui_MainWindow(object):
         self.actionCompile.setObjectName("actionCompile")
         self.actionCancel = QtWidgets.QAction(MainWindow)
         self.actionCancel.setObjectName("actionCancel")
+        self.actionReport_a_bug = QtWidgets.QAction(MainWindow)
+        self.actionReport_a_bug.setObjectName("actionReport_a_bug")
         self.toolBarFile.addAction(self.actionNew)
         self.toolBarFile.addAction(self.actionOpen)
         self.toolBarFile.addSeparator()
@@ -351,6 +354,8 @@ class Ui_MainWindow(object):
         self.menuCobol.addAction(self.actionCancel)
         self.menu.addAction(self.actionHelp)
         self.menu.addAction(self.actionAbout)
+        self.menu.addSeparator()
+        self.menu.addAction(self.actionReport_a_bug)
         self.menuBar.addAction(self.menuFile.menuAction())
         self.menuBar.addAction(self.menuEdit.menuAction())
         self.menuBar.addAction(self.menuView.menuAction())
@@ -460,8 +465,9 @@ class Ui_MainWindow(object):
         self.actionCancel.setText(_translate("MainWindow", "Cancel"))
         self.actionCancel.setToolTip(_translate("MainWindow", "Cancel the current operation (compile or run)"))
         self.actionCancel.setStatusTip(_translate("MainWindow", "Cancel the current operation (compile or run)"))
+        self.actionReport_a_bug.setText(_translate("MainWindow", "Report a bug"))
 
-from open_cobol_ide.view.widgets import TabWidget, RecentFilesListWidget
 from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
-from pyqode.core.widgets import InteractiveConsole, ErrorsTable
+from pyqode.core.widgets import ErrorsTable, InteractiveConsole
+from open_cobol_ide.view.widgets import RecentFilesListWidget, TabWidget
 from . import ide_rc
