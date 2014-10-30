@@ -51,6 +51,7 @@ class EditController(Controller):
         self.ui.tvFileSystem.setHeaderHidden(True)
         for i in range(1, 4):
             self.ui.tvFileSystem.hideColumn(i)
+        self.ui.tvFileSystem.fs_model_proxy.ignored_directories.append('bin')
 
     def _on_tvFileSystem_activated(self, index):
         path = self.ui.tvFileSystem.filePath(index)
