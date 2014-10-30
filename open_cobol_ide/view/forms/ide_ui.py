@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '/home/colin/Desktop/OpenCobolIDE/forms/ide.ui'
 #
-# Created: Thu Oct 30 15:41:16 2014
+# Created: Thu Oct 30 15:45:19 2014
 #      by: PyQt5 UI code generator 5.3.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from pyqode.qt import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1202, 824)
+        MainWindow.resize(1202, 860)
         MainWindow.setMinimumSize(QtCore.QSize(900, 700))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/ide-icons/rc/silex-192x192.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -252,6 +252,17 @@ class Ui_MainWindow(object):
         self.gridLayout_8.addWidget(self.tableWidgetOffsets, 0, 0, 1, 1)
         self.dockWidgetOffsets.setWidget(self.dockWidgetContents_3)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidgetOffsets)
+        self.dockWidgetFileSystem = QtWidgets.QDockWidget(MainWindow)
+        self.dockWidgetFileSystem.setObjectName("dockWidgetFileSystem")
+        self.dockWidgetContents_4 = QtWidgets.QWidget()
+        self.dockWidgetContents_4.setObjectName("dockWidgetContents_4")
+        self.gridLayout_6 = QtWidgets.QGridLayout(self.dockWidgetContents_4)
+        self.gridLayout_6.setObjectName("gridLayout_6")
+        self.tvFileSystem = FileSystemTreeView(self.dockWidgetContents_4)
+        self.tvFileSystem.setObjectName("tvFileSystem")
+        self.gridLayout_6.addWidget(self.tvFileSystem, 0, 0, 1, 1)
+        self.dockWidgetFileSystem.setWidget(self.dockWidgetContents_4)
+        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidgetFileSystem)
         self.actionQuit = QtWidgets.QAction(MainWindow)
         icon = QtGui.QIcon.fromTheme("window-close")
         self.actionQuit.setIcon(icon)
@@ -412,6 +423,7 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Offset"))
         item = self.tableWidgetOffsets.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "PIC"))
+        self.dockWidgetFileSystem.setWindowTitle(_translate("MainWindow", "File system"))
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
         self.actionQuit.setToolTip(_translate("MainWindow", "Exit application"))
         self.actionQuit.setStatusTip(_translate("MainWindow", "Exit application"))
@@ -469,5 +481,5 @@ class Ui_MainWindow(object):
 
 from open_cobol_ide.view.widgets import RecentFilesListWidget, TabWidget
 from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
-from pyqode.core.widgets import InteractiveConsole, ErrorsTable
+from pyqode.core.widgets import FileSystemTreeView, ErrorsTable, InteractiveConsole
 from . import ide_rc

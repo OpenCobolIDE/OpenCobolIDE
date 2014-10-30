@@ -47,6 +47,14 @@ class EditController(Controller):
         self._setup_status_bar()
         self.ui.consoleOutput.apply_color_scheme(
             ColorScheme(Settings().color_scheme))
+        self.ui.tvFileSystem.activated.connect(self._on_tvFileSystem_activated)
+        self.ui.tvFileSystem.setHeaderHidden(True)
+        for i in range(1, 4):
+            self.ui.tvFileSystem.hideColumn(i)
+
+    def _on_tvFileSystem_activated(self, index):
+        path = self.ui.tvFileSystem.filePath(index)
+        self.app.file.open_file(path)
 
     def _setup_status_bar(self):
         """
@@ -122,6 +130,7 @@ class EditController(Controller):
                     editor.file.name, editor.file.path, self.app.title))
             # update tools (outline and offsets table)
             self.ui.twNavigation.set_editor(editor)
+            self.ui.tvFileSystem.set_root_path(editor.file.path)
             self.ui.tableWidgetOffsets.set_editor(editor)
             # update current editor menu
             self.ui.mnuActiveEditor.clear()
