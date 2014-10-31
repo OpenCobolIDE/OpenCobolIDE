@@ -130,7 +130,10 @@ class ViewController(Controller):
         iabout = QtGui.QIcon.fromTheme(
             'help-about', QtGui.QIcon(':/ide-icons/rc/dialog-information.png'))
         icon_report_bug = QtGui.QIcon.fromTheme('tools-report-bug')
+        icon_lock = QtGui.QIcon.fromTheme('system-lock-screen', QtGui.QIcon(
+            ':/ide-icons/rc/lock.png'))
 
+        self.ui.btFSLock.setIcon(icon_lock)
         self.ui.actionPreferences.setIcon(ipreferences)
         self.ui.actionHelp.setIcon(ihelp)
         self.ui.actionClear.setIcon(iclear)

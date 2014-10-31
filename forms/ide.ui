@@ -771,7 +771,9 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset theme="system-lock-screen"/>
+          <iconset theme="system-lock-screen">
+           <normaloff/>
+          </iconset>
          </property>
          <property name="iconSize">
           <size>
