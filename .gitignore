@@ -44,3 +44,7 @@ htmlcov
 /temp/
 /__pycache__/
 *.DS_Store
+
+
+# Dolphin (KDE)
+.directory
