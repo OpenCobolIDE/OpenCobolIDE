@@ -54,10 +54,13 @@ class EditController(Controller):
         for i in range(1, 4):
             self.ui.tvFileSystem.hideColumn(i)
         self.ui.tvFileSystem.ignore_directories('bin')
-        self.ui.tvFileSystem.set_context_menu(FSContextMenu(self.app))
+        mnu = FSContextMenu(self.app)
+        self.ui.tvFileSystem.set_context_menu(mnu)
         lock_fs_path = Settings().lock_fs_path
         if lock_fs_path and os.path.exists(lock_fs_path):
             self.ui.tvFileSystem.set_root_path(lock_fs_path)
+        else:
+            Settings().lock_fs_path = ''
         self.ui.btFSLock.setChecked(lock_fs_path != '')
         self.ui.btFSLock.toggled.connect(self._on_fs_path_lock_toggled)
 
@@ -147,6 +150,9 @@ class EditController(Controller):
                     editor.file.name, editor.file.path, self.app.title))
             # update tools (outline and offsets table)
             self.ui.twNavigation.set_editor(editor)
+            if self.ui.btFSLock.isChecked() and not os.path.exists(Settings().lock_fs_path):
+                Settings().lock_fs_path = ''
+                self.ui.btFSLock.setChecked(False)
             if not self.ui.btFSLock.isChecked():
                 self.ui.tvFileSystem.set_root_path(editor.file.path)
             self.ui.tableWidgetOffsets.set_editor(editor)
