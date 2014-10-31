@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/OpenCobolIDE/forms/dlg_preferences.ui'
+# Form implementation generated from reading ui file '/home/colin/Desktop/OpenCobolIDE/forms/dlg_preferences.ui'
 #
-# Created: Wed Sep 24 21:06:30 2014
+# Created: Fri Oct 31 16:26:44 2014
 #      by: PyQt5 UI code generator 5.3.2
 #
 # WARNING! All changes made in this file will be lost!
 
-from pyqode.core.qt import QtCore, QtGui, QtWidgets
+from pyqode.qt import QtCore, QtGui, QtWidgets
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -262,7 +262,7 @@ class Ui_Dialog(object):
         self.comboBoxStandard.addItem("")
         self.comboBoxStandard.addItem("")
         self.comboBoxStandard.addItem("")
-        self.formLayout_6.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.comboBoxStandard)
+        self.formLayout_6.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.comboBoxStandard)
         icon = QtGui.QIcon.fromTheme("exec")
         self.tabWidget.addTab(self.tabCompiler, icon, "")
         self.tabRun = QtWidgets.QWidget()

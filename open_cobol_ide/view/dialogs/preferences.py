@@ -22,7 +22,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.comboBoxIconTheme.hide()
             self.lblIconTheme.hide()
         self.tabWidget.setTabIcon(2, QtGui.QIcon.fromTheme(
-            'exec',
+            'application-x-executable',
             QtGui.QIcon(':/ide-icons/rc/application-x-executable.png')))
         self.tabWidget.setTabIcon(1, QtGui.QIcon.fromTheme(
             'applications-graphics',
