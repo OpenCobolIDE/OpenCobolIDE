@@ -65,8 +65,8 @@ class ControlPanel(Panel):
         QToolButton { /* all types of tool button */
         background-color: transparent;
         border: 1px solid transparent;
-        border-radius: 8px;
-        padding: 2px;
+        border-radius: 5px;
+        padding: 5px;
         }
         QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
         padding-right: 10px; /* make way for the popup button */
