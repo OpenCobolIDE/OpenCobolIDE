@@ -26,7 +26,6 @@ class CobolCodeEdit(CodeEditBase):
         self.syntax_highlighter.color_scheme = ColorScheme(
             Settings().color_scheme)
         self.linter_mode = self.modes.append(CobolLinterMode())
-        self.auto_complete = self.modes.append(modes.AutoCompleteMode())
         self.app = None
 
     def close(self, clear=True):
@@ -37,9 +36,13 @@ class CobolCodeEdit(CodeEditBase):
 
     def _setup_panels(self):
         self.control_panel = ControlPanel(*self._buttons)
-        self.control_panel.setVisible(Settings().perspective == 'minimal')
+        self.control_panel.hide()
         self.panels.append(self.control_panel, ControlPanel.Position.RIGHT)
         super()._setup_panels()
+
+    def setPlainText(self, txt, mime_type, encoding):
+        super().setPlainText(txt, mime_type, encoding)
+        self.control_panel.setVisible(Settings().perspective == 'minimal')
 
     @property
     def file_type(self):
