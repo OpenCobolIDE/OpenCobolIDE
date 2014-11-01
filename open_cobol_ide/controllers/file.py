@@ -3,7 +3,6 @@ This module contains the FileController.
 
 """
 import logging
-import mimetypes
 import os
 
 from pyqode.core import widgets

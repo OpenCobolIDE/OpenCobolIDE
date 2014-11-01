@@ -125,14 +125,18 @@ class Application:
         - set env var to embedded OpenCobol variable
         - set PATH to cobol library path only (erase previous values)
         """
-        cwd = os.getcwd()
+        if getattr(sys, 'frozen', False):
+            # The application is frozen
+            cwd = os.path.dirname(sys.executable)
+        else:
+            cwd = os.getcwd()
         oc_root_pth = os.path.join(cwd, 'OpenCobol')
         os.environ['COB_CONFIG_DIR'] = os.path.join(oc_root_pth, 'config')
         os.environ['COB_COPY_DIR'] = os.path.join(oc_root_pth, 'copy')
         os.environ['COB_LIBRARY_PATH'] = os.path.join(oc_root_pth, 'bin')
         os.environ['COB_INCLUDE_PATH'] = os.path.join(oc_root_pth, 'include')
         os.environ['COB_LIB_PATH'] = os.path.join(oc_root_pth, 'lib')
-        os.environ['PATH'] = os.environ['COB_LIBRARY_PATH']
+        os.environ['PATH'] = ';'.join([os.environ['COB_LIBRARY_PATH'], cwd])
 
     @staticmethod
     def _osx_init():
