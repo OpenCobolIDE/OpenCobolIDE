@@ -56,6 +56,11 @@ class EditController(Controller):
         self.ui.tvFileSystem.ignore_directories('bin')
         mnu = FSContextMenu(self.app)
         self.ui.tvFileSystem.set_context_menu(mnu)
+        self.ui.tvFileSystem.file_created.connect(self.app.file.open_file)
+        self.ui.tvFileSystem.file_renamed.connect(
+            self.ui.tabWidgetEditors.rename_document)
+        self.ui.tvFileSystem.file_deleted.connect(
+            self.ui.tabWidgetEditors.close_document)
         lock_fs_path = Settings().lock_fs_path
         if lock_fs_path and os.path.exists(lock_fs_path):
             self.ui.tvFileSystem.set_root_path(lock_fs_path)
@@ -120,6 +125,14 @@ class EditController(Controller):
         editor = self.ui.tabWidgetEditors.open_document(
             path, self.app.cobol.create_bt_compile(),
             self.app.cobol.create_bt_run())
+        if editor is None:
+            editor = self.ui.tabWidgetEditors.open_document(path)
+        try:
+            fw = editor.modes.get('FileWatcherMode')
+        except KeyError:
+            pass
+        else:
+            fw.file_deleted.connect(self._on_file_deleted)
         editor.app = weakref.ref(self.app)
         update_editor_settings(editor)
         try:
@@ -207,3 +220,12 @@ class EditController(Controller):
                 self.ui.consoleOutput.apply_color_scheme(
                     ColorScheme(Settings().color_scheme))
                 editor.rehighlight()
+
+    def _on_file_deleted(self, editor):
+        if QtWidgets.QMessageBox.question(
+                self.main_window, 'Close editor?',
+                '%s has been deleted externally. Do you want to close its '
+                'editor?' % editor.file.path,
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.Yes:
+            self.ui.tabWidgetEditors.close_document(editor.file.path)
