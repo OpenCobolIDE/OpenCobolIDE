@@ -122,10 +122,11 @@ class EditController(Controller):
         :param mimetype: mimetype of the file to open.
         :return:
         """
-        editor = self.ui.tabWidgetEditors.open_document(
-            path, self.app.cobol.create_bt_compile(),
-            self.app.cobol.create_bt_run())
-        if editor is None:
+        try:
+            editor = self.ui.tabWidgetEditors.open_document(
+                path, self.app.cobol.create_bt_compile(),
+                self.app.cobol.create_bt_run())
+        except TypeError:
             editor = self.ui.tabWidgetEditors.open_document(path)
         try:
             fw = editor.modes.get('FileWatcherMode')
