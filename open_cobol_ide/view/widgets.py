@@ -1,8 +1,7 @@
 """
 Widgets in this module are used as promoted widgets in Qt Designer
 """
-import os
-from pyqode.core.qt import QtCore, QtGui, QtWidgets
+from pyqode.qt import QtCore, QtGui, QtWidgets
 from pyqode.core.widgets import SplittableCodeEditTabWidget
 from pyqode.core.widgets import FileSystemContextMenu
 

@@ -4,8 +4,8 @@ This module contains a class for accessing the application settings.
 import json
 import os
 import sys
-from pyqode.core.qt import QtCore
-from pyqode.core.qt.QtCore import QSettings
+from pyqode.qt import QtCore
+from pyqode.qt.QtCore import QSettings
 from .compiler import FileType, GnuCobolStandard
 from . import system
 

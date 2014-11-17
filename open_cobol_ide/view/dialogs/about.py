@@ -1,9 +1,7 @@
 import pyqode.core
 import pyqode.cobol
 import pygments
-from pyqode.core.qt import QtGui
-
-from pyqode.qt import QtCore, QtWidgets
+from pyqode.qt import QtGui, QtCore, QtWidgets
 from ..forms import dlg_about_ui
 from ... import __version__, logger
 from ...compiler import GnuCobolCompiler
