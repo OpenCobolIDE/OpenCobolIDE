@@ -107,6 +107,13 @@ class EditController(Controller):
         self._lbl_cursor.setAlignment(QtCore.Qt.AlignHCenter |
                                       QtCore.Qt.AlignVCenter)
         self._lbl_cursor.setText('1:1')
+
+        # path
+        self._lbl_path = QtWidgets.QLabel()
+        self._lbl_path.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self._lbl_path.setText('n/a')
+
+        self.ui.statusbar.addWidget(self._lbl_path, True)
         self.ui.statusbar.addPermanentWidget(self._lbl_format)
         self.ui.statusbar.addPermanentWidget(self._lbl_cursor)
         self.ui.statusbar.addPermanentWidget(self._lbl_encoding)
@@ -191,6 +198,7 @@ class EditController(Controller):
                     not self.ui.consoleOutput.is_running)
                 self.app.cobol.enable_run(
                     is_executable and not self.ui.consoleOutput.is_running)
+            self._update_status_bar_labels()
             _logger().info('current editor changed: %s', editor.file.path)
 
     def _update_status_bar_labels(self):
@@ -203,6 +211,12 @@ class EditController(Controller):
             self._lbl_encoding.setText(self.current_editor.file.encoding)
             self._lbl_format.setText(
                 'Free format' if Settings().free_format else 'Fixed format')
+            self._lbl_path.setText(self.current_editor.file.path)
+        else:
+            self._lbl_cursor.setText('n/a')
+            self._lbl_encoding.setText('n/a')
+            self._lbl_format.setText('n/a')
+            self._lbl_path.setText('n/a')
 
     def edit_preferences(self):
         try:
