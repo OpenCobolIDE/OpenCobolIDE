@@ -128,6 +128,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.spinBoxEditorCCTriggerLen.setValue(
                 settings.code_completion_trigger_len)
             self.lineEditCommentIndicator.setText(settings.comment_indicator)
+            self.checkBoxSmartBackspace.setChecked(
+                settings.enable_smart_backspace)
         # Style
         if self.tabWidget.currentIndex() == 1 or all_tabs:
             rb = (self.radioButtonColorDark if settings.dark_style else
@@ -190,6 +192,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.enable_autoindent = True
             settings.code_completion_trigger_len = 1
             settings.comment_indicator = '*> '
+            settings.enable_smart_backspace = False
         # Style
         elif index == 1:
             settings.dark_style = False
@@ -252,6 +255,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             dlg.comboBoxStandard.currentIndex())
         settings.icon_theme = dlg.comboBoxIconTheme.currentText()
         settings.show_errors = dlg.checkBoxShowErrors.isChecked()
+        settings.enable_smart_backspace = \
+            dlg.checkBoxSmartBackspace.isChecked()
 
         cb_flags = [dlg.cb_g, dlg.cb_ftrace, dlg.cb_ftraceall,
                     dlg.cb_debugging_line, dlg.cb_static]

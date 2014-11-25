@@ -194,6 +194,14 @@ class Settings(object):
     def show_errors(self, value):
         self._settings.setValue('showErrors', int(value))
 
+    @property
+    def enable_smart_backspace(self):
+        return bool(int(self._settings.value('enable_smart_backspace', '0')))
+
+    @enable_smart_backspace.setter
+    def enable_smart_backspace(self, value):
+        self._settings.setValue('enable_smart_backspace', int(value))
+
     #
     # Editor style settings
     #

@@ -15,6 +15,7 @@ def update_editor_settings(editor):
     editor.panels.get('FoldingPanel').native_look = not settings.dark_style
     try:
         # cobol editor specific settings
+        editor.backspace_mode.enabled = settings.enable_smart_backspace
         editor.comment_indicator = settings.comment_indicator
         editor.free_format = settings.free_format
         editor.caret_line_mode.enabled = settings.highlight_caret
