@@ -165,7 +165,7 @@ Screenshots
 
 .. _chardet: https://pypi.python.org/pypi/chardet
 .. _PyQt4: http://www.riverbankcomputing.co.uk/software/pyqt/download
-.. _Downloads: https://github.com/OpenCobolIDE/OpenCobolIDE/releases
+.. _Downloads: https://launchpad.net/cobcide/+download
 .. _Source repository: https://github.com/OpenCobolIDE/OpenCobolIDE/
 .. _Issue tracker: https://github.com/OpenCobolIDE/OpenCobolIDE/issues?state=open
 .. _Documentation: http://opencobolide.readthedocs.org/en/latest/
