@@ -76,7 +76,7 @@ The main window
 
 Here is the main window of OpenCobolIDE:
 
-.. image:: _static/MainWindow.png
+.. image:: _static/MainWindowWithNumbers.png
     :align: center
 
 It is made up of 5 distinct parts:

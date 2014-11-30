@@ -19,7 +19,7 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=c:\{#MyAppName}
+DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 LicenseFile=LICENSE
@@ -28,6 +28,7 @@ OutputBaseFilename=OpenCobolIDE-{#MyAppVersion}_Setup
 SetupIconFile=forms\rc\silex-icon.ico
 Compression=lzma
 SolidCompression=yes
+ChangesAssociations=yes
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -49,3 +50,11 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Fil
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[Registry]
+Root: HKCR; Subkey: ".cbl"; ValueType: string; ValueName: ""; ValueData: "text-x-cobol"; Flags: uninsdeletevalue 
+Root: HKCR; Subkey: ".cob"; ValueType: string; ValueName: ""; ValueData: "text-x-cobol"; Flags: uninsdeletevalue
+Root: HKCR; Subkey: ".pco"; ValueType: string; ValueName: ""; ValueData: "text-x-cobol"; Flags: uninsdeletevalue
+Root: HKCR; Subkey: ".cpy"; ValueType: string; ValueName: ""; ValueData: "text-x-cobol"; Flags: uninsdeletevalue
+Root: HKCR; Subkey: "text-x-cobol"; ValueType: string; ValueName: ""; ValueData: "Cobol source code"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "text-x-cobol\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKCR; Subkey: "text-x-cobol\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""

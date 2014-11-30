@@ -23,7 +23,7 @@ def lint(request_data):
         f.write(code)
     compiler = GnuCobolCompiler()
     _, messages = compiler.compile(tmp_pth, get_file_type(path))
-    return True, messages
+    return messages
 
 
 class CobolLinterMode(CheckerMode):

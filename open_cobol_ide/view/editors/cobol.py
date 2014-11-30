@@ -26,13 +26,23 @@ class CobolCodeEdit(CodeEditBase):
         self.syntax_highlighter.color_scheme = ColorScheme(
             Settings().color_scheme)
         self.linter_mode = self.modes.append(CobolLinterMode())
-        self.auto_complete = self.modes.append(modes.AutoCompleteMode())
+        self.app = None
+
+    def close(self, clear=True):
+        super().close(clear=clear)
+        self.app().cobol.compile_buttons.remove(self._buttons[0])
+        self.app().cobol.run_buttons.remove(self._buttons[1])
+        self.app = None
 
     def _setup_panels(self):
         self.control_panel = ControlPanel(*self._buttons)
-        self.control_panel.setVisible(Settings().perspective == 'minimal')
+        self.control_panel.hide()
         self.panels.append(self.control_panel, ControlPanel.Position.RIGHT)
         super()._setup_panels()
+
+    def setPlainText(self, txt, mime_type, encoding):
+        super().setPlainText(txt, mime_type, encoding)
+        self.control_panel.setVisible(Settings().perspective == 'minimal')
 
     @property
     def file_type(self):
@@ -42,14 +52,21 @@ class CobolCodeEdit(CodeEditBase):
     def file_type(self, ftype):
         Settings().set_file_type(self.file.path, ftype)
 
+    def clone(self):
+        clone = self.__class__(
+            self.app().cobol.create_bt_compile(),
+            self.app().cobol.create_bt_run(), parent=self.parent())
+        clone.app = self.app
+        return clone
+
 
 class ControlPanel(Panel):
     dropbtn_stylesheet = """
         QToolButton { /* all types of tool button */
         background-color: transparent;
         border: 1px solid transparent;
-        border-radius: 8px;
-        padding: 2px;
+        border-radius: 5px;
+        padding: 5px;
         }
         QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
         padding-right: 10px; /* make way for the popup button */
@@ -96,6 +113,12 @@ class ControlPanel(Panel):
         bt_compile.setStyleSheet(self.dropbtn_stylesheet)
         bt_run.setStyleSheet(self.dropbtn_stylesheet)
         self.setLayout(layout)
+
+    def setVisible(self, visible):
+        super().setVisible(visible)
+        if self.editor:
+            for c in self.editor.clones:
+                c.panels.get(self.__class__).setVisible(visible)
 
     def paintEvent(self, event):
         """ Fills the panel background. """

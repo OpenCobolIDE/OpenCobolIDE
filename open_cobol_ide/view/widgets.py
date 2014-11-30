@@ -1,7 +1,9 @@
 """
 Widgets in this module are used as promoted widgets in Qt Designer
 """
-from pyqode.core.qt import QtCore, QtGui, QtWidgets
+from pyqode.qt import QtCore, QtGui, QtWidgets
+from pyqode.core.widgets import SplittableCodeEditTabWidget
+from pyqode.core.widgets import FileSystemContextMenu
 
 
 class RecentFilesListWidget(QtWidgets.QListWidget):
@@ -114,3 +116,34 @@ class TabCornerWidget(QtWidgets.QWidget):
         layout.addWidget(bt_compile)
         layout.addWidget(bt_run)
         self.setLayout(layout)
+
+
+class TabWidget(SplittableCodeEditTabWidget):
+    tab_bar_double_clicked = QtCore.Signal()
+
+    def __init__(self, parent, root=True):
+        super().__init__(parent, root)
+        self.main_tab_widget.tabBar().double_clicked.connect(
+            self.tab_bar_double_clicked.emit)
+
+    def split(self, widget, orientation):
+        splitter = super().split(widget, orientation)
+        splitter.tab_bar_double_clicked.connect(
+            self.tab_bar_double_clicked.emit)
+
+
+class FSContextMenu(FileSystemContextMenu):
+    def __init__(self, app):
+        super().__init__()
+        self.app = app
+
+    def get_new_user_actions(self):
+        self.action_new_file = QtWidgets.QAction('Cobol file', self)
+        self.action_new_file.setIcon(QtGui.QIcon(
+            ':/ide-icons/rc/cobol-mimetype.png'))
+        self.action_new_file.triggered.connect(self._on_new_file_triggered)
+        return [self.action_new_file]
+
+    def _on_new_file_triggered(self):
+        self.app.file.request_new(
+            self.tree_view.filePath(self.tree_view.currentIndex()))

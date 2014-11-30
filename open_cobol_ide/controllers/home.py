@@ -13,31 +13,13 @@ class HomePageWhite:
     """
     Contains the stylesheets for a white (default) theme.
     """
-    frame_recent = """
-    QFrame
-    {
-    border: 1px solid rgb(150, 150, 150);
-    border-radius: 5px;
-    background-color: rgb(255, 255, 255);
-    }
-    """
-
-    list_recent = """
-    QListWidget
-    {
+    label_recent = """
     border: none;
-    background-color: transparent;
-    }
-    """
-
-    label_recent = """border: none;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
-    background-color: rgb(206, 206, 206);
     padding: 5px;
-    border-bottom: 1px solid rgb(150, 150, 150);
     """
 
 
@@ -45,22 +27,12 @@ class HomePageDark:
     """
     Contains the stylesheets for a dark theme.
     """
-    frame_recent = """border: 1px solid rgb(80, 80, 80);
-    border-radius: 5px;
-    """
-
-    list_recent = """border: none;
-    background-color: transparent;
-    """
-
     label_recent = """border: none;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
-    background-color: rgb(64, 64, 64);
     padding: 5px;
-    border-bottom: 1px solid rgb(80, 80, 80);
     """
 
 
@@ -96,9 +68,9 @@ class HomeController(Controller):
             style = HomePageDark
         else:
             style = HomePageWhite
-        self.ui.frameRecents.setStyleSheet(style.frame_recent)
+        # self.ui.frameRecents.setStyleSheet(style.frame_recent)
         self.ui.labelRecents.setStyleSheet(style.label_recent)
-        self.ui.listWidgetRecents.setStyleSheet(style.list_recent)
+        # self.ui.listWidgetRecents.setStyleSheet(style.list_recent)
 
     def _clear_recents(self):
         """

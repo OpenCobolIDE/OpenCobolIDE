@@ -22,11 +22,13 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.comboBoxIconTheme.hide()
             self.lblIconTheme.hide()
         self.tabWidget.setTabIcon(2, QtGui.QIcon.fromTheme(
-            'exec',
+            'application-x-executable',
             QtGui.QIcon(':/ide-icons/rc/application-x-executable.png')))
         self.tabWidget.setTabIcon(1, QtGui.QIcon.fromTheme(
             'applications-graphics',
             QtGui.QIcon(':/ide-icons/rc/applications-graphics.png')))
+        self.tabWidget.setTabIcon(3, QtGui.QIcon.fromTheme(
+            'media-playback-start', QtGui.QIcon(':/ide-icons/rc/media-playback-start.png')))
         self.buttonBox.button(self.buttonBox.Reset).clicked.connect(self.reset)
         self.buttonBox.button(self.buttonBox.RestoreDefaults).clicked.connect(
             self.restore_defaults)
@@ -101,8 +103,9 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                 break
 
     def update_color_scheme_preview(self, item):
-        self.plainTextEdit.syntax_highlighter.color_scheme = ColorScheme(
-            item.text())
+        if item:
+            self.plainTextEdit.syntax_highlighter.color_scheme = ColorScheme(
+                item.text())
 
     def setupUi(self, Dialog):
         super().setupUi(Dialog)
@@ -125,6 +128,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.spinBoxEditorCCTriggerLen.setValue(
                 settings.code_completion_trigger_len)
             self.lineEditCommentIndicator.setText(settings.comment_indicator)
+            self.checkBoxSmartBackspace.setChecked(
+                settings.enable_smart_backspace)
         # Style
         if self.tabWidget.currentIndex() == 1 or all_tabs:
             rb = (self.radioButtonColorDark if settings.dark_style else
@@ -137,6 +142,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.spinBoxFontSize.setValue(settings.font_size)
             self.listWidgetColorSchemes.clear()
             current_index = None
+            self.listWidgetColorSchemes.clear()
             for style in PYGMENTS_STYLES:
                 self.listWidgetColorSchemes.addItem(style)
                 if style == settings.color_scheme:
@@ -186,6 +192,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.enable_autoindent = True
             settings.code_completion_trigger_len = 1
             settings.comment_indicator = '*> '
+            settings.enable_smart_backspace = False
         # Style
         elif index == 1:
             settings.dark_style = False
@@ -248,6 +255,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             dlg.comboBoxStandard.currentIndex())
         settings.icon_theme = dlg.comboBoxIconTheme.currentText()
         settings.show_errors = dlg.checkBoxShowErrors.isChecked()
+        settings.enable_smart_backspace = \
+            dlg.checkBoxSmartBackspace.isChecked()
 
         cb_flags = [dlg.cb_g, dlg.cb_ftrace, dlg.cb_ftraceall,
                     dlg.cb_debugging_line, dlg.cb_static]

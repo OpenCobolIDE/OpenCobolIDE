@@ -49,7 +49,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <property name="usesScrollButtons">
          <bool>true</bool>
@@ -177,7 +177,7 @@
              <item row="2" column="0">
               <widget class="QLabel" name="label_14">
                <property name="text">
-                <string>Automatic:</string>
+                <string/>
                </property>
               </widget>
              </item>
@@ -206,10 +206,28 @@
                 <string>Enable/Disable automatic indentation</string>
                </property>
                <property name="text">
-                <string/>
+                <string>Automatic indentation</string>
                </property>
                <property name="checked">
                 <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_6">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QCheckBox" name="checkBoxSmartBackspace">
+               <property name="toolTip">
+                <string>Backspace will act as shift+tab, i.e. it will eat as much spaces 
+as possible to get back to the previous indentation level.</string>
+               </property>
+               <property name="text">
+                <string>Intelligent backspace</string>
                </property>
               </widget>
              </item>
@@ -483,7 +501,9 @@
         </widget>
         <widget class="QWidget" name="tabCompiler">
          <attribute name="icon">
-          <iconset theme="exec"/>
+          <iconset theme="exec">
+           <normaloff/>
+          </iconset>
          </attribute>
          <attribute name="title">
           <string>Compiler</string>
@@ -614,7 +634,7 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="0" column="1">
            <widget class="QComboBox" name="comboBoxStandard">
             <item>
              <property name="text">
@@ -657,7 +677,9 @@
         </widget>
         <widget class="QWidget" name="tabRun">
          <attribute name="icon">
-          <iconset theme="media-playback-start"/>
+          <iconset theme="media-playback-start">
+           <normaloff/>
+          </iconset>
          </attribute>
          <attribute name="title">
           <string>Run</string>

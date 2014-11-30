@@ -1,8 +1,7 @@
 import pyqode.core
 import pyqode.cobol
 import pygments
-
-from pyqode.qt import QtCore, QtWidgets
+from pyqode.qt import QtGui, QtCore, QtWidgets
 from ..forms import dlg_about_ui
 from ... import __version__, logger
 from ...compiler import GnuCobolCompiler
@@ -35,8 +34,12 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
         self.tbwVersions.setRowCount(len(self.HEADERS))
         self.tbwVersions.setVerticalHeaderLabels(self.HEADERS)
         self.tbwVersions.setHorizontalHeaderLabels(['Version'])
+        self.tbwVersions.verticalHeader().setStretchLastSection(False)
         self.labelMain.setText(self.labelMain.text() % __version__)
-        self.adjustSize()
+        self.setMinimumWidth(640)
+        self.setMinimumHeight(480)
+        self.setWindowIcon(QtGui.QIcon.fromTheme(
+            'help-about', QtGui.QIcon(':/ide-icons/rc/dialog-information.png')))
         try:
             import qdarkstyle
         except ImportError:

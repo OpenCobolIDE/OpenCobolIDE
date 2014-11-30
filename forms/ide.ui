@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1202</width>
-    <height>824</height>
+    <height>860</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -25,16 +25,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout" rowstretch="0" columnstretch="0">
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
+    <property name="margin">
      <number>0</number>
     </property>
     <property name="spacing">
@@ -307,16 +298,7 @@
              <property name="spacing">
               <number>0</number>
              </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
+             <property name="margin">
               <number>0</number>
              </property>
              <item>
@@ -377,23 +359,18 @@
       </widget>
       <widget class="QWidget" name="page_2">
        <layout class="QGridLayout" name="gridLayout_2">
-        <property name="leftMargin">
-         <number>6</number>
-        </property>
-        <property name="topMargin">
-         <number>6</number>
-        </property>
-        <property name="rightMargin">
-         <number>6</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>6</number>
         </property>
         <property name="spacing">
          <number>6</number>
         </property>
         <item row="0" column="0">
-         <widget class="TabWidget" name="tabWidgetEditors"/>
+         <widget class="TabWidget" name="tabWidgetEditors">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -456,16 +433,7 @@
          <string>Show compiler log</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_4">
-         <property name="leftMargin">
-          <number>6</number>
-         </property>
-         <property name="topMargin">
-          <number>6</number>
-         </property>
-         <property name="rightMargin">
-          <number>6</number>
-         </property>
-         <property name="bottomMargin">
+         <property name="margin">
           <number>6</number>
          </property>
          <item row="0" column="0">
@@ -497,16 +465,7 @@
          <string>Output</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_5">
-         <property name="leftMargin">
-          <number>6</number>
-         </property>
-         <property name="topMargin">
-          <number>6</number>
-         </property>
-         <property name="rightMargin">
-          <number>6</number>
-         </property>
-         <property name="bottomMargin">
+         <property name="margin">
           <number>6</number>
          </property>
          <property name="spacing">
@@ -535,7 +494,7 @@
      <x>0</x>
      <y>0</y>
      <width>1202</width>
-     <height>27</height>
+     <height>34</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -564,6 +523,11 @@
      <property name="title">
       <string>Active editor</string>
      </property>
+     <property name="icon">
+      <iconset theme="accessories-text-editor">
+       <normaloff/>
+      </iconset>
+     </property>
      <addaction name="separator"/>
     </widget>
     <addaction name="mnuActiveEditor"/>
@@ -577,6 +541,11 @@
     <widget class="QMenu" name="menuWindows">
      <property name="title">
       <string>Windows</string>
+     </property>
+     <property name="icon">
+      <iconset theme="window">
+       <normaloff/>
+      </iconset>
      </property>
     </widget>
     <addaction name="menuWindows"/>
@@ -607,6 +576,8 @@
     </property>
     <addaction name="actionHelp"/>
     <addaction name="actionAbout"/>
+    <addaction name="separator"/>
+    <addaction name="actionReport_a_bug"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -618,11 +589,11 @@
    <property name="minimumSize">
     <size>
      <width>300</width>
-     <height>121</height>
+     <height>211</height>
     </size>
    </property>
    <property name="features">
-    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+    <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
    <property name="windowTitle">
     <string>Navigation</string>
@@ -632,19 +603,13 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QGridLayout" name="gridLayout_7">
-     <property name="leftMargin">
-      <number>6</number>
+     <property name="margin">
+      <number>3</number>
      </property>
-     <property name="topMargin">
-      <number>6</number>
+     <property name="spacing">
+      <number>3</number>
      </property>
-     <property name="rightMargin">
-      <number>6</number>
-     </property>
-     <property name="bottomMargin">
-      <number>6</number>
-     </property>
-     <item row="0" column="0">
+     <item row="1" column="0">
       <widget class="OutlineTreeWidget" name="twNavigation">
        <property name="toolTip">
         <string>Show the current editor structure</string>
@@ -680,6 +645,12 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3">
     <layout class="QGridLayout" name="gridLayout_8">
+     <property name="margin">
+      <number>3</number>
+     </property>
+     <property name="spacing">
+      <number>3</number>
+     </property>
      <item row="0" column="0">
       <widget class="PicOffsetsTable" name="tableWidgetOffsets">
        <property name="minimumSize">
@@ -740,9 +711,98 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockWidgetFileSystem">
+   <property name="windowTitle">
+    <string>File system</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>3</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>3</number>
+     </property>
+     <property name="bottomMargin">
+      <number>3</number>
+     </property>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btFSLock">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Lock&lt;/span&gt; current file path to prevent the view from changing when the current editor changes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset theme="system-lock-screen">
+           <normaloff/>
+          </iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="FileSystemTreeView" name="tvFileSystem"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionQuit">
    <property name="icon">
-    <iconset theme="window-close" resource="ide.qrc">
+    <iconset theme="application-exit" resource="ide.qrc">
      <normaloff>:/ide-icons/rc/system-log-out.png</normaloff>:/ide-icons/rc/system-log-out.png</iconset>
    </property>
    <property name="text">
@@ -969,6 +1029,11 @@
    <property name="checked">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset theme="application-x-executable">
+     <normaloff/>
+    </iconset>
+   </property>
    <property name="text">
     <string>Executable</string>
    </property>
@@ -983,6 +1048,11 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset theme="package-x-generic">
+     <normaloff/>
+    </iconset>
+   </property>
    <property name="text">
     <string>Module</string>
    </property>
@@ -995,7 +1065,7 @@
   </action>
   <action name="actionCompile">
    <property name="icon">
-    <iconset theme="exec">
+    <iconset theme="application-x-executable">
      <normaloff>:/ide-icons/rc/applications-system.png</normaloff>:/ide-icons/rc/applications-system.png</iconset>
    </property>
    <property name="text">
@@ -1015,6 +1085,11 @@
    </property>
   </action>
   <action name="actionCancel">
+   <property name="icon">
+    <iconset theme="dialog-cancel">
+     <normaloff/>
+    </iconset>
+   </property>
    <property name="text">
     <string>Cancel</string>
    </property>
@@ -1025,6 +1100,17 @@
     <string>Cancel the current operation (compile or run)</string>
    </property>
   </action>
+  <action name="actionReport_a_bug">
+   <property name="icon">
+    <iconset theme="tools-report-bug">
+     <normaloff/>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Report a bug</string>
+   </property>
+  </action>
+  <zorder>dockWidgetNavPanel</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -1044,8 +1130,8 @@
   </customwidget>
   <customwidget>
    <class>TabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>pyqode.core.widgets</header>
+   <extends>QSplitter</extends>
+   <header>open_cobol_ide.view.widgets</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -1057,6 +1143,11 @@
    <class>PicOffsetsTable</class>
    <extends>QTableWidget</extends>
    <header>pyqode.cobol.widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>FileSystemTreeView</class>
+   <extends>QTreeView</extends>
+   <header>pyqode.core.widgets</header>
   </customwidget>
  </customwidgets>
  <resources>

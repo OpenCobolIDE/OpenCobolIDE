@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/OpenCobolIDE/forms/dlg_preferences.ui'
+# Form implementation generated from reading ui file '/home/colin/Desktop/OpenCobolIDE/forms/dlg_preferences.ui'
 #
-# Created: Wed Sep 24 21:06:30 2014
+# Created: Tue Nov 25 22:50:42 2014
 #      by: PyQt5 UI code generator 5.3.2
 #
 # WARNING! All changes made in this file will be lost!
 
-from pyqode.core.qt import QtCore, QtGui, QtWidgets
+from pyqode.qt import QtCore, QtGui, QtWidgets
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -80,6 +80,7 @@ class Ui_Dialog(object):
         self.label.setObjectName("label")
         self.formLayout_2.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label)
         self.label_14 = QtWidgets.QLabel(self.groupBox_2)
+        self.label_14.setText("")
         self.label_14.setObjectName("label_14")
         self.formLayout_2.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_14)
         self.spinBoxEditorTabLen = QtWidgets.QSpinBox(self.groupBox_2)
@@ -88,10 +89,16 @@ class Ui_Dialog(object):
         self.spinBoxEditorTabLen.setObjectName("spinBoxEditorTabLen")
         self.formLayout_2.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.spinBoxEditorTabLen)
         self.checkBoxEditorAutoIndent = QtWidgets.QCheckBox(self.groupBox_2)
-        self.checkBoxEditorAutoIndent.setText("")
         self.checkBoxEditorAutoIndent.setChecked(True)
         self.checkBoxEditorAutoIndent.setObjectName("checkBoxEditorAutoIndent")
         self.formLayout_2.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.checkBoxEditorAutoIndent)
+        self.label_6 = QtWidgets.QLabel(self.groupBox_2)
+        self.label_6.setText("")
+        self.label_6.setObjectName("label_6")
+        self.formLayout_2.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.label_6)
+        self.checkBoxSmartBackspace = QtWidgets.QCheckBox(self.groupBox_2)
+        self.checkBoxSmartBackspace.setObjectName("checkBoxSmartBackspace")
+        self.formLayout_2.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.checkBoxSmartBackspace)
         self.verticalLayout.addWidget(self.groupBox_2)
         self.groupBox_4 = QtWidgets.QGroupBox(self.tabEditor)
         self.groupBox_4.setObjectName("groupBox_4")
@@ -262,7 +269,7 @@ class Ui_Dialog(object):
         self.comboBoxStandard.addItem("")
         self.comboBoxStandard.addItem("")
         self.comboBoxStandard.addItem("")
-        self.formLayout_6.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.comboBoxStandard)
+        self.formLayout_6.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.comboBoxStandard)
         icon = QtGui.QIcon.fromTheme("exec")
         self.tabWidget.addTab(self.tabCompiler, icon, "")
         self.tabRun = QtWidgets.QWidget()
@@ -295,7 +302,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.addLayout(self.gridLayout_3, 2, 0, 1, 1)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -318,11 +325,14 @@ class Ui_Dialog(object):
         self.checkBoxShowErrors.setToolTip(_translate("Dialog", "Compile your code on the fly and show errors while you\'re typing"))
         self.groupBox_2.setTitle(_translate("Dialog", "Indentation"))
         self.label.setText(_translate("Dialog", "Width:"))
-        self.label_14.setText(_translate("Dialog", "Automatic:"))
         self.spinBoxEditorTabLen.setToolTip(_translate("Dialog", "Tab length (number of spaces)"))
         self.spinBoxEditorTabLen.setStatusTip(_translate("Dialog", "Tab length (number of spaces)"))
         self.checkBoxEditorAutoIndent.setToolTip(_translate("Dialog", "Enable/Disable automatic indentation"))
         self.checkBoxEditorAutoIndent.setStatusTip(_translate("Dialog", "Enable/Disable automatic indentation"))
+        self.checkBoxEditorAutoIndent.setText(_translate("Dialog", "Automatic indentation"))
+        self.checkBoxSmartBackspace.setToolTip(_translate("Dialog", "Backspace will act as shift+tab, i.e. it will eat as much spaces \n"
+"as possible to get back to the previous indentation level."))
+        self.checkBoxSmartBackspace.setText(_translate("Dialog", "Intelligent backspace"))
         self.groupBox_4.setTitle(_translate("Dialog", "Code completion"))
         self.label_2.setText(_translate("Dialog", "Trigger length:"))
         self.spinBoxEditorCCTriggerLen.setToolTip(_translate("Dialog", "Number of characters needed to trigger auto completion"))

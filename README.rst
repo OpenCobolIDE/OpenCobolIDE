@@ -136,7 +136,7 @@ Screenshots
 
 * Editor:
 
-.. image:: doc/source/_static/CompilerOutput.png
+.. image:: doc/source/_static/MainWindow.png
     :align: center
 
 * Minimal view:

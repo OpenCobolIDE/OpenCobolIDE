@@ -49,7 +49,7 @@ class ViewController(Controller):
             QtCore.Qt.CustomContextMenu)
         self.ui.tabWidgetEditors.customContextMenuRequested.connect(
             self.show_main_menu_as_context_menu)
-        self.ui.tabWidgetEditors.tab_bar.double_clicked.connect(
+        self.ui.tabWidgetEditors.tab_bar_double_clicked.connect(
             self.toggle_perspective)
         self.ui.actionFullscreen.triggered.connect(self.toggle_fullscreen)
         self.bt_mnu = QtWidgets.QToolButton()
@@ -129,7 +129,11 @@ class ViewController(Controller):
             QtGui.QIcon(':/ide-icons/rc/Preferences-system.png'))
         iabout = QtGui.QIcon.fromTheme(
             'help-about', QtGui.QIcon(':/ide-icons/rc/dialog-information.png'))
+        icon_report_bug = QtGui.QIcon.fromTheme('tools-report-bug')
+        icon_lock = QtGui.QIcon.fromTheme('system-lock-screen', QtGui.QIcon(
+            ':/ide-icons/rc/lock.png'))
 
+        self.ui.btFSLock.setIcon(icon_lock)
         self.ui.actionPreferences.setIcon(ipreferences)
         self.ui.actionHelp.setIcon(ihelp)
         self.ui.actionClear.setIcon(iclear)
@@ -151,6 +155,7 @@ class ViewController(Controller):
         self.ui.actionPreferences.setMenuRole(
             QtWidgets.QAction.PreferencesRole)
         self.ui.actionQuit.setMenuRole(QtWidgets.QAction.QuitRole)
+        self.ui.actionReport_a_bug.setIcon(icon_report_bug)
 
         if system.darwin:
             self.ui.menu.setTitle('Help')
@@ -195,11 +200,13 @@ class ViewController(Controller):
             self.ui.dockWidgetLogs.hide()
             self.ui.dockWidgetNavPanel.hide()
             self.ui.dockWidgetOffsets.hide()
+            self.ui.dockWidgetFileSystem.hide()
             if self.ui.consoleOutput.is_running:
                 self.ui.consoleOutput.stop_process()
         else:
             self._apply_perspective()
             self.ui.dockWidgetNavPanel.setVisible(Settings().outline_visible)
+            self.ui.dockWidgetFileSystem.setVisible(True)
 
     def _apply_perspective(self):
         """
@@ -210,7 +217,7 @@ class ViewController(Controller):
             self.ui.statusbar.show()
             self.ui.toolBarFile.show()
             self.ui.toolBarCode.show()
-            for w in self.ui.tabWidgetEditors._widgets:
+            for w in self.ui.tabWidgetEditors.widgets():
                 try:
                     w.control_panel.setVisible(False)
                 except AttributeError:
@@ -220,7 +227,7 @@ class ViewController(Controller):
             self.ui.statusbar.hide()
             self.ui.toolBarCode.hide()
             self.ui.toolBarFile.hide()
-            for w in self.ui.tabWidgetEditors._widgets:
+            for w in self.ui.tabWidgetEditors.widgets(include_clones=True):
                 try:
                     w.control_panel.setVisible(True)
                 except AttributeError:
