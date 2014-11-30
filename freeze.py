@@ -37,7 +37,7 @@ if len(sys.argv) == 1:
 
 pygments_styles = []
 for s in get_all_styles():
-    module = 'pygments.styles.%s' % s
+    module = 'pygments.styles.%s' % s.replace('-', '_')
     try:
         __import__(module)
     except ImportError:
