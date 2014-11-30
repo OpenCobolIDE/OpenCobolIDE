@@ -97,9 +97,12 @@ if windows:
                 data.append(l)
             dst.writelines(data)
         # cx_freeze is missing libEGL.dll, copy it ourself
-        import PyQt5
-        shutil.copy(os.path.join(
-            os.path.dirname(PyQt5.__file__), 'libEGL.dll'), build_dir)
+        try:
+            import PyQt5
+            shutil.copy(os.path.join(
+                os.path.dirname(PyQt5.__file__), 'libEGL.dll'), build_dir)
+        except (ImportError, RuntimeError):
+            pass  # using pyqt4, there is nothing to do
         # if not in PATH, inno setup is usually located in
         # C:\Program Files (x86)\Inno Setup 5 on Windows
         os.environ['PATH'] += ';C:\Program Files (x86)\Inno Setup 5'
