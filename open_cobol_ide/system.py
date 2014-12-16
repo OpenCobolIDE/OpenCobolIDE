@@ -84,6 +84,6 @@ def icon_themes():
         else:
             for d in dirs:
                 pth = os.path.join(path, d)
-                if os.path.isdir(pth):
+                if os.path.isdir(pth) and 'cursors' not in os.listdir(pth):
                     themes.append(d)
     return themes
