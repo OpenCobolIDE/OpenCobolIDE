@@ -9,11 +9,11 @@ Submitting pull requests:
 
 Pull Requests are great!
 
-    1. Fork the Repo on github.
-    2. Create a feature or a bugfix branch before you start coding.
-    3. If you are adding functionality or fixing a bug, please add a test!
-    4. Add your name to AUTHORS.rst
-    5. Push to your fork and submit a pull request to **the master branch**.
+1. Fork the Repo on github.
+2. Create a feature or a bugfix branch before you start coding.
+3. If you are adding functionality or fixing a bug, please add a test!
+4. Add your name to AUTHORS.rst
+5. Push to your fork and submit a pull request to **the master branch**.
 
 Please use **PEP8** to style your code (PEP8 compliance is tested Travis CI).
 
