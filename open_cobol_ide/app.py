@@ -51,7 +51,7 @@ class Application:
         self.cobol = CobolController(self)
         self.help = HelpController(self)
 
-        self.win.show()
+        self.win.showMaximized()
         self.view.show_perspective(Settings().perspective)
         self.view.show_home_page()
 
