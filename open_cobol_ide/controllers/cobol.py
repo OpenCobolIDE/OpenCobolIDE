@@ -98,7 +98,7 @@ class CobolController(Controller):
         """
         try:
             ftype = editor.file_type
-        except AttributeError:
+        except (AttributeError, UnicodeDecodeError):
             pass
         else:
             self.ui.actionProgram.setChecked(ftype == FileType.EXECUTABLE)
