@@ -68,7 +68,7 @@ GNU/Linux
 
 Install pyqt5, open-cobol and pip using your package manager, then run the following commands::
 
-    sudo pip3 install OpenCobolIDE
+    sudo pip3 install OpenCobolIDE --upgrade
 
 
 If you are using Archlinux, you can install OpenCobolIDE and all its
