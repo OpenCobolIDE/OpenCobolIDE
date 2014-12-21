@@ -203,10 +203,12 @@ class ViewController(Controller):
             self.ui.dockWidgetFileSystem.hide()
             if self.ui.consoleOutput.is_running:
                 self.ui.consoleOutput.stop_process()
+            self.ui.widgetHome.show()
         else:
             self._apply_perspective()
             self.ui.dockWidgetNavPanel.setVisible(Settings().outline_visible)
             self.ui.dockWidgetFileSystem.setVisible(True)
+            self.ui.widgetHome.hide()
 
     def _apply_perspective(self):
         """
