@@ -291,8 +291,10 @@ class GnuCobolCompiler:
             if prog.match(l):
                 _logger().debug('MATCHED')
                 status = CheckerMessages.WARNING
-                # todo find a better way, there might be more ':' in the desc
-                fn, line, error_type, desc = l.split(":")
+                tokens = l.split(':')
+                line = tokens[1]
+                error_type = tokens[2]
+                desc = ''.join(tokens[3:])
                 if 'error' in error_type.lower():
                     status = CheckerMessages.ERROR
                 # there does not seems to be any 'warning' messages output
