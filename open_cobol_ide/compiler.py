@@ -291,6 +291,7 @@ class GnuCobolCompiler:
             if prog.match(l):
                 _logger().debug('MATCHED')
                 status = CheckerMessages.WARNING
+                # todo find a better way, there might be more ':' in the desc
                 fn, line, error_type, desc = l.split(":")
                 if 'error' in error_type.lower():
                     status = CheckerMessages.ERROR

@@ -240,6 +240,9 @@ as possible to get back to the previous indentation level.</string>
              <string>Code completion</string>
             </property>
             <layout class="QFormLayout" name="formLayout_4">
+             <property name="fieldGrowthPolicy">
+              <enum>QFormLayout::ExpandingFieldsGrow</enum>
+             </property>
              <item row="1" column="0">
               <widget class="QLabel" name="label_2">
                <property name="text">
@@ -259,6 +262,43 @@ as possible to get back to the previous indentation level.</string>
                 <number>1</number>
                </property>
               </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_16">
+               <property name="text">
+                <string>Proposed keywords:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QRadioButton" name="rbLowerCaseKwds">
+                 <property name="toolTip">
+                  <string>All proposed keywords are lower-case</string>
+                 </property>
+                 <property name="text">
+                  <string>lower-case</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="rbUpperCaseKwds">
+                 <property name="toolTip">
+                  <string>All proposed keywords are UPPER-CASE</string>
+                 </property>
+                 <property name="text">
+                  <string>UPPER-CASE</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </widget>

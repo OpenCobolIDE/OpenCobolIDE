@@ -25,5 +25,6 @@ def update_editor_settings(editor):
         editor.line_nbr_panel.enabled = settings.display_lines
         editor.line_nbr_panel.setVisible(settings.display_lines)
         editor.linter_mode.enabled = settings.show_errors
+        editor.lower_case_keywords = settings.lower_case_keywords
     except AttributeError:
         editor.syntax_highlighter.pygments_style = settings.color_scheme

@@ -127,6 +127,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                 settings.enable_autoindent)
             self.spinBoxEditorCCTriggerLen.setValue(
                 settings.code_completion_trigger_len)
+            self.rbLowerCaseKwds.setChecked(settings.lower_case_keywords)
+            self.rbUpperCaseKwds.setChecked(not settings.lower_case_keywords)
             self.lineEditCommentIndicator.setText(settings.comment_indicator)
             self.checkBoxSmartBackspace.setChecked(
                 settings.enable_smart_backspace)
@@ -193,6 +195,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.code_completion_trigger_len = 1
             settings.comment_indicator = '*> '
             settings.enable_smart_backspace = False
+            settings.lower_case_keywords = False
         # Style
         elif index == 1:
             settings.dark_style = False
@@ -245,6 +248,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.color_scheme = dlg.listWidgetColorSchemes.currentItem().text()
         settings.external_terminal = dlg.checkBoxRunExtTerm.isChecked()
         settings.external_terminal_command = dlg.lineEditRunTerm.text()
+        settings.lower_case_keywords = dlg.rbLowerCaseKwds.isChecked()
         if dlg.checkBoxCustomPath.isChecked():
             settings.custom_compiler_path = dlg.lineEditCompilerPath.text()
         else:

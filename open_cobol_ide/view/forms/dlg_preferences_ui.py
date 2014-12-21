@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/Desktop/OpenCobolIDE/forms/dlg_preferences.ui'
+# Form implementation generated from reading ui file '/home/colin/OpenCobolIDE/forms/dlg_preferences.ui'
 #
-# Created: Tue Nov 25 22:50:42 2014
+# Created: Sun Dec 21 17:06:14 2014
 #      by: PyQt5 UI code generator 5.3.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -103,6 +103,7 @@ class Ui_Dialog(object):
         self.groupBox_4 = QtWidgets.QGroupBox(self.tabEditor)
         self.groupBox_4.setObjectName("groupBox_4")
         self.formLayout_4 = QtWidgets.QFormLayout(self.groupBox_4)
+        self.formLayout_4.setFieldGrowthPolicy(QtWidgets.QFormLayout.ExpandingFieldsGrow)
         self.formLayout_4.setObjectName("formLayout_4")
         self.label_2 = QtWidgets.QLabel(self.groupBox_4)
         self.label_2.setObjectName("label_2")
@@ -111,6 +112,20 @@ class Ui_Dialog(object):
         self.spinBoxEditorCCTriggerLen.setProperty("value", 1)
         self.spinBoxEditorCCTriggerLen.setObjectName("spinBoxEditorCCTriggerLen")
         self.formLayout_4.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.spinBoxEditorCCTriggerLen)
+        self.label_16 = QtWidgets.QLabel(self.groupBox_4)
+        self.label_16.setObjectName("label_16")
+        self.formLayout_4.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_16)
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setContentsMargins(0, -1, -1, -1)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.rbLowerCaseKwds = QtWidgets.QRadioButton(self.groupBox_4)
+        self.rbLowerCaseKwds.setObjectName("rbLowerCaseKwds")
+        self.horizontalLayout.addWidget(self.rbLowerCaseKwds)
+        self.rbUpperCaseKwds = QtWidgets.QRadioButton(self.groupBox_4)
+        self.rbUpperCaseKwds.setChecked(True)
+        self.rbUpperCaseKwds.setObjectName("rbUpperCaseKwds")
+        self.horizontalLayout.addWidget(self.rbUpperCaseKwds)
+        self.formLayout_4.setLayout(2, QtWidgets.QFormLayout.FieldRole, self.horizontalLayout)
         self.verticalLayout.addWidget(self.groupBox_4)
         self.groupBox = QtWidgets.QGroupBox(self.tabEditor)
         self.groupBox.setObjectName("groupBox")
@@ -337,6 +352,11 @@ class Ui_Dialog(object):
         self.label_2.setText(_translate("Dialog", "Trigger length:"))
         self.spinBoxEditorCCTriggerLen.setToolTip(_translate("Dialog", "Number of characters needed to trigger auto completion"))
         self.spinBoxEditorCCTriggerLen.setStatusTip(_translate("Dialog", "Number of characters needed to trigger auto completion"))
+        self.label_16.setText(_translate("Dialog", "Proposed keywords:"))
+        self.rbLowerCaseKwds.setToolTip(_translate("Dialog", "All proposed keywords are lower-case"))
+        self.rbLowerCaseKwds.setText(_translate("Dialog", "lower-case"))
+        self.rbUpperCaseKwds.setToolTip(_translate("Dialog", "All proposed keywords are UPPER-CASE"))
+        self.rbUpperCaseKwds.setText(_translate("Dialog", "UPPER-CASE"))
         self.groupBox.setTitle(_translate("Dialog", "Comments"))
         self.label_7.setText(_translate("Dialog", "Symbol"))
         self.lineEditCommentIndicator.setText(_translate("Dialog", "*>"))

@@ -320,6 +320,14 @@ class Settings(object):
         self._settings.setValue('free_format', int(value))
 
     @property
+    def lower_case_keywords(self):
+        return bool(int(self._settings.value('lower_case_keywords', '0')))
+
+    @lower_case_keywords.setter
+    def lower_case_keywords(self, value):
+        self._settings.setValue('lower_case_keywords', int(value))
+
+    @property
     def comment_indicator(self):
         return self._settings.value('comment_indicator', '*> ')
 
