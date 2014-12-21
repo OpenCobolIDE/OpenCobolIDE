@@ -247,7 +247,7 @@ class GnuCobolCompiler:
         _logger().debug('compile results: %r - %r', status, messages)
         return status, messages
 
-    def make_command(self, input_file_names, file_type, additional_options):
+    def make_command(self, input_file_names, file_type, additional_options=None):
         """
         Makes the command needed to compile the specified file.
 
@@ -361,6 +361,7 @@ class DbpreCompiler:
 
     Commands:
         - /path/to/dbpre SOURCE.scb -I/path/to/framework -ts=TAB_LEN
+        - copy PGCTBBATWS to source dir
         - cobc -x SOURCE.cob /path/to/cobmysqlapi.o -L/usr/lib/mysql -lmysqlclient -o bin/SOURCE.exe
 
     (-L: library search path, -l libraries to link with)
