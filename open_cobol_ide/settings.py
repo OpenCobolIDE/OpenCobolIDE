@@ -309,6 +309,22 @@ class Settings(object):
     def compiler_flags(self, value):
         self._settings.setValue('compilerFlags', repr(value))
 
+    @property
+    def library_search_path(self):
+        return self._settings.value('library_search_path', '')
+
+    @library_search_path.setter
+    def library_search_path(self, value):
+        self._settings.setValue('library_search_path', value)
+
+    @property
+    def libraries(self):
+        return self._settings.value('libraries', '')
+
+    @libraries.setter
+    def libraries(self, value):
+        self._settings.setValue('libraries', value)
+
     # Cobol settings
     # ----------------------
     @property

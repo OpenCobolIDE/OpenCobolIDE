@@ -206,7 +206,7 @@ class GnuCobolCompiler:
             for f in files:
                 shutil.copy(f, bin_dir)
 
-    def compile(self, file_path, file_type):
+    def compile(self, file_path, file_type, object_files=None, additional_options=None):
         """
         Compiles a file. This is a blocking function, it returns only when
         the compiler process finished.
@@ -221,7 +221,11 @@ class GnuCobolCompiler:
         # ensure bin dir exists
         self.make_bin_dir(path)
         # run command using qt process api, this is blocking.
-        pgm, options = self.make_command(filename, file_type)
+        if object_files:
+            inputs = [filename] + object_files
+        else:
+            inputs = [filename]
+        pgm, options = self.make_command(inputs, file_type, additional_options)
         process = QtCore.QProcess()
         process.setWorkingDirectory(path)
         process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
@@ -243,11 +247,13 @@ class GnuCobolCompiler:
         _logger().debug('compile results: %r - %r', status, messages)
         return status, messages
 
-    def make_command(self, input_file_name, file_type):
+    def make_command(self, input_file_names, file_type, additional_options):
         """
         Makes the command needed to compile the specified file.
 
-        :param input_file_name: Input file name (without path)
+        :param input_file_names: Input file names (without path).
+            The first name must be the source file, other entries can
+            be used to link with additional object files.
         :param output_file_name: Output file base name (without path and
             extension). None to use the input_file_name base name.
         :param file_type: file type (exe or dll).
@@ -256,7 +262,7 @@ class GnuCobolCompiler:
         """
         from .settings import Settings
         settings = Settings()
-        output_file_name = os.path.splitext(input_file_name)[0]
+        output_file_name = os.path.splitext(input_file_names[0])[0]
         options = []
         if file_type == FileType.EXECUTABLE:
             options.append('-x')
@@ -268,7 +274,16 @@ class GnuCobolCompiler:
         options += settings.compiler_flags
         if settings.free_format:
             options.append('-free')
-        options.append(input_file_name)
+        if settings.library_search_path:
+            for path in settings.library_search_path.split(' '):
+                options.append('-L%s' % path)
+        if settings.libraries:
+            for lib in settings.libraries.split(' '):
+                options.append('-l%s' % lib)
+        if additional_options:
+            options += additional_options
+        for ifn in input_file_names:
+            options.append(ifn)
         return 'cobc', options
 
     @staticmethod
@@ -338,3 +353,18 @@ class GnuCobolCompiler:
         dependencies = list(set(dependencies))
         _logger().debug('dependencies of %s: %r', filename, dependencies)
         return dependencies
+
+
+class DbpreCompiler:
+    """
+    Provides an interface to the Dbpre tool.
+
+    Commands:
+        - /path/to/dbpre SOURCE.scb -I/path/to/framework -ts=TAB_LEN
+        - cobc -x SOURCE.cob /path/to/cobmysqlapi.o -L/usr/lib/mysql -lmysqlclient -o bin/SOURCE.exe
+
+    (-L: library search path, -l libraries to link with)
+    """
+
+    def compile(self, file_path):
+        pass

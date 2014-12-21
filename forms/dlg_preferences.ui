@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>644</width>
-    <height>619</height>
+    <height>633</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -49,7 +49,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <property name="usesScrollButtons">
          <bool>true</bool>
@@ -644,14 +644,14 @@ as possible to get back to the previous indentation level.</string>
             </item>
            </layout>
           </item>
-          <item row="4" column="0">
+          <item row="6" column="0">
            <widget class="QLabel" name="label_compiler_path">
             <property name="text">
              <string>Custom compiler path:</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
+          <item row="6" column="1">
            <widget class="QCheckBox" name="checkBoxCustomPath">
             <property name="toolTip">
              <string>Enable/Disable custom compiler path</string>
@@ -664,7 +664,7 @@ as possible to get back to the previous indentation level.</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
+          <item row="7" column="1">
            <widget class="QLineEdit" name="lineEditCompilerPath">
             <property name="toolTip">
              <string>Path to the compiler (should not include the executable name, only the directory path)</string>
@@ -711,6 +711,34 @@ as possible to get back to the previous indentation level.</string>
               <string>mf</string>
              </property>
             </item>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_17">
+            <property name="text">
+             <string>Library search path:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="lineEditLibSearchPath">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can set the library search path here (-L option)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_18">
+            <property name="text">
+             <string>Libraries to link with:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLineEdit" name="lineEditLibs">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the libraries you would like your programs to link with here (-l option)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
            </widget>
           </item>
          </layout>

@@ -179,6 +179,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                     flags.remove(v)
                 except ValueError:
                     pass
+            self.lineEditLibs.setText(settings.libraries)
+            self.lineEditLibSearchPath.setText(settings.library_search_path)
             self.le_compiler_flags.setText(' '.join(flags))
 
     def restore_defaults(self):
@@ -213,6 +215,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.cobol_standard = GnuCobolStandard.default
             settings.custom_compiler_path = ''
             settings.compiler_flags = []
+            settings.library_search_path = ''
+            settings.libraries = ''
         self.reset()
 
     @classmethod
@@ -261,6 +265,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.show_errors = dlg.checkBoxShowErrors.isChecked()
         settings.enable_smart_backspace = \
             dlg.checkBoxSmartBackspace.isChecked()
+        settings.library_search_path = dlg.lineEditLibSearchPath.text()
+        settings.libraries = dlg.lineEditLibs.text()
 
         cb_flags = [dlg.cb_g, dlg.cb_ftrace, dlg.cb_ftraceall,
                     dlg.cb_debugging_line, dlg.cb_static]

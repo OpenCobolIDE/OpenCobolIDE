@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '/home/colin/OpenCobolIDE/forms/dlg_preferences.ui'
 #
-# Created: Sun Dec 21 17:06:14 2014
+# Created: Sun Dec 21 20:11:27 2014
 #      by: PyQt5 UI code generator 5.3.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from pyqode.qt import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(644, 619)
+        Dialog.resize(644, 633)
         icon = QtGui.QIcon.fromTheme("preferences-system")
         Dialog.setWindowIcon(icon)
         self.gridLayout_2 = QtWidgets.QGridLayout(Dialog)
@@ -267,14 +267,14 @@ class Ui_Dialog(object):
         self.formLayout_6.setLayout(3, QtWidgets.QFormLayout.FieldRole, self.verticalLayout_4)
         self.label_compiler_path = QtWidgets.QLabel(self.tabCompiler)
         self.label_compiler_path.setObjectName("label_compiler_path")
-        self.formLayout_6.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.label_compiler_path)
+        self.formLayout_6.setWidget(6, QtWidgets.QFormLayout.LabelRole, self.label_compiler_path)
         self.checkBoxCustomPath = QtWidgets.QCheckBox(self.tabCompiler)
         self.checkBoxCustomPath.setText("")
         self.checkBoxCustomPath.setObjectName("checkBoxCustomPath")
-        self.formLayout_6.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.checkBoxCustomPath)
+        self.formLayout_6.setWidget(6, QtWidgets.QFormLayout.FieldRole, self.checkBoxCustomPath)
         self.lineEditCompilerPath = QtWidgets.QLineEdit(self.tabCompiler)
         self.lineEditCompilerPath.setObjectName("lineEditCompilerPath")
-        self.formLayout_6.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.lineEditCompilerPath)
+        self.formLayout_6.setWidget(7, QtWidgets.QFormLayout.FieldRole, self.lineEditCompilerPath)
         self.comboBoxStandard = QtWidgets.QComboBox(self.tabCompiler)
         self.comboBoxStandard.setObjectName("comboBoxStandard")
         self.comboBoxStandard.addItem("")
@@ -285,6 +285,18 @@ class Ui_Dialog(object):
         self.comboBoxStandard.addItem("")
         self.comboBoxStandard.addItem("")
         self.formLayout_6.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.comboBoxStandard)
+        self.label_17 = QtWidgets.QLabel(self.tabCompiler)
+        self.label_17.setObjectName("label_17")
+        self.formLayout_6.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.label_17)
+        self.lineEditLibSearchPath = QtWidgets.QLineEdit(self.tabCompiler)
+        self.lineEditLibSearchPath.setObjectName("lineEditLibSearchPath")
+        self.formLayout_6.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.lineEditLibSearchPath)
+        self.label_18 = QtWidgets.QLabel(self.tabCompiler)
+        self.label_18.setObjectName("label_18")
+        self.formLayout_6.setWidget(5, QtWidgets.QFormLayout.LabelRole, self.label_18)
+        self.lineEditLibs = QtWidgets.QLineEdit(self.tabCompiler)
+        self.lineEditLibs.setObjectName("lineEditLibs")
+        self.formLayout_6.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.lineEditLibs)
         icon = QtGui.QIcon.fromTheme("exec")
         self.tabWidget.addTab(self.tabCompiler, icon, "")
         self.tabRun = QtWidgets.QWidget()
@@ -317,7 +329,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.addLayout(self.gridLayout_3, 2, 0, 1, 1)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -407,6 +419,10 @@ class Ui_Dialog(object):
         self.comboBoxStandard.setItemText(4, _translate("Dialog", "mvs"))
         self.comboBoxStandard.setItemText(5, _translate("Dialog", "bs2000"))
         self.comboBoxStandard.setItemText(6, _translate("Dialog", "mf"))
+        self.label_17.setText(_translate("Dialog", "Library search path:"))
+        self.lineEditLibSearchPath.setToolTip(_translate("Dialog", "<html><head/><body><p>You can set the library search path here (-L option)</p></body></html>"))
+        self.label_18.setText(_translate("Dialog", "Libraries to link with:"))
+        self.lineEditLibs.setToolTip(_translate("Dialog", "<html><head/><body><p>Add the libraries you would like your programs to link with here (-l option)</p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabCompiler), _translate("Dialog", "Compiler"))
         self.label_5.setText(_translate("Dialog", "Run in external terminal:"))
         self.checkBoxRunExtTerm.setToolTip(_translate("Dialog", "Enable/Disable running program in an external terminal"))
