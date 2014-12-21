@@ -69,7 +69,50 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
        END PROGRAM YOUR-PROGRAM-NAME.
 
         ''', '', '')
+        self.lineEditDbpre.setReadOnly(True)
+        self.lineEditDbpreFramework.setReadOnly(True)
+        self.lineEditCobmysqlapi.setReadOnly(True)
+        self.toolButtonDbpre.clicked.connect(self._select_dbpre)
+        self.toolButtonDbpreFramework.clicked.connect(self._select_dbpre_framework)
+        self.toolButtonCobMySqlApiPath.clicked.connect(self._select_cobmysqlapi)
         self.reset(all_tabs=True)
+
+    def _select_dbpre(self):
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, 'Select dbpre executable')
+        if path:
+            self.lineEditDbpre.setText(path)
+
+    def _select_cobmysqlapi(self):
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, 'Select dbpre framework directory')
+        if path:
+            self.lineEditCobmysqlapi.setText(path)
+
+    def _select_dbpre_framework(self):
+        def bool_to_string(value):
+            if value:
+                return 'Found'
+            else:
+                return 'Missing'
+
+        path = QtWidgets.QFileDialog.getExistingDirectory(
+            self, 'Select cobmysqlapi object file')
+        if path:
+            pgctbbat = os.path.exists(os.path.join(path, 'PGCTBBAT'))
+            pgctbbatws = os.path.exists(os.path.join(path, 'PGCTBBATWS'))
+            sqlca = os.path.exists(os.path.join(path, 'SQLCA'))
+            if pgctbbat and pgctbbatws and sqlca:
+                self.lineEditDbpreFramework.setText(path)
+            else:
+                QtWidgets.QMessageBox.warning(self, 'Invalid dpre framework directory',
+                                              'Missing one of the following files: \n'
+                                              'PGCTBBAT: %s\n'
+                                              'PGCTBBATWS: %s\n'
+                                              'SQLCA: %s\n' % (
+                                                  bool_to_string(pgctbbat),
+                                                  bool_to_string(pgctbbatws),
+                                                  bool_to_string(sqlca)))
 
     def stop_backend(self):
         self.plainTextEdit.backend.stop()
@@ -182,6 +225,17 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditLibs.setText(settings.libraries)
             self.lineEditLibSearchPath.setText(settings.library_search_path)
             self.le_compiler_flags.setText(' '.join(flags))
+        # SQL Cobol
+        if self.tabWidget.currentIndex() == 4 or all_tabs:
+            self.lineEditDbpre.setText(settings.dbpre)
+            self.lineEditDbpreFramework.setText(settings.dbpre_framework)
+            self.lineEditCobmysqlapi.setText(settings.cobmysqlapi)
+            self.lineEditDBHOST.setText(settings.dbhost)
+            self.lineEditDBUSER.setText(settings.dbuser)
+            self.lineEditDBPASSWD.setText(settings.dbpasswd)
+            self.lineEditDBNAME.setText(settings.dbname)
+            self.lineEditDBPORT.setText(settings.dbport)
+            self.lineEditDBSOCKET.setText(settings.dbsocket)
 
     def restore_defaults(self):
         settings = Settings()
@@ -217,6 +271,16 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.compiler_flags = []
             settings.library_search_path = ''
             settings.libraries = ''
+        elif index == 4:
+            settings.dbpre = ''
+            settings.dbpre_framework = ''
+            settings.cobmysqlapi = ''
+            settings.dbhost = 'localhost'
+            settings.dbuser = ''
+            settings.dbpasswd = ''
+            settings.dbname = ''
+            settings.dbport = '03306'
+            settings.dbsocket = 'null'
         self.reset()
 
     @classmethod
@@ -273,3 +337,13 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         flags = [cb.text() for cb in cb_flags if cb.isChecked()]
         flags += dlg.le_compiler_flags.text().split(' ')
         settings.compiler_flags = flags
+        # sql
+        settings.dbpre = dlg.lineEditDbpre.text()
+        settings.dbpre_framework = dlg.lineEditDbpreFramework.text()
+        settings.cobmysqlapi = dlg.lineEditCobmysqlapi.text()
+        settings.dbhost = dlg.lineEditDBHOST.text()
+        settings.dbuser = dlg.lineEditDBUSER.text()
+        settings.dbpasswd = dlg.lineEditDBPASSWD.text()
+        settings.dbname = dlg.lineEditDBNAME.text()
+        settings.dbport = dlg.lineEditDBPORT.text()
+        settings.dbsocket = dlg.lineEditDBSOCKET.text()

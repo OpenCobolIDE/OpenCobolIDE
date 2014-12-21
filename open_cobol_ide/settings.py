@@ -399,3 +399,77 @@ class Settings(object):
     @lock_fs_path.setter
     def lock_fs_path(self, value):
         self._settings.setValue('lock_fs_path', str(value))
+
+    # SQL Cobol Settings
+    # ----------------------
+    @property
+    def dbpre(self):
+        return self._settings.value('dbpre', '')
+
+    @dbpre.setter
+    def dbpre(self, path):
+        self._settings.setValue('dbpre', path)
+
+    @property
+    def cobmysqlapi(self):
+        return self._settings.value('cobmysqlapi', '')
+
+    @cobmysqlapi.setter
+    def cobmysqlapi(self, path):
+        self._settings.setValue('cobmysqlapi', path)
+
+    @property
+    def dbpre_framework(self):
+        return self._settings.value('dbpre_framework', '')
+
+    @dbpre_framework.setter
+    def dbpre_framework(self, path):
+        self._settings.setValue('dbpre_framework', path)
+
+    @property
+    def dbhost(self):
+        return self._settings.value('dbhost', 'localhost')
+
+    @dbhost.setter
+    def dbhost(self, value):
+        self._settings.setValue('dbhost', value)
+
+    @property
+    def dbuser(self):
+        return self._settings.value('dbuser', '')
+
+    @dbuser.setter
+    def dbuser(self, value):
+        self._settings.setValue('dbuser', value)
+
+    @property
+    def dbpasswd(self):
+        return self._settings.value('dbpasswd', '')
+
+    @dbpasswd.setter
+    def dbpasswd(self, value):
+        self._settings.setValue('dbpasswd', value)
+
+    @property
+    def dbname(self):
+        return self._settings.value('dbname', '')
+
+    @dbname.setter
+    def dbname(self, value):
+        self._settings.setValue('dbname', value)
+
+    @property
+    def dbport(self):
+        return self._settings.value('dbport', '03306')
+
+    @dbport.setter
+    def dbport(self, value):
+        self._settings.setValue('dbport', value)
+
+    @property
+    def dbsocket(self):
+        return self._settings.value('dbsocket', 'null')
+
+    @dbsocket.setter
+    def dbsocket(self, value):
+        self._settings.setValue('dbsocket', value)

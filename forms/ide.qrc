@@ -2,6 +2,7 @@
   <qresource prefix="ide-icons">
     <file>rc/lock.png</file>
     <file>rc/applications-graphics.png</file>
+    <file>rc/database.png</file>
     <file>rc/downarrow.png</file>
     <file>rc/emblem-important.png</file>
     <file>rc/accessories-calculator.png</file>
