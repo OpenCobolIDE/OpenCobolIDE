@@ -189,6 +189,7 @@ class EditController(Controller):
                 is_executable = (self.app.edit.current_editor.file_type ==
                                  FileType.EXECUTABLE)
             except AttributeError:
+                # not a cobol editor
                 self.ui.menuCobol.setEnabled(False)
                 self.app.cobol.enable_compile(False)
                 self.app.cobol.enable_run(False)
