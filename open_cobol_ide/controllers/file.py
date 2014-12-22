@@ -110,6 +110,7 @@ class FileController(Controller):
         self.app.edit.add_editor(path)
         self.app.view.show_edit_page()
         self.app.file.recent_files_manager.open_file(path)
+        Settings().last_path = path
 
     def save_as(self):
         """
