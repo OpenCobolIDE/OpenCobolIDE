@@ -5,14 +5,14 @@ Controls the cobol specific action (compile, run and change program type)
 import logging
 import os
 import subprocess
-import sys
 from pyqode.core.api import TextHelper
 from pyqode.core.modes import CheckerMessage, CheckerMessages
 from pyqode.qt import QtCore, QtWidgets
 from .base import Controller
-from ..compiler import FileType, GnuCobolCompiler, get_file_type
 from open_cobol_ide import system
-from ..settings import Settings
+from open_cobol_ide.enums import FileType
+from open_cobol_ide.compiler import GnuCobolCompiler, get_file_type
+from open_cobol_ide.settings import Settings
 
 
 class CompilationThread(QtCore.QThread):

@@ -9,13 +9,16 @@ import os
 import re
 import subprocess
 import sys
-from enum import IntEnum
+import shutil
+
 from pyqode.cobol.widgets import CobolCodeEdit
 from pyqode.core.cache import Cache
 from pyqode.core.modes import CheckerMessages
 from pyqode.qt import QtCore
-from . import system
-import shutil
+
+from open_cobol_ide import system
+from open_cobol_ide.enums import FileType
+from open_cobol_ide.settings import Settings
 
 
 def _logger():
@@ -84,32 +87,6 @@ def check_compiler():
             msg = 'You have to install the package open-cobol using your ' \
                   "distribution's package manager"
         raise CompilerNotFound(msg)
-
-
-class FileType(IntEnum):
-    """
-    Enumerates the different source file types:
-        - executable (.exe)
-        - module (.dll)
-    """
-    #: Executable file (produces an executable binary that can be run)
-    EXECUTABLE = 0
-    #: Module file (produces a shared library that can be used from other
-    #: modules or executables)
-    MODULE = 1
-
-
-class GnuCobolStandard(IntEnum):
-    """
-    Enumerates the differen cobol standards supported by the GnuCobolCompiler.
-    """
-    default = 0
-    cobol2002 = 1
-    cobol85 = 2
-    ibm = 3
-    mvs = 4
-    bs2000 = 5
-    mf = 6
 
 
 class CompilerNotFound(Exception):
@@ -367,5 +344,45 @@ class DbpreCompiler:
     (-L: library search path, -l libraries to link with)
     """
 
+    @staticmethod
+    def get_version():
+        """
+        Returns the GnuCobol compiler version as a string
+        """
+        program = Settings().dbpre
+        if not os.path.exists(program) or not os.path.isfile(program):
+            return 'Not installed'
+        cmd = [program, '--version']
+        try:
+            _logger().debug('getting dbpre version: %s' % ' '.join(cmd))
+            if sys.platform == 'win32':
+                startupinfo = subprocess.STARTUPINFO()
+                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                p = subprocess.Popen(
+                    cmd, shell=False, startupinfo=startupinfo,
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                    stdin=subprocess.PIPE)
+            else:
+                p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE)
+        except OSError:
+            _logger().exception('dbpre pre-compiler not found')
+            return 'Not installed'
+        else:
+            stdout, stderr = p.communicate()
+            stdout = str(stdout)
+            lversion = stdout.splitlines()[0]
+            _logger().debug('parsing version line: %s' % lversion)
+            prog = re.compile(r'\d.\d')
+            for v in prog.finditer(lversion):
+                s, e = v.span()
+                return lversion[s: e]
+
+    def is_working(self):
+        return self.get_version() != 'Not installed'
+
     def compile(self, file_path):
-        pass
+        program = Settings().dbpre
+
+
+print(DbpreCompiler().get_version())

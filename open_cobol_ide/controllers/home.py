@@ -5,8 +5,8 @@ Controls the home page.
 from pyqode.cobol.api import icons
 from pyqode.cobol.widgets import CobolCodeEdit
 from pyqode.qt import QtCore, QtGui, QtWidgets
+from open_cobol_ide.settings import Settings
 from .base import Controller
-from ..settings import Settings
 
 
 class HomePageWhite:

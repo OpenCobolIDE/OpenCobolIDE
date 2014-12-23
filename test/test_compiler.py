@@ -6,7 +6,8 @@ import re
 import pytest
 from open_cobol_ide import system
 from open_cobol_ide.compiler import (
-    GnuCobolCompiler, FileType, GnuCobolStandard, get_file_type)
+    GnuCobolCompiler, GnuCobolStandard, get_file_type)
+from open_cobol_ide.enums import FileType, GnuCobolStandard
 from open_cobol_ide.settings import Settings
 
 

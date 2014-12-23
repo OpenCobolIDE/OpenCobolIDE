@@ -2,10 +2,10 @@ import pyqode.core
 import pyqode.cobol
 import pygments
 from pyqode.qt import QtGui, QtCore, QtWidgets
-from ..forms import dlg_about_ui
-from ... import __version__, logger
-from ...compiler import GnuCobolCompiler
-from ...settings import Settings
+from open_cobol_ide import __version__, logger
+from open_cobol_ide.compiler import GnuCobolCompiler
+from open_cobol_ide.settings import Settings
+from open_cobol_ide.view.forms import dlg_about_ui
 
 
 class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):

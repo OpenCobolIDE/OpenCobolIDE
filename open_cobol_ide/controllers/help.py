@@ -1,6 +1,6 @@
 from pyqode.qt import QtCore, QtGui
+from open_cobol_ide.view.dialogs.about import DlgAbout
 from .base import Controller
-from ..view.dialogs.about import DlgAbout
 
 
 class HelpController(Controller):

@@ -8,13 +8,13 @@ import logging
 import os
 import sys
 from pyqode.qt import QtWidgets, QT_API, PYQT5_API, PYSIDE_API
-from . import __version__, logger
-from .controllers import (CobolController, EditController, FileController,
-                          HelpController, HomeController, ViewController)
-from .compiler import check_compiler, CompilerNotFound
-from open_cobol_ide import system
-from .settings import Settings
-from .view.main_window import MainWindow
+from open_cobol_ide import __version__, logger, system
+from open_cobol_ide.controllers import (
+    CobolController, EditController, FileController, HelpController,
+    HomeController, ViewController)
+from open_cobol_ide.compiler import check_compiler, CompilerNotFound
+from open_cobol_ide.settings import Settings
+from open_cobol_ide.view.main_window import MainWindow
 
 
 def _logger():

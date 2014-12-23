@@ -4,15 +4,13 @@ This module contains the FileController.
 """
 import logging
 import os
-
 from pyqode.core import widgets
 from pyqode.cobol.api import icons
 from pyqode.qt import QtWidgets, QtGui
-
+from open_cobol_ide.view.editors import CobolCodeEdit
+from open_cobol_ide.settings import Settings
+from open_cobol_ide.view.dialogs.new_file import DlgNewFile
 from .base import Controller
-from ..view.editors import CobolCodeEdit
-from ..settings import Settings
-from ..view.dialogs.new_file import DlgNewFile
 
 
 def _logger():

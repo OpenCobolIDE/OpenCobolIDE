@@ -6,8 +6,8 @@ import os
 import sys
 from pyqode.qt import QtCore
 from pyqode.qt.QtCore import QSettings
-from .compiler import FileType, GnuCobolStandard
-from . import system
+from open_cobol_ide import system
+from open_cobol_ide.enums import FileType, GnuCobolStandard
 
 
 class Settings(object):

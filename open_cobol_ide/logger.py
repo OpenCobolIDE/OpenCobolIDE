@@ -4,7 +4,7 @@ application.
 """
 import logging
 import os
-from .system import get_cache_directory
+from open_cobol_ide.system import get_cache_directory
 
 
 def get_path():

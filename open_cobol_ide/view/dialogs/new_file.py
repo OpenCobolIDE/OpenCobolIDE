@@ -1,8 +1,8 @@
 import locale
 import os
 from pyqode.qt import QtCore, QtWidgets
-from ..forms import dlg_file_type_ui
-from ...settings import Settings
+from open_cobol_ide.settings import Settings
+from open_cobol_ide.view.forms import dlg_file_type_ui
 
 
 EXE_TEMPLATE = """      ******************************************************************

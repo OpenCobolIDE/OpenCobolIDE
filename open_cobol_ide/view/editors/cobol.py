@@ -2,14 +2,13 @@
 Contains the cobol code editor widget.
 
 """
-from pyqode.core import modes
 from pyqode.qt import QtGui, QtWidgets
 from pyqode.core.api import Panel, ColorScheme
 from pyqode.cobol.widgets import CobolCodeEdit as CodeEditBase
 
-from ...compiler import get_file_type
-from ...linter import CobolLinterMode
-from ...settings import Settings
+from open_cobol_ide.compiler import get_file_type
+from open_cobol_ide.linter import CobolLinterMode
+from open_cobol_ide.settings import Settings
 
 
 class CobolCodeEdit(CodeEditBase):

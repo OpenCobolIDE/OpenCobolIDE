@@ -6,9 +6,8 @@ import logging
 from enum import IntEnum
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
-from .. import system
-from ..view.widgets import TabCornerWidget
-from ..settings import Settings
+from open_cobol_ide import system
+from open_cobol_ide.settings import Settings
 
 
 class Page(IntEnum):

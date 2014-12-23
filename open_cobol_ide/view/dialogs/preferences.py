@@ -1,12 +1,11 @@
 import os
 import sys
 from pyqode.core.api.syntax_highlighter import PYGMENTS_STYLES, ColorScheme
-from pyqode.qt import QtCore, QtGui, QtWidgets, QT_API, PYQT5_API, PYSIDE_API
-from ...compiler import GnuCobolStandard
+from pyqode.qt import QtCore, QtGui, QtWidgets
 from open_cobol_ide import system
-from open_cobol_ide.view.editors import update_editor_settings
-from ...settings import Settings
-from ...view.forms import dlg_preferences_ui
+from open_cobol_ide.enums import GnuCobolStandard
+from open_cobol_ide.settings import Settings
+from open_cobol_ide.view.forms import dlg_preferences_ui
 
 
 class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):

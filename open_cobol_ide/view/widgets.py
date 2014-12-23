@@ -60,64 +60,6 @@ class RecentFilesListWidget(QtWidgets.QListWidget):
             self.setCurrentRow(self.row(item))
 
 
-class TabCornerWidget(QtWidgets.QWidget):
-    dropbtn_stylesheet = """
-
-    QToolButton  { /* all types of tool button */
-        background-color: transparent;
-        border: 1px solid transparent;
-        border-radius: 11px;
-        padding: 2px;
-        margin-bottom: 1px;
-    }
-
-    QToolButton:hover {
-        background-color: rgba(128, 128, 128, 20);
-        border: 1px solid transparent;
-    }
-
-    QToolButton:pressed  {
-        background-color: rgba(128, 128, 128, 40);
-        border: 1px solid transparent;
-    }
-
-    /* the subcontrols below are used only in the MenuButtonPopup mode */
-    QToolButton::menu-button  {
-        background-color: transparent;
-        border: 1px transparent black;
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-        /* 16px width + 4px for border = 20px allocated above */
-        width: 16px;
-    }
-
-    QToolButton::menu-arrow  {
-        image: url(":/pyqode-icons/rc/arrow_down_off.png");
-    }
-
-    QToolButton::menu-arrow:open  {
-        top: 1px; left: 1px; /* shift it a bit */
-    }
-
-    """
-
-    def __init__(self, parent, bt_compile, bt_run):
-        super().__init__(parent)
-        assert isinstance(bt_compile, QtWidgets.QToolButton)
-        assert isinstance(bt_run, QtWidgets.QToolButton)
-        bt_compile.setPopupMode(bt_compile.DelayedPopup)
-        bt_compile.setStyleSheet(self.dropbtn_stylesheet + """
-        QToolButton{
-        padding-right: 10px; /* make way for the popup button */
-        }""")
-        bt_run.setStyleSheet(self.dropbtn_stylesheet)
-        layout = QtWidgets.QHBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(bt_compile)
-        layout.addWidget(bt_run)
-        self.setLayout(layout)
-
-
 class TabWidget(SplittableCodeEditTabWidget):
     tab_bar_double_clicked = QtCore.Signal()
 
