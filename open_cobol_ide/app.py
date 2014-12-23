@@ -12,7 +12,7 @@ from open_cobol_ide import __version__, logger, system
 from open_cobol_ide.controllers import (
     CobolController, EditController, FileController, HelpController,
     HomeController, ViewController)
-from open_cobol_ide.compiler import check_compiler, CompilerNotFound
+from open_cobol_ide.compilers import check_compiler, CompilerNotFound
 from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.main_window import MainWindow
 

@@ -3,7 +3,7 @@ import pyqode.cobol
 import pygments
 from pyqode.qt import QtGui, QtCore, QtWidgets
 from open_cobol_ide import __version__, logger
-from open_cobol_ide.compiler import GnuCobolCompiler
+from open_cobol_ide.compilers import GnuCobolCompiler
 from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.forms import dlg_about_ui
 

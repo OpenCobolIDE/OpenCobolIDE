@@ -3,7 +3,7 @@ Cobol linter; use open cobol to check your your syntax on the fly.
 """
 import os
 from pyqode.core.modes import CheckerMode
-from open_cobol_ide.compiler import GnuCobolCompiler, get_file_type
+from open_cobol_ide.compilers import GnuCobolCompiler, get_file_type
 from open_cobol_ide.system import get_cache_directory
 
 

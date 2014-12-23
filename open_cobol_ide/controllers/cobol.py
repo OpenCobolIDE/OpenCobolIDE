@@ -11,7 +11,7 @@ from pyqode.qt import QtCore, QtWidgets
 from .base import Controller
 from open_cobol_ide import system
 from open_cobol_ide.enums import FileType
-from open_cobol_ide.compiler import GnuCobolCompiler, get_file_type
+from open_cobol_ide.compilers import GnuCobolCompiler, get_file_type, DbpreCompiler
 from open_cobol_ide.settings import Settings
 
 
@@ -33,11 +33,24 @@ class CompilationThread(QtCore.QThread):
         """
         Compiles the file and all its dependencies.
         """
-        compiler = GnuCobolCompiler()
+        def is_sql_cobol(path):
+            if path.lower().endswith('.scb'):
+                with open(path, 'r') as f:
+                    return 'exec sql' in f.read().lower()
+            return False
+
+        cobc = GnuCobolCompiler()
+        dbpre = DbpreCompiler()
         files = [self.file_path]
-        files += compiler.get_dependencies(self.file_path, recursive=True)
+        files += cobc.get_dependencies(self.file_path, recursive=True)
+
+        _logger().info('running compilation thread: %r', files)
+
         for f in files:
-            status, messages = compiler.compile(f, get_file_type(f))
+            if is_sql_cobol(f):
+                status, messages = dbpre.compile(f)
+            else:
+                status, messages = cobc.compile(f, get_file_type(f))
             self.file_compiled.emit(f, status, messages)
         self.finished.emit()
 

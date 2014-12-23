@@ -2,7 +2,7 @@ import os
 import sys
 from pyqode.core.api.syntax_highlighter import PYGMENTS_STYLES, ColorScheme
 from pyqode.qt import QtCore, QtGui, QtWidgets
-from open_cobol_ide import system
+from open_cobol_ide import system, compilers
 from open_cobol_ide.enums import GnuCobolStandard
 from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.forms import dlg_preferences_ui
@@ -74,17 +74,23 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.toolButtonDbpre.clicked.connect(self._select_dbpre)
         self.toolButtonDbpreFramework.clicked.connect(self._select_dbpre_framework)
         self.toolButtonCobMySqlApiPath.clicked.connect(self._select_cobmysqlapi)
+        self.checkBoxShowDbPass.stateChanged.connect(self._on_show_pass_state_changed)
         self.reset(all_tabs=True)
 
     def _select_dbpre(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Select dbpre executable')
+            self, 'Select dbpre executable', self.lineEditDbpre.text())
         if path:
             self.lineEditDbpre.setText(path)
+            self.labelDbpreVersion.setText(
+                compilers.DbpreCompiler(path).get_version()
+                if Settings().dbpre != '' else ''
+            )
 
     def _select_cobmysqlapi(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Select dbpre framework directory')
+            self, 'Select dbpre framework directory',
+            self.lineEditCobmysqlapi.text())
         if path:
             self.lineEditCobmysqlapi.setText(path)
 
@@ -96,7 +102,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                 return 'Missing'
 
         path = QtWidgets.QFileDialog.getExistingDirectory(
-            self, 'Select cobmysqlapi object file')
+            self, 'Select cobmysqlapi object file',
+            self.lineEditDbpreFramework.text())
         if path:
             pgctbbat = os.path.exists(os.path.join(path, 'PGCTBBAT'))
             pgctbbatws = os.path.exists(os.path.join(path, 'PGCTBBATWS'))
@@ -119,6 +126,14 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
     def _update_icon_theme(self, c):
         index = self.comboBoxIconTheme.findText(c)
         self.comboBoxIconTheme.setCurrentIndex(index)
+
+    def _on_show_pass_state_changed(self, state):
+        if state:
+            self.lineEditDBPASSWD.setEchoMode(QtWidgets.QLineEdit.Normal)
+        else:
+            self.lineEditDBPASSWD.setEchoMode(QtWidgets.QLineEdit.Password)
+
+
 
     @QtCore.Slot(bool)
     def on_radioButtonColorWhite_toggled(self, native):
@@ -235,6 +250,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditDBNAME.setText(settings.dbname)
             self.lineEditDBPORT.setText(settings.dbport)
             self.lineEditDBSOCKET.setText(settings.dbsocket)
+            self.labelDbpreVersion.setText(compilers.DbpreCompiler().get_version()
+                                           if Settings().dbpre != '' else '')
 
     def restore_defaults(self):
         settings = Settings()
