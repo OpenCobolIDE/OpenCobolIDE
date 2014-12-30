@@ -289,7 +289,7 @@ class GnuCobolCompiler:
             options.append(ifn)
         if Settings().custom_compiler_path and Settings().vcvars32:
             VisualStudioWrapperBatch.generate()
-            pgm = VisualStudioWrapperBatch.FILENAME
+            pgm = VisualStudioWrapperBatch.path()
         else:
             pgm = 'cobc'
         return pgm, options
