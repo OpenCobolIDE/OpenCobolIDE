@@ -278,14 +278,16 @@ class GnuCobolCompiler:
         if settings.free_format:
             options.append('-free')
         if settings.library_search_path:
-            for path in settings.library_search_path.split(' '):
-                options.append('-L%s' % path)
+            # for path in settings.library_search_path.split(' '):
+            options.append('-L%s' % settings.library_search_path)
         if settings.libraries:
             for lib in settings.libraries.split(' '):
                 options.append('-l%s' % lib)
         if additional_options:
             options += additional_options
         for ifn in input_file_names:
+            if system.windows and ' ' in ifn:
+                ifn = '"%s"' % ifn
             options.append(ifn)
         if Settings().custom_compiler_path and Settings().vcvars32:
             VisualStudioWrapperBatch.generate()
