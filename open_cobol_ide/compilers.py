@@ -100,6 +100,7 @@ class GnuCobolCompiler:
     """
     Provides an interface to the GnuCobol compiler (cobc)
     """
+    EXTENSIONS = [".COB", ".CBL", ".PCO", ".CPY"]
 
     def __init__(self):
         #: platform specifc extensions, sorted per file type
@@ -352,6 +353,8 @@ class DbpreCompiler:
 
     (-L: library search path, -l libraries to link with)
     """
+
+    EXTENSIONS = [".SCB"]
 
     _INVALID = 'invalid dbpre executable'
 

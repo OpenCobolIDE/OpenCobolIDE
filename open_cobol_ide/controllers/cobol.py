@@ -139,6 +139,21 @@ class CobolController(Controller):
         """
         Compiles the current editor
         """
+        # make sure the associated compiler is working, otherwise disable compile/run actions
+        path = self.app.edit.current_editor.file.path
+        dotted_extension = os.path.splitext(path)[1].upper()
+        compiler_works = False
+        msg = 'Invalid extension'
+        if dotted_extension in GnuCobolCompiler.EXTENSIONS:
+            compiler_works = GnuCobolCompiler().is_working()
+            msg = 'GnuCobol compiler not found'
+        elif dotted_extension in DbpreCompiler.EXTENSIONS:
+            compiler_works = DbpreCompiler().is_working()
+            msg = 'dbpre compiler not working, please check your SQL cobol configuration'
+        if not compiler_works:
+            QtWidgets.QMessageBox.warning(self.app.win, 'Cannot compile file',
+                                          'Cannot compile file: %r.\n\nReason: %s' % (os.path.split(path)[1], msg))
+            return
         # ensures all editors are saved before compiling
         self.ui.tabWidgetEditors.save_all()
         # disable actions
