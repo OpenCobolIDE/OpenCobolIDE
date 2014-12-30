@@ -5,8 +5,7 @@ import os
 import tempfile
 from pyqode.core.modes import CheckerMode
 import time
-from .compiler import GnuCobolCompiler, get_file_type
-from .system import get_cache_directory
+from open_cobol_ide.compilers import GnuCobolCompiler, get_file_type
 
 
 def lint(request_data):
