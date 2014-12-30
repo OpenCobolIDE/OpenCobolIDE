@@ -10,6 +10,7 @@ import re
 import subprocess
 import sys
 import shutil
+import tempfile
 
 from pyqode.cobol.widgets import CobolCodeEdit
 from pyqode.core.cache import Cache
@@ -94,6 +95,30 @@ class CompilerNotFound(Exception):
     Error raised when no compiler were found.
     """
     pass
+
+
+class VisualStudioWrapperBatch:
+    """
+    Helps creating a wrapper batch that setup visual studio command line environment
+    before running the cobc command, this is needed to use the kiska builds on Windows.
+    """
+    CODE_TEMPLATE = """set OLDDIR=%CD%
+chdir {0}
+call VCVARS32
+chdir /d %OLDDIR%
+call cobc %*
+"""
+    FILENAME = 'cobc_wrapper.bat'
+
+    @classmethod
+    def path(cls):
+        return os.path.join(tempfile.gettempdir(), cls.FILENAME)
+
+    @classmethod
+    def generate(cls):
+        with open(cls.path(), 'w') as f:
+            f.write(cls.CODE_TEMPLATE.format(
+                os.path.dirname(Settings().vcvars32)))
 
 
 class GnuCobolCompiler:
@@ -262,7 +287,12 @@ class GnuCobolCompiler:
             options += additional_options
         for ifn in input_file_names:
             options.append(ifn)
-        return 'cobc', options
+        if Settings().custom_compiler_path and Settings().vcvars32:
+            VisualStudioWrapperBatch.generate()
+            pgm = VisualStudioWrapperBatch.FILENAME
+        else:
+            pgm = 'cobc'
+        return pgm, options
 
     @staticmethod
     def parse_output(compiler_output, file_path):

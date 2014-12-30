@@ -297,6 +297,14 @@ class Settings(object):
         self._settings.setValue('customCompilerPath', value)
 
     @property
+    def vcvars32(self):
+        return self._settings.value('vcvars32', '')
+
+    @vcvars32.setter
+    def vcvars32(self, value):
+        self._settings.setValue('vcvars32', value)
+
+    @property
     def compiler_flags(self):
         lst = eval(self._settings.value('compilerFlags', '[]'))
         ret_val = []

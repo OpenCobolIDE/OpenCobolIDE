@@ -33,8 +33,6 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.restore_defaults)
         self.checkBoxRunExtTerm.stateChanged.connect(
             self.lineEditRunTerm.setEnabled)
-        self.checkBoxCustomPath.stateChanged.connect(
-            self.lineEditCompilerPath.setEnabled)
         self.listWidgetColorSchemes.currentItemChanged.connect(
             self.update_color_scheme_preview)
         self.plainTextEdit.setPlainText('''      * Author:
@@ -75,13 +73,40 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.toolButtonDbpreFramework.clicked.connect(self._select_dbpre_framework)
         self.toolButtonCobMySqlApiPath.clicked.connect(self._select_cobmysqlapi)
         self.checkBoxShowDbPass.stateChanged.connect(self._on_show_pass_state_changed)
+        self.toolButtonVCVARS.clicked.connect(self._select_vcvars32)
+        self.toolButtonCustomCompilerPath.clicked.connect(self._select_custom_compiler_path)
         self.reset(all_tabs=True)
+
+    def _select_vcvars32(self):
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, 'Select VCVARS32.bat', self.lineEditVCVARS.text())
+        if path:
+            path = os.path.normpath(path)
+            if os.path.isfile(path) and path.lower().endswith('vcvars32.bat'):
+                self.lineEditVCVARS.setText(path)
+            else:
+                QtWidgets.QMessageBox.warning(
+                    self, "Invalid VCVARS32 path",
+                    "%r is not a valid VCVARS32 batch file" % path)
+
+    def _select_custom_compiler_path(self):
+        path = QtWidgets.QFileDialog.getExistingDirectory(
+            self, 'Select custom GnuCobol directory', self.lineEditCompilerPath.text())
+        if path:
+            pgm = 'cobc' if not system.windows else 'cobc.exe'
+            pth = os.path.join(path, pgm)
+            if os.path.exists(pth):
+                self.lineEditCompilerPath.setText(os.path.normpath(path))
+            else:
+                QtWidgets.QMessageBox.warning(
+                    self, 'Invalid compiler path',
+                    'Not a valid compiler path because it does not contain %s!' % pgm)
 
     def _select_dbpre(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
             self, 'Select dbpre executable', self.lineEditDbpre.text())
         if path:
-            self.lineEditDbpre.setText(path)
+            self.lineEditDbpre.setText(os.path.normpath(path))
             self.labelDbpreVersion.setText(
                 compilers.DbpreCompiler(path).get_version()
                 if Settings().dbpre != '' else ''
@@ -89,10 +114,10 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
 
     def _select_cobmysqlapi(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Select dbpre framework directory',
+            self, 'Select cobmysqlapi object file',
             self.lineEditCobmysqlapi.text())
         if path:
-            self.lineEditCobmysqlapi.setText(path)
+            self.lineEditCobmysqlapi.setText(os.path.normpath(path))
 
     def _select_dbpre_framework(self):
         def bool_to_string(value):
@@ -102,9 +127,10 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                 return 'Missing'
 
         path = QtWidgets.QFileDialog.getExistingDirectory(
-            self, 'Select cobmysqlapi object file',
+            self, 'Select dbpre framework directory',
             self.lineEditDbpreFramework.text())
         if path:
+            path = os.path.normpath(path)
             pgctbbat = os.path.exists(os.path.join(path, 'PGCTBBAT'))
             pgctbbatws = os.path.exists(os.path.join(path, 'PGCTBBATWS'))
             sqlca = os.path.exists(os.path.join(path, 'SQLCA'))
@@ -219,11 +245,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.checkBoxFreeFormat.setChecked(settings.free_format)
             self.comboBoxStandard.setCurrentIndex(
                 int(settings.cobol_standard))
-            self.checkBoxCustomPath.setChecked(
-                settings.custom_compiler_path != system.which('cobc'))
             self.lineEditCompilerPath.setText(settings.custom_compiler_path)
-            self.lineEditCompilerPath.setEnabled(
-                self.checkBoxCustomPath.isChecked())
             flags = Settings().compiler_flags
             self.cb_debugging_line.setChecked(
                 self.cb_debugging_line.text() in flags)
@@ -239,6 +261,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditLibs.setText(settings.libraries)
             self.lineEditLibSearchPath.setText(settings.library_search_path)
             self.le_compiler_flags.setText(' '.join(flags))
+            self.lineEditVCVARS.setText(settings.vcvars32)
         # SQL Cobol
         if self.tabWidget.currentIndex() == 4 or all_tabs:
             self.lineEditDbpre.setText(settings.dbpre)
@@ -287,6 +310,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.compiler_flags = []
             settings.library_search_path = ''
             settings.libraries = ''
+            settings.vcvars32 = ''
         elif index == 4:
             settings.dbpre = ''
             settings.dbpre_framework = ''
@@ -333,10 +357,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.external_terminal = dlg.checkBoxRunExtTerm.isChecked()
         settings.external_terminal_command = dlg.lineEditRunTerm.text()
         settings.lower_case_keywords = dlg.rbLowerCaseKwds.isChecked()
-        if dlg.checkBoxCustomPath.isChecked():
-            settings.custom_compiler_path = dlg.lineEditCompilerPath.text()
-        else:
-            settings.customCompilerPath = ''
+        settings.custom_compiler_path = dlg.lineEditCompilerPath.text()
+        settings.vcvars32 = dlg.lineEditVCVARS.text()
         settings.free_format = dlg.checkBoxFreeFormat.isChecked()
         settings.comment_indicator = dlg.lineEditCommentIndicator.text()
         settings.cobol_standard = GnuCobolStandard(
