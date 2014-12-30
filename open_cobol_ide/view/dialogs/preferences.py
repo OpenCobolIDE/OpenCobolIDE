@@ -75,11 +75,24 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.checkBoxShowDbPass.stateChanged.connect(self._on_show_pass_state_changed)
         self.toolButtonVCVARS.clicked.connect(self._select_vcvars32)
         self.toolButtonCustomCompilerPath.clicked.connect(self._select_custom_compiler_path)
+        self.toolButtonAddLibPath.clicked.connect(self._add_lib_path)
+        self.toolButtonRemoveLibPath.clicked.connect(self._rm_lib_path)
         self.reset(all_tabs=True)
         if not system.windows:
             self.labelVCVARS.hide()
             self.lineEditVCVARS.hide()
             self.toolButtonVCVARS.hide()
+
+    def _add_lib_path(self):
+        path = QtWidgets.QFileDialog.getExistingDirectory(
+            self, 'Select a library directory')
+        if path:
+            self.listWidgetLibPaths.addItem(path)
+
+    def _rm_lib_path(self):
+        items = self.listWidgetLibPaths.selectedItems()
+        for item in items:
+            self.listWidgetLibPaths.takeItem(self.listWidgetLibPaths.row(item))
 
     def _select_vcvars32(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
@@ -263,7 +276,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                 except ValueError:
                     pass
             self.lineEditLibs.setText(settings.libraries)
-            self.lineEditLibSearchPath.setText(settings.library_search_path)
+            self.listWidgetLibPaths.addItems(
+                [pth for pth in settings.library_search_path.split(';') if pth])
             self.le_compiler_flags.setText(' '.join(flags))
             self.lineEditVCVARS.setText(settings.vcvars32)
         # SQL Cobol
@@ -371,7 +385,10 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.show_errors = dlg.checkBoxShowErrors.isChecked()
         settings.enable_smart_backspace = \
             dlg.checkBoxSmartBackspace.isChecked()
-        settings.library_search_path = dlg.lineEditLibSearchPath.text()
+        paths = []
+        for i in range(dlg.listWidgetLibPaths.count()):
+            paths.append(dlg.listWidgetLibPaths.item(i).text())
+        settings.library_search_path = ';'.join(paths)
         settings.libraries = dlg.lineEditLibs.text()
 
         cb_flags = [dlg.cb_g, dlg.cb_ftrace, dlg.cb_ftraceall,

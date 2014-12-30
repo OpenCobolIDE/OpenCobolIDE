@@ -25,7 +25,16 @@
    </iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
     <number>6</number>
    </property>
    <item row="1" column="0">
@@ -47,7 +56,16 @@
       <string notr="true"/>
      </property>
      <layout class="QGridLayout" name="widget_2">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <property name="spacing">
@@ -92,8 +110,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>607</width>
-               <height>564</height>
+               <width>585</width>
+               <height>537</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -401,8 +419,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>607</width>
-               <height>564</height>
+               <width>585</width>
+               <height>537</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -519,7 +537,7 @@ as possible to get back to the previous indentation level.</string>
                      </property>
                      <property name="currentFont">
                       <font>
-                       <family>BatangChe</family>
+                       <family>Andale Mono</family>
                        <pointsize>10</pointsize>
                       </font>
                      </property>
@@ -608,8 +626,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>607</width>
-               <height>564</height>
+               <width>585</width>
+               <height>537</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_6">
@@ -662,14 +680,14 @@ as possible to get back to the previous indentation level.</string>
                 </item>
                </widget>
               </item>
-              <item row="2" column="0">
+              <item row="1" column="0">
                <widget class="QLabel" name="label_9">
                 <property name="text">
                  <string>Free format:</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
+              <item row="1" column="1">
                <widget class="QCheckBox" name="checkBoxFreeFormat">
                 <property name="toolTip">
                  <string>Code and compile with free format support</string>
@@ -679,10 +697,20 @@ as possible to get back to the previous indentation level.</string>
                 </property>
                </widget>
               </item>
-              <item row="3" column="0">
+              <item row="2" column="0">
                <widget class="QLabel" name="label_15">
                 <property name="text">
                  <string>C compiler flags:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QCheckBox" name="cb_static">
+                <property name="toolTip">
+                 <string>Link statically</string>
+                </property>
+                <property name="text">
+                 <string>-static</string>
                 </property>
                </widget>
               </item>
@@ -727,86 +755,93 @@ as possible to get back to the previous indentation level.</string>
                </widget>
               </item>
               <item row="7" column="1">
-               <widget class="QCheckBox" name="cb_static">
-                <property name="toolTip">
-                 <string>Link statically</string>
-                </property>
-                <property name="text">
-                 <string>-static</string>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="1">
                <widget class="QLineEdit" name="le_compiler_flags">
                 <property name="toolTip">
                  <string>You can add other compiler flags here</string>
                 </property>
                </widget>
               </item>
-              <item row="9" column="0">
+              <item row="8" column="0">
                <widget class="QLabel" name="label_17">
                 <property name="text">
-                 <string>Library search path:</string>
+                 <string>Library path:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_10">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QListWidget" name="listWidgetLibPaths"/>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_4">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QToolButton" name="toolButtonAddLibPath">
+                    <property name="text">
+                     <string>...</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="ide.qrc">
+                      <normaloff>:/ide-icons/rc/list-add.png</normaloff>:/ide-icons/rc/list-add.png</iconset>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="toolButtonRemoveLibPath">
+                    <property name="text">
+                     <string>...</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="ide.qrc">
+                      <normaloff>:/ide-icons/rc/list-remove.png</normaloff>:/ide-icons/rc/list-remove.png</iconset>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="verticalSpacer_3">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+              <item row="9" column="0">
+               <widget class="QLabel" name="label_18">
+                <property name="text">
+                 <string>Libraries</string>
                 </property>
                </widget>
               </item>
               <item row="9" column="1">
-               <widget class="QLineEdit" name="lineEditLibSearchPath">
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can set the library search path here (-L option)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-              <item row="10" column="0">
-               <widget class="QLabel" name="label_18">
-                <property name="text">
-                 <string>Libraries to link with:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="10" column="1">
                <widget class="QLineEdit" name="lineEditLibs">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the libraries you would like your programs to link with here (-l option)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
-              <item row="11" column="0">
+              <item row="10" column="0">
                <widget class="QLabel" name="label_compiler_path">
                 <property name="text">
-                 <string>Custom compiler path:</string>
+                 <string>Custom compiler:</string>
                 </property>
                </widget>
               </item>
-              <item row="13" column="0">
-               <widget class="QLabel" name="labelVCVARS">
-                <property name="text">
-                 <string>VCVARS32 path:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="13" column="1">
-               <layout class="QHBoxLayout" name="horizontalLayout_8">
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QLineEdit" name="lineEditVCVARS">
-                  <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to VCVARS32.bat. VCVARS32.bat is needed if you're using a GnuCobol compiler built with Visual Studio.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;The VCVARS32.bat file is located under the bin directory of you Visual C++ installation. Make sure to use the same version as the one used to build the compiler!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QToolButton" name="toolButtonVCVARS">
-                  <property name="text">
-                   <string>...</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item row="11" column="1">
+              <item row="10" column="1">
                <layout class="QHBoxLayout" name="horizontalLayout_9">
                 <property name="leftMargin">
                  <number>0</number>
@@ -823,6 +858,34 @@ as possible to get back to the previous indentation level.</string>
                 </item>
                 <item>
                  <widget class="QToolButton" name="toolButtonCustomCompilerPath">
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="11" column="0">
+               <widget class="QLabel" name="labelVCVARS">
+                <property name="text">
+                 <string>VCVARS32 path:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="11" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_8">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLineEdit" name="lineEditVCVARS">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to VCVARS32.bat. VCVARS32.bat is needed if you're using a GnuCobol compiler built with Visual Studio.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;The VCVARS32.bat file is located under the bin directory of you Visual C++ installation. Make sure to use the same version as the one used to build the compiler!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="toolButtonVCVARS">
                   <property name="text">
                    <string>...</string>
                   </property>
@@ -856,8 +919,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>607</width>
-               <height>564</height>
+               <width>585</width>
+               <height>537</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_5">
@@ -916,8 +979,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>607</width>
-               <height>564</height>
+               <width>585</width>
+               <height>537</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -1067,7 +1130,16 @@ as possible to get back to the previous indentation level.</string>
                  </item>
                  <item row="2" column="1">
                   <layout class="QVBoxLayout" name="verticalLayout_6">
-                   <property name="margin">
+                   <property name="leftMargin">
+                    <number>3</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>3</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>3</number>
+                   </property>
+                   <property name="bottomMargin">
                     <number>3</number>
                    </property>
                    <item>
