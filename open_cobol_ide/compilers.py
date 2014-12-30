@@ -278,7 +278,7 @@ class GnuCobolCompiler:
         if settings.free_format:
             options.append('-free')
         if settings.library_search_path:
-            # for path in settings.library_search_path.split(' '):
+            # todo: fix me to allow multiple paths
             options.append('-L%s' % settings.library_search_path)
         if settings.libraries:
             for lib in settings.libraries.split(' '):
