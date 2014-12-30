@@ -286,8 +286,7 @@ class Settings(object):
 
     @property
     def custom_compiler_path(self):
-        default = system.which('cobc')
-        return self._settings.value('customCompilerPath', default)
+        return self._settings.value('customCompilerPath', '')
 
     @custom_compiler_path.setter
     def custom_compiler_path(self, value):

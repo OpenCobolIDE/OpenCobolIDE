@@ -76,6 +76,10 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.toolButtonVCVARS.clicked.connect(self._select_vcvars32)
         self.toolButtonCustomCompilerPath.clicked.connect(self._select_custom_compiler_path)
         self.reset(all_tabs=True)
+        if not system.windows:
+            self.labelVCVARS.hide()
+            self.lineEditVCVARS.hide()
+            self.toolButtonVCVARS.hide()
 
     def _select_vcvars32(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
