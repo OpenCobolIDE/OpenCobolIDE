@@ -92,11 +92,12 @@ class FileController(Controller):
         """
         Prompts the user for a file to open and open it.
         """
-        path, status = QtWidgets.QFileDialog.getOpenFileName(
+        paths, status = QtWidgets.QFileDialog.getOpenFileNames(
             self.main_window, 'Open a file', directory=Settings().last_path,
             filter=FILTER)
         if status:
-            self.open_file(path)
+            for path in paths:
+                self.open_file(path)
 
     def open_file(self, path):
         """
@@ -108,6 +109,7 @@ class FileController(Controller):
         self.app.edit.add_editor(path)
         self.app.view.show_edit_page()
         self.app.file.recent_files_manager.open_file(path)
+        Settings().last_path = path
 
     def save_as(self):
         """

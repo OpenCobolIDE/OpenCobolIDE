@@ -9,6 +9,7 @@ from pyqode.core.api import TextHelper, ColorScheme
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
 from open_cobol_ide.enums import FileType
+from open_cobol_ide import system
 from ..view.dialogs.preferences import DlgPreferences
 from ..settings import Settings
 from ..view.editors import CobolCodeEdit, GenericCodeEdit, \
@@ -179,9 +180,7 @@ class EditController(Controller):
             self.ui.tableWidgetOffsets.set_editor(editor)
             # update current editor menu
             self.ui.mnuActiveEditor.clear()
-            self._mnu = self.current_editor.get_context_menu()
-            self.ui.mnuActiveEditor.addActions(
-                self._mnu.actions())
+            self.ui.mnuActiveEditor.addActions(editor.actions())
             # update file type menu
             self.app.cobol.display_file_type(editor)
             # update cobol related actions (run/compile
@@ -189,6 +188,7 @@ class EditController(Controller):
                 is_executable = (self.app.edit.current_editor.file_type ==
                                  FileType.EXECUTABLE)
             except AttributeError:
+                # not a cobol editor
                 self.ui.menuCobol.setEnabled(False)
                 self.app.cobol.enable_compile(False)
                 self.app.cobol.enable_run(False)

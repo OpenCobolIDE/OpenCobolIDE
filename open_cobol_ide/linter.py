@@ -2,9 +2,11 @@
 Cobol linter; use open cobol to check your your syntax on the fly.
 """
 import os
+import tempfile
 from pyqode.core.modes import CheckerMode
-from open_cobol_ide.compilers import GnuCobolCompiler, get_file_type
-from open_cobol_ide.system import get_cache_directory
+import time
+from .compiler import GnuCobolCompiler, get_file_type
+from .system import get_cache_directory
 
 
 def lint(request_data):
@@ -18,11 +20,18 @@ def lint(request_data):
     """
     code = request_data['code']
     path = request_data['path']
-    tmp_pth = os.path.join(get_cache_directory(), 'temp.cbl')
+    # time stamped file path
+    tmp_pth = os.path.join(tempfile.gettempdir(), 'oci%s.cbl' % str(int(time.time())))
+    print("temp path = %s" % tmp_pth)
     with open(tmp_pth, 'w') as f:
         f.write(code)
     compiler = GnuCobolCompiler()
     _, messages = compiler.compile(tmp_pth, get_file_type(path))
+    # do not leave tmp files
+    try:
+        os.remove(tmp_pth)
+    except OSError:
+        pass
     return messages
 
 
