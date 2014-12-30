@@ -9,8 +9,8 @@ work or not).
 """
 import logging
 from pyqode.qt import QtWidgets
-from .forms.ide_ui import Ui_MainWindow
-from ..settings import Settings
+from open_cobol_ide.view.forms.ide_ui import Ui_MainWindow
+from open_cobol_ide.settings import Settings
 
 
 def _logger():

@@ -4,8 +4,8 @@ System utility module (get system info, platform specific path,...).
 import functools
 import os
 import platform
-from pyqode.qt import QtGui
 import sys
+from pyqode.qt import QtGui
 
 
 windows = platform.system() == 'Windows'

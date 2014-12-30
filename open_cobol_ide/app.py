@@ -8,13 +8,13 @@ import logging
 import os
 import sys
 from pyqode.qt import QtWidgets, QT_API, PYQT5_API, PYSIDE_API
-from . import __version__, logger
-from .controllers import (CobolController, EditController, FileController,
-                          HelpController, HomeController, ViewController)
-from .compiler import check_compiler, CompilerNotFound
-from open_cobol_ide import system
-from .settings import Settings
-from .view.main_window import MainWindow
+from open_cobol_ide import __version__, logger, system
+from open_cobol_ide.controllers import (
+    CobolController, EditController, FileController, HelpController,
+    HomeController, ViewController)
+from open_cobol_ide.compilers import check_compiler, CompilerNotFound
+from open_cobol_ide.settings import Settings
+from open_cobol_ide.view.main_window import MainWindow
 
 
 def _logger():
@@ -130,13 +130,19 @@ class Application:
             cwd = os.path.dirname(sys.executable)
         else:
             cwd = os.getcwd()
-        oc_root_pth = os.path.join(cwd, 'OpenCobol')
-        os.environ['COB_CONFIG_DIR'] = os.path.join(oc_root_pth, 'config')
-        os.environ['COB_COPY_DIR'] = os.path.join(oc_root_pth, 'copy')
-        os.environ['COB_LIBRARY_PATH'] = os.path.join(oc_root_pth, 'bin')
-        os.environ['COB_INCLUDE_PATH'] = os.path.join(oc_root_pth, 'include')
-        os.environ['COB_LIB_PATH'] = os.path.join(oc_root_pth, 'lib')
-        os.environ['PATH'] = ';'.join([os.environ['COB_LIBRARY_PATH'], cwd])
+        custom_compiler_path = Settings().custom_compiler_path
+        if custom_compiler_path:
+            # for dlls to copy
+            os.environ['COB_LIBRARY_PATH'] = os.path.join(custom_compiler_path)
+            os.environ['PATH'] += ';'.join([custom_compiler_path])
+        else:
+            oc_root_pth = os.path.join(cwd, 'OpenCobol')
+            os.environ['COB_CONFIG_DIR'] = os.path.join(oc_root_pth, 'config')
+            os.environ['COB_COPY_DIR'] = os.path.join(oc_root_pth, 'copy')
+            os.environ['COB_LIBRARY_PATH'] = os.path.join(oc_root_pth, 'bin')
+            os.environ['COB_INCLUDE_PATH'] = os.path.join(oc_root_pth, 'include')
+            os.environ['COB_LIB_PATH'] = os.path.join(oc_root_pth, 'lib')
+            os.environ['PATH'] = ';'.join([os.environ['COB_LIBRARY_PATH'], cwd])
 
     @staticmethod
     def _osx_init():

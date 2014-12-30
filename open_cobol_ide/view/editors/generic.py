@@ -1,6 +1,6 @@
 import os
-from pyqode.core import widgets
 import sys
+from pyqode.core import widgets
 from pyqode.core.backend import server
 
 

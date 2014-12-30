@@ -9,13 +9,17 @@ import os
 import re
 import subprocess
 import sys
-from enum import IntEnum
+import shutil
+import tempfile
+
 from pyqode.cobol.widgets import CobolCodeEdit
 from pyqode.core.cache import Cache
 from pyqode.core.modes import CheckerMessages
 from pyqode.qt import QtCore
-from . import system
-import shutil
+
+from open_cobol_ide import system
+from open_cobol_ide.enums import FileType
+from open_cobol_ide.settings import Settings
 
 
 def _logger():
@@ -86,32 +90,6 @@ def check_compiler():
         raise CompilerNotFound(msg)
 
 
-class FileType(IntEnum):
-    """
-    Enumerates the different source file types:
-        - executable (.exe)
-        - module (.dll)
-    """
-    #: Executable file (produces an executable binary that can be run)
-    EXECUTABLE = 0
-    #: Module file (produces a shared library that can be used from other
-    #: modules or executables)
-    MODULE = 1
-
-
-class GnuCobolStandard(IntEnum):
-    """
-    Enumerates the differen cobol standards supported by the GnuCobolCompiler.
-    """
-    default = 0
-    cobol2002 = 1
-    cobol85 = 2
-    ibm = 3
-    mvs = 4
-    bs2000 = 5
-    mf = 6
-
-
 class CompilerNotFound(Exception):
     """
     Error raised when no compiler were found.
@@ -119,10 +97,35 @@ class CompilerNotFound(Exception):
     pass
 
 
+class VisualStudioWrapperBatch:
+    """
+    Helps creating a wrapper batch that setup visual studio command line environment
+    before running the cobc command, this is needed to use the kiska builds on Windows.
+    """
+    CODE_TEMPLATE = """set OLDDIR=%CD%
+chdir {0}
+call VCVARS32
+chdir /d %OLDDIR%
+call cobc %*
+"""
+    FILENAME = 'cobc_wrapper.bat'
+
+    @classmethod
+    def path(cls):
+        return os.path.join(tempfile.gettempdir(), cls.FILENAME)
+
+    @classmethod
+    def generate(cls):
+        with open(cls.path(), 'w') as f:
+            f.write(cls.CODE_TEMPLATE.format(
+                os.path.dirname(Settings().vcvars32)))
+
+
 class GnuCobolCompiler:
     """
     Provides an interface to the GnuCobol compiler (cobc)
     """
+    EXTENSIONS = [".COB", ".CBL", ".PCO", ".CPY"]
 
     def __init__(self):
         #: platform specifc extensions, sorted per file type
@@ -206,7 +209,7 @@ class GnuCobolCompiler:
             for f in files:
                 shutil.copy(f, bin_dir)
 
-    def compile(self, file_path, file_type):
+    def compile(self, file_path, file_type, object_files=None, additional_options=None):
         """
         Compiles a file. This is a blocking function, it returns only when
         the compiler process finished.
@@ -221,7 +224,11 @@ class GnuCobolCompiler:
         # ensure bin dir exists
         self.make_bin_dir(path)
         # run command using qt process api, this is blocking.
-        pgm, options = self.make_command(filename, file_type)
+        if object_files:
+            inputs = [filename] + object_files
+        else:
+            inputs = [filename]
+        pgm, options = self.make_command(inputs, file_type, additional_options)
         process = QtCore.QProcess()
         process.setWorkingDirectory(path)
         process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
@@ -243,11 +250,13 @@ class GnuCobolCompiler:
         _logger().debug('compile results: %r - %r', status, messages)
         return status, messages
 
-    def make_command(self, input_file_name, file_type):
+    def make_command(self, input_file_names, file_type, additional_options=None):
         """
         Makes the command needed to compile the specified file.
 
-        :param input_file_name: Input file name (without path)
+        :param input_file_names: Input file names (without path).
+            The first name must be the source file, other entries can
+            be used to link with additional object files.
         :param output_file_name: Output file base name (without path and
             extension). None to use the input_file_name base name.
         :param file_type: file type (exe or dll).
@@ -256,7 +265,7 @@ class GnuCobolCompiler:
         """
         from .settings import Settings
         settings = Settings()
-        output_file_name = os.path.splitext(input_file_name)[0]
+        output_file_name = os.path.splitext(input_file_names[0])[0]
         options = []
         if file_type == FileType.EXECUTABLE:
             options.append('-x')
@@ -268,8 +277,24 @@ class GnuCobolCompiler:
         options += settings.compiler_flags
         if settings.free_format:
             options.append('-free')
-        options.append(input_file_name)
-        return 'cobc', options
+        if settings.library_search_path:
+            # for path in settings.library_search_path.split(' '):
+            options.append('-L%s' % settings.library_search_path)
+        if settings.libraries:
+            for lib in settings.libraries.split(' '):
+                options.append('-l%s' % lib)
+        if additional_options:
+            options += additional_options
+        for ifn in input_file_names:
+            if system.windows and ' ' in ifn:
+                ifn = '"%s"' % ifn
+            options.append(ifn)
+        if Settings().custom_compiler_path and Settings().vcvars32:
+            VisualStudioWrapperBatch.generate()
+            pgm = VisualStudioWrapperBatch.path()
+        else:
+            pgm = 'cobc'
+        return pgm, options
 
     @staticmethod
     def parse_output(compiler_output, file_path):
@@ -338,3 +363,182 @@ class GnuCobolCompiler:
         dependencies = list(set(dependencies))
         _logger().debug('dependencies of %s: %r', filename, dependencies)
         return dependencies
+
+
+PARAM_FILE_CONTENT = '''DBHOST=%(host)s
+DBUSER=%(user)s
+DBPASSWD=%(pswd)s
+DBNAME=%(dbname)s
+DBPORT=%(port)s
+DBSOCKET=%(socket)s
+'''
+
+
+class DbpreCompiler:
+    """
+    Provides an interface to the Dbpre tool.
+
+    Commands:
+        - /path/to/dbpre SOURCE.scb -I/path/to/framework -ts=TAB_LEN
+        - copy PGCTBBATWS to source dir
+        - cobc -x SOURCE.cob /path/to/cobmysqlapi.o -L/usr/lib/mysql -lmysqlclient -o bin/SOURCE.exe
+
+    (-L: library search path, -l libraries to link with)
+    """
+
+    EXTENSIONS = [".SCB"]
+
+    _INVALID = 'invalid dbpre executable'
+
+    def __init__(self, dbpre_path=None):
+        if dbpre_path is None:
+            dbpre_path = Settings().dbpre
+        self.dbpre_path = dbpre_path
+
+    def get_version(self):
+        """
+        Returns the GnuCobol compiler version as a string
+        """
+        program = self.dbpre_path
+        cmd = [program, '--version']
+        try:
+            _logger().debug('getting dbpre version: %s' % ' '.join(cmd))
+            if sys.platform == 'win32':
+                startupinfo = subprocess.STARTUPINFO()
+                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                p = subprocess.Popen(
+                    cmd, shell=False, startupinfo=startupinfo,
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                    stdin=subprocess.PIPE)
+            else:
+                p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE)
+        except OSError:
+            pass
+        else:
+            stdout, stderr = p.communicate()
+            stdout = stdout.decode()
+            lversion = stdout.splitlines()[0]
+            if re.match(r'dbpre V \d.\d.+', lversion):
+                return lversion
+        return self._INVALID
+
+    def is_working(self):
+        """
+
+        :return:
+        """
+        return self.get_version() != self._INVALID
+
+    def make_command(self, file_path):
+        """
+        Make the dbpre command.
+
+        :param file_path: .scb path
+        """
+        source = os.path.splitext(os.path.split(file_path)[1])[0]
+        return self.dbpre_path, [source, '-I%s' % Settings().dbpre_framework,
+                                 '-ts=%d' % Settings().tab_len]
+
+    def _run_dbpre(self, file_path):
+        """
+        Run the dbpre process and returns it's exit code and
+        output (both stderr and stdout).
+
+        :param file_path: .scb path.
+        :return: int, str
+        """
+        path = os.path.dirname(file_path)
+        pgm, options = self.make_command(file_path)
+        process = QtCore.QProcess()
+        process.setWorkingDirectory(path)
+        process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
+        _logger().info('command: %s %s', pgm, ' '.join(options))
+        _logger().debug('working directory: %s', path)
+        _logger().debug('system environment: %s', process.systemEnvironment())
+        process.start(pgm, options)
+        process.waitForFinished()
+        status = process.exitCode()
+        output = process.readAllStandardOutput().data().decode(
+            locale.getpreferredencoding())
+        return output, status
+
+    def _copy_dbpre_framework(self, path):
+        """
+        Copies the dbpre framework files to the source directory.
+
+        :param path: path of the .scb file
+        """
+        _logger().info('copying dbpre framework to source directory')
+        pgctbbat = os.path.join(Settings().dbpre_framework, 'PGCTBBAT')
+        pgctbbatws = os.path.join(Settings().dbpre_framework, 'PGCTBBATWS')
+        sqlca = os.path.join(Settings().dbpre_framework, 'SQLCA')
+        results = os.listdir(os.path.dirname(path))
+        if 'PGCTBBAT' not in results:
+            _logger().info('copying PGCTBBAT')
+            shutil.copy(pgctbbat, os.path.dirname(path))
+        if 'PGCTBBATWS' not in results:
+            _logger().info('copying PGCTBBATWS')
+            shutil.copy(pgctbbatws, os.path.dirname(path))
+        if 'SQLCA' not in results:
+            _logger().info('copying QSLCA')
+            shutil.copy(sqlca, os.path.dirname(path))
+
+    def _compile_with_cobc(self, path):
+        """
+        Compile the .cob generated by dbpre.
+
+        :param path: path of the .scb file.
+
+        :return: status, messages
+        """
+        _logger().info('compiling with cobc')
+        cob_path = os.path.splitext(path)[0] + '.cob'
+        compiler = GnuCobolCompiler()
+        return compiler.compile(cob_path, get_file_type(cob_path),
+                                object_files=[Settings().cobmysqlapi])
+
+    def _generate_param_file(self, source_path):
+        """
+        Generate the bin/EXECUTABLE.param file based on the settings defined in
+        the preferences dialog.
+
+        :param source_path: path of the .scb file.
+        """
+        name = os.path.splitext(os.path.split(source_path)[1])[0] + '.param'
+        content = PARAM_FILE_CONTENT % {
+            'host': Settings().dbhost,
+            'user': Settings().dbuser,
+            'pswd': Settings().dbpasswd,
+            'dbname': Settings().dbname,
+            'port': Settings().dbport,
+            'socket': Settings().dbsocket
+        }
+        path = os.path.join(os.path.dirname(source_path), 'bin', name)
+        if not os.path.exists(path):
+            _logger().info('creating %s', name)
+            with open(path, 'w') as f:
+                f.write(content)
+
+    def compile(self, path):
+        """
+        Compile an sql cobol file using dbpre.
+
+        :param path: path of the sql cobol file (.scb)
+
+        :return: build status, list of error/warning messages to
+                 display.
+        """
+        if not self.is_working():
+            return -1, []
+        output, status = self._run_dbpre(path)
+        _logger().info('dbpre output:%s', output)
+        if status != 0:
+            # dbpre failed with some errors, let the user know about that
+            return status, [(output.strip(), CheckerMessages.ERROR, -1, 0,
+                             None, None, path)]
+        self._copy_dbpre_framework(path)
+        status, messages = self._compile_with_cobc(path)
+        self._generate_param_file(path)
+        return status, messages
+

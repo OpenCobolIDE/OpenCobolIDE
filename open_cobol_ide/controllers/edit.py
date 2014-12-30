@@ -8,7 +8,7 @@ import weakref
 from pyqode.core.api import TextHelper, ColorScheme
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
-from ..compiler import FileType
+from open_cobol_ide.enums import FileType
 from open_cobol_ide import system
 from ..view.dialogs.preferences import DlgPreferences
 from ..settings import Settings

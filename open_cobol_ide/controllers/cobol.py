@@ -5,14 +5,14 @@ Controls the cobol specific action (compile, run and change program type)
 import logging
 import os
 import subprocess
-import sys
 from pyqode.core.api import TextHelper
 from pyqode.core.modes import CheckerMessage, CheckerMessages
 from pyqode.qt import QtCore, QtWidgets
 from .base import Controller
-from ..compiler import FileType, GnuCobolCompiler, get_file_type
 from open_cobol_ide import system
-from ..settings import Settings
+from open_cobol_ide.enums import FileType
+from open_cobol_ide.compilers import GnuCobolCompiler, get_file_type, DbpreCompiler
+from open_cobol_ide.settings import Settings
 
 
 class CompilationThread(QtCore.QThread):
@@ -33,11 +33,24 @@ class CompilationThread(QtCore.QThread):
         """
         Compiles the file and all its dependencies.
         """
-        compiler = GnuCobolCompiler()
+        def is_sql_cobol(path):
+            if path.lower().endswith('.scb'):
+                with open(path, 'r') as f:
+                    return 'exec sql' in f.read().lower()
+            return False
+
+        cobc = GnuCobolCompiler()
+        dbpre = DbpreCompiler()
         files = [self.file_path]
-        files += compiler.get_dependencies(self.file_path, recursive=True)
+        files += cobc.get_dependencies(self.file_path, recursive=True)
+
+        _logger().info('running compilation thread: %r', files)
+
         for f in files:
-            status, messages = compiler.compile(f, get_file_type(f))
+            if is_sql_cobol(f):
+                status, messages = dbpre.compile(f)
+            else:
+                status, messages = cobc.compile(f, get_file_type(f))
             self.file_compiled.emit(f, status, messages)
         self.finished.emit()
 
@@ -126,6 +139,21 @@ class CobolController(Controller):
         """
         Compiles the current editor
         """
+        # make sure the associated compiler is working, otherwise disable compile/run actions
+        path = self.app.edit.current_editor.file.path
+        dotted_extension = os.path.splitext(path)[1].upper()
+        compiler_works = False
+        msg = 'Invalid extension'
+        if dotted_extension in GnuCobolCompiler.EXTENSIONS:
+            compiler_works = GnuCobolCompiler().is_working()
+            msg = 'GnuCobol compiler not found'
+        elif dotted_extension in DbpreCompiler.EXTENSIONS:
+            compiler_works = DbpreCompiler().is_working()
+            msg = 'dbpre compiler not working, please check your SQL cobol configuration'
+        if not compiler_works:
+            QtWidgets.QMessageBox.warning(self.app.win, 'Cannot compile file',
+                                          'Cannot compile file: %r.\n\nReason: %s' % (os.path.split(path)[1], msg))
+            return
         # ensures all editors are saved before compiling
         self.ui.tabWidgetEditors.save_all()
         # disable actions

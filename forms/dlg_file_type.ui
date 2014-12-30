@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>356</width>
-    <height>160</height>
+    <height>180</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -129,6 +129,11 @@
          </item>
          <item>
           <property name="text">
+           <string>.scb</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>.CBL</string>
           </property>
          </item>
@@ -145,6 +150,11 @@
          <item>
           <property name="text">
            <string>.CPY</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>.SCB</string>
           </property>
          </item>
         </widget>

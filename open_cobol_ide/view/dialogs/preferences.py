@@ -1,12 +1,11 @@
 import os
 import sys
 from pyqode.core.api.syntax_highlighter import PYGMENTS_STYLES, ColorScheme
-from pyqode.qt import QtCore, QtGui, QtWidgets, QT_API, PYQT5_API, PYSIDE_API
-from ...compiler import GnuCobolStandard
-from open_cobol_ide import system
-from open_cobol_ide.view.editors import update_editor_settings
-from ...settings import Settings
-from ...view.forms import dlg_preferences_ui
+from pyqode.qt import QtCore, QtGui, QtWidgets
+from open_cobol_ide import system, compilers
+from open_cobol_ide.enums import GnuCobolStandard
+from open_cobol_ide.settings import Settings
+from open_cobol_ide.view.forms import dlg_preferences_ui
 
 
 class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
@@ -34,8 +33,6 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.restore_defaults)
         self.checkBoxRunExtTerm.stateChanged.connect(
             self.lineEditRunTerm.setEnabled)
-        self.checkBoxCustomPath.stateChanged.connect(
-            self.lineEditCompilerPath.setEnabled)
         self.listWidgetColorSchemes.currentItemChanged.connect(
             self.update_color_scheme_preview)
         self.plainTextEdit.setPlainText('''      * Author:
@@ -69,7 +66,85 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
        END PROGRAM YOUR-PROGRAM-NAME.
 
         ''', '', '')
+        self.lineEditDbpre.setReadOnly(True)
+        self.lineEditDbpreFramework.setReadOnly(True)
+        self.lineEditCobmysqlapi.setReadOnly(True)
+        self.toolButtonDbpre.clicked.connect(self._select_dbpre)
+        self.toolButtonDbpreFramework.clicked.connect(self._select_dbpre_framework)
+        self.toolButtonCobMySqlApiPath.clicked.connect(self._select_cobmysqlapi)
+        self.checkBoxShowDbPass.stateChanged.connect(self._on_show_pass_state_changed)
+        self.toolButtonVCVARS.clicked.connect(self._select_vcvars32)
+        self.toolButtonCustomCompilerPath.clicked.connect(self._select_custom_compiler_path)
         self.reset(all_tabs=True)
+
+    def _select_vcvars32(self):
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, 'Select VCVARS32.bat', self.lineEditVCVARS.text())
+        if path:
+            path = os.path.normpath(path)
+            if os.path.isfile(path) and path.lower().endswith('vcvars32.bat'):
+                self.lineEditVCVARS.setText(path)
+            else:
+                QtWidgets.QMessageBox.warning(
+                    self, "Invalid VCVARS32 path",
+                    "%r is not a valid VCVARS32 batch file" % path)
+
+    def _select_custom_compiler_path(self):
+        path = QtWidgets.QFileDialog.getExistingDirectory(
+            self, 'Select custom GnuCobol directory', self.lineEditCompilerPath.text())
+        if path:
+            pgm = 'cobc' if not system.windows else 'cobc.exe'
+            pth = os.path.join(path, pgm)
+            if os.path.exists(pth):
+                self.lineEditCompilerPath.setText(os.path.normpath(path))
+            else:
+                QtWidgets.QMessageBox.warning(
+                    self, 'Invalid compiler path',
+                    'Not a valid compiler path because it does not contain %s!' % pgm)
+
+    def _select_dbpre(self):
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, 'Select dbpre executable', self.lineEditDbpre.text())
+        if path:
+            self.lineEditDbpre.setText(os.path.normpath(path))
+            self.labelDbpreVersion.setText(
+                compilers.DbpreCompiler(path).get_version()
+                if Settings().dbpre != '' else ''
+            )
+
+    def _select_cobmysqlapi(self):
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, 'Select cobmysqlapi object file',
+            self.lineEditCobmysqlapi.text())
+        if path:
+            self.lineEditCobmysqlapi.setText(os.path.normpath(path))
+
+    def _select_dbpre_framework(self):
+        def bool_to_string(value):
+            if value:
+                return 'Found'
+            else:
+                return 'Missing'
+
+        path = QtWidgets.QFileDialog.getExistingDirectory(
+            self, 'Select dbpre framework directory',
+            self.lineEditDbpreFramework.text())
+        if path:
+            path = os.path.normpath(path)
+            pgctbbat = os.path.exists(os.path.join(path, 'PGCTBBAT'))
+            pgctbbatws = os.path.exists(os.path.join(path, 'PGCTBBATWS'))
+            sqlca = os.path.exists(os.path.join(path, 'SQLCA'))
+            if pgctbbat and pgctbbatws and sqlca:
+                self.lineEditDbpreFramework.setText(path)
+            else:
+                QtWidgets.QMessageBox.warning(self, 'Invalid dpre framework directory',
+                                              'Missing one of the following files: \n'
+                                              'PGCTBBAT: %s\n'
+                                              'PGCTBBATWS: %s\n'
+                                              'SQLCA: %s\n' % (
+                                                  bool_to_string(pgctbbat),
+                                                  bool_to_string(pgctbbatws),
+                                                  bool_to_string(sqlca)))
 
     def stop_backend(self):
         self.plainTextEdit.backend.stop()
@@ -77,6 +152,14 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
     def _update_icon_theme(self, c):
         index = self.comboBoxIconTheme.findText(c)
         self.comboBoxIconTheme.setCurrentIndex(index)
+
+    def _on_show_pass_state_changed(self, state):
+        if state:
+            self.lineEditDBPASSWD.setEchoMode(QtWidgets.QLineEdit.Normal)
+        else:
+            self.lineEditDBPASSWD.setEchoMode(QtWidgets.QLineEdit.Password)
+
+
 
     @QtCore.Slot(bool)
     def on_radioButtonColorWhite_toggled(self, native):
@@ -162,11 +245,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.checkBoxFreeFormat.setChecked(settings.free_format)
             self.comboBoxStandard.setCurrentIndex(
                 int(settings.cobol_standard))
-            self.checkBoxCustomPath.setChecked(
-                settings.custom_compiler_path != system.which('cobc'))
             self.lineEditCompilerPath.setText(settings.custom_compiler_path)
-            self.lineEditCompilerPath.setEnabled(
-                self.checkBoxCustomPath.isChecked())
             flags = Settings().compiler_flags
             self.cb_debugging_line.setChecked(
                 self.cb_debugging_line.text() in flags)
@@ -179,7 +258,23 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                     flags.remove(v)
                 except ValueError:
                     pass
+            self.lineEditLibs.setText(settings.libraries)
+            self.lineEditLibSearchPath.setText(settings.library_search_path)
             self.le_compiler_flags.setText(' '.join(flags))
+            self.lineEditVCVARS.setText(settings.vcvars32)
+        # SQL Cobol
+        if self.tabWidget.currentIndex() == 4 or all_tabs:
+            self.lineEditDbpre.setText(settings.dbpre)
+            self.lineEditDbpreFramework.setText(settings.dbpre_framework)
+            self.lineEditCobmysqlapi.setText(settings.cobmysqlapi)
+            self.lineEditDBHOST.setText(settings.dbhost)
+            self.lineEditDBUSER.setText(settings.dbuser)
+            self.lineEditDBPASSWD.setText(settings.dbpasswd)
+            self.lineEditDBNAME.setText(settings.dbname)
+            self.lineEditDBPORT.setText(settings.dbport)
+            self.lineEditDBSOCKET.setText(settings.dbsocket)
+            self.labelDbpreVersion.setText(compilers.DbpreCompiler().get_version()
+                                           if Settings().dbpre != '' else '')
 
     def restore_defaults(self):
         settings = Settings()
@@ -213,6 +308,19 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.cobol_standard = GnuCobolStandard.default
             settings.custom_compiler_path = ''
             settings.compiler_flags = []
+            settings.library_search_path = ''
+            settings.libraries = ''
+            settings.vcvars32 = ''
+        elif index == 4:
+            settings.dbpre = ''
+            settings.dbpre_framework = ''
+            settings.cobmysqlapi = ''
+            settings.dbhost = 'localhost'
+            settings.dbuser = ''
+            settings.dbpasswd = ''
+            settings.dbname = ''
+            settings.dbport = '03306'
+            settings.dbsocket = 'null'
         self.reset()
 
     @classmethod
@@ -249,10 +357,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.external_terminal = dlg.checkBoxRunExtTerm.isChecked()
         settings.external_terminal_command = dlg.lineEditRunTerm.text()
         settings.lower_case_keywords = dlg.rbLowerCaseKwds.isChecked()
-        if dlg.checkBoxCustomPath.isChecked():
-            settings.custom_compiler_path = dlg.lineEditCompilerPath.text()
-        else:
-            settings.customCompilerPath = ''
+        settings.custom_compiler_path = dlg.lineEditCompilerPath.text()
+        settings.vcvars32 = dlg.lineEditVCVARS.text()
         settings.free_format = dlg.checkBoxFreeFormat.isChecked()
         settings.comment_indicator = dlg.lineEditCommentIndicator.text()
         settings.cobol_standard = GnuCobolStandard(
@@ -261,9 +367,21 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.show_errors = dlg.checkBoxShowErrors.isChecked()
         settings.enable_smart_backspace = \
             dlg.checkBoxSmartBackspace.isChecked()
+        settings.library_search_path = dlg.lineEditLibSearchPath.text()
+        settings.libraries = dlg.lineEditLibs.text()
 
         cb_flags = [dlg.cb_g, dlg.cb_ftrace, dlg.cb_ftraceall,
                     dlg.cb_debugging_line, dlg.cb_static]
         flags = [cb.text() for cb in cb_flags if cb.isChecked()]
         flags += dlg.le_compiler_flags.text().split(' ')
         settings.compiler_flags = flags
+        # sql
+        settings.dbpre = dlg.lineEditDbpre.text()
+        settings.dbpre_framework = dlg.lineEditDbpreFramework.text()
+        settings.cobmysqlapi = dlg.lineEditCobmysqlapi.text()
+        settings.dbhost = dlg.lineEditDBHOST.text()
+        settings.dbuser = dlg.lineEditDBUSER.text()
+        settings.dbpasswd = dlg.lineEditDBPASSWD.text()
+        settings.dbname = dlg.lineEditDBNAME.text()
+        settings.dbport = dlg.lineEditDBPORT.text()
+        settings.dbsocket = dlg.lineEditDBSOCKET.text()

@@ -2,7 +2,7 @@
 This is the application entry. This is where we create and run the
 Application.
 """
-from .app import Application
+from open_cobol_ide.app import Application
 
 
 def main():

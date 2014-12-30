@@ -5,8 +5,9 @@ import os
 import re
 import pytest
 from open_cobol_ide import system
-from open_cobol_ide.compiler import (
-    GnuCobolCompiler, FileType, GnuCobolStandard, get_file_type)
+from open_cobol_ide.compilers import (
+    GnuCobolCompiler, get_file_type)
+from open_cobol_ide.enums import FileType, GnuCobolStandard
 from open_cobol_ide.settings import Settings
 
 
@@ -96,7 +97,7 @@ def test_make_command_exe(free, std, ftype, expected_opts):
     settings = Settings()
     settings.free_format = free
     settings.cobol_standard = std
-    pgm, options = compiler.make_command('HelloWorld.cbl', ftype)
+    pgm, options = compiler.make_command(['HelloWorld.cbl'], ftype)
     assert pgm == 'cobc'
     for o, eo in zip(options, expected_opts):
         assert o == eo
