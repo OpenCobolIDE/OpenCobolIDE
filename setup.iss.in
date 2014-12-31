@@ -39,6 +39,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 Source: "@BUILD_DIR@\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "share\cobol-mimetype.ico"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -55,6 +56,7 @@ Root: HKCR; Subkey: ".cbl"; ValueType: string; ValueName: ""; ValueData: "text-x
 Root: HKCR; Subkey: ".cob"; ValueType: string; ValueName: ""; ValueData: "text-x-cobol"; Flags: uninsdeletevalue
 Root: HKCR; Subkey: ".pco"; ValueType: string; ValueName: ""; ValueData: "text-x-cobol"; Flags: uninsdeletevalue
 Root: HKCR; Subkey: ".cpy"; ValueType: string; ValueName: ""; ValueData: "text-x-cobol"; Flags: uninsdeletevalue
+Root: HKCR; Subkey: ".scb"; ValueType: string; ValueName: ""; ValueData: "text-x-cobol"; Flags: uninsdeletevalue
 Root: HKCR; Subkey: "text-x-cobol"; ValueType: string; ValueName: ""; ValueData: "Cobol source code"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "text-x-cobol\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKCR; Subkey: "text-x-cobol\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\cobol-mimetype.ico,0"
 Root: HKCR; Subkey: "text-x-cobol\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
