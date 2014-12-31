@@ -19,19 +19,22 @@ def lint(request_data):
     """
     code = request_data['code']
     path = request_data['path']
-    # time stamped file path
-    tmp_pth = os.path.join(tempfile.gettempdir(), 'oci%s.cbl' % str(int(time.time())))
-    print("temp path = %s" % tmp_pth)
-    with open(tmp_pth, 'w') as f:
-        f.write(code)
-    compiler = GnuCobolCompiler()
-    _, messages = compiler.compile(tmp_pth, get_file_type(path))
-    # do not leave tmp files
-    try:
-        os.remove(tmp_pth)
-    except OSError:
-        pass
-    return messages
+    extension = os.path.splitext(path)[1]
+    if extension in GnuCobolCompiler.EXTENSIONS:
+        # time stamped file path
+        tmp_pth = os.path.join(tempfile.gettempdir(), 'oci%s.cbl' % str(int(time.time())))
+        print("temp path = %s" % tmp_pth)
+        with open(tmp_pth, 'w') as f:
+            f.write(code)
+        compiler = GnuCobolCompiler()
+        _, messages = compiler.compile(tmp_pth, get_file_type(path))
+        # do not leave tmp files
+        try:
+            os.remove(tmp_pth)
+        except OSError:
+            pass
+        return messages
+    return []
 
 
 class CobolLinterMode(CheckerMode):
