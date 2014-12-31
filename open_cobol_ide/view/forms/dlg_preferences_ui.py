@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/Users/Colin/Documents/OpenCobolIDE/forms/dlg_preferences.ui'
+# Form implementation generated from reading ui file '/home/colin/Documents/OpenCobolIDE/forms/dlg_preferences.ui'
 #
-# Created: Tue Dec 30 23:10:05 2014
+# Created: Wed Dec 31 14:33:02 2014
 #      by: PyQt5 UI code generator 5.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -28,8 +28,8 @@ class Ui_Dialog(object):
         self.widget.setStyleSheet("")
         self.widget.setObjectName("widget")
         self.widget_2 = QtWidgets.QGridLayout(self.widget)
-        self.widget_2.setSpacing(0)
         self.widget_2.setContentsMargins(0, 0, 0, 0)
+        self.widget_2.setSpacing(0)
         self.widget_2.setObjectName("widget_2")
         self.tabWidget = QtWidgets.QTabWidget(self.widget)
         self.tabWidget.setStyleSheet("")
@@ -41,13 +41,12 @@ class Ui_Dialog(object):
         self.tabEditor = QtWidgets.QWidget()
         self.tabEditor.setObjectName("tabEditor")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.tabEditor)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.scrollArea = QtWidgets.QScrollArea(self.tabEditor)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 585, 537))
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 607, 553))
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
@@ -171,7 +170,7 @@ class Ui_Dialog(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollArea_2.setObjectName("scrollArea_2")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 585, 537))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 607, 553))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_8 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
@@ -216,7 +215,7 @@ class Ui_Dialog(object):
         self.fontComboBox = QtWidgets.QFontComboBox(self.groupBox_6)
         self.fontComboBox.setFontFilters(QtWidgets.QFontComboBox.MonospacedFonts)
         font = QtGui.QFont()
-        font.setFamily("Andale Mono")
+        font.setFamily("DejaVu Sans Mono")
         font.setPointSize(10)
         self.fontComboBox.setCurrentFont(font)
         self.fontComboBox.setObjectName("fontComboBox")
@@ -261,7 +260,7 @@ class Ui_Dialog(object):
         self.scrollArea_5.setWidgetResizable(True)
         self.scrollArea_5.setObjectName("scrollArea_5")
         self.scrollAreaWidgetContents_7 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_7.setGeometry(QtCore.QRect(0, 0, 585, 537))
+        self.scrollAreaWidgetContents_7.setGeometry(QtCore.QRect(0, 0, 607, 553))
         self.scrollAreaWidgetContents_7.setObjectName("scrollAreaWidgetContents_7")
         self.formLayout_6 = QtWidgets.QFormLayout(self.scrollAreaWidgetContents_7)
         self.formLayout_6.setFieldGrowthPolicy(QtWidgets.QFormLayout.ExpandingFieldsGrow)
@@ -379,7 +378,7 @@ class Ui_Dialog(object):
         self.scrollArea_4.setWidgetResizable(True)
         self.scrollArea_4.setObjectName("scrollArea_4")
         self.scrollAreaWidgetContents_6 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_6.setGeometry(QtCore.QRect(0, 0, 585, 537))
+        self.scrollAreaWidgetContents_6.setGeometry(QtCore.QRect(0, 0, 607, 553))
         self.scrollAreaWidgetContents_6.setObjectName("scrollAreaWidgetContents_6")
         self.formLayout_5 = QtWidgets.QFormLayout(self.scrollAreaWidgetContents_6)
         self.formLayout_5.setObjectName("formLayout_5")
@@ -405,7 +404,7 @@ class Ui_Dialog(object):
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollArea_3.setObjectName("scrollArea_3")
         self.scrollAreaWidgetContents_5 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_5.setGeometry(QtCore.QRect(0, 0, 585, 537))
+        self.scrollAreaWidgetContents_5.setGeometry(QtCore.QRect(0, 0, 607, 530))
         self.scrollAreaWidgetContents_5.setObjectName("scrollAreaWidgetContents_5")
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_5)
         self.verticalLayout_9.setObjectName("verticalLayout_9")
@@ -519,7 +518,11 @@ class Ui_Dialog(object):
         self.formLayout_9.setItem(6, QtWidgets.QFormLayout.LabelRole, spacerItem4)
         self.verticalLayout_9.addWidget(self.groupBox_9)
         self.scrollArea_3.setWidget(self.scrollAreaWidgetContents_5)
-        self.gridLayout.addWidget(self.scrollArea_3, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.scrollArea_3, 1, 0, 1, 1)
+        self.label_28 = QtWidgets.QLabel(self.tabSqlCobol)
+        self.label_28.setOpenExternalLinks(True)
+        self.label_28.setObjectName("label_28")
+        self.gridLayout.addWidget(self.label_28, 0, 0, 1, 1)
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap(":/ide-icons/rc/database.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.tabWidget.addTab(self.tabSqlCobol, icon3, "")
@@ -527,7 +530,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.addWidget(self.widget, 0, 0, 1, 1)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(4)
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -647,6 +650,7 @@ class Ui_Dialog(object):
         self.label_25.setText(_translate("Dialog", "DBNAME:"))
         self.label_26.setText(_translate("Dialog", "DBPORT:"))
         self.label_27.setText(_translate("Dialog", "DBSOCKET:"))
+        self.label_28.setText(_translate("Dialog", "<html><head/><body><p align=\"center\">Read the <a href=\"http://opencobolide.readthedocs.org/en/latest/advanced.html#how-to-setup-dbpre-integration-with-opencobolide\"><span style=\" text-decoration: underline; color:#2980b9;\">guide</span></a> to get started</p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabSqlCobol), _translate("Dialog", "SQL Cobol"))
 
 from pyqode.cobol.widgets import CobolCodeEdit
