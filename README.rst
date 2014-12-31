@@ -38,6 +38,7 @@ Features:
   necessary if you are using the SCREEN section).
 - dark color schemes and theme
 - cross platform: works on **GNU/Linux**, **Windows** and **Mac OSX**
+- dbpre integration on Linux
 
 
 License
@@ -108,22 +109,6 @@ Resources
 -  `Source repository`_
 -  `Issue tracker`_
 -  `Documentation`_
-
-
-Disclaimer
-----------
-
-I am by no way a cobol expert, I just had to work on a cobol project at school
-with an awful IDE (NetExpress on a Windows Xp virtual machine). As I was writing
-pyqode, I thought it would be nice to use it to make a simple cobol editor for
-GNU/Linux.
-
-I've only learnt COBOL 74 and the IDE has been designed with this standard in
-mind. I don't plan to work with cobol at the moment nor to learn
-a new standard but if you found a missing feature, feel free to open a feature
-request. I'm always looking forward to make OpenCobolIDE better for the experts.
-
-Your advice will be very appreciated!
 
 
 Screenshots

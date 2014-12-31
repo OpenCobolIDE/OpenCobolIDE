@@ -19,6 +19,8 @@ Parts of the documentation:
     whats_new
     download
     getting_started
+    settings
+    advanced
     tipsandtricks
     faq
     contribute
@@ -26,7 +28,7 @@ Parts of the documentation:
 
 
 .. hlist::
-   :columns: 2
+   :columns: 1
 
    * .. glossary::
 
@@ -42,6 +44,21 @@ Parts of the documentation:
 
       :doc:`getting_started`
          Getting started with OpenCobolIDE
+
+   * .. glossary::
+
+      :doc:`settings`
+         Description of the application preferences settings
+
+   * .. glossary::
+
+      :doc:`advanced`
+         Covers some more advanced topics
+
+   * .. glossary::
+
+      :doc:`tipsandtricks`
+         Tips & Tricks
 
    * .. glossary::
 
@@ -72,28 +89,6 @@ Indices and tables:
 * :ref:`genindex`
 
 * :ref:`search`
-
-
-Disclaimer
-==========
-
-I am by no way a cobol expert, I just had to work on a cobol project at my
-night school with an awful IDE (NetExpress on a Windows Xp virtual machine).
-
-As I was writing pyQode (a code editor widget for python qt applications),
-I thought it would be the perfect occasion to show what pyqode can do and write
-a simple and lightweight cobol IDE that I could run on my favorite Linux
-distribution
-
-I've only learned COBOL 74 and the IDE has been designed with this standard in
-mind.
-
-I have no plan on working with cobol at the moment nor to learn
-a new standard but if you found a missing feature, feel free to open a feature
-request.
-
-I'm always looking forward to make OpenCobolIDE better. Your advice is needed
-and will be very appreciated!
 
 
 .. _pyQode: https://github.com/pyQode
