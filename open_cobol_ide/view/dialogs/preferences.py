@@ -28,6 +28,9 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             QtGui.QIcon(':/ide-icons/rc/applications-graphics.png')))
         self.tabWidget.setTabIcon(3, QtGui.QIcon.fromTheme(
             'media-playback-start', QtGui.QIcon(':/ide-icons/rc/media-playback-start.png')))
+        self.toolButtonAddLibPath.setIcon(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(':/ide-icons/rc/list-add.png')))
+        self.toolButtonRemoveLibPath.setIcon(
+            QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(':/ide-icons/rc/list-remove.png')))
         self.buttonBox.button(self.buttonBox.Reset).clicked.connect(self.reset)
         self.buttonBox.button(self.buttonBox.RestoreDefaults).clicked.connect(
             self.restore_defaults)
