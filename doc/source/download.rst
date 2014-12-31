@@ -18,10 +18,10 @@ OpenCobolIDE depends on the following packages:
 GNU/Linux
 ---------
 
-Install pyqt5, open-cobol and pip using your package manager, then run the
+Install pyqt5, open-cobol and pip for python3 using your package manager, then run the
 following commands::
 
-    sudo pip3 install OpenCobolIDE
+    sudo pip3 install OpenCobolIDE --upgrade
 
 
 If you are on Archlinux, you can install OpenCobolIDE and all its dependencies

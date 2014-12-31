@@ -28,15 +28,3 @@ to tell OpenCobolIDE where to look.
 
 You can specify the path to the compiler in the preferences dialog
 (Build & Run tab).
-
-
-4) Is it possible to install from source on Windows or Mac OSX?
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-Installation from source is possible on Mac and Windows:
-
-- install all requirements (Python3, PyQt5, pyqode.core)
-- run the ``open-cobol-ide`` script from the *extracted archive* or
-  *git repository* without actually installing OpenCobolIDE.
-  Do not run `setup.py install` on Windows or Mac OSX, it won't work.

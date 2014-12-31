@@ -19,6 +19,7 @@ Parts of the documentation:
     whats_new
     download
     getting_started
+    tipsandtricks
     faq
     contribute
     license

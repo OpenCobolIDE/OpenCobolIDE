@@ -15,6 +15,27 @@ on...
 Changelog
 ---------
 
+4.3.0
++++++
+
+New features:
+
+- experimental support for dbpre on Linux
+- experimental support for using a custom GnuCobol compiler on Windows
+- support for custom keywords convention (lower or upper case keyword suggestions)
+- support for very small screens (10 inches)
+- support for opening more than one file
+
+Fixed bugs:
+
+- improvements to the navigation panel: fix issues where exec statements were shown in the outline.
+- fixed a bug where the linter mixed the code of two opened tabs
+- fixed indentation bugs when indenting source that have characters before column 7 (non free format)
+- fixed duplicate entires in the recent files list
+- fixed a bug that prevent the IDE to remember the last open/save path
+- fixed a bug where compilation/run actions were wrongly disabled
+
+
 4.2.0
 +++++
 

@@ -11,8 +11,11 @@ You can contribute in many different ways:
 
 If you have any question, just open an issue on the issue tracker.
 
-.. _`issue tracker`: https://github.com/OpenCobolIDE/OpenCobolIDE/issues
+It might also be worth checking the OpenCobolIDE's `wiki` (for developers and contributors).
 
+
+.. _`issue tracker`: https://github.com/OpenCobolIDE/OpenCobolIDE/issues
+.. _`wiki`: https://github.com/OpenCobolIDE/OpenCobolIDE/wiki
 
 Recommendation for submitting a bug report:
 -------------------------------------------
@@ -22,20 +25,29 @@ To submit a valuable bug report, the following information is required:
     - Operating System
     - Desktop Environment (for GNU/Linux only)
     - Describe the way you installed the IDE (for GNU/Linux only): pip or apt-get or another method?
-    - Include the Application log output content (*Menu->View->Application log->Show window*)
+    - Include the Application log output content (*?->About OpenCobolIDE->Log*)
 
-Recommendation for submitting a Pull Request:
+Starting from v4.2, there is a report bug menu action (*?->Report a bug*) that will open
+your web browser to the github bug tracker with a prefilled report template.
+
+Recommendations for submitting pull requests:
 ---------------------------------------------
 
-Pull Requests are great (on the dev branch)! Readme/Documentation changes are
-ok in the master branch.
+Pull Requests are great!
 
-    - Fork the Repo on github.
-    - Push to your fork and submit a pull request to the dev branch.
+1. Fork the Repo on github.
+2. Create a feature or a bugfix branch before you start coding.
+3. If you are adding functionality or fixing a bug, please add a test!
+4. Add your name to AUTHORS.rst
+5. Push to your fork and submit a pull request to **the master branch**.
 
-The master branch is used for the stable releases, following the
-`git workflow`_.
+Please use **PEP8** to style your code (PEP8 compliance is tested Travis CI).
 
-Please use **PEP8** to style your code.
+*You can check pep8 compliance before pushing by running the test suite with
+the --pep8 option*::
 
-.. _`git workflow`: http://nvie.com/posts/a-successful-git-branching-model/
+    ($ pip3 install pytest-pep8)
+    $ python3 runtests.py --pep8 -m pep8
+
+
+.. _bug tracker: https://github.com/OpenCobolIDE/OpenCobolIDE/issues?state=open
