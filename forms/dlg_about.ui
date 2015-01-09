@@ -61,7 +61,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -101,7 +101,7 @@ p, li { white-space: pre-wrap; }
        <item>
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Copyright (C) 2013-2014 Colin Duquesnoy</string>
+          <string>Copyright (C) 2013-2015 Colin Duquesnoy</string>
          </property>
         </widget>
        </item>
