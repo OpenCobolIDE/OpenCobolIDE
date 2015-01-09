@@ -87,12 +87,12 @@ class Application:
                 Settings().dark_style = False
             else:
                 qt_api = os.environ[QT_API]
-                if qt_api == os.environ[QT_API] == PYQT5_API:
+                if qt_api in PYQT5_API:
                     self.app.setStyleSheet(
                         qdarkstyle.load_stylesheet_pyqt5())
                 else:
                     self.app.setStyleSheet(
-                        qdarkstyle.load_stylesheet(qt_api == PYSIDE_API))
+                        qdarkstyle.load_stylesheet(qt_api in PYSIDE_API))
                 return
         self.app.setStyleSheet('')
 
