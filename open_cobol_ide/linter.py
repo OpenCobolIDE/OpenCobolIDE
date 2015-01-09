@@ -20,7 +20,7 @@ def lint(request_data):
     code = request_data['code']
     path = request_data['path']
     extension = os.path.splitext(path)[1]
-    if extension in GnuCobolCompiler.EXTENSIONS:
+    if extension.upper() in GnuCobolCompiler.EXTENSIONS:
         # time stamped file path
         tmp_pth = os.path.join(tempfile.gettempdir(), 'oci%s.cbl' % str(int(time.time())))
         print("temp path = %s" % tmp_pth)
