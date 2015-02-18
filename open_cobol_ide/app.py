@@ -128,6 +128,7 @@ class Application:
         if getattr(sys, 'frozen', False):
             # The application is frozen
             cwd = os.path.dirname(sys.executable)
+            os.environ['REQUESTS_CA_BUNDLE'] = os.path.join(cwd, 'cacert.pem')
         else:
             cwd = os.getcwd()
         custom_compiler_path = Settings().custom_compiler_path

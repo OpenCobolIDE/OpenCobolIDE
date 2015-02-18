@@ -12,6 +12,7 @@ from pyqode.core.tools import console
 from open_cobol_ide import __version__
 from pyqode.cobol.backend import server
 from pyqode.core.api.syntax_highlighter import get_all_styles
+import requests.certs
 
 
 # Detect system
@@ -49,9 +50,13 @@ print('pygment styles', pygments_styles)
 
 options = {
     'namespace_packages': ['pyqode'],
+    "include_files": [(requests.certs.where(), 'cacert.pem')],
     # freeze the pygments default style along with our executable
     'includes': [
-        'pkg_resources'
+        'pkg_resources',
+        'requests',
+        'uritemplate',
+        'github3'
     ] + pygments_styles
 }
 
