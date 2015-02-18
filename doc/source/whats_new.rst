@@ -15,6 +15,21 @@ on...
 Changelog
 ---------
 
+4.3.1
++++++
+
+New features:
+
+- new bug report tool that make use of the Github API to submit a new bug report
+  using your account that automatically includes system information and
+  the application log.
+
+Fixed bugs:
+
+- fix a couple of small bugs in pyqode which should improve the usability (things like
+  restoring cursor position after a reload due to an external change, improved auto-completion
+  of quotes and parentheses).
+
 4.3.0
 +++++
 
