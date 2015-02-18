@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/Documents/pyqode/OpenCobolIDE/forms/dlg_report_bug.ui'
+# Form implementation generated from reading ui file '/home/colin/OpenCobolIDE/forms/dlg_report_bug.ui'
 #
-# Created: Wed Feb 18 16:21:16 2015
+# Created: Wed Feb 18 17:39:53 2015
 #      by: PyQt5 UI code generator 5.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -62,10 +62,10 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Report a bug/wish"))
+        Dialog.setWindowTitle(_translate("Dialog", "Report a bug"))
         self.label.setText(_translate("Dialog", "Title:"))
         self.label_2.setText(_translate("Dialog", "Description:"))
         self.label_3.setText(_translate("Dialog", "Report type:"))
         self.radioButtonBug.setText(_translate("Dialog", "Bu&g"))
-        self.radioButtonWish.setText(_translate("Dialog", "Enhancement"))
+        self.radioButtonWish.setText(_translate("Dialog", "E&nhancement"))
         self.pushButtonSubmit.setText(_translate("Dialog", "Submit"))

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Report a bug/wish</string>
+   <string>Report a bug</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -64,7 +64,7 @@
        <item>
         <widget class="QRadioButton" name="radioButtonWish">
          <property name="text">
-          <string>Enhancement</string>
+          <string>E&amp;nhancement</string>
          </property>
         </widget>
        </item>

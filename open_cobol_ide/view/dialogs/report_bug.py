@@ -1,10 +1,11 @@
+import sys
 import pygments
 import pyqode.core
 import pyqode.cobol
 import pyqode.qt
 import platform
 from github3 import login
-from pyqode.qt import QtWidgets, QtCore
+from pyqode.qt import QtWidgets, QtCore, QtGui
 from open_cobol_ide import __version__, logger
 from open_cobol_ide.view.forms.dlg_report_bug_ui import Ui_Dialog
 from open_cobol_ide.view.dialogs.github_login import DlgGithubLogin
@@ -68,9 +69,24 @@ class DlgReportBug(QtWidgets.QDialog):
         if bug:
             description = BUG_DESCRIPTION % (description, self.get_system_infos(),
                                              self.get_application_log())
-        # issue = self.github.create_issue('OpenCobolIDE', 'OpenCobolIDE', title, description,
-        #                                  labels=labels)
-        # todo: open web browser if issue submitted sucessfully
+        usr = 'OpenCobolIDE'
+        repo = 'OpenCobolIDE'
+        issue = self.github.create_issue(usr, repo, title, description, labels=labels)
+        if issue is not None:
+            answer = QtWidgets.QMessageBox.question(
+                self, 'Open report URL',
+                'Report sucessfully submitted. Do you want to see the report '
+                'in your web browser?', QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                QtWidgets.QMessageBox.Yes)
+            if answer == QtWidgets.QMessageBox.Yes:
+                url = 'http://github/%s/%s/issues/%d' % (usr, repo, issue.number)
+                QtGui.QDesktopServices.openUrl(QtCore.QUrl(url))
+        else:
+            QtWidgets.QMessageBox.warning(self, 'Failed to submit bug report',
+                                          'An error occured while submitting the bug report.\n'
+                                          'You may report a bug manually here: '
+                                          'https://github.com/OpenCobolIDE/OpenCobolIDE/issues/new')
+        self.accept()
 
     @classmethod
     def report_bug(cls, parent):
