@@ -24,6 +24,22 @@ class Settings(object):
         """
         self._settings.clear()
 
+    @property
+    def github_oauth_token(self):
+        return self._settings.value('githubToken', '')
+
+    @github_oauth_token.setter
+    def github_oauth_token(self, token):
+        self._settings.setValue('githubToken', str(token))
+
+    @property
+    def github_username(self):
+        return self._settings.value('githubUsername', '')
+
+    @github_username.setter
+    def github_username(self, username):
+        self._settings.setValue('githubUsername', str(username))
+
     # Geometry and state (visible windows, ...) + working settings (last path)
     # ------------------------------------------------------------------------
     @property
