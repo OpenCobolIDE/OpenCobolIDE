@@ -3,6 +3,12 @@ Report bugs or ask a question
 
 You can report bugs or ask question on our `bug tracker`_.
 
+Since v4.3.1, you can report a bug from within the IDE (? -> Report a bug). The first time
+you use it, it will prompt you for your github credentials in order to generate a personal
+access token that is needed to submit a bug report using your credentials. This tool
+will automatically send the system information and the application log, you just have
+to write a short title and description.
+
 
 Submitting pull requests:
 -------------------------

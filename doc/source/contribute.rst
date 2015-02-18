@@ -13,6 +13,12 @@ If you have any question, just open an issue on the issue tracker.
 
 It might also be worth checking the OpenCobolIDE's `wiki` (for developers and contributors).
 
+Since v4.3.1, you can report a bug from within the IDE (? -> Report a bug). The first time
+you use it, it will prompt you for your github credentials in order to generate a personal
+access token that is needed to submit a bug report using your credentials. This tool
+will automatically send the system information and the application log, you just have
+to write a short title and description.
+
 
 .. _`issue tracker`: https://github.com/OpenCobolIDE/OpenCobolIDE/issues
 .. _`wiki`: https://github.com/OpenCobolIDE/OpenCobolIDE/wiki
