@@ -238,7 +238,7 @@ class GnuCobolCompiler:
         process.start(pgm, options)
         process.waitForFinished()
         status = process.exitCode()
-        output = process.readAllStandardOutput().data().decode('utf-8')
+        output = process.readAllStandardOutput().data().decode(locale.getpreferredencoding())
         messages = self.parse_output(output, file_path)
         _logger().info('output: %s', output)
         if status != 0 and not len(messages):
