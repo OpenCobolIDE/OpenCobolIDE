@@ -59,6 +59,7 @@ Requirements
 - `pyqode.cobol`_
 - `Pygments`_
 - `qdarkstyle`_
+- `github3.py`_
 
 
 Installation
@@ -164,3 +165,4 @@ Screenshots
 .. _PyQt5: http://www.riverbankcomputing.co.uk/software/pyqt/download
 .. _qdarkstyle: https://github.com/ColinDuquesnoy/QDarkStyleSheet
 .. _pyQode: https://github.com/pyQode/
+.. _github3.py: https://github.com/sigmavirus24/github3.py
