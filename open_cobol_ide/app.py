@@ -157,6 +157,10 @@ class Application:
                  '/usr/local/sbin', '/opt/bin', '/opt/sbin', '/opt/local/bin',
                  '/opt/local/sbin']
         os.environ['PATH'] = ':'.join(paths)
+        if getattr(sys, 'frozen', False):
+            # The application is frozen
+            cwd = os.path.dirname(sys.executable)
+            os.environ['REQUESTS_CA_BUNDLE'] = os.path.join(cwd, 'cacert.pem')
 
     def exit(self):
         """
