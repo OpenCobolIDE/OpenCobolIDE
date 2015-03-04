@@ -50,6 +50,7 @@ print('pygment styles', pygments_styles)
 
 options = {
     'namespace_packages': ['pyqode'],
+    'include_msvcr': True,
     "include_files": [(requests.certs.where(), 'cacert.pem')],
     # freeze the pygments default style along with our executable
     'includes': [
