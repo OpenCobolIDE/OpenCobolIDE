@@ -57,7 +57,14 @@ class DlgReportBug(QtWidgets.QDialog):
             title = '[Enhancement] %s' % title
         url_data = urllib.parse.urlencode({'title': title, 'body': description})
         url = 'https://github.com/OpenCobolIDE/OpenCobolIDE/issues/new?' + url_data
+        QtWidgets.QMessageBox.information(
+            self, 'Complete bug report on www.github.com',
+            'To complete the report process, we need you to submit the generated '
+            'ticket on our issue tracker. We will open a browser to our '
+            'tracker, you just need to login with your github account and '
+            'press the submit button at the end of the page.')
         QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromEncoded(url))
+        self.accept()
 
     @classmethod
     def report_bug(cls, parent):
