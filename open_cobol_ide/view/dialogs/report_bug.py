@@ -1,18 +1,15 @@
-import sys
+import logging
 import pygments
 import pyqode.core
 import pyqode.cobol
 import pyqode.qt
 import platform
-import logging
-from github3 import login
+import urllib.parse
+import sys
 from pyqode.qt import QtWidgets, QtCore, QtGui
 from open_cobol_ide import __version__, logger
 from open_cobol_ide.view.forms.dlg_report_bug_ui import Ui_Dialog
-from open_cobol_ide.view.dialogs.github_login import DlgGithubLogin
 from open_cobol_ide.compilers import GnuCobolCompiler
-from open_cobol_ide.settings import Settings
-
 
 
 BUG_DESCRIPTION = '''%s
@@ -38,9 +35,6 @@ class DlgReportBug(QtWidgets.QDialog):
         super().__init__(parent)
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
-        self.github = None
-        # show the login dialog on next frame
-        QtCore.QTimer.singleShot(1, self.login)
         self.ui.lineEditTitle.textChanged.connect(self.enable_submit)
         self.ui.plainTextEditDesc.textChanged.connect(self.enable_submit)
         self.ui.pushButtonSubmit.clicked.connect(self.submit)
@@ -49,18 +43,7 @@ class DlgReportBug(QtWidgets.QDialog):
     def enable_submit(self, *_):
         self.ui.pushButtonSubmit.setEnabled(
             self.ui.lineEditTitle.text().strip() != '' and
-            self.ui.plainTextEditDesc.toPlainText().strip() != '' and
-            self.github is not None)
-
-    def login(self):
-        if not Settings().github_oauth_token:
-            user, token = DlgGithubLogin.login(self)
-            if token is None:
-                self.reject()
-            Settings().github_oauth_token = token
-            Settings().github_username = user
-        self.github = login(token=Settings().github_oauth_token)
-        _logger().info('github login done: %r', self.github)
+            self.ui.plainTextEditDesc.toPlainText().strip() != '')
 
     def submit(self):
         title = self.ui.lineEditTitle.text().strip()
@@ -68,39 +51,13 @@ class DlgReportBug(QtWidgets.QDialog):
         bug = self.ui.radioButtonBug.isChecked()
         if bug:
             title = '[Bug] %s' % title
-            labels = ['Bug']
             description = BUG_DESCRIPTION % (description, self.get_system_infos(),
                                              self.get_application_log())
         else:
             title = '[Enhancement] %s' % title
-            labels = ['Enhancement']
-        usr = 'OpenCobolIDE'
-        repo = 'OpenCobolIDE'
-        try:
-            issue = self.github.create_issue(usr, repo, title, description, labels=labels)
-        except Exception:
-            _logger().exception('Failed to create issue on github')
-            issue = None
-        if issue is not None:
-            answer = QtWidgets.QMessageBox.question(
-                self, 'Open report URL',
-                'Report sucessfully submitted. Do you want to see the report '
-                'in your web browser?', QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                QtWidgets.QMessageBox.Yes)
-            if answer == QtWidgets.QMessageBox.Yes:
-                url = 'http://github/%s/%s/issues/%d' % (usr, repo, issue.number)
-                QtGui.QDesktopServices.openUrl(QtCore.QUrl(url))
-        else:
-            QtGui.QClipboard().setText(description)
-            QtWidgets.QMessageBox.warning(
-                self, 'Failed to submit bug report',
-                'An error occurred while submitting the bug report.\n\n'
-                'You may report a bug manually here: '
-                'https://github.com/OpenCobolIDE/OpenCobolIDE/issues/new\n\n'
-                'Note that the complete bug report has been stored'
-                'in the clipboard so that you can just press Ctrl+V to copy '
-                'it on github!')
-        self.accept()
+        url_data = urllib.parse.urlencode({'title': title, 'body': description})
+        url = 'https://github.com/OpenCobolIDE/OpenCobolIDE/issues/new?' + url_data
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromEncoded(url))
 
     @classmethod
     def report_bug(cls, parent):

@@ -27,8 +27,7 @@ requirements = [
     'pygments>=1.6',
     'pyqode.core>=2.3.2',
     'pyqode.cobol',
-    'qdarkstyle>=1.11',
-    'github3.py'
+    'qdarkstyle>=1.11'
 ]
 if int('%s%s' % sys.version_info[:2]) < 34:
     # python < 3.4 needs enum backport package
