@@ -426,6 +426,14 @@ class Settings(object):
     # SQL Cobol Settings
     # ----------------------
     @property
+    def esqloc(self):
+        return self._settings.value('esqloc', '')
+
+    @esqloc.setter
+    def esqloc(self, value):
+        self._settings.setValue('esqloc', value)
+
+    @property
     def dbpre(self):
         return self._settings.value('dbpre', '')
 
