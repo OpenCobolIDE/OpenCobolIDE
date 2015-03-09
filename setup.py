@@ -25,8 +25,9 @@ with open('README.rst', 'r') as readme:
 # install requirements
 requirements = [
     'pygments>=1.6',
-    'pyqode.core>=2.3.2',
-    'pyqode.cobol',
+    'pyqode.core>=2.5.0',
+    'pyqode.cobol>=2.5.0',
+    'pyqode.qt>=2.5.0',
     'qdarkstyle>=1.11'
 ]
 if int('%s%s' % sys.version_info[:2]) < 34:

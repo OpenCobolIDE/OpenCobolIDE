@@ -15,6 +15,17 @@ on...
 Changelog
 ---------
 
+4.4.0
++++++
+
+New features:
+
+  - esqlOC integration (SQL precompiler for windows)
+
+Fixed bugs:
+  - fix a bug with the new reporter tool on windows (and get rid of the github3.py dependency)
+  - improve comment/uncomment when workin in fixed format and column 1-6 is not empty.
+
 4.3.1
 +++++
 
