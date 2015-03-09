@@ -619,7 +619,8 @@ class EsqlOCCompiler:
         _logger().info('compiling with cobc')
         cob_path = os.path.splitext(path)[0] + '.cob'
         compiler = GnuCobolCompiler()
-        return compiler.compile(cob_path, get_file_type(cob_path))
+        return compiler.compile(cob_path, get_file_type(cob_path), additional_options=[
+            '-static', '-L%s' % Settings().esqloc, '-locsql.lib'])
 
     def compile(self, path):
         """
