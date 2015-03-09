@@ -11,7 +11,7 @@ from pyqode.qt import QtCore, QtWidgets
 from .base import Controller
 from open_cobol_ide import system
 from open_cobol_ide.enums import FileType
-from open_cobol_ide.compilers import GnuCobolCompiler, get_file_type, DbpreCompiler
+from open_cobol_ide.compilers import GnuCobolCompiler, get_file_type, DbpreCompiler, EsqlOCCompiler
 from open_cobol_ide.settings import Settings
 
 
@@ -33,22 +33,31 @@ class CompilationThread(QtCore.QThread):
         """
         Compiles the file and all its dependencies.
         """
-        def is_sql_cobol(path):
+        def is_dbpre_cobol(path):
             if path.lower().endswith('.scb'):
+                with open(path, 'r') as f:
+                    return 'exec sql' in f.read().lower()
+            return False
+
+        def is_esqloc_cobol(path):
+            if path.lower().endswith('.sqb'):
                 with open(path, 'r') as f:
                     return 'exec sql' in f.read().lower()
             return False
 
         cobc = GnuCobolCompiler()
         dbpre = DbpreCompiler()
+        esqloc = EsqlOCCompiler()
         files = [self.file_path]
         files += cobc.get_dependencies(self.file_path, recursive=True)
 
         _logger().info('running compilation thread: %r', files)
 
         for f in files:
-            if is_sql_cobol(f):
+            if is_dbpre_cobol(f):
                 status, messages = dbpre.compile(f)
+            elif is_esqloc_cobol(f):
+                status, messages = esqloc.compile(f)
             else:
                 status, messages = cobc.compile(f, get_file_type(f))
             self.file_compiled.emit(f, status, messages)
@@ -135,13 +144,7 @@ class CobolController(Controller):
             for item in self.run_buttons + [self.ui.actionRun]:
                 item.setEnabled(False)
 
-    def compile(self):
-        """
-        Compiles the current editor
-        """
-        # make sure the associated compiler is working, otherwise disable compile/run actions
-        path = self.app.edit.current_editor.file.path
-        dotted_extension = os.path.splitext(path)[1].upper()
+    def check_compiler(self, dotted_extension):
         compiler_works = False
         msg = 'Invalid extension'
         if dotted_extension in GnuCobolCompiler.EXTENSIONS:
@@ -150,6 +153,19 @@ class CobolController(Controller):
         elif dotted_extension in DbpreCompiler.EXTENSIONS:
             compiler_works = DbpreCompiler().is_working()
             msg = 'dbpre compiler not working, please check your SQL cobol configuration'
+        elif dotted_extension in EsqlOCCompiler.EXTENSIONS:
+            compiler_works = EsqlOCCompiler().is_working()
+            msg = 'esqlOC compiler not workign, please check your SQL cobol configuration'
+        return compiler_works, msg
+
+    def compile(self):
+        """
+        Compiles the current editor
+        """
+        # make sure the associated compiler is working, otherwise disable compile/run actions
+        path = self.app.edit.current_editor.file.path
+        dotted_extension = os.path.splitext(path)[1].upper()
+        compiler_works, msg = self.check_compiler(dotted_extension)
         if not compiler_works:
             QtWidgets.QMessageBox.warning(self.app.win, 'Cannot compile file',
                                           'Cannot compile file: %r.\n\nReason: %s' % (os.path.split(path)[1], msg))

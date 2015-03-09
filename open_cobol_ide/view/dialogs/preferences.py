@@ -80,11 +80,15 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.toolButtonCustomCompilerPath.clicked.connect(self._select_custom_compiler_path)
         self.toolButtonAddLibPath.clicked.connect(self._add_lib_path)
         self.toolButtonRemoveLibPath.clicked.connect(self._rm_lib_path)
+        self.toolButtonESQLOC.clicked.connect(self._select_esqloc)
         self.reset(all_tabs=True)
         if not system.windows:
             self.labelVCVARS.hide()
             self.lineEditVCVARS.hide()
             self.toolButtonVCVARS.hide()
+            self.stackedWidgetSQL.setCurrentIndex(0)
+        else:
+            self.stackedWidgetSQL.setCurrentIndex(1)
 
     def _add_lib_path(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(
@@ -121,6 +125,12 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                 QtWidgets.QMessageBox.warning(
                     self, 'Invalid compiler path',
                     'Not a valid compiler path because it does not contain %s!' % pgm)
+
+    def _select_esqloc(self):
+        path = QtWidgets.QFileDialog.getExistingDirectory(
+            self, 'Select esqlOC folder', self.lineEditESQLOC.text())
+        if path:
+            self.lineEditESQLOC.setText(path)
 
     def _select_dbpre(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
@@ -296,6 +306,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditDBSOCKET.setText(settings.dbsocket)
             self.labelDbpreVersion.setText(compilers.DbpreCompiler().get_version()
                                            if Settings().dbpre != '' else '')
+            self.lineEditESQLOC.setText(settings.esqloc)
 
     def restore_defaults(self):
         settings = Settings()
@@ -342,6 +353,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.dbname = ''
             settings.dbport = '03306'
             settings.dbsocket = 'null'
+            settings.esqloc = ''
         self.reset()
 
     @classmethod
@@ -409,3 +421,4 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.dbname = dlg.lineEditDBNAME.text()
         settings.dbport = dlg.lineEditDBPORT.text()
         settings.dbsocket = dlg.lineEditDBSOCKET.text()
+        settings.esqloc = dlg.lineEditESQLOC.text()

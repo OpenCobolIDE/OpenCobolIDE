@@ -1,8 +1,11 @@
 Advanced topics
 ===============
 
-How to use a custom GnuCobol compiler build on WINDOWS?
--------------------------------------------------------
+
+.. _windows-gnu-cobol:
+
+Setup a custom compiler on Windows (GnuCobol built with Visual Studio)
+----------------------------------------------------------------------
 
 Starting from version 4.3, it is possible to use another GnuCobol compiler than the one that is bundled
 with the IDE.
@@ -20,8 +23,46 @@ This section describes how to setup OpenCobolIDE to use kiska's GnuCobol 2.0 com
 7) Create a simple hello world cobol program, compile and run it to make sure everything works OK.
 
 
-How to setup dbpre integration with OpenCobolIDE?
--------------------------------------------------
+.. _sql-guide:
+
+SQL Cobol Guide
+---------------
+
+GnuCobol does not support SQL statements (such as EXEC SQL) natively but you may use a pre-compiler that
+will convert your sql statements to pure cobol that can then be compiled with GnuCobol.
+
+OpenCobolIDE supports the following pre-compilers:
+
+- `dbpre`_  (**UNIX**)
+- `esqlOC`_ (**WINDOWS**)
+
+.. _dbpre: http://sourceforge.net/projects/dbpre/
+.. _esqlOC: http://sourceforge.net/p/open-cobol/discussion/contrib/thread/4057115f/
+
+
+Read the below section to know how to setup OpenCobolIDE to work with one of these pre-compilers.
+
+
+.. warning:: Pre-compilers are associated with one specific extension (**.scb** for dbpre and **.sqb** for esqlOC).
+             Those tools will get used only if the file extension match the associated extension!
+             E.g. pre-compilers will never get called on regular cobol files (.cbl, .cob,...).
+
+esqlOC (on Windows)
++++++++++++++++++++
+
+.. warning:: To work with esqlOC, you need to use GnuCobol built with Visual Studio.
+             Read :ref:`windows-gnu-cobol` to setup the correct compiler.
+
+1) Setup OpenCobolIDE to work with GnuCobol compiled with Visual Studio (make sure you can compile a simple
+   HelloWorld)
+2) Download esqlOC and install it somewhere on your drive (prefer a path without spaces such as ``c:\esqloc``).
+3) Open the OpenCobolIDE preferences and go to the **SQL Cobol** tab. There specify the installation directory
+   of esqlOC.
+4) Open a **.sqb** file and compile it.
+
+
+DBPRE (on GNU/Linux)
+++++++++++++++++++++
 
 1) Download dbpre and follow the instruction for compiling. You don't need to install it system
    wide, just create a clean dbpre directory in your home folder where you you copy the following files:
@@ -42,7 +83,7 @@ How to setup dbpre integration with OpenCobolIDE?
 6) Go to the compiler settings tab
 7) Add a new library path that points to: `/usr/include/mysql`
 8) Add `mysqlclient` to the libraries.
-9) Open a .scb file, compile and enjoy!
+9) Open a **.scb** file, compile and enjoy!
 
 Here are some screen-shots of a working configuration:
 

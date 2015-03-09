@@ -29,7 +29,15 @@ to tell OpenCobolIDE where to look.
 You can specify the path to the compiler in the preferences dialog
 (Build & Run tab).
 
-4) OpenCobolIDE failed to open a file due to an encoding issue. What can I do?
+4) Cannot compile source code that contains EXEC SQL statements. What can I do?
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+GnuCobol does not support EXEC SQL statements. You need to use a cobol precompiler that will
+convert your sql statements to regular cobol code that can be compiled with GnuCobol.
+
+Read the :ref:`sql-guide`.
+
+5) OpenCobolIDE failed to open a file due to an encoding issue. What can I do?
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 OpenCobolIDE does not detect file encoding automatically. It first tries with your

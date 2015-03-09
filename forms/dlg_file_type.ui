@@ -134,6 +134,11 @@
          </item>
          <item>
           <property name="text">
+           <string>.sqb</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>.CBL</string>
           </property>
          </item>
@@ -155,6 +160,11 @@
          <item>
           <property name="text">
            <string>.SCB</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>.SQB</string>
           </property>
          </item>
         </widget>

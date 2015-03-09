@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/OpenCobolIDE/forms/dlg_file_type.ui'
+# Form implementation generated from reading ui file 'C:\Users\Colin\Desktop\OpenCobolIDE\forms\dlg_file_type.ui'
 #
-# Created: Tue Dec 23 12:52:43 2014
-#      by: PyQt5 UI code generator 5.3.2
+# Created: Thu Mar  5 17:17:23 2015
+#      by: PyQt5 UI code generator 5.2.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -61,6 +61,8 @@ class Ui_Dialog(object):
         self.comboBoxExtension.addItem("")
         self.comboBoxExtension.addItem("")
         self.comboBoxExtension.addItem("")
+        self.comboBoxExtension.addItem("")
+        self.comboBoxExtension.addItem("")
         self.horizontalLayout_2.addWidget(self.comboBoxExtension)
         self.formLayout.setLayout(1, QtWidgets.QFormLayout.FieldRole, self.horizontalLayout_2)
         self.verticalLayout.addLayout(self.formLayout)
@@ -104,10 +106,12 @@ class Ui_Dialog(object):
         self.comboBoxExtension.setItemText(2, _translate("Dialog", ".pco"))
         self.comboBoxExtension.setItemText(3, _translate("Dialog", ".cpy"))
         self.comboBoxExtension.setItemText(4, _translate("Dialog", ".scb"))
-        self.comboBoxExtension.setItemText(5, _translate("Dialog", ".CBL"))
-        self.comboBoxExtension.setItemText(6, _translate("Dialog", ".COB"))
-        self.comboBoxExtension.setItemText(7, _translate("Dialog", ".PCO"))
-        self.comboBoxExtension.setItemText(8, _translate("Dialog", ".CPY"))
-        self.comboBoxExtension.setItemText(9, _translate("Dialog", ".SCB"))
+        self.comboBoxExtension.setItemText(5, _translate("Dialog", ".sqb"))
+        self.comboBoxExtension.setItemText(6, _translate("Dialog", ".CBL"))
+        self.comboBoxExtension.setItemText(7, _translate("Dialog", ".COB"))
+        self.comboBoxExtension.setItemText(8, _translate("Dialog", ".PCO"))
+        self.comboBoxExtension.setItemText(9, _translate("Dialog", ".CPY"))
+        self.comboBoxExtension.setItemText(10, _translate("Dialog", ".SCB"))
+        self.comboBoxExtension.setItemText(11, _translate("Dialog", ".SQB"))
 
 from . import ide_rc
