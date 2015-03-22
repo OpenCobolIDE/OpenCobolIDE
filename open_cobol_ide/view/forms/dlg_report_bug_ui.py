@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file '/home/colin/OpenCobolIDE/forms/dlg_report_bug.ui'
 #
-# Created: Wed Feb 18 17:39:53 2015
-#      by: PyQt5 UI code generator 5.4
+# Created by: PyQt5 UI code generator 5.4.1
 #
 # WARNING! All changes made in this file will be lost!
 

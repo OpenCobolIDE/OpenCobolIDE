@@ -144,7 +144,7 @@ class Ui_Dialog(object):
         self.groupBox_10 = QtWidgets.QGroupBox(self.scrollAreaWidgetContents_2)
         self.groupBox_10.setObjectName("groupBox_10")
         self.formLayout_11 = QtWidgets.QFormLayout(self.groupBox_10)
-        self.formLayout_11.setFieldGrowthPolicy(QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_11.setFieldGrowthPolicy(QtWidgets.QFormLayout.ExpandingFieldsGrow)
         self.formLayout_11.setObjectName("formLayout_11")
         self.label_30 = QtWidgets.QLabel(self.groupBox_10)
         self.label_30.setObjectName("label_30")

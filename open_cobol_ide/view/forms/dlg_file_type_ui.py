@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Users\Colin\Desktop\OpenCobolIDE\forms\dlg_file_type.ui'
+# Form implementation generated from reading ui file '/home/colin/OpenCobolIDE/forms/dlg_file_type.ui'
 #
-# Created: Thu Mar  5 17:17:23 2015
-#      by: PyQt5 UI code generator 5.2.1
+# Created by: PyQt5 UI code generator 5.4.1
 #
 # WARNING! All changes made in this file will be lost!
 
