@@ -156,7 +156,7 @@ class Settings(object):
     #
     @property
     def preferred_eol(self):
-        return self._settings.value('preferredEOL', 0)
+        return int(self._settings.value('preferredEOL', 0))
 
     @preferred_eol.setter
     def preferred_eol(self, value):
@@ -164,7 +164,7 @@ class Settings(object):
 
     @property
     def autodetect_eol(self):
-        return self._settings.value('autodetectEOL', True)
+        return bool(self._settings.value('autodetectEOL', True))
 
     @autodetect_eol.setter
     def autodetect_eol(self, value):

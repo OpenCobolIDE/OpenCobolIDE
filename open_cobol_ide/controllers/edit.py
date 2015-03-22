@@ -237,6 +237,8 @@ class EditController(Controller):
                 self.ui.consoleOutput.apply_color_scheme(
                     ColorScheme(Settings().color_scheme))
                 editor.rehighlight()
+                editor.file.autodetect_eol = Settings().autodetect_eol
+                editor.file.preferred_eol = Settings().preferred_eol
 
     def _on_file_deleted(self, editor):
         if QtWidgets.QMessageBox.question(
