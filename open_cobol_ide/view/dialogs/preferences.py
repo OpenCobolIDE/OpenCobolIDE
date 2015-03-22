@@ -189,8 +189,6 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         else:
             self.lineEditDBPASSWD.setEchoMode(QtWidgets.QLineEdit.Password)
 
-
-
     @QtCore.Slot(bool)
     def on_radioButtonColorWhite_toggled(self, native):
         # choose an icon them that goes well with the selected style
@@ -245,6 +243,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditCommentIndicator.setText(settings.comment_indicator)
             self.checkBoxSmartBackspace.setChecked(
                 settings.enable_smart_backspace)
+            self.checkBoxAutodetectEOL.setChecked(settings.autodetect_eol)
+            self.comboBoxPreferredEOL.setCurrentIndex(settings.preferred_eol)
         # Style
         if self.tabWidget.currentIndex() == 1 or all_tabs:
             rb = (self.radioButtonColorDark if settings.dark_style else
@@ -323,6 +323,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.comment_indicator = '*> '
             settings.enable_smart_backspace = False
             settings.lower_case_keywords = False
+            settings.autodetect_eol = True
+            settings.preferred_eol = 0
         # Style
         elif index == 1:
             settings.dark_style = False
@@ -383,6 +385,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.enable_autoindent = dlg.checkBoxEditorAutoIndent.isChecked()
         settings.code_completion_trigger_len = \
             dlg.spinBoxEditorCCTriggerLen.value()
+        settings.preferred_eol = dlg.comboBoxPreferredEOL.currentIndex()
+        settings.autodetect_eol = dlg.checkBoxAutodetectEOL.isChecked()
         settings.dark_style = dlg.radioButtonColorDark.isChecked()
         settings.font = dlg.fontComboBox.currentFont().family()
         settings.font_size = dlg.spinBoxFontSize.value()

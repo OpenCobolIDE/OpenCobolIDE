@@ -155,6 +155,22 @@ class Settings(object):
     # Editor settings settings
     #
     @property
+    def preferred_eol(self):
+        return self._settings.value('preferredEOL', 0)
+
+    @preferred_eol.setter
+    def preferred_eol(self, value):
+        self._settings.setValue('preferredEOL', int(value))
+
+    @property
+    def autodetect_eol(self):
+        return self._settings.value('autodetectEOL', True)
+
+    @autodetect_eol.setter
+    def autodetect_eol(self, value):
+        self._settings.setValue('autodetectEOL', bool(value))
+
+    @property
     def display_lines(self):
         return bool(int(self._settings.value('displayLineNumbers', '1')))
 

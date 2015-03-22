@@ -132,8 +132,10 @@ class EditController(Controller):
         """
         try:
             editor = self.ui.tabWidgetEditors.open_document(
-                path, self.app.cobol.create_bt_compile(),
-                self.app.cobol.create_bt_run())
+                path, preferred_eol=Settings().preferred_eol,
+                autodetect_eol=Settings().autodetect_eol,
+                bt_compile=self.app.cobol.create_bt_compile(),
+                bt_run=self.app.cobol.create_bt_run(),)
         except TypeError:
             editor = self.ui.tabWidgetEditors.open_document(path)
         try:

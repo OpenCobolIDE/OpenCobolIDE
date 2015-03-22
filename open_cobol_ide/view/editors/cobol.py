@@ -19,7 +19,7 @@ class CobolCodeEdit(CodeEditBase):
 
     """
 
-    def __init__(self, bt_compile, bt_run, parent=None):
+    def __init__(self, bt_compile=None, bt_run=None, parent=None):
         self._buttons = (bt_compile, bt_run)
         super().__init__(parent)
         self.syntax_highlighter.color_scheme = ColorScheme(

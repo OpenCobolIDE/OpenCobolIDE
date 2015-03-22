@@ -1,6 +1,7 @@
 import locale
 import os
 from pyqode.qt import QtCore, QtWidgets
+from pyqode.core.managers import FileManager
 from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.forms import dlg_file_type_ui
 
@@ -166,7 +167,9 @@ class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
                     QtWidgets.QMessageBox.No)
                 if answer == QtWidgets.QMessageBox.No:
                     return None
+            text = dlg.template().replace('\n', FileManager.EOL.string(
+                Settings().preferred_eol))
             with open(path, 'w', encoding=locale.getpreferredencoding()) as f:
-                f.write(dlg.template())
+                f.write(text)
             return path
         return None
