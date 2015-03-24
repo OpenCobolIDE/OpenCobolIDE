@@ -8,8 +8,8 @@ import logging
 import os
 import sys
 from pyqode.qt import QtWidgets, QT_API, PYQT5_API, PYSIDE_API
-from pyqode.core.api import CodeEdit
-CodeEdit.use_qtawesome = False
+from pyqode.core import icons
+icons.USE_QTAWESOME = False
 from open_cobol_ide import __version__, logger, system
 from open_cobol_ide.controllers import (
     CobolController, EditController, FileController, HelpController,
