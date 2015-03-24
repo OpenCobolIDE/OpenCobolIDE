@@ -55,9 +55,6 @@ options = {
     # freeze the pygments default style along with our executable
     'includes': [
         'pkg_resources',
-        'requests',
-        'uritemplate',
-        'github3'
     ] + pygments_styles
 }
 
