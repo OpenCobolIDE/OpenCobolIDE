@@ -1,0 +1,10 @@
+[
+    {
+        "environment": {},
+        "interpreter_options": [],
+        "name": "OpenCobolIDE",
+        "script": "OpenCobolIDE",
+        "script_parameters": [],
+        "working_dir": "."
+    }
+]

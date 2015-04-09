@@ -17,9 +17,14 @@ except ImportError:
     cmdclass = {}
 
 
+DESCRIPTION = 'A simple COBOL IDE'
+
 # get long description
 with open('README.rst', 'r') as readme:
-    long_desc = readme.read()
+    if 'bdist_deb' in sys.argv:
+        LONG_DESC = DESCRIPTION + ' based on GnuCobol and PyQode'
+    else:
+        LONG_DESC = readme.read()
 
 
 # install requirements
@@ -30,6 +35,8 @@ requirements = [
     'pyqode.qt>=2.5.0',
     'qdarkstyle>=1.11'
 ]
+
+
 if int('%s%s' % sys.version_info[:2]) < 34:
     # python < 3.4 needs enum backport package
     requirements.append('enum34')
@@ -52,8 +59,8 @@ setup(
     license='GPL v3',
     author='Colin Duquesnoy',
     author_email='colin.duquesnoy@gmail.com',
-    description='A simple cobol IDE',
-    long_description=long_desc,
+    description=DESCRIPTION,
+    long_description=LONG_DESC,
     install_requires=requirements,
     entry_points={'gui_scripts': ['OpenCobolIDE = open_cobol_ide.main:main']},
     cmdclass=cmdclass,

@@ -48,3 +48,9 @@ htmlcov
 
 # Dolphin (KDE)
 .directory
+
+
+*.tar.gz
+deb_dist
+*.usr
+*~
