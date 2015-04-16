@@ -175,10 +175,6 @@
                <property name="text">
                 <string>New</string>
                </property>
-               <property name="icon">
-                <iconset theme="document-new">
-                 <normaloff>../../../.designer/backup</normaloff>../../../.designer/backup</iconset>
-               </property>
               </widget>
              </item>
              <item>
@@ -200,10 +196,6 @@
                </property>
                <property name="text">
                 <string>Open</string>
-               </property>
-               <property name="icon">
-                <iconset theme="document-open">
-                 <normaloff>../../../.designer/backup</normaloff>../../../.designer/backup</iconset>
                </property>
               </widget>
              </item>
@@ -560,7 +552,7 @@
      <x>0</x>
      <y>0</y>
      <width>1054</width>
-     <height>29</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -891,10 +883,6 @@
    </widget>
   </widget>
   <action name="actionQuit">
-   <property name="icon">
-    <iconset theme="application-exit" resource="ide.qrc">
-     <normaloff>:/ide-icons/rc/system-log-out.png</normaloff>:/ide-icons/rc/system-log-out.png</iconset>
-   </property>
    <property name="text">
     <string>&amp;Quit</string>
    </property>
@@ -912,10 +900,6 @@
    </property>
   </action>
   <action name="actionRun">
-   <property name="icon">
-    <iconset theme="media-playback-start" resource="ide.qrc">
-     <normaloff>:/ide-icons/rc/media-playback-start.png</normaloff>:/ide-icons/rc/media-playback-start.png</iconset>
-   </property>
    <property name="text">
     <string>&amp;Run</string>
    </property>
@@ -933,10 +917,6 @@
    </property>
   </action>
   <action name="actionAbout">
-   <property name="icon">
-    <iconset theme="help-about" resource="ide.qrc">
-     <normaloff>:/ide-icons/rc/silex-64x64.png</normaloff>:/ide-icons/rc/silex-64x64.png</iconset>
-   </property>
    <property name="text">
     <string>&amp;About OpenCobolIDE</string>
    </property>
@@ -951,10 +931,6 @@
    </property>
   </action>
   <action name="actionSave">
-   <property name="icon">
-    <iconset theme="document-save" resource="ide.qrc">
-     <normaloff>:/ide-icons/rc/document-save.png</normaloff>:/ide-icons/rc/document-save.png</iconset>
-   </property>
    <property name="text">
     <string>&amp;Save</string>
    </property>
@@ -972,10 +948,6 @@
    </property>
   </action>
   <action name="actionSaveAs">
-   <property name="icon">
-    <iconset theme="document-save-as" resource="ide.qrc">
-     <normaloff>:/ide-icons/rc/document-save-as.png</normaloff>:/ide-icons/rc/document-save-as.png</iconset>
-   </property>
    <property name="text">
     <string>Sa&amp;ve as</string>
    </property>
@@ -996,10 +968,6 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="icon">
-    <iconset theme="view-fullscreen" resource="ide.qrc">
-     <normaloff>:/ide-icons/rc/view-fullscreen.png</normaloff>:/ide-icons/rc/view-fullscreen.png</iconset>
-   </property>
    <property name="text">
     <string>&amp;Fullscreen</string>
    </property>
@@ -1017,10 +985,6 @@
    </property>
   </action>
   <action name="actionNew">
-   <property name="icon">
-    <iconset theme="document-new" resource="ide.qrc">
-     <normaloff>:/ide-icons/rc/document-new.png</normaloff>:/ide-icons/rc/document-new.png</iconset>
-   </property>
    <property name="text">
     <string>&amp;New</string>
    </property>
@@ -1038,10 +1002,6 @@
    </property>
   </action>
   <action name="actionOpen">
-   <property name="icon">
-    <iconset theme="document-open" resource="ide.qrc">
-     <normaloff>:/ide-icons/rc/document-open.png</normaloff>:/ide-icons/rc/document-open.png</iconset>
-   </property>
    <property name="text">
     <string>&amp;Open</string>
    </property>
@@ -1059,10 +1019,6 @@
    </property>
   </action>
   <action name="actionClear">
-   <property name="icon">
-    <iconset theme="edit-clear">
-     <normaloff>../../../.designer/backup/rc/edit-clear.png</normaloff>../../../.designer/backup/rc/edit-clear.png</iconset>
-   </property>
    <property name="text">
     <string>Clear list</string>
    </property>
@@ -1074,10 +1030,6 @@
    </property>
   </action>
   <action name="actionPreferences">
-   <property name="icon">
-    <iconset theme="preferences-system" resource="ide.qrc">
-     <normaloff>:/ide-icons/rc/Preferences-system.png</normaloff>:/ide-icons/rc/Preferences-system.png</iconset>
-   </property>
    <property name="text">
     <string>&amp;Preferences</string>
    </property>
@@ -1092,10 +1044,6 @@
    </property>
   </action>
   <action name="actionHelp">
-   <property name="icon">
-    <iconset theme="help-contents">
-     <normaloff>../../../.designer/backup</normaloff>../../../.designer/backup</iconset>
-   </property>
    <property name="text">
     <string>&amp;Help</string>
    </property>
@@ -1119,11 +1067,6 @@
    <property name="checked">
     <bool>true</bool>
    </property>
-   <property name="icon">
-    <iconset theme="application-x-executable">
-     <normaloff/>
-    </iconset>
-   </property>
    <property name="text">
     <string>&amp;Executable</string>
    </property>
@@ -1138,11 +1081,6 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="icon">
-    <iconset theme="package-x-generic">
-     <normaloff/>
-    </iconset>
-   </property>
    <property name="text">
     <string>&amp;Module</string>
    </property>
@@ -1154,10 +1092,6 @@
    </property>
   </action>
   <action name="actionCompile">
-   <property name="icon">
-    <iconset theme="application-x-executable">
-     <normaloff>:/ide-icons/rc/applications-system.png</normaloff>:/ide-icons/rc/applications-system.png</iconset>
-   </property>
    <property name="text">
     <string>&amp;Compile</string>
    </property>
@@ -1175,11 +1109,6 @@
    </property>
   </action>
   <action name="actionCancel">
-   <property name="icon">
-    <iconset theme="dialog-cancel">
-     <normaloff/>
-    </iconset>
-   </property>
    <property name="text">
     <string>Ca&amp;ncel</string>
    </property>
