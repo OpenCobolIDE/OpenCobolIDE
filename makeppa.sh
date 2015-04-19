@@ -3,7 +3,7 @@
 # package info
 ppa="ppa:colin-duquesnoy/experimental"
 name="opencobolide"
-version="4.5.0~dev0"
+version="4.5.0~dev1"
 debian_version=1
 
 # read pgp key from gpg_key file
