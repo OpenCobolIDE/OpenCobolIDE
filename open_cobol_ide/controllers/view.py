@@ -192,7 +192,8 @@ class ViewController(Controller):
             if self._page != -1:
                 s = Settings()
                 s.outline_visible = self.ui.dockWidgetNavPanel.isVisible()
-            self.ui.menuBar.hide()
+            if not system.ubuntu:
+                self.ui.menuBar.hide()
             self.ui.statusbar.hide()
             self.ui.toolBarCode.hide()
             self.ui.toolBarFile.hide()
@@ -214,7 +215,8 @@ class ViewController(Controller):
         TODO
         """
         if self._perspective == 'default':
-            self.ui.menuBar.show()
+            if not system.ubuntu:
+                self.ui.menuBar.show()
             self.ui.statusbar.show()
             self.ui.toolBarFile.show()
             self.ui.toolBarCode.show()
@@ -224,7 +226,8 @@ class ViewController(Controller):
                 except AttributeError:
                     pass
         else:
-            self.ui.menuBar.hide()
+            if not system.ubuntu:
+                self.ui.menuBar.hide()
             self.ui.statusbar.hide()
             self.ui.toolBarCode.hide()
             self.ui.toolBarFile.hide()
