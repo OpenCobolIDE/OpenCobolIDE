@@ -245,6 +245,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                 settings.enable_smart_backspace)
             self.checkBoxAutodetectEOL.setChecked(settings.autodetect_eol)
             self.comboBoxPreferredEOL.setCurrentIndex(settings.preferred_eol)
+            self.comboCcFilterMode.setCurrentIndex(
+                settings.completion_filter_mode)
         # Style
         if self.tabWidget.currentIndex() == 1 or all_tabs:
             rb = (self.radioButtonColorDark if settings.dark_style else
@@ -325,6 +327,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.lower_case_keywords = False
             settings.autodetect_eol = True
             settings.preferred_eol = 0
+            settings.code_completion_trigger_len = 1
         # Style
         elif index == 1:
             settings.dark_style = False
@@ -426,3 +429,5 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.dbport = dlg.lineEditDBPORT.text()
         settings.dbsocket = dlg.lineEditDBSOCKET.text()
         settings.esqloc = dlg.lineEditESQLOC.text()
+        settings.completion_filter_mode = \
+            dlg.comboCcFilterMode.currentIndex()

@@ -26,5 +26,9 @@ def update_editor_settings(editor):
         editor.line_nbr_panel.setVisible(settings.display_lines)
         editor.linter_mode.enabled = settings.show_errors
         editor.lower_case_keywords = settings.lower_case_keywords
+        editor.file.autodetect_eol = settings.autodetect_eol
+        editor.file.preferred_eol = settings.preferred_eol
+        editor.modes.get('CodeCompletionMode').smart_completion = \
+            bool(settings.completion_filter_mode)
     except AttributeError:
         editor.syntax_highlighter.pygments_style = settings.color_scheme

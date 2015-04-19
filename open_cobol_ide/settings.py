@@ -24,22 +24,6 @@ class Settings(object):
         """
         self._settings.clear()
 
-    @property
-    def github_oauth_token(self):
-        return self._settings.value('githubToken', '')
-
-    @github_oauth_token.setter
-    def github_oauth_token(self, token):
-        self._settings.setValue('githubToken', str(token))
-
-    @property
-    def github_username(self):
-        return self._settings.value('githubUsername', '')
-
-    @github_username.setter
-    def github_username(self, username):
-        self._settings.setValue('githubUsername', str(username))
-
     # Geometry and state (visible windows, ...) + working settings (last path)
     # ------------------------------------------------------------------------
     @property
@@ -209,6 +193,15 @@ class Settings(object):
     @enable_autoindent.setter
     def enable_autoindent(self, value):
         self._settings.setValue('enableAutoIndent', int(value))
+
+    @property
+    def completion_filter_mode(self):
+        ret_val = int(self._settings.value('codeCompletionFilterMode', 1))
+        return ret_val
+
+    @completion_filter_mode.setter
+    def completion_filter_mode(self, value):
+        self._settings.setValue('codeCompletionFilterMode', int(value))
 
     @property
     def code_completion_trigger_len(self):
