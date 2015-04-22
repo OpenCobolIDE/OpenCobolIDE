@@ -61,17 +61,7 @@ class RecentFilesListWidget(QtWidgets.QListWidget):
 
 
 class TabWidget(SplittableCodeEditTabWidget):
-    tab_bar_double_clicked = QtCore.Signal()
-
-    def __init__(self, parent, root=True):
-        super().__init__(parent, root)
-        self.main_tab_widget.tabBar().double_clicked.connect(
-            self.tab_bar_double_clicked.emit)
-
-    def split(self, widget, orientation):
-        splitter = super().split(widget, orientation)
-        splitter.tab_bar_double_clicked.connect(
-            self.tab_bar_double_clicked.emit)
+    pass
 
 
 class FSContextMenu(FileSystemContextMenu):
