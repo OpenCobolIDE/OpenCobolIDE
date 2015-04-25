@@ -88,11 +88,17 @@ class Application:
             else:
                 qt_api = os.environ[QT_API]
                 if qt_api in PYQT5_API:
-                    self.app.setStyleSheet(
-                        qdarkstyle.load_stylesheet_pyqt5())
+                    qss = qdarkstyle.load_stylesheet_pyqt5()
                 else:
-                    self.app.setStyleSheet(
-                        qdarkstyle.load_stylesheet(qt_api in PYSIDE_API))
+                    qss = qdarkstyle.load_stylesheet(qt_api in PYSIDE_API)
+                qss += """QFrame {
+                    border: 1px transparent black;
+                }
+                QListWidget {
+                    border: 1px solid #444;
+                }
+                """
+                self.app.setStyleSheet(qss)
                 return
         self.app.setStyleSheet('')
 
