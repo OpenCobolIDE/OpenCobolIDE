@@ -167,9 +167,10 @@ class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
                     QtWidgets.QMessageBox.No)
                 if answer == QtWidgets.QMessageBox.No:
                     return None
-            text = dlg.template().replace('\n', FileManager.EOL.string(
-                Settings().preferred_eol))
-            with open(path, 'w', encoding=locale.getpreferredencoding()) as f:
-                f.write(text)
+            eol = FileManager.EOL.string(Settings().preferred_eol)
+            text = eol.join(dlg.template().splitlines()) + eol
+            data = text.encode(locale.getpreferredencoding())
+            with open(path, 'wb') as f:
+                f.write(data)
             return path
         return None
