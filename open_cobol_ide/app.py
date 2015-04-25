@@ -30,6 +30,7 @@ class Application:
     """
     def __init__(self, parse_args=True):
         self.init_env()
+        self.app = QtWidgets.QApplication(sys.argv)
         if parse_args and not system.darwin:
             args = self.parse_args()
             verbose = args.verbose
@@ -41,7 +42,6 @@ class Application:
         self.name = 'OpenCobolIDE'
         self.version = __version__
         self.title = '%s %s' % (self.name, self.version)
-        self.app = QtWidgets.QApplication(sys.argv)
         self.win = MainWindow()
         self.win.setWindowTitle(self.title)
         self.file = FileController(self)
