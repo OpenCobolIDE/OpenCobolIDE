@@ -552,7 +552,7 @@
      <x>0</x>
      <y>0</y>
      <width>1054</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -654,7 +654,7 @@
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
    <property name="windowTitle">
-    <string>Navi&amp;gation</string>
+    <string>Navigation</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -705,7 +705,7 @@
     </size>
    </property>
    <property name="windowTitle">
-    <string>Offset calc&amp;ulator</string>
+    <string>Offset calculator</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -795,7 +795,7 @@
     </size>
    </property>
    <property name="windowTitle">
-    <string>File s&amp;ystem</string>
+    <string>File system</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>

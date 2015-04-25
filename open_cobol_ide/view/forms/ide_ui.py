@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/Documents/OpenCobolIDE/forms/ide.ui'
+# Form implementation generated from reading ui file 'C:\Dev\OpenCobolIDE\forms\ide.ui'
 #
-# Created: Thu Apr 16 14:02:01 2015
-#      by: PyQt5 UI code generator 5.2.1
+# Created by: PyQt5 UI code generator 5.4.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -192,7 +191,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1054, 25))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1054, 21))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -349,6 +348,7 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon.fromTheme("tools-report-bug")
         self.actionReport_a_bug.setIcon(icon)
         self.actionReport_a_bug.setObjectName("actionReport_a_bug")
+        self.dockWidgetNavPanel.raise_()
         self.toolBarFile.addAction(self.actionNew)
         self.toolBarFile.addAction(self.actionOpen)
         self.toolBarFile.addSeparator()
@@ -422,10 +422,10 @@ class Ui_MainWindow(object):
         self.menuCobol.setTitle(_translate("MainWindow", "&Cobol"))
         self.menuProgramType.setTitle(_translate("MainWindow", "&Program type"))
         self.menu.setTitle(_translate("MainWindow", "?"))
-        self.dockWidgetNavPanel.setWindowTitle(_translate("MainWindow", "Navi&gation"))
+        self.dockWidgetNavPanel.setWindowTitle(_translate("MainWindow", "Navigation"))
         self.twNavigation.setToolTip(_translate("MainWindow", "Show the current editor structure"))
         self.twNavigation.setStatusTip(_translate("MainWindow", "Show the current editor structure"))
-        self.dockWidgetOffsets.setWindowTitle(_translate("MainWindow", "Offset calc&ulator"))
+        self.dockWidgetOffsets.setWindowTitle(_translate("MainWindow", "Offset calculator"))
         self.tableWidgetOffsets.setToolTip(_translate("MainWindow", "Show PIC fields offsets"))
         self.tableWidgetOffsets.setStatusTip(_translate("MainWindow", "Show PIC fields offsets"))
         self.tableWidgetOffsets.setSortingEnabled(True)
@@ -437,7 +437,7 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Offset"))
         item = self.tableWidgetOffsets.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "PIC"))
-        self.dockWidgetFileSystem.setWindowTitle(_translate("MainWindow", "File s&ystem"))
+        self.dockWidgetFileSystem.setWindowTitle(_translate("MainWindow", "File system"))
         self.btFSLock.setToolTip(_translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Lock</span> current file path to prevent the view from changing when the current editor changes.</p></body></html>"))
         self.actionQuit.setText(_translate("MainWindow", "&Quit"))
         self.actionQuit.setToolTip(_translate("MainWindow", "Exit application"))
@@ -495,6 +495,6 @@ class Ui_MainWindow(object):
         self.actionReport_a_bug.setText(_translate("MainWindow", "&Report a bug"))
 
 from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
-from open_cobol_ide.view.widgets import RecentFilesListWidget, TabWidget
-from pyqode.core.widgets import FileSystemTreeView, InteractiveConsole, ErrorsTable
+from pyqode.core.widgets import ErrorsTable, FileSystemTreeView, InteractiveConsole
+from open_cobol_ide.view.widgets import TabWidget, RecentFilesListWidget
 from . import ide_rc
