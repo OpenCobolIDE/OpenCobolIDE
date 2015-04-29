@@ -51,17 +51,20 @@ class DlgReportBug(QtWidgets.QDialog):
         bug = self.ui.radioButtonBug.isChecked()
         if bug:
             title = '[Bug] %s' % title
-            description = BUG_DESCRIPTION % (description, self.get_system_infos(),
-                                             self.get_application_log())
+            description = BUG_DESCRIPTION % (
+                description, self.get_system_infos(),
+                self.get_application_log())
         else:
             title = '[Enhancement] %s' % title
-        url_data = urllib.parse.urlencode({'title': title, 'body': description})
-        url = 'https://github.com/OpenCobolIDE/OpenCobolIDE/issues/new?' + url_data
+        url_data = urllib.parse.urlencode(
+            {'title': title, 'body': description})
+        url = 'https://github.com/OpenCobolIDE/OpenCobolIDE/issues/new?' + \
+            url_data
         QtWidgets.QMessageBox.information(
             self, 'Complete bug report on www.github.com',
-            'To complete the report process, we need you to submit the generated '
-            'ticket on our issue tracker. We will open a browser to our '
-            'tracker, you just need to login with your github account and '
+            'To complete the report process, we need you to submit the '
+            'generated ticket on our issue tracker. We will open a browser to '
+            'our tracker, you just need to login with your github account and '
             'press the submit button at the end of the page.')
         QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromEncoded(url))
         self.accept()
@@ -83,7 +86,8 @@ class DlgReportBug(QtWidgets.QDialog):
             '- Operating System: %s' % platform.system(),
             '- OpenCobolIDE: %s' % __version__,
             '- GnuCobol: %s' % GnuCobolCompiler().get_version(),
-            '- Python: %s (%dbits)' % (platform.python_version(), 64 if sys.maxsize > 2**32 else 32),
+            '- Python: %s (%dbits)' % (platform.python_version(), 64
+                                       if sys.maxsize > 2**32 else 32),
             '- Qt: %s' % QtCore.QT_VERSION_STR,
             '- PyQt: %s' % QtCore.PYQT_VERSION_STR,
             '- pyqode.core: %s' % pyqode.core.__version__,
@@ -96,10 +100,3 @@ class DlgReportBug(QtWidgets.QDialog):
     def get_application_log(self):
         with open(logger.get_path(), 'r') as f:
             return f.read()
-
-
-if __name__ == '__main__':
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    DlgReportBug.report_bug(None)
-

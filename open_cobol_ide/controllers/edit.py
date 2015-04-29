@@ -9,7 +9,6 @@ from pyqode.core.api import TextHelper, ColorScheme
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
 from open_cobol_ide.enums import FileType
-from open_cobol_ide import system
 from ..view.dialogs.preferences import DlgPreferences
 from ..settings import Settings
 from ..view.editors import CobolCodeEdit, GenericCodeEdit, \
@@ -156,8 +155,7 @@ class EditController(Controller):
         return editor
 
     def _on_last_tab_closed(self):
-        self.main_window.setWindowTitle(
-                self.app.title)
+        self.main_window.setWindowTitle(self.app.title)
         self.ui.twNavigation.set_editor(None)
         self.app.view.show_home_page()
 
@@ -174,7 +172,8 @@ class EditController(Controller):
                     editor.file.name, editor.file.path, self.app.title))
             # update tools (outline and offsets table)
             self.ui.twNavigation.set_editor(editor)
-            if self.ui.btFSLock.isChecked() and not os.path.exists(Settings().lock_fs_path):
+            if self.ui.btFSLock.isChecked() and \
+                    not os.path.exists(Settings().lock_fs_path):
                 Settings().lock_fs_path = ''
                 self.ui.btFSLock.setChecked(False)
             if not self.ui.btFSLock.isChecked():

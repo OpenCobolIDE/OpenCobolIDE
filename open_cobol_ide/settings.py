@@ -290,7 +290,8 @@ class Settings(object):
         # settings dialog anyway
         def get_terminal():
             """
-            Gets the authentication program used to run command as root (on linux only).
+            Gets the authentication program used to run command as root (
+            on linux only).
 
             The function try to use one of the following programs:
                 - gksu

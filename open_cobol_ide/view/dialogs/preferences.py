@@ -8,37 +8,7 @@ from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.forms import dlg_preferences_ui
 
 
-class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
-    flags_in_checkbox = ['-g', '-ftrace', '-ftraceall', '-fdebugging-line',
-                         '-static']
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.setupUi(self)
-        themes = system.icon_themes()
-        if themes:
-            self.comboBoxIconTheme.addItems(themes)
-        else:
-            self.comboBoxIconTheme.hide()
-            self.lblIconTheme.hide()
-        self.tabWidget.setTabIcon(2, QtGui.QIcon.fromTheme(
-            'application-x-executable',
-            QtGui.QIcon(':/ide-icons/rc/application-x-executable.png')))
-        self.tabWidget.setTabIcon(1, QtGui.QIcon.fromTheme(
-            'applications-graphics',
-            QtGui.QIcon(':/ide-icons/rc/applications-graphics.png')))
-        self.tabWidget.setTabIcon(3, QtGui.QIcon.fromTheme(
-            'media-playback-start', QtGui.QIcon(':/ide-icons/rc/media-playback-start.png')))
-        self.toolButtonAddLibPath.setIcon(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(':/ide-icons/rc/list-add.png')))
-        self.toolButtonRemoveLibPath.setIcon(
-            QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(':/ide-icons/rc/list-remove.png')))
-        self.buttonBox.button(self.buttonBox.Reset).clicked.connect(self.reset)
-        self.buttonBox.button(self.buttonBox.RestoreDefaults).clicked.connect(
-            self.restore_defaults)
-        self.checkBoxRunExtTerm.stateChanged.connect(
-            self.lineEditRunTerm.setEnabled)
-        self.listWidgetColorSchemes.currentItemChanged.connect(
-            self.update_color_scheme_preview)
-        self.plainTextEdit.setPlainText('''      * Author:
+DEFAULT_TEMPLATE = '''      * Author:
       * Date:
       * Purpose:
       * Tectonics: cobc
@@ -68,16 +38,58 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
       ** add other procedures here
        END PROGRAM YOUR-PROGRAM-NAME.
 
-        ''', '', '')
+'''
+
+
+class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
+    flags_in_checkbox = [
+        '-g', '-ftrace', '-ftraceall', '-fdebugging-line', '-static'
+    ]
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setupUi(self)
+        themes = system.icon_themes()
+        if themes:
+            self.comboBoxIconTheme.addItems(themes)
+        else:
+            self.comboBoxIconTheme.hide()
+            self.lblIconTheme.hide()
+        self.tabWidget.setTabIcon(2, QtGui.QIcon.fromTheme(
+            'application-x-executable',
+            QtGui.QIcon(':/ide-icons/rc/application-x-executable.png')))
+        self.tabWidget.setTabIcon(1, QtGui.QIcon.fromTheme(
+            'applications-graphics',
+            QtGui.QIcon(':/ide-icons/rc/applications-graphics.png')))
+        self.tabWidget.setTabIcon(3, QtGui.QIcon.fromTheme(
+            'media-playback-start', QtGui.QIcon(
+                ':/ide-icons/rc/media-playback-start.png')))
+        self.toolButtonAddLibPath.setIcon(QtGui.QIcon.fromTheme(
+            'list-add', QtGui.QIcon(':/ide-icons/rc/list-add.png')))
+        self.toolButtonRemoveLibPath.setIcon(
+            QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(
+                ':/ide-icons/rc/list-remove.png')))
+        self.buttonBox.button(self.buttonBox.Reset).clicked.connect(self.reset)
+        self.buttonBox.button(self.buttonBox.RestoreDefaults).clicked.connect(
+            self.restore_defaults)
+        self.checkBoxRunExtTerm.stateChanged.connect(
+            self.lineEditRunTerm.setEnabled)
+        self.listWidgetColorSchemes.currentItemChanged.connect(
+            self.update_color_scheme_preview)
+        self.plainTextEdit.setPlainText(DEFAULT_TEMPLATE, '', '')
         self.lineEditDbpre.setReadOnly(True)
         self.lineEditDbpreFramework.setReadOnly(True)
         self.lineEditCobmysqlapi.setReadOnly(True)
         self.toolButtonDbpre.clicked.connect(self._select_dbpre)
-        self.toolButtonDbpreFramework.clicked.connect(self._select_dbpre_framework)
-        self.toolButtonCobMySqlApiPath.clicked.connect(self._select_cobmysqlapi)
-        self.checkBoxShowDbPass.stateChanged.connect(self._on_show_pass_state_changed)
+        self.toolButtonDbpreFramework.clicked.connect(
+            self._select_dbpre_framework)
+        self.toolButtonCobMySqlApiPath.clicked.connect(
+            self._select_cobmysqlapi)
+        self.checkBoxShowDbPass.stateChanged.connect(
+            self._on_show_pass_state_changed)
         self.toolButtonVCVARS.clicked.connect(self._select_vcvars32)
-        self.toolButtonCustomCompilerPath.clicked.connect(self._select_custom_compiler_path)
+        self.toolButtonCustomCompilerPath.clicked.connect(
+            self._select_custom_compiler_path)
         self.toolButtonAddLibPath.clicked.connect(self._add_lib_path)
         self.toolButtonRemoveLibPath.clicked.connect(self._rm_lib_path)
         self.toolButtonESQLOC.clicked.connect(self._select_esqloc)
@@ -115,7 +127,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
 
     def _select_custom_compiler_path(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(
-            self, 'Select custom GnuCobol directory', self.lineEditCompilerPath.text())
+            self, 'Select custom GnuCobol directory',
+            self.lineEditCompilerPath.text())
         if path:
             pgm = 'cobc' if not system.windows else 'cobc.exe'
             pth = os.path.join(path, pgm)
@@ -124,7 +137,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             else:
                 QtWidgets.QMessageBox.warning(
                     self, 'Invalid compiler path',
-                    'Not a valid compiler path because it does not contain %s!' % pgm)
+                    'Not a valid compiler path because it does not contain '
+                    '%s!' % pgm)
 
     def _select_esqloc(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(
@@ -167,14 +181,14 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             if pgctbbat and pgctbbatws and sqlca:
                 self.lineEditDbpreFramework.setText(path)
             else:
-                QtWidgets.QMessageBox.warning(self, 'Invalid dpre framework directory',
-                                              'Missing one of the following files: \n'
-                                              'PGCTBBAT: %s\n'
-                                              'PGCTBBATWS: %s\n'
-                                              'SQLCA: %s\n' % (
-                                                  bool_to_string(pgctbbat),
-                                                  bool_to_string(pgctbbatws),
-                                                  bool_to_string(sqlca)))
+                QtWidgets.QMessageBox.warning(
+                    self, 'Invalid dpre framework directory',
+                    'Missing one of the following files: \n'
+                    'PGCTBBAT: %s\n'
+                    'PGCTBBATWS: %s\n'
+                    'SQLCA: %s\n' % (
+                        bool_to_string(pgctbbat), bool_to_string(pgctbbatws),
+                        bool_to_string(sqlca)))
 
     def stop_backend(self):
         self.plainTextEdit.backend.stop()
@@ -292,7 +306,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                     pass
             self.lineEditLibs.setText(settings.libraries)
             self.listWidgetLibPaths.addItems(
-                [pth for pth in settings.library_search_path.split(';') if pth])
+                [pth for pth in settings.library_search_path.split(';')
+                 if pth])
             self.le_compiler_flags.setText(' '.join(flags))
             self.lineEditVCVARS.setText(settings.vcvars32)
         # SQL Cobol
@@ -306,8 +321,9 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditDBNAME.setText(settings.dbname)
             self.lineEditDBPORT.setText(settings.dbport)
             self.lineEditDBSOCKET.setText(settings.dbsocket)
-            self.labelDbpreVersion.setText(compilers.DbpreCompiler().get_version()
-                                           if Settings().dbpre != '' else '')
+            self.labelDbpreVersion.setText(
+                compilers.DbpreCompiler().get_version()
+                if Settings().dbpre != '' else '')
             self.lineEditESQLOC.setText(settings.esqloc)
 
     def restore_defaults(self):

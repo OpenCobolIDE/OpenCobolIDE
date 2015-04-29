@@ -140,9 +140,11 @@ class Application:
             os.environ['COB_CONFIG_DIR'] = os.path.join(oc_root_pth, 'config')
             os.environ['COB_COPY_DIR'] = os.path.join(oc_root_pth, 'copy')
             os.environ['COB_LIBRARY_PATH'] = os.path.join(oc_root_pth, 'bin')
-            os.environ['COB_INCLUDE_PATH'] = os.path.join(oc_root_pth, 'include')
+            os.environ['COB_INCLUDE_PATH'] = os.path.join(
+                oc_root_pth, 'include')
             os.environ['COB_LIB_PATH'] = os.path.join(oc_root_pth, 'lib')
-            os.environ['PATH'] = ';'.join([os.environ['COB_LIBRARY_PATH'], cwd])
+            os.environ['PATH'] = ';'.join(
+                [os.environ['COB_LIBRARY_PATH'], cwd])
 
     @staticmethod
     def _osx_init():

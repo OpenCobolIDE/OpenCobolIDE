@@ -79,7 +79,7 @@ def check_compiler():
                   'the IDE is installed in a path without spaces and ' \
                   'that the OpenCobol folder sits next to the executable.'
         elif sys.platform == 'darwin':
-            msg = 'You have to install the package open-cobol using Homebrew ' \
+            msg = 'You have to install the package open-cobol using Homebrew '\
                   'or MacPorts. \n' \
                   'If you installed open-cobol in a ' \
                   'non standard directory, you can specify that directory ' \
@@ -99,8 +99,9 @@ class CompilerNotFound(Exception):
 
 class VisualStudioWrapperBatch:
     """
-    Helps creating a wrapper batch that setup visual studio command line environment
-    before running the cobc command, this is needed to use the kiska builds on Windows.
+    Helps creating a wrapper batch that setup visual studio command line
+    environment before running the cobc command, this is needed to use the
+    kiska builds on Windows.
     """
     CODE_TEMPLATE = """set OLDDIR=%CD%
 chdir {0}
@@ -209,7 +210,8 @@ class GnuCobolCompiler:
             for f in files:
                 shutil.copy(f, bin_dir)
 
-    def compile(self, file_path, file_type, object_files=None, additional_options=None):
+    def compile(self, file_path, file_type, object_files=None,
+                additional_options=None):
         """
         Compiles a file. This is a blocking function, it returns only when
         the compiler process finished.
@@ -238,7 +240,8 @@ class GnuCobolCompiler:
         process.start(pgm, options)
         process.waitForFinished()
         status = process.exitCode()
-        output = process.readAllStandardOutput().data().decode(locale.getpreferredencoding())
+        output = process.readAllStandardOutput().data().decode(
+            locale.getpreferredencoding())
         messages = self.parse_output(output, file_path)
         _logger().info('output: %s', output)
         if status != 0 and not len(messages):
@@ -250,7 +253,8 @@ class GnuCobolCompiler:
         _logger().debug('compile results: %r - %r', status, messages)
         return status, messages
 
-    def make_command(self, input_file_names, file_type, additional_options=None):
+    def make_command(self, input_file_names, file_type,
+                     additional_options=None):
         """
         Makes the command needed to compile the specified file.
 
@@ -383,7 +387,8 @@ class DbpreCompiler:
     Commands:
         - /path/to/dbpre SOURCE.scb -I/path/to/framework -ts=TAB_LEN
         - copy PGCTBBATWS to source dir
-        - cobc -x SOURCE.cob /path/to/cobmysqlapi.o -L/usr/lib/mysql -lmysqlclient -o bin/SOURCE.exe
+        - cobc -x SOURCE.cob /path/to/cobmysqlapi.o -L/usr/lib/mysql
+          -lmysqlclient -o bin/SOURCE.exe
 
     (-L: library search path, -l libraries to link with)
     """
@@ -555,10 +560,13 @@ class EsqlOCCompiler:
     SET OC_RUNTIME=c:\OpenCobol_bin
     SET esqlOC_RUNTIME=c:\esqlOC\release
     SET COB_CFLAGS=-I %OC_RUNTIME%
-    SET COB_LIBS=%OC_RUNTIME%\libcob.lib %OC_RUNTIME%\mpir.lib %esqlOC_RUNTIME%\ocsql.lib
-    SET COB_CONFIG_DIR=%OC_RUNTIME%\config\ set PATH=C:\WINDOWS\system32;%OC_RUNTIME%
+    SET COB_LIBS=
+      %OC_RUNTIME%\libcob.lib %OC_RUNTIME%\mpir.lib %esqlOC_RUNTIME%\ocsql.lib
+    SET COB_CONFIG_DIR=
+      %OC_RUNTIME%\config\ set PATH=C:\WINDOWS\system32;%OC_RUNTIME%
     call "%PROGRAMFILES%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
-    %OC_RUNTIME%\cobc.exe -fixed -v -x -static -o c:\Temp\esqlOCGetStart1.exe c:\Temp\esqlOCGetStart1.cob
+    %OC_RUNTIME%\cobc.exe -fixed -v -x -static -o c:\Temp\esqlOCGetStart1.exe
+      c:\Temp\esqlOCGetStart1.cob
     """
 
     EXTENSIONS = [".SQB"]
@@ -619,8 +627,9 @@ class EsqlOCCompiler:
         _logger().info('compiling with cobc')
         cob_path = os.path.splitext(path)[0] + '.cob'
         compiler = GnuCobolCompiler()
-        return compiler.compile(cob_path, get_file_type(cob_path), additional_options=[
-            '-static', '-L%s' % Settings().esqloc, '-locsql.lib'])
+        return compiler.compile(
+            cob_path, get_file_type(cob_path), additional_options=[
+                '-static', '-L%s' % Settings().esqloc, '-locsql.lib'])
 
     def compile(self, path):
         """
@@ -639,6 +648,6 @@ class EsqlOCCompiler:
             # esqloc failed with some errors, let the user know about that
             return status, [(output.strip(), CheckerMessages.ERROR, -1, 0,
                              None, None, path)]
-        status, messages = self._compile_with_cobc(os.path.join(os.path.dirname(path), cob_file))
+        status, messages = self._compile_with_cobc(os.path.join(
+            os.path.dirname(path), cob_file))
         return status, messages
-

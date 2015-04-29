@@ -39,7 +39,8 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
         self.setMinimumWidth(640)
         self.setMinimumHeight(480)
         self.setWindowIcon(QtGui.QIcon.fromTheme(
-            'help-about', QtGui.QIcon(':/ide-icons/rc/dialog-information.png')))
+            'help-about', QtGui.QIcon(
+                ':/ide-icons/rc/dialog-information.png')))
         try:
             import qdarkstyle
         except ImportError:

@@ -11,7 +11,8 @@ from pyqode.qt import QtCore, QtWidgets
 from .base import Controller
 from open_cobol_ide import system
 from open_cobol_ide.enums import FileType
-from open_cobol_ide.compilers import GnuCobolCompiler, get_file_type, DbpreCompiler, EsqlOCCompiler
+from open_cobol_ide.compilers import GnuCobolCompiler, get_file_type, \
+    DbpreCompiler, EsqlOCCompiler
 from open_cobol_ide.settings import Settings
 
 
@@ -82,7 +83,8 @@ class CobolController(Controller):
         self.compile_buttons = []
         self.run_buttons = []
         self.create_bt_compile()
-        self.ui.toolBarCode.insertWidget(self.ui.actionRun, self.compile_buttons[0])
+        self.ui.toolBarCode.insertWidget(
+            self.ui.actionRun, self.compile_buttons[0])
         group.triggered.connect(self._on_program_type_changed)
         self.ui.actionCompile.triggered.connect(self.compile)
         self.ui.errorsTable.msg_activated.connect(self._goto_error_msg)
@@ -152,23 +154,28 @@ class CobolController(Controller):
             msg = 'GnuCobol compiler not found'
         elif dotted_extension in DbpreCompiler.EXTENSIONS:
             compiler_works = DbpreCompiler().is_working()
-            msg = 'dbpre compiler not working, please check your SQL cobol configuration'
+            msg = 'dbpre compiler not working, please check your SQL cobol ' \
+                'configuration'
         elif dotted_extension in EsqlOCCompiler.EXTENSIONS:
             compiler_works = EsqlOCCompiler().is_working()
-            msg = 'esqlOC compiler not workign, please check your SQL cobol configuration'
+            msg = 'esqlOC compiler not workign, please check your SQL cobol ' \
+                'configuration'
         return compiler_works, msg
 
     def compile(self):
         """
         Compiles the current editor
         """
-        # make sure the associated compiler is working, otherwise disable compile/run actions
+        # make sure the associated compiler is working, otherwise disable
+        # compile/run actions
         path = self.app.edit.current_editor.file.path
         dotted_extension = os.path.splitext(path)[1].upper()
         compiler_works, msg = self.check_compiler(dotted_extension)
         if not compiler_works:
-            QtWidgets.QMessageBox.warning(self.app.win, 'Cannot compile file',
-                                          'Cannot compile file: %r.\n\nReason: %s' % (os.path.split(path)[1], msg))
+            QtWidgets.QMessageBox.warning(
+                self.app.win, 'Cannot compile file',
+                'Cannot compile file: %r.\n\nReason: %s' % (
+                    os.path.split(path)[1], msg))
             return
         # ensures all editors are saved before compiling
         self.ui.tabWidgetEditors.save_all()

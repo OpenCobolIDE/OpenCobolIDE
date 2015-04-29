@@ -22,7 +22,8 @@ def lint(request_data):
     extension = os.path.splitext(path)[1]
     if extension.upper() in GnuCobolCompiler.EXTENSIONS:
         # time stamped file path
-        tmp_pth = os.path.join(tempfile.gettempdir(), 'oci%s.cbl' % str(int(time.time())))
+        tmp_pth = os.path.join(tempfile.gettempdir(),
+                               'oci%s.cbl' % str(int(time.time())))
         print("temp path = %s" % tmp_pth)
         with open(tmp_pth, 'w') as f:
             f.write(code)
