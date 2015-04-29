@@ -91,13 +91,6 @@ class Application:
                     qss = qdarkstyle.load_stylesheet_pyqt5()
                 else:
                     qss = qdarkstyle.load_stylesheet(qt_api in PYSIDE_API)
-                qss += """QFrame {
-                    border: 1px transparent black;
-                }
-                QListWidget {
-                    border: 1px solid #444;
-                }
-                """
                 self.app.setStyleSheet(qss)
                 return
         self.app.setStyleSheet('')
