@@ -18,11 +18,6 @@ BUG_DESCRIPTION = '''%s
 
 %s
 
-## Application log
-
-```
-%s
-```
 '''
 
 
@@ -52,8 +47,7 @@ class DlgReportBug(QtWidgets.QDialog):
         if bug:
             title = '[Bug] %s' % title
             description = BUG_DESCRIPTION % (
-                description, self.get_system_infos(),
-                self.get_application_log())
+                description, self.get_system_infos())
         else:
             title = '[Enhancement] %s' % title
         url_data = urllib.parse.urlencode(
@@ -82,8 +76,12 @@ class DlgReportBug(QtWidgets.QDialog):
         else:
             qdarkstyle_version = qdarkstyle.__version__
 
+        system = platform.system()
+        is_linux = system.lower() == 'linux'
         return '\n'.join([
-            '- Operating System: %s' % platform.system(),
+            '- Operating System: %s' % system +
+            ' (' + ' '.join(platform.linux_distribution()) + ')' if is_linux
+            else '',
             '- OpenCobolIDE: %s' % __version__,
             '- GnuCobol: %s' % GnuCobolCompiler().get_version(),
             '- Python: %s (%dbits)' % (platform.python_version(), 64
