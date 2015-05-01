@@ -71,27 +71,23 @@ GNU/Linux
 Ubuntu
 ++++++
 
-OpenCobolIDE is available from a ppa (for Ubuntu >= 14.04):
+OpenCobolIDE is available from a ppa (for Ubuntu >= 14.04)::
 
-```
-sudo apt-add-repository ppa:colin-duquesnoy/stable
-sudo apt-get update
-sudo apt-get install python3-opencobolide
-```
+    sudo apt-add-repository ppa:colin-duquesnoy/stable
+    sudo apt-get update
+    sudo apt-get install python3-opencobolide
 
 ArchLinux
 +++++++++
 
-OpenCobolIDE is available from the AUR:
+OpenCobolIDE is available from the AUR::
 
-```
-yaourt -S open-cobol-ide
-```
+    yaourt -S open-cobol-ide
 
 Other distributions:
 ++++++++++++++++++++
 
-Install pyqt5, open-cobol and pip using your package manager, then run the following commands::
+Install pyqt5, open-cobol and pip3 using your package manager, then run the following commands::
 
     sudo pip3 install OpenCobolIDE --upgrade
 
