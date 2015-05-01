@@ -15,6 +15,17 @@ on...
 Changelog
 ---------
 
+4.5.0
++++++
+
+New features:
+    - EOL management (see issue #110)
+    - New filter mode for code completion: subsequence
+    - Add support for stdeb (ppa packages available)
+
+Fixed bugs:
+    - fix a bug with comment (see issue #109)
+
 4.4.0
 +++++
 
