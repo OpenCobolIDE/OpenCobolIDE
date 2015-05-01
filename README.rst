@@ -59,7 +59,6 @@ Requirements
 - `pyqode.cobol`_
 - `Pygments`_
 - `qdarkstyle`_
-- `github3.py`_
 
 
 Installation
