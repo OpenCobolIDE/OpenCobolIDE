@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # package info
-ppa="ppa:colin-duquesnoy/experimental"
+ppa="ppa:colin-duquesnoy/stable"
 name="opencobolide"
 version="4.5.0"
 
