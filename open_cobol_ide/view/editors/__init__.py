@@ -1,6 +1,7 @@
 from pyqode.core.api import ColorScheme
 from .cobol import CobolCodeEdit
 from .generic import GenericCodeEdit
+from .text import TextEdit
 
 
 def update_editor_settings(editor):

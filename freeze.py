@@ -10,6 +10,7 @@ import sys
 from cx_Freeze import setup, Executable
 from pyqode.core.tools import console
 from open_cobol_ide import __version__
+from pyqode.core.backend import server as core_server
 from pyqode.cobol.backend import server
 from pyqode.core.api.syntax_highlighter import get_all_styles
 
@@ -21,13 +22,20 @@ osx = sys.platform == 'darwin'
 app_script = 'OpenCobolIDE'
 app_name = 'OpenCobolIDE'
 app_exe = 'OpenCobolIDE.exe' if windows else 'OpenCobolIDE'
+
+# cobol backend
 srv_script = server.__file__
-srv_name = 'cobol-backend'
 srv_exe = 'cobol-backend.exe' if windows else 'cobol-backend'
 
+# core backend (for non cobol files completion).
+core_srv_script = core_server.__file__
+core_srv_exe = 'core-backend.exe' if windows else 'core-backend'
+
+# pyqode console (for run in terminal)
 console_script = console.__file__
 console_name = 'pyqode-console'
 console_exe = 'pyqode-console.exe' if windows else 'pyqode-console'
+
 
 app_icon = 'forms/rc/silex-icon.ico' if windows else 'share/silex-icon.icns'
 
@@ -35,6 +43,8 @@ app_icon = 'forms/rc/silex-icon.ico' if windows else 'share/silex-icon.icns'
 if len(sys.argv) == 1:
     sys.argv.append('build')
 
+
+# collect pygments styles
 pygments_styles = []
 for s in get_all_styles():
     module = 'pygments.styles.%s' % s.replace('-', '_')
@@ -44,9 +54,10 @@ for s in get_all_styles():
         pass
     else:
         pygments_styles.append(module)
-
 print('pygment styles', pygments_styles)
 
+
+# build options
 options = {
     'namespace_packages': ['pyqode'],
     'include_msvcr': True,
@@ -70,7 +81,9 @@ setup(name=app_name,
                      icon=app_icon if windows else None,
                      base='Win32GUI' if windows else None),
           Executable(console_script, targetName=console_exe),
-          Executable(srv_script, targetName=srv_exe)])
+          Executable(srv_script, targetName=srv_exe),
+          Executable(core_srv_script, targetName=core_srv_exe)
+      ])
 
 if windows:
     print(

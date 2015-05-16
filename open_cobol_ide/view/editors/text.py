@@ -4,7 +4,7 @@ from pyqode.core import widgets
 from pyqode.core.backend import server
 
 
-class GenericCodeEdit(widgets.GenericCodeEdit):
+class TextEdit(widgets.TextCodeEdit):
     """
     This editor is used for non cobol documents.
     """

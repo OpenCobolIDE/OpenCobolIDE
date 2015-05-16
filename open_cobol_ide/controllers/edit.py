@@ -11,7 +11,7 @@ from .base import Controller
 from open_cobol_ide.enums import FileType
 from ..view.dialogs.preferences import DlgPreferences
 from ..settings import Settings
-from ..view.editors import CobolCodeEdit, GenericCodeEdit, \
+from ..view.editors import CobolCodeEdit, GenericCodeEdit, TextEdit, \
     update_editor_settings
 from ..view.widgets import FSContextMenu
 
@@ -25,7 +25,7 @@ class EditController(Controller):
     Controls the edit view (and the edit menu).
     """
     #: the list of supported editor types
-    editor_types = [CobolCodeEdit, GenericCodeEdit]
+    editor_types = [CobolCodeEdit, GenericCodeEdit, TextEdit]
 
     @property
     def current_editor(self):
@@ -36,6 +36,10 @@ class EditController(Controller):
 
     def __init__(self, app):
         super().__init__(app)
+        self.ui.tabWidgetEditors.editors.clear()
+        self.ui.tabWidgetEditors.fallback_editor = GenericCodeEdit
+        for editor_type in self.editor_types:
+            self.ui.tabWidgetEditors.register_code_edit(editor_type)
         self.ui.tabWidgetEditors.current_changed.connect(
             self._current_changed)
         self.ui.tabWidgetEditors.last_tab_closed.connect(
