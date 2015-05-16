@@ -104,6 +104,9 @@ class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
         else:
             self.lineEditPath.setText(path)
         self.prev_pth = ""
+        self.comboBoxExtension.addItems(Settings().all_extensions)
+        self.comboBoxExtension.addItems(
+            [ext.upper() for ext in Settings().all_extensions])
 
     def path(self):
         """

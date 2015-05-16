@@ -149,14 +149,14 @@ class CobolController(Controller):
     def check_compiler(self, dotted_extension):
         compiler_works = False
         msg = 'Invalid extension'
-        if dotted_extension in GnuCobolCompiler.EXTENSIONS:
+        if dotted_extension.lower() in Settings().cobc_extensions:
             compiler_works = GnuCobolCompiler().is_working()
             msg = 'GnuCobol compiler not found'
-        elif dotted_extension in DbpreCompiler.EXTENSIONS:
+        elif dotted_extension in Settings().dbpre_extensions:
             compiler_works = DbpreCompiler().is_working()
             msg = 'dbpre compiler not working, please check your SQL cobol ' \
                 'configuration'
-        elif dotted_extension in EsqlOCCompiler.EXTENSIONS:
+        elif dotted_extension in Settings().esqloc_extensions:
             compiler_works = EsqlOCCompiler().is_working()
             msg = 'esqlOC compiler not workign, please check your SQL cobol ' \
                 'configuration'

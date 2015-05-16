@@ -106,68 +106,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBoxExtension">
-         <item>
-          <property name="text">
-           <string>.cbl</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>.cob</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>.pco</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>.cpy</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>.scb</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>.sqb</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>.CBL</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>.COB</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>.PCO</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>.CPY</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>.SCB</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>.SQB</string>
-          </property>
-         </item>
-        </widget>
+        <widget class="QComboBox" name="comboBoxExtension"/>
        </item>
       </layout>
      </item>

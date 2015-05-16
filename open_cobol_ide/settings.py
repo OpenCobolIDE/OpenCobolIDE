@@ -273,7 +273,7 @@ class Settings(object):
     def color_scheme(self, value):
         self._settings.setValue('colorScheme', value)
 
-    # Build and Run settings
+    # Run settings
     # ----------------------
     @property
     def external_terminal(self):
@@ -310,6 +310,8 @@ class Settings(object):
     def external_terminal_command(self, cmd):
         self._settings.setValue('shell', cmd)
 
+    # Compiler settings
+    # ----------------------
     @property
     def custom_compiler_path(self):
         return self._settings.value('customCompilerPath', '')
@@ -357,6 +359,14 @@ class Settings(object):
     @libraries.setter
     def libraries(self, value):
         self._settings.setValue('libraries', value)
+
+    @property
+    def cobc_extensions(self):
+        return eval(self._settings.value('cobcExtensions', "['.cob', '.cbl', '.pco', '.cpy']"))
+
+    @cobc_extensions.setter
+    def cobc_extensions(self, exts):
+        self._settings.setValue('cobcExtensions', repr(exts))
 
     # Cobol settings
     # ----------------------
@@ -444,6 +454,22 @@ class Settings(object):
         self._settings.setValue('esqloc', value)
 
     @property
+    def esqloc_extensions(self):
+        return eval(self._settings.value('esqlOcExtensions', "['.sqb']"))
+
+    @esqloc_extensions.setter
+    def esqloc_extensions(self, exts):
+        self._settings.setValue('esqlOcExtensions', repr(exts))
+
+    @property
+    def dbpre_extensions(self):
+        return eval(self._settings.value('dbpreExtensions', "['.scb']"))
+
+    @dbpre_extensions.setter
+    def dbpre_extensions(self, exts):
+        self._settings.setValue('dbpreExtensions', repr(exts))
+
+    @property
     def dbpre(self):
         return self._settings.value('dbpre', '')
 
@@ -514,3 +540,7 @@ class Settings(object):
     @dbsocket.setter
     def dbsocket(self, value):
         self._settings.setValue('dbsocket', value)
+
+    @property
+    def all_extensions(self):
+        return self.cobc_extensions + self.esqloc_extensions + self.dbpre_extensions

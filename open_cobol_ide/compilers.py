@@ -126,8 +126,6 @@ class GnuCobolCompiler:
     """
     Provides an interface to the GnuCobol compiler (cobc)
     """
-    EXTENSIONS = [".COB", ".CBL", ".PCO", ".CPY"]
-
     def __init__(self):
         #: platform specifc extensions, sorted per file type
         self.extensions = [
@@ -360,9 +358,9 @@ class GnuCobolCompiler:
                     module_base_name = txt[txt.find('"'):].replace('"', '')
                     # try to see if the module can be found in the current
                     # directory
-                    for ext in CobolCodeEdit.all_extensions():
+                    for ext in Settings().all_extensions:
                         pth = os.path.join(directory, module_base_name + ext)
-                        if os.path.exists(pth) and pth not in dependencies:
+                        if os.path.exists(pth) and pth.lower() not in dependencies:
                             dependencies.append(pth)
                             if recursive:
                                 dependencies += self.get_dependencies(pth)
@@ -392,9 +390,6 @@ class DbpreCompiler:
 
     (-L: library search path, -l libraries to link with)
     """
-
-    EXTENSIONS = [".SCB"]
-
     _INVALID = 'invalid dbpre executable'
 
     def __init__(self, dbpre_path=None):

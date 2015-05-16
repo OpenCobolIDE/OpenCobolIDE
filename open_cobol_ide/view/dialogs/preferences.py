@@ -288,6 +288,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditRunTerm.setText(settings.external_terminal_command)
         # compiler
         if self.tabWidget.currentIndex() == 2 or all_tabs:
+            self.lineEditCobcExts.setText(';'.join(Settings().cobc_extensions))
             self.checkBoxFreeFormat.setChecked(settings.free_format)
             self.comboBoxStandard.setCurrentIndex(
                 int(settings.cobol_standard))
@@ -312,6 +313,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditVCVARS.setText(settings.vcvars32)
         # SQL Cobol
         if self.tabWidget.currentIndex() == 4 or all_tabs:
+            self.lineEditDbpreExts.setText(';'.join(Settings().dbpre_extensions))
             self.lineEditDbpre.setText(settings.dbpre)
             self.lineEditDbpreFramework.setText(settings.dbpre_framework)
             self.lineEditCobmysqlapi.setText(settings.cobmysqlapi)
@@ -325,6 +327,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                 compilers.DbpreCompiler().get_version()
                 if Settings().dbpre != '' else '')
             self.lineEditESQLOC.setText(settings.esqloc)
+            self.lineEditesqlOcExts.setText(';'.join(Settings().esqloc_extensions))
 
     def restore_defaults(self):
         settings = Settings()
@@ -364,8 +367,10 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.library_search_path = ''
             settings.libraries = ''
             settings.vcvars32 = ''
+            settings.cobc_extensions = ['.cob', '.cbl', '.pco', '.cpy']
         elif index == 4:
             settings.dbpre = ''
+            settings.dbpre_extensions = ['.scb']
             settings.dbpre_framework = ''
             settings.cobmysqlapi = ''
             settings.dbhost = 'localhost'
@@ -375,6 +380,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.dbport = '03306'
             settings.dbsocket = 'null'
             settings.esqloc = ''
+            settings.esqloc_extensions = ['.sqb']
         self.reset()
 
     @classmethod
@@ -447,3 +453,10 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.esqloc = dlg.lineEditESQLOC.text()
         settings.completion_filter_mode = \
             dlg.comboCcFilterMode.currentIndex()
+
+        settings.cobc_extensions = [
+            ext for ext in dlg.lineEditCobcExts.text().split(';') if ext]
+        settings.dbpre_extensions = [
+            ext for ext in dlg.lineEditDbpreExts.text().split(';') if ext]
+        settings.esqloc_extensions = [
+            ext for ext in dlg.lineEditesqlOcExts.text().split(';') if ext]

@@ -6,7 +6,7 @@ import tempfile
 from pyqode.core.modes import CheckerMode
 import time
 from open_cobol_ide.compilers import GnuCobolCompiler, get_file_type
-
+from open_cobol_ide import settings
 
 def lint(request_data):
     """
@@ -20,7 +20,7 @@ def lint(request_data):
     code = request_data['code']
     path = request_data['path']
     extension = os.path.splitext(path)[1]
-    if extension.upper() in GnuCobolCompiler.EXTENSIONS:
+    if extension.lower() in settings.Settings().cobc_extensions:
         # time stamped file path
         tmp_pth = os.path.join(tempfile.gettempdir(),
                                'oci%s.cbl' % str(int(time.time())))

@@ -5,6 +5,7 @@ various managers and gui parts together.
 """
 import argparse
 import logging
+import mimetypes
 import os
 import sys
 from pyqode.qt import QtWidgets, QT_API, PYQT5_API, PYSIDE_API
@@ -28,6 +29,12 @@ class Application:
     The application class contains references to the main window user interface
     and to the various controllers so that they can collaborate each others.
     """
+
+    def apply_mimetypes_preferences(self):
+        for ext in Settings().all_extensions:
+            mimetypes.add_type('text/x-cobol', ext)
+            mimetypes.add_type('text/x-cobol', ext.upper())
+
     def __init__(self, parse_args=True):
         self.init_env()
         self.app = QtWidgets.QApplication(sys.argv)
@@ -42,6 +49,9 @@ class Application:
         self.name = 'OpenCobolIDE'
         self.version = __version__
         self.title = '%s %s' % (self.name, self.version)
+
+        self.apply_mimetypes_preferences()
+
         self.win = MainWindow()
         self.win.setWindowTitle(self.title)
         self.file = FileController(self)

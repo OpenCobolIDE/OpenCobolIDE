@@ -17,21 +17,10 @@ def _logger():
     return logging.getLogger(__name__)
 
 
-#: Cobol files file (for open/save dialogs)
-COBOL_FILES_FILTER = 'Cobol files (%s)' % ' '.join(
-    [ext.lower() for ext in CobolCodeEdit.extensions] +
-    CobolCodeEdit.extensions).replace('.', '*.')
-#: Other files file (ALL files)
-OTHER_FILES_FILTER = 'Other text files (*)'
-#: filter separator
-FILTER_SEPARATOR = ';;'
-FILTER = FILTER_SEPARATOR.join([COBOL_FILES_FILTER, OTHER_FILES_FILTER])
-
-
 class FileIconProvider(QtWidgets.QFileIconProvider):
     def icon(self, file_infos):
         try:
-            if '.%s' % file_infos.suffix() in CobolCodeEdit.all_extensions():
+            if '.%s' % file_infos.suffix().lower() in Settings().all_extensions:
                 return QtGui.QIcon(icons.ICON_MIMETYPE)
         except AttributeError:
             pass
@@ -88,13 +77,20 @@ class FileController(Controller):
         if path:
             self.open_file(path)
 
+    def _get_open_file_filter(self):
+        cobol_files_filter = 'Cobol files (%s)' % ' '.join(
+            [ext.replace('.', '*.') for ext in Settings().all_extensions] +
+            [ext.upper().replace('.', '*.') for ext in Settings().all_extensions])
+        other_files_filter = 'Other text files (*)'
+        return ';;'.join([cobol_files_filter, other_files_filter])
+
     def request_open(self):
         """
         Prompts the user for a file to open and open it.
         """
         paths, status = QtWidgets.QFileDialog.getOpenFileNames(
             self.main_window, 'Open a file', directory=Settings().last_path,
-            filter=FILTER)
+            filter=self._get_open_file_filter())
         if status:
             for path in paths:
                 self.open_file(path)

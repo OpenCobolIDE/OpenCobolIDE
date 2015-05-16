@@ -97,8 +97,8 @@ class HomeController(Controller):
         self.ui.listWidgetRecents.clear()
         for file in self.app.file.recent_files_manager.get_recent_files():
             item = QtWidgets.QListWidgetItem()
-            if ('.' + QtCore.QFileInfo(file).suffix().upper() in
-                    CobolCodeEdit.extensions):
+            if ('.' + QtCore.QFileInfo(file).suffix().lower() in
+                    Settings().all_extensions):
                 icon = QtGui.QIcon(icons.ICON_MIMETYPE)
             else:
                 icon = QtWidgets.QFileIconProvider().icon(
