@@ -14,6 +14,16 @@ on...
 
 Changelog
 ---------
+4.5.1
+++++++
+
+New features:
+    - add ability to set custom file extension association with the different 
+      compiler (cobc, dbpre and esqlOC)
+
+Fixed bugs:
+    - Fix issues with non cobol files on frozen builds (Windows and OSX only)
+    - All bugs fixed in pyqode.core 2.6.1
 
 4.5.0
 +++++
