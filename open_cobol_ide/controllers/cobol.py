@@ -152,11 +152,11 @@ class CobolController(Controller):
         if dotted_extension.lower() in Settings().cobc_extensions:
             compiler_works = GnuCobolCompiler().is_working()
             msg = 'GnuCobol compiler not found'
-        elif dotted_extension in Settings().dbpre_extensions:
+        elif dotted_extension.lower() in Settings().dbpre_extensions:
             compiler_works = DbpreCompiler().is_working()
             msg = 'dbpre compiler not working, please check your SQL cobol ' \
                 'configuration'
-        elif dotted_extension in Settings().esqloc_extensions:
+        elif dotted_extension.lower() in Settings().esqloc_extensions:
             compiler_works = EsqlOCCompiler().is_working()
             msg = 'esqlOC compiler not workign, please check your SQL cobol ' \
                 'configuration'
