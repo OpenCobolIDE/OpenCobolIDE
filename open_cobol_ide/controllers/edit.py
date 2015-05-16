@@ -134,13 +134,17 @@ class EditController(Controller):
         :return:
         """
         try:
-            editor = self.ui.tabWidgetEditors.open_document(
-                path, preferred_eol=Settings().preferred_eol,
-                autodetect_eol=Settings().autodetect_eol,
-                bt_compile=self.app.cobol.create_bt_compile(),
-                bt_run=self.app.cobol.create_bt_run(),)
-        except TypeError:
-            editor = self.ui.tabWidgetEditors.open_document(path)
+            try:
+                editor = self.ui.tabWidgetEditors.open_document(
+                    path, preferred_eol=Settings().preferred_eol,
+                    autodetect_eol=Settings().autodetect_eol,
+                    bt_compile=self.app.cobol.create_bt_compile(),
+                    bt_run=self.app.cobol.create_bt_run(),)
+            except TypeError:
+                editor = self.ui.tabWidgetEditors.open_document(path)
+        except OSError as e:
+            QtWidgets.QMessageBox.warning(self.main_window, 'Failed to open path',
+                                          'Failed to open path: %s' % e)
         try:
             fw = editor.modes.get('FileWatcherMode')
         except KeyError:
