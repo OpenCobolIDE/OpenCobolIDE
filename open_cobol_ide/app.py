@@ -61,7 +61,6 @@ class Application:
         self.cobol = CobolController(self)
         self.help = HelpController(self)
 
-        self.win.showMaximized()
         self.view.show_perspective(Settings().perspective)
         self.view.show_home_page()
 
@@ -109,6 +108,10 @@ class Application:
         """
         Run the Qt main loop.
         """
+        if Settings().fullscreen:
+            self.win.showFullScreen()
+        else:
+            self.win.showMaximized()
         return self.app.exec_()
 
     @classmethod

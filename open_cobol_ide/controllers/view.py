@@ -70,7 +70,7 @@ class ViewController(Controller):
                      background-color: rgba(255, 255,255,0);
                 }
                 ''')
-        self.ui.actionFullscreen.setChecked(self.main_window.isFullScreen())
+        self.ui.actionFullscreen.setChecked(Settings().fullscreen)
 
     def toggle_perspective(self):
         self.show_perspective(
@@ -242,3 +242,4 @@ class ViewController(Controller):
             self.main_window.showFullScreen()
         else:
             self.main_window.showNormal()
+        Settings().fullscreen = self.ui.actionFullscreen.isChecked()
