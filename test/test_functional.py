@@ -39,6 +39,7 @@ def test_functional(app):
 
     :type app: open_cobol_ide.app.Application
     """
+    app.win.show()
     # Open a cobol file
     app.file.open_file(path_ok)
     assert app.win.ui.actionCompile.isEnabled()
@@ -64,6 +65,7 @@ def test_functional_external_terminal(app):
 
     :type app: open_cobol_ide.app.Application
     """
+    app.win.show()
     # Open a cobol file
     Settings().external_terminal = True
     app.file.open_file(path_ok)
@@ -86,6 +88,7 @@ def test_functional_external_terminal(app):
 
 
 def test_toggle_perspective(app):
+    app.win.show()
     assert Settings().perspective == 'default'
     assert app.win.ui.toolBarCode.isVisible()
     assert app.win.ui.toolBarFile.isVisible()
@@ -106,6 +109,7 @@ def test_functional_syntax_errors(app):
     Open a cobol file that contains errors and ensures there is an error
     message in the error table when compilation finished.
     """
+    app.win.show()
     app.file.open_file(path_ko)
     assert app.edit.current_editor.file.path == path_ko
     QTest.qWait(500)
@@ -127,11 +131,13 @@ def test_open_text_file(app):
     """
     :type app: open_cobol_ide.app.Application
     """
+    app.win.show()
     app.file.open_file(path_txt)
     assert not app.win.ui.actionCompile.isEnabled()
 
 
 def test_cancel_operations(app):
+    app.win.show()
     app.file.open_file(path_interactive)
     QTest.qWait(500)
     app.cobol.run()
@@ -145,6 +151,7 @@ def test_change_pgm_type(app):
     """
     :type app: open_cobol_ide.app.Application
     """
+    app.win.show()
     # Open a cobol file
     app.file.open_file(path_ok)
     QTest.qWait(500)
