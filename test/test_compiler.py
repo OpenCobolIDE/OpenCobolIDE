@@ -105,7 +105,7 @@ def test_make_command_exe(free, std, ftype, expected_opts):
     settings = Settings()
     settings.free_format = free
     settings.cobol_standard = std
-    pgm, options = compiler.make_command(['HelloWorld.cbl'], ftype)
+    pgm, options = compiler.make_command(['HelloWorld.cbl'], ftype, 'bin')
     assert pgm == 'cobc'
     for o, eo in zip(options, expected_opts):
         assert o == eo
