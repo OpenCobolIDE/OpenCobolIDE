@@ -505,8 +505,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>364</width>
-               <height>355</height>
+               <width>641</width>
+               <height>589</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -785,7 +785,7 @@ as possible to get back to the previous indentation level.</string>
               <item row="3" column="0">
                <widget class="QLabel" name="label_15">
                 <property name="text">
-                 <string>C compiler flags:</string>
+                 <string>Compiler flags</string>
                 </property>
                </widget>
               </item>
@@ -849,7 +849,7 @@ as possible to get back to the previous indentation level.</string>
               <item row="9" column="0">
                <widget class="QLabel" name="label_17">
                 <property name="text">
-                 <string>Library path:</string>
+                 <string>Library paths:</string>
                 </property>
                </widget>
               </item>
@@ -987,6 +987,13 @@ as possible to get back to the previous indentation level.</string>
               </item>
               <item row="0" column="1">
                <widget class="QLineEdit" name="lineEditCobcExts"/>
+              </item>
+              <item row="8" column="0">
+               <widget class="QLabel" name="label_35">
+                <property name="text">
+                 <string>Extra compiler flags</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>
