@@ -43,7 +43,7 @@ DEFAULT_TEMPLATE = '''      * Author:
 
 class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
     flags_in_checkbox = [
-        '-g', '-ftrace', '-ftraceall', '-fdebugging-line', '-static'
+        '-g', '-ftrace', '-ftraceall', '-fdebugging-line', '-static', '-debug'
     ]
 
     def __init__(self, parent):
@@ -296,10 +296,11 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             flags = Settings().compiler_flags
             self.cb_debugging_line.setChecked(
                 self.cb_debugging_line.text() in flags)
-            self.cb_ftrace.setChecked(self.cb_ftrace.text() in flags)
-            self.cb_ftraceall.setChecked(self.cb_ftraceall.text() in flags)
-            self.cb_g.setChecked(self.cb_g.text() in flags)
-            self.cb_static.setChecked(self.cb_static.text() in flags)
+            self.cb_ftrace.setChecked(self.cb_ftrace.text().replace('&', '') in flags)
+            self.cb_ftraceall.setChecked(self.cb_ftraceall.text().replace('&', '') in flags)
+            self.cb_g.setChecked(self.cb_g.text().replace('&', '') in flags)
+            self.cb_static.setChecked(self.cb_static.text().replace('&', '') in flags)
+            self.cb_debug.setChecked(self.cb_debug.text().replace('&', '') in flags)
             for v in self.flags_in_checkbox:
                 try:
                     flags.remove(v)
@@ -363,7 +364,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.free_format = False
             settings.cobol_standard = GnuCobolStandard.default
             settings.custom_compiler_path = ''
-            settings.compiler_flags = []
+            settings.compiler_flags = ['-debug']
             settings.library_search_path = ''
             settings.libraries = ''
             settings.vcvars32 = ''
@@ -436,7 +437,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.libraries = dlg.lineEditLibs.text()
 
         cb_flags = [dlg.cb_g, dlg.cb_ftrace, dlg.cb_ftraceall,
-                    dlg.cb_debugging_line, dlg.cb_static]
+                    dlg.cb_debugging_line, dlg.cb_static, dlg.cb_debug]
         flags = [cb.text() for cb in cb_flags if cb.isChecked()]
         flags += dlg.le_compiler_flags.text().split(' ')
         settings.compiler_flags = flags

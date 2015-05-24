@@ -37,7 +37,7 @@
    <property name="bottomMargin">
     <number>6</number>
    </property>
-   <item row="1" column="0">
+   <item row="6" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -789,56 +789,6 @@ as possible to get back to the previous indentation level.</string>
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
-               <widget class="QCheckBox" name="cb_static">
-                <property name="toolTip">
-                 <string>Link statically</string>
-                </property>
-                <property name="text">
-                 <string>-static</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="1">
-               <widget class="QCheckBox" name="cb_g">
-                <property name="toolTip">
-                 <string>Enable C compiler debug / stack check / trace</string>
-                </property>
-                <property name="text">
-                 <string>-g</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="1">
-               <widget class="QCheckBox" name="cb_ftrace">
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Generate trace code&lt;/p&gt;&lt;p&gt;   - Executed SECTION/PARAGRAPH&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="text">
-                 <string>-ftrace</string>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="1">
-               <widget class="QCheckBox" name="cb_ftraceall">
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Generate trace code&lt;/p&gt;&lt;p&gt;  - Executed SECTION/PARAGRAPH/STATEMENTS&lt;/p&gt;&lt;p&gt;  - Turned on by -debug&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="text">
-                 <string>-ftraceall</string>
-                </property>
-               </widget>
-              </item>
-              <item row="7" column="1">
-               <widget class="QCheckBox" name="cb_debugging_line">
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable debugging lines&lt;/p&gt;&lt;p&gt;  - 'D' in indicator column or floating &amp;gt;&amp;gt;D&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="text">
-                 <string>-fdebugging-line</string>
-                </property>
-               </widget>
-              </item>
               <item row="8" column="1">
                <widget class="QLineEdit" name="le_compiler_flags">
                 <property name="toolTip">
@@ -994,6 +944,73 @@ as possible to get back to the previous indentation level.</string>
                  <string>Extra compiler flags</string>
                 </property>
                </widget>
+              </item>
+              <item row="3" column="1">
+               <layout class="QGridLayout" name="gridLayout_5">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <item row="2" column="0">
+                 <widget class="QCheckBox" name="cb_ftrace">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Generate trace code&lt;/p&gt;&lt;p&gt;   - Executed SECTION/PARAGRAPH&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="text">
+                   <string>-ftrace</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QCheckBox" name="cb_static">
+                  <property name="toolTip">
+                   <string>Link statically</string>
+                  </property>
+                  <property name="text">
+                   <string>-static</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QCheckBox" name="cb_g">
+                  <property name="toolTip">
+                   <string>Enable C compiler debug / stack check / trace</string>
+                  </property>
+                  <property name="text">
+                   <string>-g</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QCheckBox" name="cb_debugging_line">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable debugging lines&lt;/p&gt;&lt;p&gt;  - 'D' in indicator column or floating &amp;gt;&amp;gt;D&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="text">
+                   <string>-fdebugging-line</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QCheckBox" name="cb_ftraceall">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Generate trace code&lt;/p&gt;&lt;p&gt;  - Executed SECTION/PARAGRAPH/STATEMENTS&lt;/p&gt;&lt;p&gt;  - Turned on by -debug&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="text">
+                   <string>-ftraceall</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QCheckBox" name="cb_debug">
+                  <property name="text">
+                   <string>-debug</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
              </layout>
             </widget>
