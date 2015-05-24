@@ -227,7 +227,7 @@ class CobolController(Controller):
             path = os.path.join(output_dir, name + ext)
             self.ui.errorsTable.add_message(
                 CheckerMessage(
-                    'Compilation succeeded: %s' % path,
+                    'Compilation succeeded (output: %s)' % path,
                     CheckerMessages.INFO, -1,
                     path=filename))
         else:
