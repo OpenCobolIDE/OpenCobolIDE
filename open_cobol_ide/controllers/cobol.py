@@ -7,13 +7,18 @@ import os
 import subprocess
 from pyqode.core.api import TextHelper
 from pyqode.core.modes import CheckerMessage, CheckerMessages
-from pyqode.qt import QtCore, QtWidgets
+from pyqode.qt import QtCore, QtGui, QtWidgets
 from .base import Controller
 from open_cobol_ide import system
 from open_cobol_ide.enums import FileType
 from open_cobol_ide.compilers import GnuCobolCompiler, get_file_type, \
     DbpreCompiler, EsqlOCCompiler
 from open_cobol_ide.settings import Settings
+
+
+LOG_PAGE_COMPILER = 0
+LOG_PAGE_ISSUES = 1
+LOG_PAGE_RUN = 2
 
 
 class CompilationThread(QtCore.QThread):
@@ -26,6 +31,9 @@ class CompilationThread(QtCore.QThread):
     file_compiled = QtCore.Signal(str, int, list)
     #: signal emitted when the thread finished.
     finished = QtCore.Signal()
+
+    command_started = QtCore.Signal(str)
+    output_available = QtCore.Signal(str)
 
     #: path of the file to compile
     file_path = ''
@@ -47,8 +55,17 @@ class CompilationThread(QtCore.QThread):
             return False
 
         cobc = GnuCobolCompiler()
+        cobc.started.connect(self.command_started.emit)
+        cobc.output_available.connect(self.output_available.emit)
+
         dbpre = DbpreCompiler()
+        dbpre.started.connect(self.command_started.emit)
+        dbpre.output_available.connect(self.output_available.emit)
+
         esqloc = EsqlOCCompiler()
+        esqloc.started.connect(self.command_started.emit)
+        esqloc.output_available.connect(self.output_available.emit)
+
         files = [self.file_path]
         files += cobc.get_dependencies(self.file_path, recursive=True)
 
@@ -186,13 +203,31 @@ class CobolController(Controller):
         self.ui.errorsTable.clear()
         self._errors = 0
         # prepare and start compilation thread
+        self.ui.textEditCompilerOutput.clear()
+        self.ui.tabWidgetLogs.setCurrentIndex(LOG_PAGE_COMPILER)
         self._compilation_thread = CompilationThread()
         self._compilation_thread.file_path = \
             self.app.edit.current_editor.file.path
         self._compilation_thread.file_compiled.connect(self._on_file_compiled)
+        self._compilation_thread.command_started.connect(
+            self._on_command_started)
+        self._compilation_thread.output_available.connect(
+            self._on_output_available)
         self._compilation_thread.finished.connect(
             self._on_compilation_finished)
         self._compilation_thread.start()
+
+    def _on_command_started(self, cmd):
+        old_color = self.ui.textEditCompilerOutput.textColor()
+        color = QtGui.QColor('#629755') if Settings().dark_style else \
+            QtGui.QColor('#000080')
+        self.ui.textEditCompilerOutput.setTextColor(color)
+        self.ui.textEditCompilerOutput.append(cmd)
+        self.ui.textEditCompilerOutput.setTextColor(old_color)
+
+    def _on_output_available(self, output):
+        if output:
+            self.ui.textEditCompilerOutput.append(output)
 
     def _on_compilation_finished(self):
         """
@@ -203,6 +238,7 @@ class CobolController(Controller):
         self.enable_compile(True)
         self.enable_run(
             self.app.edit.current_editor.file_type == FileType.EXECUTABLE)
+        self.ui.tabWidgetLogs.setCurrentIndex(LOG_PAGE_ISSUES)
         if self._run_requested:
             self._run_requested = False
             if self._errors == 0:
@@ -215,7 +251,7 @@ class CobolController(Controller):
         Displays compilation status in errors table.
         """
         self.ui.dockWidgetLogs.show()
-        self.ui.tabWidgetLogs.setCurrentIndex(0)
+        self.ui.tabWidgetLogs.setCurrentIndex(LOG_PAGE_COMPILER)
         if len(messages) == 0 and status == 0:
             ext = GnuCobolCompiler().extension_for_type(
                 get_file_type(filename))
@@ -287,7 +323,7 @@ class CobolController(Controller):
         editor = self.app.edit.current_editor
         file_type = editor.file_type
         if file_type == FileType.EXECUTABLE:
-            self.ui.tabWidgetLogs.setCurrentIndex(1)
+            self.ui.tabWidgetLogs.setCurrentIndex(LOG_PAGE_RUN)
             self.ui.dockWidgetLogs.show()
             self.ui.consoleOutput.clear()
             output_dir = Settings().output_directory

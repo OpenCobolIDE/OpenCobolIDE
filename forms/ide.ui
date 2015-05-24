@@ -459,8 +459,22 @@
      <item row="1" column="0">
       <widget class="QTabWidget" name="tabWidgetLogs">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
+       <widget class="QWidget" name="tabCompiler">
+        <attribute name="icon">
+         <iconset resource="ide.qrc">
+          <normaloff>:/ide-icons/rc/silex-32x32.png</normaloff>:/ide-icons/rc/silex-32x32.png</iconset>
+        </attribute>
+        <attribute name="title">
+         <string>Compiler</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_6">
+         <item row="0" column="0">
+          <widget class="QTextEdit" name="textEditCompilerOutput"/>
+         </item>
+        </layout>
+       </widget>
        <widget class="QWidget" name="tabCompiler">
         <attribute name="icon">
          <iconset theme="emblem-important">
@@ -552,7 +566,7 @@
      <x>0</x>
      <y>0</y>
      <width>1054</width>
-     <height>21</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -654,7 +668,7 @@
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
    <property name="windowTitle">
-    <string>Navigation</string>
+    <string>Navi&amp;gation</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -705,7 +719,7 @@
     </size>
    </property>
    <property name="windowTitle">
-    <string>Offset calculator</string>
+    <string>Offset calc&amp;ulator</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -795,7 +809,7 @@
     </size>
    </property>
    <property name="windowTitle">
-    <string>File system</string>
+    <string>File s&amp;ystem</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>

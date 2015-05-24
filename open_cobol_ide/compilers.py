@@ -396,7 +396,7 @@ DBSOCKET=%(socket)s
 '''
 
 
-class DbpreCompiler:
+class DbpreCompiler(QtCore.QObject):
     """
     Provides an interface to the Dbpre tool.
 
@@ -419,6 +419,7 @@ class DbpreCompiler:
     _INVALID = 'invalid dbpre executable'
 
     def __init__(self, dbpre_path=None):
+        super().__init__()
         if dbpre_path is None:
             dbpre_path = Settings().dbpre
         self.dbpre_path = dbpre_path
@@ -579,7 +580,7 @@ class DbpreCompiler:
         return status, messages
 
 
-class EsqlOCCompiler:
+class EsqlOCCompiler(QtCore.QObject):
     """
     Provides an interface to esqlOC.exe:
 
@@ -610,6 +611,7 @@ class EsqlOCCompiler:
     _INVALID = 'invalid esqlOC executable'
 
     def __init__(self):
+        super().__init__()
         self.esqloc_path = os.path.join(Settings().esqloc, 'esqlOC.exe')
 
     def is_working(self):

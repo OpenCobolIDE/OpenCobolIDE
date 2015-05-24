@@ -105,7 +105,7 @@ class ViewController(Controller):
         inew = QtGui.QIcon.fromTheme(
             'document-new',
             QtGui.QIcon(':/ide-icons/rc/document-new.png'))
-        iissue = QtGui.QIcon.fromTheme('important', QtGui.QIcon(
+        issue = QtGui.QIcon.fromTheme('important', QtGui.QIcon(
             ':/ide-icons/rc/emblem-important.png'))
         icompile = QtGui.QIcon.fromTheme(
             'application-x-executable', QtGui.QIcon(
@@ -148,8 +148,9 @@ class ViewController(Controller):
         self.ui.actionCancel.setIcon(icancel)
         self.ui.actionCompile.setIcon(icompile)
         self.ui.actionAbout.setIcon(iabout)
-        self.ui.tabWidgetLogs.setTabIcon(0, iissue)
-        self.ui.tabWidgetLogs.setTabIcon(1, irun)
+        self.ui.tabWidgetLogs.setTabIcon(0, icompile)
+        self.ui.tabWidgetLogs.setTabIcon(1, issue)
+        self.ui.tabWidgetLogs.setTabIcon(2, irun)
         self.ui.actionAbout.setMenuRole(QtWidgets.QAction.AboutRole)
         self.ui.actionPreferences.setMenuRole(
             QtWidgets.QAction.PreferencesRole)

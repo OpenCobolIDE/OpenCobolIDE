@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Dev\OpenCobolIDE\forms\ide.ui'
+# Form implementation generated from reading ui file '/home/colin/Documents/OpenCobolIDE/forms/ide.ui'
 #
 # Created by: PyQt5 UI code generator 5.4.1
 #
@@ -165,17 +165,27 @@ class Ui_MainWindow(object):
         self.tabWidgetLogs.setObjectName("tabWidgetLogs")
         self.tabCompiler = QtWidgets.QWidget()
         self.tabCompiler.setObjectName("tabCompiler")
-        self.gridLayout_4 = QtWidgets.QGridLayout(self.tabCompiler)
+        self.gridLayout_6 = QtWidgets.QGridLayout(self.tabCompiler)
+        self.gridLayout_6.setObjectName("gridLayout_6")
+        self.textEditCompilerOutput = QtWidgets.QTextEdit(self.tabCompiler)
+        self.textEditCompilerOutput.setObjectName("textEditCompilerOutput")
+        self.gridLayout_6.addWidget(self.textEditCompilerOutput, 0, 0, 1, 1)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/ide-icons/rc/silex-32x32.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.tabWidgetLogs.addTab(self.tabCompiler, icon1, "")
+        self.tabCompiler1 = QtWidgets.QWidget()
+        self.tabCompiler1.setObjectName("tabCompiler1")
+        self.gridLayout_4 = QtWidgets.QGridLayout(self.tabCompiler1)
         self.gridLayout_4.setContentsMargins(6, 6, 6, 6)
         self.gridLayout_4.setObjectName("gridLayout_4")
-        self.errorsTable = ErrorsTable(self.tabCompiler)
+        self.errorsTable = ErrorsTable(self.tabCompiler1)
         self.errorsTable.setMinimumSize(QtCore.QSize(0, 0))
         self.errorsTable.setObjectName("errorsTable")
         self.errorsTable.setColumnCount(5)
         self.errorsTable.setRowCount(0)
         self.gridLayout_4.addWidget(self.errorsTable, 0, 0, 1, 1)
         icon = QtGui.QIcon.fromTheme("emblem-important")
-        self.tabWidgetLogs.addTab(self.tabCompiler, icon, "")
+        self.tabWidgetLogs.addTab(self.tabCompiler1, icon, "")
         self.tabProgramOutput = QtWidgets.QWidget()
         self.tabProgramOutput.setObjectName("tabProgramOutput")
         self.gridLayout_5 = QtWidgets.QGridLayout(self.tabProgramOutput)
@@ -191,7 +201,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1054, 21))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1054, 29))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -389,7 +399,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.stackedWidget.setCurrentIndex(0)
-        self.tabWidgetLogs.setCurrentIndex(1)
+        self.tabWidgetLogs.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -406,9 +416,10 @@ class Ui_MainWindow(object):
         self.toolBarFile.setWindowTitle(_translate("MainWindow", "Toolbar File"))
         self.toolBarCode.setWindowTitle(_translate("MainWindow", "Toolbar Code"))
         self.dockWidgetLogs.setWindowTitle(_translate("MainWindow", "&Logs"))
+        self.tabWidgetLogs.setTabText(self.tabWidgetLogs.indexOf(self.tabCompiler), _translate("MainWindow", "Compiler"))
         self.errorsTable.setStatusTip(_translate("MainWindow", "The list of errors found in your program"))
-        self.tabWidgetLogs.setTabText(self.tabWidgetLogs.indexOf(self.tabCompiler), _translate("MainWindow", "Issues"))
-        self.tabWidgetLogs.setTabToolTip(self.tabWidgetLogs.indexOf(self.tabCompiler), _translate("MainWindow", "Show compiler log"))
+        self.tabWidgetLogs.setTabText(self.tabWidgetLogs.indexOf(self.tabCompiler1), _translate("MainWindow", "Issues"))
+        self.tabWidgetLogs.setTabToolTip(self.tabWidgetLogs.indexOf(self.tabCompiler1), _translate("MainWindow", "Show compiler log"))
         self.consoleOutput.setToolTip(_translate("MainWindow", "Program output"))
         self.consoleOutput.setStatusTip(_translate("MainWindow", "Program output"))
         self.tabWidgetLogs.setTabText(self.tabWidgetLogs.indexOf(self.tabProgramOutput), _translate("MainWindow", "Output"))
@@ -422,10 +433,10 @@ class Ui_MainWindow(object):
         self.menuCobol.setTitle(_translate("MainWindow", "&Cobol"))
         self.menuProgramType.setTitle(_translate("MainWindow", "&Program type"))
         self.menu.setTitle(_translate("MainWindow", "?"))
-        self.dockWidgetNavPanel.setWindowTitle(_translate("MainWindow", "Navigation"))
+        self.dockWidgetNavPanel.setWindowTitle(_translate("MainWindow", "Navi&gation"))
         self.twNavigation.setToolTip(_translate("MainWindow", "Show the current editor structure"))
         self.twNavigation.setStatusTip(_translate("MainWindow", "Show the current editor structure"))
-        self.dockWidgetOffsets.setWindowTitle(_translate("MainWindow", "Offset calculator"))
+        self.dockWidgetOffsets.setWindowTitle(_translate("MainWindow", "Offset calc&ulator"))
         self.tableWidgetOffsets.setToolTip(_translate("MainWindow", "Show PIC fields offsets"))
         self.tableWidgetOffsets.setStatusTip(_translate("MainWindow", "Show PIC fields offsets"))
         self.tableWidgetOffsets.setSortingEnabled(True)
@@ -437,7 +448,7 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Offset"))
         item = self.tableWidgetOffsets.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "PIC"))
-        self.dockWidgetFileSystem.setWindowTitle(_translate("MainWindow", "File system"))
+        self.dockWidgetFileSystem.setWindowTitle(_translate("MainWindow", "File s&ystem"))
         self.btFSLock.setToolTip(_translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Lock</span> current file path to prevent the view from changing when the current editor changes.</p></body></html>"))
         self.actionQuit.setText(_translate("MainWindow", "&Quit"))
         self.actionQuit.setToolTip(_translate("MainWindow", "Exit application"))
@@ -494,7 +505,7 @@ class Ui_MainWindow(object):
         self.actionCancel.setStatusTip(_translate("MainWindow", "Cancel the current operation (compile or run)"))
         self.actionReport_a_bug.setText(_translate("MainWindow", "&Report a bug"))
 
+from pyqode.core.widgets import ErrorsTable, InteractiveConsole, FileSystemTreeView
+from open_cobol_ide.view.widgets import RecentFilesListWidget, TabWidget
 from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
-from pyqode.core.widgets import ErrorsTable, FileSystemTreeView, InteractiveConsole
-from open_cobol_ide.view.widgets import TabWidget, RecentFilesListWidget
 from . import ide_rc
