@@ -77,21 +77,13 @@ class FileController(Controller):
         if path:
             self.open_file(path)
 
-    def _get_open_file_filter(self):
-        cobol_files_filter = 'Cobol files (%s)' % ' '.join(
-            [ext.replace('.', '*.') for ext in Settings().all_extensions] +
-            [ext.upper().replace('.', '*.') for ext in Settings().all_extensions])
-        other_files_filter = 'Other text files (*)'
-        return ';;'.join([cobol_files_filter, other_files_filter])
-
     def request_open(self):
         """
         Prompts the user for a file to open and open it.
         """
-        paths, status = QtWidgets.QFileDialog.getOpenFileNames(
-            self.main_window, 'Open a file', directory=Settings().last_path,
-            filter=self._get_open_file_filter())
-        if status:
+        paths, _ = QtWidgets.QFileDialog.getOpenFileNames(
+            self.main_window, 'Open a file', directory=Settings().last_path)
+        if paths:
             for path in paths:
                 self.open_file(path)
 

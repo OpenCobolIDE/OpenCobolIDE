@@ -368,7 +368,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.library_search_path = ''
             settings.libraries = ''
             settings.vcvars32 = ''
-            settings.cobc_extensions = ['.cob', '.cbl', '.pco', '.cpy']
+            settings.cobc_extensions = ['.cob', '.cbl', '.pco', '.cpy', '.lst']
         elif index == 4:
             settings.dbpre = ''
             settings.dbpre_extensions = ['.scb']

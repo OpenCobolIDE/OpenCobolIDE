@@ -362,7 +362,7 @@ class Settings(object):
 
     @property
     def cobc_extensions(self):
-        return eval(self._settings.value('cobcExtensions', "['.cob', '.cbl', '.pco', '.cpy']"))
+        return eval(self._settings.value('cobcExtensions', "['.cob', '.cbl', '.pco', '.cpy', '.lst']"))
 
     @cobc_extensions.setter
     def cobc_extensions(self, exts):
