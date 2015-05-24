@@ -122,11 +122,20 @@ call cobc %*
                 os.path.dirname(Settings().vcvars32)))
 
 
-class GnuCobolCompiler:
+class GnuCobolCompiler(QtCore.QObject):
     """
     Provides an interface to the GnuCobol compiler (cobc)
     """
+    #: signal emitted when the compilation process started, parameter
+    #: is the command
+    started = QtCore.Signal(str)
+
+    #: signal emitted when the compilation process finished and its output
+    #: is available for parsing.
+    output_available = QtCore.Signal(str)
+    
     def __init__(self):
+        super().__init__()
         #: platform specifc extensions, sorted per file type
         self.extensions = [
             # no extension for exe on linux and mac
@@ -197,49 +206,58 @@ class GnuCobolCompiler:
         """
         return self.extensions[int(file_type)]
 
-    def make_bin_dir(self, path):
-        bin_dir = os.path.join(path, 'bin')
-        if not os.path.exists(bin_dir):
-            os.makedirs(bin_dir)
+    def prepare_bin_dir(self, path):
+        assert not os.path.isfile(path)  # must be a directory
+        if not os.path.exists(path):
+            os.makedirs(path)
         if sys.platform == "win32":
             # copy the dll
             files = glob.glob(os.path.join(os.environ["COB_LIBRARY_PATH"],
                                            "*.dll"))
             for f in files:
-                shutil.copy(f, bin_dir)
+                shutil.copy(f, path)
 
     def compile(self, file_path, file_type, object_files=None,
-                additional_options=None):
+                additional_options=None, output_dir=None):
         """
         Compiles a file. This is a blocking function, it returns only when
         the compiler process finished.
 
         :param file_path: Path of the file to compile.
         :param file_type: File type (exe or dll)
+        :param output_dir: Output directory, if None, the directory set in the
+                           application directory will be used.
         :return: status, list of checker messages
-
         """
         _logger().info('compiling %s' % file_path)
         path, filename = os.path.split(file_path)
+        if output_dir is None:
+            output_dir = Settings().output_directory
+        if not os.path.isabs(output_dir):
+            output_dir = os.path.abspath(os.path.join(path, output_dir))
         # ensure bin dir exists
-        self.make_bin_dir(path)
+        self.prepare_bin_dir(output_dir)
         # run command using qt process api, this is blocking.
         if object_files:
             inputs = [filename] + object_files
         else:
             inputs = [filename]
-        pgm, options = self.make_command(inputs, file_type, additional_options)
+        pgm, options = self.make_command(inputs, file_type, output_dir,
+                                         additional_options)
         process = QtCore.QProcess()
         process.setWorkingDirectory(path)
         process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
-        _logger().info('command: %s %s', pgm, ' '.join(options))
+        cmd = '%s %s' % (pgm, ' '.join(options))
+        _logger().info('command: %s', cmd)
         _logger().debug('working directory: %s', path)
         _logger().debug('system environment: %s', process.systemEnvironment())
         process.start(pgm, options)
+        self.started.emit(cmd)
         process.waitForFinished()
         status = process.exitCode()
         output = process.readAllStandardOutput().data().decode(
             locale.getpreferredencoding())
+        self.output_available.emit(output)
         messages = self.parse_output(output, file_path)
         _logger().info('output: %s', output)
         if status != 0 and not len(messages):
@@ -251,7 +269,7 @@ class GnuCobolCompiler:
         _logger().debug('compile results: %r - %r', status, messages)
         return status, messages
 
-    def make_command(self, input_file_names, file_type,
+    def make_command(self, input_file_names, file_type, output_dir=None,
                      additional_options=None):
         """
         Makes the command needed to compile the specified file.
@@ -273,7 +291,7 @@ class GnuCobolCompiler:
             options.append('-x')
         output_file_name += self.extension_for_type(file_type)
         options.append('-o')
-        options.append(os.path.join('bin', output_file_name))
+        options.append(os.path.join(output_dir, output_file_name))
         options.append('-std=%s' % str(settings.cobol_standard).replace(
             'GnuCobolStandard.', ''))
         options += settings.compiler_flags
@@ -390,6 +408,14 @@ class DbpreCompiler:
 
     (-L: library search path, -l libraries to link with)
     """
+    #: signal emitted when the compilation process started, parameter
+    #: is the command
+    started = QtCore.Signal(str)
+
+    #: signal emitted when the compilation process finished and its output
+    #: is available for parsing.
+    output_available = QtCore.Signal(str)
+
     _INVALID = 'invalid dbpre executable'
 
     def __init__(self, dbpre_path=None):
@@ -455,14 +481,17 @@ class DbpreCompiler:
         process = QtCore.QProcess()
         process.setWorkingDirectory(path)
         process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
-        _logger().info('command: %s %s', pgm, ' '.join(options))
+        cmd = '%s %s' % (pgm, ' '.join(options))
+        _logger().info('command: %s', cmd)
         _logger().debug('working directory: %s', path)
         _logger().debug('system environment: %s', process.systemEnvironment())
         process.start(pgm, options)
+        self.started.emit(cmd)
         process.waitForFinished()
         status = process.exitCode()
         output = process.readAllStandardOutput().data().decode(
             locale.getpreferredencoding())
+        self.output_available.emit(output)
         return output, status
 
     def _copy_dbpre_framework(self, path):
@@ -497,6 +526,8 @@ class DbpreCompiler:
         _logger().info('compiling with cobc')
         cob_path = os.path.splitext(path)[0] + '.cob'
         compiler = GnuCobolCompiler()
+        compiler.started.connect(self.started.emit)
+        compiler.output_available.connect(self.output_available.emit)
         return compiler.compile(cob_path, get_file_type(cob_path),
                                 object_files=[Settings().cobmysqlapi])
 
@@ -516,7 +547,10 @@ class DbpreCompiler:
             'port': Settings().dbport,
             'socket': Settings().dbsocket
         }
-        path = os.path.join(os.path.dirname(source_path), 'bin', name)
+        output_dir = Settings().output_directory
+        if not os.path.isabs(output_dir):
+            output_dir = os.path.abspath(os.path.join(source_path, output_dir))
+        path = os.path.join(output_dir, name)
         if not os.path.exists(path):
             _logger().info('creating %s', name)
             with open(path, 'w') as f:
@@ -563,6 +597,13 @@ class EsqlOCCompiler:
     %OC_RUNTIME%\cobc.exe -fixed -v -x -static -o c:\Temp\esqlOCGetStart1.exe
       c:\Temp\esqlOCGetStart1.cob
     """
+    #: signal emitted when the compilation process started, parameter
+    #: is the command
+    started = QtCore.Signal(str)
+
+    #: signal emitted when the compilation process finished and its output
+    #: is available for parsing.
+    output_available = QtCore.Signal(str)
 
     EXTENSIONS = [".SQB"]
 
@@ -601,14 +642,17 @@ class EsqlOCCompiler:
         process = QtCore.QProcess()
         process.setWorkingDirectory(path)
         process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
-        _logger().info('command: %s %s', pgm, ' '.join(options))
+        cmd = '%s %s' % (pgm, ' '.join(options))
+        _logger().info('command: %s', cmd)
         _logger().debug('working directory: %s', path)
         _logger().debug('system environment: %s', process.systemEnvironment())
         process.start(pgm, options)
+        self.started.emit(cmd)
         process.waitForFinished()
         status = process.exitCode()
         output = process.readAllStandardOutput().data().decode(
             locale.getpreferredencoding())
+        self.output_available.emit(output)
         return output, status, destination
 
     def _compile_with_cobc(self, path):
@@ -622,6 +666,8 @@ class EsqlOCCompiler:
         _logger().info('compiling with cobc')
         cob_path = os.path.splitext(path)[0] + '.cob'
         compiler = GnuCobolCompiler()
+        compiler.started.connect(self.started.emit)
+        compiler.output_available.connect(self.output_available.emit)
         return compiler.compile(
             cob_path, get_file_type(cob_path), additional_options=[
                 '-static', '-L%s' % Settings().esqloc, '-locsql.lib'])

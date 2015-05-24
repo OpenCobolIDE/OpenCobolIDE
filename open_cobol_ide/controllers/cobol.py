@@ -220,7 +220,11 @@ class CobolController(Controller):
             ext = GnuCobolCompiler().extension_for_type(
                 get_file_type(filename))
             name = os.path.splitext(os.path.split(filename)[1])[0]
-            path = os.path.join(os.path.dirname(filename), 'bin', name + ext)
+            output_dir = Settings().output_directory
+            if not os.path.isabs(output_dir):
+                path = os.path.dirname(filename)
+                output_dir = os.path.abspath(os.path.join(path, output_dir))
+            path = os.path.join(output_dir, name + ext)
             self.ui.errorsTable.add_message(
                 CheckerMessage(
                     'Compilation succeeded: %s' % path,
@@ -286,7 +290,11 @@ class CobolController(Controller):
             self.ui.tabWidgetLogs.setCurrentIndex(1)
             self.ui.dockWidgetLogs.show()
             self.ui.consoleOutput.clear()
-            wd = os.path.join(os.path.dirname(editor.file.path), 'bin')
+            output_dir = Settings().output_directory
+            if not os.path.isabs(output_dir):
+                output_dir = os.path.join(
+                    os.path.dirname(editor.file.path), output_dir)
+            wd = output_dir
             program = os.path.join(
                 wd, os.path.splitext(editor.file.name)[0] +
                 GnuCobolCompiler().extension_for_type(file_type))

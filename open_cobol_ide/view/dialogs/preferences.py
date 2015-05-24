@@ -288,6 +288,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditRunTerm.setText(settings.external_terminal_command)
         # compiler
         if self.tabWidget.currentIndex() == 2 or all_tabs:
+            self.lineEditOutputDirectory.setText(Settings().output_directory)
             self.lineEditCobcExts.setText(';'.join(Settings().cobc_extensions))
             self.checkBoxFreeFormat.setChecked(settings.free_format)
             self.comboBoxStandard.setCurrentIndex(
@@ -361,6 +362,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.external_terminal_command = None
         # compiler
         elif index == 2:
+            settings.output_directory = 'bin'
             settings.free_format = False
             settings.cobol_standard = GnuCobolStandard.default
             settings.custom_compiler_path = ''
@@ -435,6 +437,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             paths.append(dlg.listWidgetLibPaths.item(i).text())
         settings.library_search_path = ';'.join(paths)
         settings.libraries = dlg.lineEditLibs.text()
+        settings.output_directory = dlg.lineEditOutputDirectory.text()
 
         cb_flags = [dlg.cb_g, dlg.cb_ftrace, dlg.cb_ftraceall,
                     dlg.cb_debugging_line, dlg.cb_static, dlg.cb_debug]

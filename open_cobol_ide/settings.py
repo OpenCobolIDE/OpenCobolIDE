@@ -313,6 +313,14 @@ class Settings(object):
     # Compiler settings
     # ----------------------
     @property
+    def output_directory(self):
+        return self._settings.value('outputDirectory', 'bin')
+
+    @output_directory.setter
+    def output_directory(self, value):
+        self._settings.setValue('outputDirectory', value)
+
+    @property
     def custom_compiler_path(self):
         return self._settings.value('customCompilerPath', '')
 
