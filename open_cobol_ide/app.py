@@ -124,10 +124,6 @@ class Application:
             cls._windows_init()
         elif sys.platform == 'darwin':
             cls._osx_init()
-        path = Settings().custom_compiler_path
-        if path:
-            sep = ';' if sys.platform == 'win32' else ':'
-            os.environ['PATH'] += sep + path
 
     @staticmethod
     def _windows_init():
@@ -137,27 +133,12 @@ class Application:
         - set env var to embedded GnuCOBOL variable
         - set PATH to cobol library path only (erase previous values)
         """
-        if getattr(sys, 'frozen', False):
-            # The application is frozen
-            cwd = os.path.dirname(sys.executable)
-            os.environ['REQUESTS_CA_BUNDLE'] = os.path.join(cwd, 'cacert.pem')
-        else:
-            cwd = os.getcwd()
-        custom_compiler_path = Settings().custom_compiler_path
-        if custom_compiler_path:
-            # for dlls to copy
-            os.environ['COB_LIBRARY_PATH'] = os.path.join(custom_compiler_path)
-            os.environ['PATH'] += ';'.join([custom_compiler_path])
-        else:
-            oc_root_pth = os.path.join(cwd, 'OpenCobol')
-            os.environ['COB_CONFIG_DIR'] = os.path.join(oc_root_pth, 'config')
-            os.environ['COB_COPY_DIR'] = os.path.join(oc_root_pth, 'copy')
-            os.environ['COB_LIBRARY_PATH'] = os.path.join(oc_root_pth, 'bin')
-            os.environ['COB_INCLUDE_PATH'] = os.path.join(
-                oc_root_pth, 'include')
-            os.environ['COB_LIB_PATH'] = os.path.join(oc_root_pth, 'lib')
-            os.environ['PATH'] = ';'.join(
-                [os.environ['COB_LIBRARY_PATH'], cwd])
+        s = Settings()
+        os.environ['PATH'] = s.path
+        os.environ['COB_CONFIG_DIR'] = s.cob_config_dir
+        os.environ['COB_COPY_DIR'] = s.cob_copy_dir
+        os.environ['COB_INCLUDE_PATH'] = s.cob_include_path
+        os.environ['COB_LIB_PATH'] = s.cob_lib_path
 
     @staticmethod
     def _osx_init():

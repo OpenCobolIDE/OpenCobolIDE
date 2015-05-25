@@ -105,6 +105,9 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.toolButtonCheckCompiler.clicked.connect(self._check_compiler)
 
     def _check_compiler(self):
+        from open_cobol_ide.app import Application
+        self.apply()
+        Application.init_env()
         pgm = 'cobc' if not system.windows else 'cobc.exe'
         pth = os.path.join(self.lineEditCompilerPath.text(), pgm)
         output, exit_code = DlgCheckCompiler.check_compiler(pth)
@@ -329,7 +332,13 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                 [pth for pth in settings.library_search_path.split(';')
                  if pth])
             self.le_compiler_flags.setText(' '.join(flags))
-            self.lineEditVCVARS.setText(settings.vcvars32)
+            if system.windows:
+                self.lineEditVCVARS.setText(settings.vcvars32)
+                self.PATH.setText(settings.path)
+                self.COB_CONFIG_DIR.setText(settings.cob_config_dir)
+                self.COB_COPY_DIR.setText(settings.cob_copy_dir)
+                self.COB_INCLUDE_PATH.setText(settings.cob_include_path)
+                self.COB_LIB_PATH.setText(settings.cob_lib_path)
         # SQL Cobol
         if self.tabWidget.currentIndex() == 4 or all_tabs:
             self.lineEditDbpreExts.setText(';'.join(Settings().dbpre_extensions))
@@ -382,12 +391,18 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.output_directory = 'bin'
             settings.free_format = False
             settings.cobol_standard = GnuCobolStandard.default
-            settings.custom_compiler_path = ''
+            settings.custom_compiler_path = Settings.default_compiler_path()
             settings.compiler_flags = ['-debug']
             settings.library_search_path = ''
             settings.libraries = ''
-            settings.vcvars32 = ''
             settings.cobc_extensions = ['.cob', '.cbl', '.pco', '.cpy', '.lst']
+            if system.windows:
+                settings.vcvars32 = ''
+                settings.path = settings.default_path()
+                settings.cob_config_dir = settings.default_config_dir()
+                settings.cob_copy_dir = settings.default_copy_dir()
+                settings.cob_include_path = settings.default_include_dir()
+                settings.cob_lib_path = settings.default_lib_path()
         elif index == 4:
             settings.dbpre = ''
             settings.dbpre_extensions = ['.scb']
@@ -402,6 +417,72 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.esqloc = ''
             settings.esqloc_extensions = ['.sqb']
         self.reset()
+
+    def apply(self):
+        settings = Settings()
+        settings.display_lines = self.checkBoxViewLineNumber.isChecked()
+        settings.highlight_caret = self.checkBoxHighlightCurrentLine.isChecked()
+        settings.show_whitespaces = \
+            self.checkBoxHighlightWhitespaces.isChecked()
+        settings.tab_len = self.spinBoxEditorTabLen.value()
+        settings.enable_autoindent = self.checkBoxEditorAutoIndent.isChecked()
+        settings.code_completion_trigger_len = \
+            self.spinBoxEditorCCTriggerLen.value()
+        settings.preferred_eol = self.comboBoxPreferredEOL.currentIndex()
+        settings.autodetect_eol = self.checkBoxAutodetectEOL.isChecked()
+        settings.dark_style = self.radioButtonColorDark.isChecked()
+        settings.font = self.fontComboBox.currentFont().family()
+        settings.font_size = self.spinBoxFontSize.value()
+        settings.color_scheme = self.listWidgetColorSchemes.currentItem().text()
+        settings.external_terminal = self.checkBoxRunExtTerm.isChecked()
+        settings.external_terminal_command = self.lineEditRunTerm.text()
+        settings.lower_case_keywords = self.rbLowerCaseKwds.isChecked()
+        settings.custom_compiler_path = self.lineEditCompilerPath.text()
+        if system.windows:
+            settings.vcvars32 = self.lineEditVCVARS.text()
+            settings.path = self.PATH.text()
+            settings.cob_config_dir = self.COB_CONFIG_DIR.text()
+            settings.cob_copy_dir = self.COB_COPY_DIR.text()
+            settings.cob_include_path = self.COB_INCLUDE_PATH.text()
+            settings.cob_lib_path = self.COB_LIB_PATH.text()
+        settings.free_format = self.checkBoxFreeFormat.isChecked()
+        settings.comment_indicator = self.lineEditCommentIndicator.text()
+        settings.cobol_standard = GnuCobolStandard(
+            self.comboBoxStandard.currentIndex())
+        settings.icon_theme = self.comboBoxIconTheme.currentText()
+        settings.show_errors = self.checkBoxShowErrors.isChecked()
+        settings.enable_smart_backspace = \
+            self.checkBoxSmartBackspace.isChecked()
+        paths = []
+        for i in range(self.listWidgetLibPaths.count()):
+            paths.append(self.listWidgetLibPaths.item(i).text())
+        settings.library_search_path = ';'.join(paths)
+        settings.libraries = self.lineEditLibs.text()
+        settings.output_directory = self.lineEditOutputDirectory.text()
+        cb_flags = [self.cb_g, self.cb_ftrace, self.cb_ftraceall,
+                    self.cb_debugging_line, self.cb_static, self.cb_debug]
+        flags = [cb.text() for cb in cb_flags if cb.isChecked()]
+        flags += self.le_compiler_flags.text().split(' ')
+        settings.compiler_flags = flags
+        # sql
+        settings.dbpre = self.lineEditDbpre.text()
+        settings.dbpre_framework = self.lineEditDbpreFramework.text()
+        settings.cobmysqlapi = self.lineEditCobmysqlapi.text()
+        settings.dbhost = self.lineEditDBHOST.text()
+        settings.dbuser = self.lineEditDBUSER.text()
+        settings.dbpasswd = self.lineEditDBPASSWD.text()
+        settings.dbname = self.lineEditDBNAME.text()
+        settings.dbport = self.lineEditDBPORT.text()
+        settings.dbsocket = self.lineEditDBSOCKET.text()
+        settings.esqloc = self.lineEditESQLOC.text()
+        settings.completion_filter_mode = \
+            self.comboCcFilterMode.currentIndex()
+        settings.cobc_extensions = [
+            ext for ext in self.lineEditCobcExts.text().split(';') if ext]
+        settings.dbpre_extensions = [
+            ext for ext in self.lineEditDbpreExts.text().split(';') if ext]
+        settings.esqloc_extensions = [
+            ext for ext in self.lineEditesqlOcExts.text().split(';') if ext]
 
     @classmethod
     def edit_preferences(cls, parent):
@@ -421,63 +502,4 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         if ret_val != dlg.Accepted:
             raise ValueError()
         save_state(dlg)
-        settings = Settings()
-        settings.display_lines = dlg.checkBoxViewLineNumber.isChecked()
-        settings.highlight_caret = dlg.checkBoxHighlightCurrentLine.isChecked()
-        settings.show_whitespaces = \
-            dlg.checkBoxHighlightWhitespaces.isChecked()
-        settings.tab_len = dlg.spinBoxEditorTabLen.value()
-        settings.enable_autoindent = dlg.checkBoxEditorAutoIndent.isChecked()
-        settings.code_completion_trigger_len = \
-            dlg.spinBoxEditorCCTriggerLen.value()
-        settings.preferred_eol = dlg.comboBoxPreferredEOL.currentIndex()
-        settings.autodetect_eol = dlg.checkBoxAutodetectEOL.isChecked()
-        settings.dark_style = dlg.radioButtonColorDark.isChecked()
-        settings.font = dlg.fontComboBox.currentFont().family()
-        settings.font_size = dlg.spinBoxFontSize.value()
-        settings.color_scheme = dlg.listWidgetColorSchemes.currentItem().text()
-        settings.external_terminal = dlg.checkBoxRunExtTerm.isChecked()
-        settings.external_terminal_command = dlg.lineEditRunTerm.text()
-        settings.lower_case_keywords = dlg.rbLowerCaseKwds.isChecked()
-        settings.custom_compiler_path = dlg.lineEditCompilerPath.text()
-        settings.vcvars32 = dlg.lineEditVCVARS.text()
-        settings.free_format = dlg.checkBoxFreeFormat.isChecked()
-        settings.comment_indicator = dlg.lineEditCommentIndicator.text()
-        settings.cobol_standard = GnuCobolStandard(
-            dlg.comboBoxStandard.currentIndex())
-        settings.icon_theme = dlg.comboBoxIconTheme.currentText()
-        settings.show_errors = dlg.checkBoxShowErrors.isChecked()
-        settings.enable_smart_backspace = \
-            dlg.checkBoxSmartBackspace.isChecked()
-        paths = []
-        for i in range(dlg.listWidgetLibPaths.count()):
-            paths.append(dlg.listWidgetLibPaths.item(i).text())
-        settings.library_search_path = ';'.join(paths)
-        settings.libraries = dlg.lineEditLibs.text()
-        settings.output_directory = dlg.lineEditOutputDirectory.text()
-
-        cb_flags = [dlg.cb_g, dlg.cb_ftrace, dlg.cb_ftraceall,
-                    dlg.cb_debugging_line, dlg.cb_static, dlg.cb_debug]
-        flags = [cb.text() for cb in cb_flags if cb.isChecked()]
-        flags += dlg.le_compiler_flags.text().split(' ')
-        settings.compiler_flags = flags
-        # sql
-        settings.dbpre = dlg.lineEditDbpre.text()
-        settings.dbpre_framework = dlg.lineEditDbpreFramework.text()
-        settings.cobmysqlapi = dlg.lineEditCobmysqlapi.text()
-        settings.dbhost = dlg.lineEditDBHOST.text()
-        settings.dbuser = dlg.lineEditDBUSER.text()
-        settings.dbpasswd = dlg.lineEditDBPASSWD.text()
-        settings.dbname = dlg.lineEditDBNAME.text()
-        settings.dbport = dlg.lineEditDBPORT.text()
-        settings.dbsocket = dlg.lineEditDBSOCKET.text()
-        settings.esqloc = dlg.lineEditESQLOC.text()
-        settings.completion_filter_mode = \
-            dlg.comboCcFilterMode.currentIndex()
-
-        settings.cobc_extensions = [
-            ext for ext in dlg.lineEditCobcExts.text().split(';') if ext]
-        settings.dbpre_extensions = [
-            ext for ext in dlg.lineEditDbpreExts.text().split(';') if ext]
-        settings.esqloc_extensions = [
-            ext for ext in dlg.lineEditesqlOcExts.text().split(';') if ext]
+        dlg.apply()

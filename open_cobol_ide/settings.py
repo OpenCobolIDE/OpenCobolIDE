@@ -320,9 +320,26 @@ class Settings(object):
     def output_directory(self, value):
         self._settings.setValue('outputDirectory', value)
 
+    @staticmethod
+    def default_compiler_path():
+        if system.windows:
+            # get the bundled compiler path as default
+            # compiler on windows
+            if getattr(sys, 'frozen', False):
+                # The application is frozen
+                cwd = os.path.dirname(sys.executable)
+            else:
+                cwd = os.getcwd()
+            default = os.path.join(cwd, 'OpenCobol', 'bin')
+        else:
+            # todo maybe use `which cobc`
+            default = ''
+        return default
+
     @property
     def custom_compiler_path(self):
-        return self._settings.value('customCompilerPath', '')
+        default = self.default_compiler_path()
+        return self._settings.value('customCompilerPath', default)
 
     @custom_compiler_path.setter
     def custom_compiler_path(self, value):
@@ -552,3 +569,72 @@ class Settings(object):
     @property
     def all_extensions(self):
         return self.cobc_extensions + self.esqloc_extensions + self.dbpre_extensions
+
+    # environment variables
+    def default_path(self):
+        path = os.pathsep.join([self.custom_compiler_path])
+        return path
+
+    @property
+    def path(self):
+        return self._settings.value('env/PATH', self.default_path())
+
+    @path.setter
+    def path(self, value):
+        self._settings.setValue('env/PATH', value)
+
+    def default_config_dir(self):
+        root = os.path.abspath(os.path.join(self.custom_compiler_path, '..'))
+        default = os.path.join(root, 'config')
+        return default
+
+    @property
+    def cob_config_dir(self):
+        default = self.default_config_dir()
+        return self._settings.value('env/COB_CONFIG_DIR', default)
+
+    @cob_config_dir.setter
+    def cob_config_dir(self, value):
+        self._settings.setValue('env/COB_CONFIG_DIR', value)
+
+    def default_copy_dir(self):
+        root = os.path.abspath(os.path.join(self.custom_compiler_path, '..'))
+        default = os.path.join(root, 'copy')
+        return default
+
+    @property
+    def cob_copy_dir(self):
+        default = self.default_copy_dir()
+        return self._settings.value('env/COB_COPY_DIR', default)
+
+    @cob_copy_dir.setter
+    def cob_copy_dir(self, value):
+        self._settings.setValue('env/COB_COPY_DIR', value)
+
+    def default_include_dir(self):
+        root = os.path.abspath(os.path.join(self.custom_compiler_path, '..'))
+        default = os.path.join(root, 'include')
+        return default
+
+    @property
+    def cob_include_path(self):
+        default = self.default_include_dir()
+        return self._settings.value('env/COB_INCLUDE_PATH', default)
+
+    @cob_include_path.setter
+    def cob_include_path(self, value):
+        self._settings.setValue('env/COB_INCLUDE_PATH', value)
+
+    def default_lib_path(self):
+        root = os.path.abspath(os.path.join(self.custom_compiler_path, '..'))
+        default = os.path.join(root, 'lib')
+        return default
+
+    @property
+    def cob_lib_path(self):
+        default = self.default_lib_path()
+        return self._settings.value('env/COB_LIB_PATH', default)
+
+    @cob_lib_path.setter
+    def cob_lib_path(self, value):
+        self._settings.setValue('env/COB_LIB_PATH', value)

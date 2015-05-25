@@ -212,8 +212,8 @@ class GnuCobolCompiler(QtCore.QObject):
             os.makedirs(path)
         if sys.platform == "win32":
             # copy the dll
-            files = glob.glob(os.path.join(os.environ["COB_LIBRARY_PATH"],
-                                           "*.dll"))
+            files = glob.glob(os.path.join(
+                Settings().custom_compiler_path, "*.dll"))
             for f in files:
                 shutil.copy(f, path)
 
