@@ -150,28 +150,32 @@ class Application:
             try:
                 os.environ['COB_CONFIG_DIR'] = _original_env['COB_CONFIG_DIR']
             except KeyError:
-                os.environ['COB_CONFIG_DIR'] = ''
+                if 'COB_CONFIG_DIR' in os.environ:
+                    os.environ['COB_CONFIG_DIR'] = ''
         if s.cob_copy_dir_enabled:
             os.environ['COB_COPY_DIR'] = s.cob_copy_dir
         else:
             try:
                 os.environ['COB_COPY_DIR'] = _original_env['COB_COPY_DIR']
             except KeyError:
-                os.environ['COB_COPY_DIR'] = ''
+                if 'COB_COPY_DIR' in os.environ:
+                    os.environ['COB_COPY_DIR'] = ''
         if s.cob_include_path_enabled:
             os.environ['COB_INCLUDE_PATH'] = s.cob_include_path
         else:
             try:
                 os.environ['COB_INCLUDE_PATH'] = _original_env['COB_INCLUDE_PATH']
             except KeyError:
-                os.environ['COB_INCLUDE_PATH'] = ''
+                if 'COB_INCLUDE_PATH' in os.environ:
+                    os.environ['COB_INCLUDE_PATH'] = ''
         if s.cob_lib_path_enabled:
             os.environ['COB_LIB_PATH'] = s.cob_lib_path
         else:
             try:
                 os.environ['COB_LIB_PATH'] = _original_env['COB_LIB_PATH']
             except KeyError:
-                os.environ['COB_LIB_PATH'] = ''
+                if 'COB_LIB_PATH' in os.environ:
+                    os.environ['COB_LIB_PATH'] = ''
 
     @staticmethod
     def _osx_init():
