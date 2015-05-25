@@ -24,15 +24,19 @@ class DlgCheckCompiler(QtWidgets.QDialog):
             f.write(DEFAULT_TEMPLATE)
 
         output = os.path.join(tempfile.gettempdir(),
-            'test' + '.exe' if system.windows else '')
+            'test' + ('.exe' if system.windows else ''))
 
         p = QtCore.QProcess()
+        print(self._compiler, ['-x', '-o', output, cbl_path])
         p.start(self._compiler, ['-x', '-o', output, cbl_path])
         p.waitForFinished()
         stdout = bytes(p.readAllStandardOutput()).decode(locale.getpreferredencoding())
         stderr = bytes(p.readAllStandardError()).decode(locale.getpreferredencoding())
         self.ui.label.setText('Output')
-        self.ui.plainTextEdit.setPlainText(stderr + stdout)
+        output = stderr + stdout
+        if p.exitStatus() == 0:
+            output = 'Compiler works!\n' + output
+        self.ui.plainTextEdit.setPlainText(output)
         self.ui.buttonBox.button(self.ui.buttonBox.Ok).setEnabled(p.exitCode() == 0)
 
     @classmethod

@@ -315,7 +315,7 @@ class GnuCobolCompiler(QtCore.QObject):
             VisualStudioWrapperBatch.generate()
             pgm = VisualStudioWrapperBatch.path()
         else:
-            pgm = 'cobc'
+            pgm = 'cobc' if not Settings().custom_compiler_path else os.path.join(Settings().custom_compiler_path, 'cobc')
         return pgm, options
 
     @staticmethod
