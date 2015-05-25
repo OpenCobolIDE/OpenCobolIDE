@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Check compiler</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="ide.qrc">
+    <normaloff>:/ide-icons/rc/silex-192x192.png</normaloff>:/ide-icons/rc/silex-192x192.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -25,6 +29,9 @@
      </item>
      <item row="0" column="1">
       <widget class="QPlainTextEdit" name="plainTextEdit">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>cobc (OpenCOBOL) 1.1.0
 Copyright (C) 2001-2009 Keisuke Nishida / Roger While
@@ -50,7 +57,9 @@ Packaged Feb 06 2009 10:30:55 CET</string>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="ide.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

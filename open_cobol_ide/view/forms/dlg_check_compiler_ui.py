@@ -12,6 +12,9 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(452, 172)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/ide-icons/rc/silex-192x192.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Dialog.setWindowIcon(icon)
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.formLayout = QtWidgets.QFormLayout()
@@ -20,6 +23,7 @@ class Ui_Dialog(object):
         self.label.setObjectName("label")
         self.formLayout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label)
         self.plainTextEdit = QtWidgets.QPlainTextEdit(Dialog)
+        self.plainTextEdit.setReadOnly(True)
         self.plainTextEdit.setObjectName("plainTextEdit")
         self.formLayout.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.plainTextEdit)
         self.verticalLayout.addLayout(self.formLayout)
@@ -37,9 +41,11 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Check compiler"))
         self.label.setText(_translate("Dialog", "Selected compiler:"))
         self.plainTextEdit.setPlainText(_translate("Dialog", "cobc (OpenCOBOL) 1.1.0\n"
 "Copyright (C) 2001-2009 Keisuke Nishida / Roger While\n"
 "Built    Sep 10 2010 10:12:33\n"
 "Packaged Feb 06 2009 10:30:55 CET"))
+
+from . import ide_rc

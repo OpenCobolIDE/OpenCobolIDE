@@ -20,9 +20,8 @@
    <string>Preferences</string>
   </property>
   <property name="windowIcon">
-   <iconset theme="preferences-system">
-    <normaloff/>
-   </iconset>
+   <iconset resource="ide.qrc">
+    <normaloff>:/ide-icons/rc/silex-192x192.png</normaloff>:/ide-icons/rc/silex-192x192.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <property name="margin">

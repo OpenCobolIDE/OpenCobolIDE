@@ -48,7 +48,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
     ]
 
     def __init__(self, parent):
-        super().__init__(parent)
+        super().__init__(parent, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint |
+                         QtCore.Qt.WindowCloseButtonHint)
         self.setupUi(self)
         themes = system.icon_themes()
         if themes:
