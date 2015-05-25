@@ -133,7 +133,7 @@ class GnuCobolCompiler(QtCore.QObject):
     #: signal emitted when the compilation process finished and its output
     #: is available for parsing.
     output_available = QtCore.Signal(str)
-    
+
     def __init__(self):
         super().__init__()
         #: platform specifc extensions, sorted per file type
@@ -183,15 +183,19 @@ class GnuCobolCompiler(QtCore.QObject):
         with open(cbl_path, 'w') as f:
             f.write(DEFAULT_TEMPLATE)
         output = os.path.join(tempfile.gettempdir(),
-            'test' + ('.exe' if system.windows else ''))
+                              'test' + ('.exe' if system.windows else ''))
         p = QtCore.QProcess()
-        p.start(compiler, ['-x', '-o', output, cbl_path])
+        args = ['-x', '-o', output, cbl_path]
+        p.start(compiler, args)
         _logger().info('check compiler')
-        _logger().info('process environment: %r', p.processEnvironment().toStringList())
-        _logger().info('command: %s %s', p.program(), p.arguments())
+        _logger().info('process environment: %r',
+                       p.processEnvironment().toStringList())
+        _logger().info('command: %s %s', compiler, ' '.join(args))
         p.waitForFinished()
-        stdout = bytes(p.readAllStandardOutput()).decode(locale.getpreferredencoding())
-        stderr = bytes(p.readAllStandardError()).decode(locale.getpreferredencoding())
+        stdout = bytes(p.readAllStandardOutput()).decode(
+            locale.getpreferredencoding())
+        stderr = bytes(p.readAllStandardError()).decode(
+            locale.getpreferredencoding())
         output = stderr + stdout
         if p.exitStatus() == p.Crashed:
             exit_code = 139
@@ -199,11 +203,13 @@ class GnuCobolCompiler(QtCore.QObject):
             exit_code = p.exitCode()
         _logger().info('process output: %r', output)
         _logger().info('process exit code: %r', exit_code)
-        _logger().info('compiler works: %s', 'Yes' if  exit_code == 0 else 'No')
+        _logger().info('compiler works: %s',
+                       'Yes' if exit_code == 0 else 'No')
         if exit_code == 0:
             output = 'Compiler works!\n' + output
         else:
-            output = 'Complier check failed:\n\nExit code: %d\nOutput:%s' % (exit_code, output)
+            output = 'Complier check failed:\n\nExit code: %d\nOutput:%s' % (
+                exit_code, output)
         return output, p.exitCode()
 
     def is_working(self):
