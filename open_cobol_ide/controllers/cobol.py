@@ -168,7 +168,7 @@ class CobolController(Controller):
         msg = 'Invalid extension'
         if dotted_extension.lower() in Settings().cobc_extensions:
             compiler_works = GnuCobolCompiler().is_working()
-            msg = 'GnuCOBOL compiler not found'
+            msg = 'GnuCOBOL compiler not found or not working'
         elif dotted_extension.lower() in Settings().dbpre_extensions:
             compiler_works = DbpreCompiler().is_working()
             msg = 'dbpre compiler not working, please check your SQL cobol ' \
