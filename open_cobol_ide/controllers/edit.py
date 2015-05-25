@@ -57,7 +57,7 @@ class EditController(Controller):
         self.ui.tvFileSystem.setHeaderHidden(True)
         for i in range(1, 4):
             self.ui.tvFileSystem.hideColumn(i)
-        self.ui.tvFileSystem.ignore_directories('bin')
+        self.ui.tvFileSystem.add_ignore_patterns('bin', '.oci*.cbl')
         mnu = FSContextMenu(self.app)
         self.ui.tvFileSystem.set_context_menu(mnu)
         self.ui.tvFileSystem.file_created.connect(self.app.file.open_file)
