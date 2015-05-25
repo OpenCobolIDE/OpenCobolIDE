@@ -452,12 +452,39 @@ class DbpreCompiler(QtCore.QObject):
                 return lversion
         return self._INVALID
 
+    @staticmethod
+    def check_compiler(compiler):
+        """
+        Checks if cobc is working by compiling a simple hello world example
+        in /tmp
+
+        :param compiler: compiler path
+        :return: compilation_output, exit_code
+        """
+        from open_cobol_ide.view.dialogs.preferences import DEFAULT_TEMPLATE
+        cbl_path = os.path.join(tempfile.gettempdir(), 'test.cbl')
+        with open(cbl_path, 'w') as f:
+            f.write(DEFAULT_TEMPLATE)
+        output = os.path.join(tempfile.gettempdir(),
+            'test' + ('.exe' if system.windows else ''))
+        p = QtCore.QProcess()
+        p.start(compiler, ['-x', '-o', output, cbl_path])
+        p.waitForFinished()
+        stdout = bytes(p.readAllStandardOutput()).decode(locale.getpreferredencoding())
+        stderr = bytes(p.readAllStandardError()).decode(locale.getpreferredencoding())
+        output = stderr + stdout
+        if p.exitCode() == 0:
+            output = 'Compiler works!\n' + output
+        else:
+            output = 'Complier check failed:\n\nExit code: %d\nOutput:%s' % (p.exitCode(), output)
+        return output, p.exitCode()
+
     def is_working(self):
         """
 
         :return:
         """
-        return self.get_version() != self._INVALID
+        return self.get_version() != self._INVALID and check_compiler()[1] == 0
 
     def make_command(self, file_path):
         """
