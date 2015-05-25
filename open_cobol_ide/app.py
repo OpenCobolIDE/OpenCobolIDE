@@ -139,7 +139,6 @@ class Application:
         s = Settings()
         if s.path_enabled:
             os.environ['PATH'] = s.path + os.pathsep + os.environ['PATH']
-            print(os.environ['PATH'])
         else:
             try:
                 os.environ['PATH'] = _original_env['PATH']
