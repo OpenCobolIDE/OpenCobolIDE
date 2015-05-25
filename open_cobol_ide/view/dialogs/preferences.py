@@ -1,3 +1,4 @@
+import locale
 import os
 import sys
 from pyqode.core.api.syntax_highlighter import PYGMENTS_STYLES, ColorScheme
@@ -6,7 +7,7 @@ from open_cobol_ide import system, compilers
 from open_cobol_ide.enums import GnuCobolStandard
 from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.forms import dlg_preferences_ui
-
+from open_cobol_ide.view.dialogs.check_compiler import DlgCheckCompiler
 
 DEFAULT_TEMPLATE = '''      * Author:
       * Date:
@@ -133,7 +134,12 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             pgm = 'cobc' if not system.windows else 'cobc.exe'
             pth = os.path.join(path, pgm)
             if os.path.exists(pth):
-                self.lineEditCompilerPath.setText(os.path.normpath(path))
+                p = QtCore.QProcess()
+                p.start(pth, ['--version'])
+                p.waitForFinished()
+                output = bytes(p.readAllStandardOutput()).decode(locale.getpreferredencoding())
+                if DlgCheckCompiler.check(self, pth, output):
+                    self.lineEditCompilerPath.setText(os.path.normpath(path))
             else:
                 QtWidgets.QMessageBox.warning(
                     self, 'Invalid compiler path',
