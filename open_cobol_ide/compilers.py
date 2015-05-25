@@ -175,27 +175,44 @@ class GnuCobolCompiler(QtCore.QObject):
                 s, e = v.span()
                 return lversion[s: e]
 
+    @staticmethod
+    def check_compiler(compiler):
+        from open_cobol_ide.view.dialogs.preferences import DEFAULT_TEMPLATE
+        cbl_path = os.path.join(tempfile.gettempdir(), 'test.cbl')
+        with open(cbl_path, 'w') as f:
+            f.write(DEFAULT_TEMPLATE)
+        output = os.path.join(tempfile.gettempdir(),
+            'test' + ('.exe' if system.windows else ''))
+        p = QtCore.QProcess()
+        p.start(compiler, ['-x', '-o', output, cbl_path])
+        p.waitForFinished()
+        stdout = bytes(p.readAllStandardOutput()).decode(locale.getpreferredencoding())
+        stderr = bytes(p.readAllStandardError()).decode(locale.getpreferredencoding())
+        output = stderr + stdout
+        if p.exitStatus() == p.Crashed:
+            exit_code = 139
+        else:
+            exit_code = p.exitCode()
+        if exit_code == 0:
+            output = 'Compiler works!\n' + output
+        else:
+            output = 'Complier check failed:\n\nExit code: %d\nOutput:%s' % (exit_code, output)
+        return output, p.exitCode()
+
     def is_working(self):
         """
         Checks if the GNUCobol compiler is working.
         """
         version = self.get_version()
-        if version == 'Not installed':
-            if sys.platform == 'win32':
-                expected_root_path = os.path.join(os.getcwd(), 'OpenCobol')
-                expected_cobc_path = os.path.join(
-                    expected_root_path, 'bin', 'cobc.exe')
-                if not os.path.exists(expected_root_path):
-                    _logger().warning(
-                        '%s does not exists' % expected_root_path)
-                elif not os.path.exists(expected_cobc_path):
-                    _logger().warning(
-                        '%s does not exists' % expected_cobc_path)
-                else:
-                    _logger().warning('cobc.exe found but not usable.')
-            return False
         _logger().info('OpenCOBOL compiler v.%s' % version)
-        return True
+        if not version:
+            return False
+        if Settings().custom_compiler_path:
+            pth = os.path.join(Settings().custom_compiler_path, 'cobc')
+        else:
+            pth = 'cobc'
+        _, exit_code = self.check_compiler(pth)
+        return exit_code == 0
 
     def extension_for_type(self, file_type):
         """

@@ -117,7 +117,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         Application.init_env()
         pgm = 'cobc' if not system.windows else 'cobc.exe'
         pth = os.path.join(self.lineEditCompilerPath.text(), pgm)
-        output, exit_code = DlgCheckCompiler.check_compiler(pth)
+        output, exit_code = compilers.GnuCobolCompiler.check_compiler(pth)
         if exit_code == 0:
             fct = QtWidgets.QMessageBox.information
         else:
