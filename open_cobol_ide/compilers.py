@@ -155,6 +155,7 @@ class GnuCobolCompiler(QtCore.QObject):
             if sys.platform == 'win32':
                 startupinfo = subprocess.STARTUPINFO()
                 startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                cmd[0] = os.path.join(Settings().custom_compiler_path, 'cobc')
                 p = subprocess.Popen(
                     cmd, shell=False, startupinfo=startupinfo,
                     stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -185,6 +186,9 @@ class GnuCobolCompiler(QtCore.QObject):
             'test' + ('.exe' if system.windows else ''))
         p = QtCore.QProcess()
         p.start(compiler, ['-x', '-o', output, cbl_path])
+        _logger().info('check compiler')
+        _logger().info('process environment: %r', p.processEnvironment().toStringList())
+        _logger().info('command: %s %s', p.program(), p.arguments())
         p.waitForFinished()
         stdout = bytes(p.readAllStandardOutput()).decode(locale.getpreferredencoding())
         stderr = bytes(p.readAllStandardError()).decode(locale.getpreferredencoding())
@@ -193,6 +197,9 @@ class GnuCobolCompiler(QtCore.QObject):
             exit_code = 139
         else:
             exit_code = p.exitCode()
+        _logger().info('process output: %r', output)
+        _logger().info('process exit code: %r', exit_code)
+        _logger().info('compiler works: %s', 'Yes' if  exit_code == 0 else 'No')
         if exit_code == 0:
             output = 'Compiler works!\n' + output
         else:
@@ -211,6 +218,11 @@ class GnuCobolCompiler(QtCore.QObject):
             pth = os.path.join(Settings().custom_compiler_path, 'cobc')
         else:
             pth = 'cobc'
+
+        if Settings().vcvars32:
+            VisualStudioWrapperBatch.generate()
+            pth = VisualStudioWrapperBatch.path()
+
         _, exit_code = self.check_compiler(pth)
         return exit_code == 0
 
