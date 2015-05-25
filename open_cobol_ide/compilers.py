@@ -473,6 +473,8 @@ class DbpreCompiler(QtCore.QObject):
         stdout = bytes(p.readAllStandardOutput()).decode(locale.getpreferredencoding())
         stderr = bytes(p.readAllStandardError()).decode(locale.getpreferredencoding())
         output = stderr + stdout
+        if p.exitStatus() == p.Crashed:
+            output += '\nProcess crashed (exit code value is invalid)'
         if p.exitCode() == 0:
             output = 'Compiler works!\n' + output
         else:
