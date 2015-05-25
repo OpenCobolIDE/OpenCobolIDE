@@ -474,12 +474,15 @@ class DbpreCompiler(QtCore.QObject):
         stderr = bytes(p.readAllStandardError()).decode(locale.getpreferredencoding())
         output = stderr + stdout
         if p.exitStatus() == p.Crashed:
-            output += '\nProcess crashed (exit code value is invalid)'
-        if p.exitCode() == 0:
+            output += '\nProcess crashed'
+            exit_code = 139
+        else:
+            exit_code = p.exitCode()
+        if exit_code == 0:
             output = 'Compiler works!\n' + output
         else:
-            output = 'Complier check failed:\n\nExit code: %d\nOutput:%s' % (p.exitCode(), output)
-        return output, p.exitCode()
+            output = 'Complier check failed:\n\nExit code: %d\nOutput:%s' % (exit_code, output)
+        return output, exit_code
 
     def is_working(self):
         """
