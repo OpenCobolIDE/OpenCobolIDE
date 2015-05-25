@@ -1019,55 +1019,55 @@ as possible to get back to the previous indentation level.</string>
                  <property name="fieldGrowthPolicy">
                   <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
                  </property>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="PATH"/>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="COB_CONFIG_DIR"/>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLineEdit" name="COB_COPY_DIR"/>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QLineEdit" name="COB_INCLUDE_PATH"/>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QLineEdit" name="COB_LIB_PATH"/>
+                 </item>
                  <item row="0" column="0">
-                  <widget class="QLabel" name="label_37">
+                  <widget class="QCheckBox" name="cbPATH">
                    <property name="text">
                     <string>PATH:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1">
-                  <widget class="QLineEdit" name="PATH"/>
-                 </item>
                  <item row="1" column="0">
-                  <widget class="QLabel" name="label_38">
+                  <widget class="QCheckBox" name="cbCOB_CONFIG_DIR">
                    <property name="text">
                     <string>COB_CONFIG_DIR:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="1">
-                  <widget class="QLineEdit" name="COB_CONFIG_DIR"/>
-                 </item>
                  <item row="2" column="0">
-                  <widget class="QLabel" name="label_39">
+                  <widget class="QCheckBox" name="cbCOB_COPY_DIR">
                    <property name="text">
                     <string>COB_COPY_DIR:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="1">
-                  <widget class="QLineEdit" name="COB_COPY_DIR"/>
-                 </item>
                  <item row="4" column="0">
-                  <widget class="QLabel" name="label_41">
+                  <widget class="QCheckBox" name="cbCOB_INCLUDE_PATH">
                    <property name="text">
                     <string>COB_INCLUDE_PATH:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="4" column="1">
-                  <widget class="QLineEdit" name="COB_INCLUDE_PATH"/>
-                 </item>
                  <item row="5" column="0">
-                  <widget class="QLabel" name="label_42">
+                  <widget class="QCheckBox" name="cbCOB_LIB_PATH">
                    <property name="text">
                     <string>COB_LIB_PATH:</string>
                    </property>
                   </widget>
-                 </item>
-                 <item row="5" column="1">
-                  <widget class="QLineEdit" name="COB_LIB_PATH"/>
                  </item>
                 </layout>
                </widget>
@@ -1483,8 +1483,8 @@ as possible to get back to the previous indentation level.</string>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>254</x>
+     <y>651</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -1499,8 +1499,8 @@ as possible to get back to the previous indentation level.</string>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>322</x>
+     <y>651</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>

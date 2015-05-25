@@ -22,6 +22,9 @@ def _logger():
     return logging.getLogger(__name__)
 
 
+_original_env = os.environ.copy()
+
+
 class Application:
     """
     Sets up the Qt Application, the main window and the various controllers.
@@ -134,11 +137,41 @@ class Application:
         - set PATH to cobol library path only (erase previous values)
         """
         s = Settings()
-        os.environ['PATH'] = s.path
-        os.environ['COB_CONFIG_DIR'] = s.cob_config_dir
-        os.environ['COB_COPY_DIR'] = s.cob_copy_dir
-        os.environ['COB_INCLUDE_PATH'] = s.cob_include_path
-        os.environ['COB_LIB_PATH'] = s.cob_lib_path
+        if s.path_enabled:
+            os.environ['PATH'] = s.path
+        else:
+            try:
+                os.environ['PATH'] = _original_env['PATH']
+            except KeyError:
+                pass
+        if s.cob_config_dir_enabled:
+            os.environ['COB_CONFIG_DIR'] = s.cob_config_dir
+        else:
+            try:
+                os.environ['COB_CONFIG_DIR'] = _original_env['COB_CONFIG_DIR']
+            except KeyError:
+                pass
+        if s.cob_copy_dir_enabled:
+            os.environ['COB_COPY_DIR'] = s.cob_copy_dir
+        else:
+            try:
+                os.environ['COB_COPY_DIR'] = _original_env['COB_COPY_DIR']
+            except KeyError:
+                pass
+        if s.cob_include_path_enabled:
+            os.environ['COB_INCLUDE_PATH'] = s.cob_include_path
+        else:
+            try:
+                os.environ['COB_INCLUDE_PATH'] = _original_env['COB_INCLUDE_PATH']
+            except KeyError:
+                pass
+        if s.cob_lib_path_enabled:
+            os.environ['COB_LIB_PATH'] = s.cob_lib_path
+        else:
+            try:
+                os.environ['COB_LIB_PATH'] = _original_env['COB_LIB_PATH']
+            except KeyError:
+                pass
 
     @staticmethod
     def _osx_init():

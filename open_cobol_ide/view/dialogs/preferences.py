@@ -105,6 +105,11 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         else:
             self.stackedWidgetSQL.setCurrentIndex(1)
         self.toolButtonCheckCompiler.clicked.connect(self._check_compiler)
+        self.cbPATH.stateChanged.connect(self.PATH.setEnabled)
+        self.cbCOB_CONFIG_DIR.stateChanged.connect(self.COB_CONFIG_DIR.setEnabled)
+        self.cbCOB_COPY_DIR.stateChanged.connect(self.COB_COPY_DIR.setEnabled)
+        self.cbCOB_INCLUDE_PATH.stateChanged.connect(self.COB_INCLUDE_PATH.setEnabled)
+        self.cbCOB_LIB_PATH.stateChanged.connect(self.COB_LIB_PATH.setEnabled)
 
     def _check_compiler(self):
         from open_cobol_ide.app import Application
@@ -337,10 +342,16 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             if system.windows:
                 self.lineEditVCVARS.setText(settings.vcvars32)
                 self.PATH.setText(settings.path)
+                self.cbPATH.setChecked(settings.path_enabled)
                 self.COB_CONFIG_DIR.setText(settings.cob_config_dir)
+                self.cbCOB_CONFIG_DIR.setChecked(settings.cob_config_dir_enabled)
                 self.COB_COPY_DIR.setText(settings.cob_copy_dir)
+                self.cbCOB_COPY_DIR.setChecked(settings.cob_copy_dir_enabled)
                 self.COB_INCLUDE_PATH.setText(settings.cob_include_path)
+                self.cbCOB_INCLUDE_PATH.setChecked(settings.cob_include_path_enabled)
                 self.COB_LIB_PATH.setText(settings.cob_lib_path)
+                self.cbCOB_LIB_PATH.setChecked(settings.cob_lib_path_enabled)
+
         # SQL Cobol
         if self.tabWidget.currentIndex() == 4 or all_tabs:
             self.lineEditDbpreExts.setText(';'.join(Settings().dbpre_extensions))
@@ -401,10 +412,15 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             if system.windows:
                 settings.vcvars32 = ''
                 settings.path = settings.default_path()
+                settings.path_enabled = True
                 settings.cob_config_dir = settings.default_config_dir()
+                settings.cob_config_dir_enabled = True
                 settings.cob_copy_dir = settings.default_copy_dir()
+                settings.cob_copy_dir_enabled = True
                 settings.cob_include_path = settings.default_include_dir()
+                settings.cob_include_path_enabled = True
                 settings.cob_lib_path = settings.default_lib_path()
+                settings.cob_lib_path_enabled = True
         elif index == 4:
             settings.dbpre = ''
             settings.dbpre_extensions = ['.scb']
@@ -443,10 +459,15 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         if system.windows:
             settings.vcvars32 = self.lineEditVCVARS.text()
             settings.path = self.PATH.text()
+            settings.path_enabled = self.cbPATH.isChecked()
             settings.cob_config_dir = self.COB_CONFIG_DIR.text()
+            settings.cob_config_dir_enabled = self.cbCOB_CONFIG_DIR.isChecked()
             settings.cob_copy_dir = self.COB_COPY_DIR.text()
+            settings.cob_copy_dir_enabled = self.cbCOB_COPY_DIR.isChecked()
             settings.cob_include_path = self.COB_INCLUDE_PATH.text()
+            settings.cob_include_path_enabled = self.cbCOB_INCLUDE_PATH.isChecked()
             settings.cob_lib_path = self.COB_LIB_PATH.text()
+            settings.cob_lib_path_enabled = self.cbCOB_LIB_PATH.isChecked()
         settings.free_format = self.checkBoxFreeFormat.isChecked()
         settings.comment_indicator = self.lineEditCommentIndicator.text()
         settings.cobol_standard = GnuCobolStandard(

@@ -583,6 +583,14 @@ class Settings(object):
     def path(self, value):
         self._settings.setValue('env/PATH', value)
 
+    @property
+    def path_enabled(self):
+        return bool(int(self._settings.value('env/PATH_Enabled', 1 if system.windows else 0)))
+
+    @path_enabled.setter
+    def path_enabled(self, value):
+        self._settings.setValue('env/PATH_Enabled', int(value))
+
     def default_config_dir(self):
         root = os.path.abspath(os.path.join(self.custom_compiler_path, '..'))
         default = os.path.join(root, 'config')
@@ -596,6 +604,14 @@ class Settings(object):
     @cob_config_dir.setter
     def cob_config_dir(self, value):
         self._settings.setValue('env/COB_CONFIG_DIR', value)
+
+    @property
+    def cob_config_dir_enabled(self):
+        return bool(int(self._settings.value('env/COB_CONFIG_DIR_Enabled', True if system.windows else False)))
+
+    @cob_config_dir_enabled.setter
+    def cob_config_dir_enabled(self, value):
+        self._settings.setValue('env/COB_CONFIG_DIR_Enabled', int(value))
 
     def default_copy_dir(self):
         root = os.path.abspath(os.path.join(self.custom_compiler_path, '..'))
@@ -611,6 +627,14 @@ class Settings(object):
     def cob_copy_dir(self, value):
         self._settings.setValue('env/COB_COPY_DIR', value)
 
+    @property
+    def cob_copy_dir_enabled(self):
+        return  bool(int(self._settings.value('env/COB_COPY_DIR_Enabled', True if system.windows else False)))
+
+    @cob_copy_dir_enabled.setter
+    def cob_copy_dir_enabled(self, value):
+        self._settings.setValue('env/COB_COPY_DIR_Enabled', int(value))
+
     def default_include_dir(self):
         root = os.path.abspath(os.path.join(self.custom_compiler_path, '..'))
         default = os.path.join(root, 'include')
@@ -625,6 +649,14 @@ class Settings(object):
     def cob_include_path(self, value):
         self._settings.setValue('env/COB_INCLUDE_PATH', value)
 
+    @property
+    def cob_include_path_enabled(self):
+        return  bool(int(self._settings.value('env/COB_INCLUDE_PATH_Enabled', True if system.windows else False)))
+
+    @cob_include_path_enabled.setter
+    def cob_include_path_enabled(self, value):
+        self._settings.setValue('env/COB_INCLUDE_PATH_Enabled', int(value))
+
     def default_lib_path(self):
         root = os.path.abspath(os.path.join(self.custom_compiler_path, '..'))
         default = os.path.join(root, 'lib')
@@ -638,3 +670,11 @@ class Settings(object):
     @cob_lib_path.setter
     def cob_lib_path(self, value):
         self._settings.setValue('env/COB_LIB_PATH', value)
+
+    @property
+    def cob_lib_path_enabled(self):
+        return  bool(int(self._settings.value('env/COB_LIB_PATH_Enabled', True if system.windows else False)))
+
+    @cob_lib_path_enabled.setter
+    def cob_lib_path_enabled(self, value):
+        self._settings.setValue('env/COB_LIB_PATH_Enabled', int(value))
