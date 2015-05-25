@@ -5,8 +5,8 @@ import os
 import tempfile
 from pyqode.core.modes import CheckerMode
 import time
-from open_cobol_ide.compilers import GnuCobolCompiler, get_file_type
 from open_cobol_ide import settings
+from open_cobol_ide.compilers import GnuCobolCompiler, get_file_type
 
 
 def lint(request_data):
@@ -18,6 +18,8 @@ def lint(request_data):
     :param request_data: work request data (dict)
     :return: status, messages
     """
+    from open_cobol_ide.app import Application
+    Application.init_env()
     code = request_data['code']
     path = request_data['path']
     extension = os.path.splitext(path)[1]
@@ -28,7 +30,6 @@ def lint(request_data):
         # instance might be compiling.
         tmp_pth = os.path.join(os.path.dirname(path),
                                '.oci%s.cbl' % str(int(time.time())))
-        print("temp path = %s" % tmp_pth)
         with open(tmp_pth, 'w') as f:
             f.write(code)
         compiler = GnuCobolCompiler()
