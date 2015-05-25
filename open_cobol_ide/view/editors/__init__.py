@@ -31,5 +31,6 @@ def update_editor_settings(editor):
         editor.file.preferred_eol = settings.preferred_eol
         editor.modes.get('CodeCompletionMode').smart_completion = \
             bool(settings.completion_filter_mode)
+        editor.enable_linter()
     except AttributeError:
         editor.syntax_highlighter.pygments_style = settings.color_scheme

@@ -2,6 +2,7 @@
 Contains the cobol code editor widget.
 
 """
+import logging
 from pyqode.qt import QtGui, QtWidgets
 from pyqode.core.api import Panel, ColorScheme
 from pyqode.cobol.widgets import CobolCodeEdit as CodeEditBase
@@ -9,6 +10,10 @@ from pyqode.cobol.widgets import CobolCodeEdit as CodeEditBase
 from open_cobol_ide.compilers import get_file_type, GnuCobolCompiler
 from open_cobol_ide.linter import CobolLinterMode
 from open_cobol_ide.settings import Settings
+
+
+def _logger():
+    return logging.getLogger(__name__)
 
 
 class CobolCodeEdit(CodeEditBase):
@@ -26,11 +31,11 @@ class CobolCodeEdit(CodeEditBase):
             Settings().color_scheme)
         self.linter_mode = self.modes.append(CobolLinterMode())
         self.app = None
-        self.textChanged.connect(self._enable_linter)
+        self.enable_linter()
 
-    def _enable_linter(self, *_):
-        if self.file.extension in Settings().cobc_extensions:
-            self.linter_mode.enabled = GnuCobolCompiler().is_working()
+    def enable_linter(self):
+        self.linter_mode.enabled = GnuCobolCompiler().is_working()
+        _logger().info('linter enabled: %r', self.linter_mode.enabled)
 
     def close(self, clear=True):
         super().close(clear=clear)
