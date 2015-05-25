@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>677</width>
-    <height>691</height>
+    <height>658</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -25,16 +25,7 @@
    </iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <property name="leftMargin">
-    <number>6</number>
-   </property>
-   <property name="topMargin">
-    <number>6</number>
-   </property>
-   <property name="rightMargin">
-    <number>6</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>6</number>
    </property>
    <item row="6" column="0">
@@ -56,16 +47,7 @@
       <string notr="true"/>
      </property>
      <layout class="QGridLayout" name="widget_2">
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
+      <property name="margin">
        <number>0</number>
       </property>
       <property name="spacing">
@@ -110,8 +92,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>368</width>
-               <height>626</height>
+               <width>639</width>
+               <height>568</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -505,8 +487,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>364</width>
-               <height>355</height>
+               <width>639</width>
+               <height>568</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -623,7 +605,7 @@ as possible to get back to the previous indentation level.</string>
                      </property>
                      <property name="currentFont">
                       <font>
-                       <family>Clean</family>
+                       <family>BatangChe</family>
                       </font>
                      </property>
                     </widget>
@@ -711,8 +693,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>641</width>
-               <height>589</height>
+               <width>639</width>
+               <height>568</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_6">
@@ -1048,8 +1030,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>192</width>
-               <height>69</height>
+               <width>639</width>
+               <height>568</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_5">
@@ -1095,7 +1077,7 @@ as possible to get back to the previous indentation level.</string>
            <normaloff>:/ide-icons/rc/database.png</normaloff>:/ide-icons/rc/database.png</iconset>
          </attribute>
          <attribute name="title">
-          <string>SQL Cobol</string>
+          <string>SQL COBOL</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout">
           <item row="1" column="0">
@@ -1108,8 +1090,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>333</width>
-               <height>543</height>
+               <width>639</width>
+               <height>549</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -1276,16 +1258,7 @@ as possible to get back to the previous indentation level.</string>
                      </item>
                      <item row="2" column="1">
                       <layout class="QVBoxLayout" name="verticalLayout_6">
-                       <property name="leftMargin">
-                        <number>3</number>
-                       </property>
-                       <property name="topMargin">
-                        <number>3</number>
-                       </property>
-                       <property name="rightMargin">
-                        <number>3</number>
-                       </property>
-                       <property name="bottomMargin">
+                       <property name="margin">
                         <number>3</number>
                        </property>
                        <item>

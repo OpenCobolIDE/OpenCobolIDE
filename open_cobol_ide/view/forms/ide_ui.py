@@ -423,16 +423,16 @@ class Ui_MainWindow(object):
         self.consoleOutput.setToolTip(_translate("MainWindow", "Program output"))
         self.consoleOutput.setStatusTip(_translate("MainWindow", "Program output"))
         self.tabWidgetLogs.setTabText(self.tabWidgetLogs.indexOf(self.tabProgramOutput), _translate("MainWindow", "Output"))
-        self.menuFile.setTitle(_translate("MainWindow", "File"))
-        self.menuEdit.setTitle(_translate("MainWindow", "Edit"))
+        self.menuFile.setTitle(_translate("MainWindow", "&File"))
+        self.menuEdit.setTitle(_translate("MainWindow", "&Edit"))
         self.mnuActiveEditor.setToolTip(_translate("MainWindow", "Active editor context menu"))
         self.mnuActiveEditor.setStatusTip(_translate("MainWindow", "Active editor context menu"))
         self.mnuActiveEditor.setTitle(_translate("MainWindow", "&Active editor"))
         self.menuView.setTitle(_translate("MainWindow", "&View"))
         self.menuWindows.setTitle(_translate("MainWindow", "&Windows"))
-        self.menuCobol.setTitle(_translate("MainWindow", "&Cobol"))
+        self.menuCobol.setTitle(_translate("MainWindow", "&COBOL"))
         self.menuProgramType.setTitle(_translate("MainWindow", "&Program type"))
-        self.menu.setTitle(_translate("MainWindow", "?"))
+        self.menu.setTitle(_translate("MainWindow", "&?"))
         self.dockWidgetNavPanel.setWindowTitle(_translate("MainWindow", "Navigation"))
         self.twNavigation.setToolTip(_translate("MainWindow", "Show the current editor structure"))
         self.twNavigation.setStatusTip(_translate("MainWindow", "Show the current editor structure"))
@@ -505,7 +505,7 @@ class Ui_MainWindow(object):
         self.actionCancel.setStatusTip(_translate("MainWindow", "Cancel the current operation (compile or run)"))
         self.actionReport_a_bug.setText(_translate("MainWindow", "&Report a bug"))
 
-from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
 from open_cobol_ide.view.widgets import TabWidget, RecentFilesListWidget
-from pyqode.core.widgets import ErrorsTable, FileSystemTreeView, InteractiveConsole
+from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
+from pyqode.core.widgets import FileSystemTreeView, InteractiveConsole, ErrorsTable
 from . import ide_rc

@@ -70,7 +70,7 @@ class FSContextMenu(FileSystemContextMenu):
         self.app = app
 
     def get_new_user_actions(self):
-        self.action_new_file = QtWidgets.QAction('Cobol file', self)
+        self.action_new_file = QtWidgets.QAction('COBOL file', self)
         self.action_new_file.setIcon(QtGui.QIcon(
             ':/ide-icons/rc/cobol-mimetype.png'))
         self.action_new_file.triggered.connect(self._on_new_file_triggered)

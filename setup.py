@@ -2,7 +2,7 @@
 """
 Setup script for OpenCobolIDE
 
-You will need to install PyQt4 (or PyQt5) and OpenCobol on your own.
+You will need to install PyQt4 (or PyQt5) and GnuCOBOL on your own.
 
 """
 import sys

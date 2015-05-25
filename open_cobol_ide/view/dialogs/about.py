@@ -16,7 +16,7 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
     _flg_verbose = False
 
     HEADERS = [
-        'GnuCobol',
+        'GnuCOBOL',
         'Qt',
         'PyQt',
         'pyqode.core',

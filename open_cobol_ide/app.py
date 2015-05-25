@@ -70,8 +70,8 @@ class Application:
             check_compiler()
         except CompilerNotFound as e:
             QtWidgets.QMessageBox.warning(
-                self.win, 'Cobol compiler not found',
-                'Failed to find GnuCobol compiler!\n\n%s.\n\n'
+                self.win, 'COBOL compiler not found',
+                'Failed to find GnuCOBOL compiler!\n\n%s.\n\n'
                 "The IDE will continue to work but you won't be able to "
                 'compile any file' % e)
 
@@ -134,7 +134,7 @@ class Application:
         """
         Windows specific initialisation:
 
-        - set env var to embedded OpenCobol variable
+        - set env var to embedded GnuCOBOL variable
         - set PATH to cobol library path only (erase previous values)
         """
         if getattr(sys, 'frozen', False):

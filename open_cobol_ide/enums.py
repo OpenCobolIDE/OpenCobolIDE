@@ -16,7 +16,7 @@ class FileType(IntEnum):
 
 class GnuCobolStandard(IntEnum):
     """
-    Enumerates the differen cobol standards supported by the GnuCobolCompiler.
+    Enumerates the differen cobol standards supported by the GnuCOBOLCompiler.
     """
     default = 0
     cobol2002 = 1

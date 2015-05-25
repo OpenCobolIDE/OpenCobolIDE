@@ -127,7 +127,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
 
     def _select_custom_compiler_path(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(
-            self, 'Select custom GnuCobol directory',
+            self, 'Select custom GnuCOBOL directory',
             self.lineEditCompilerPath.text())
         if path:
             pgm = 'cobc' if not system.windows else 'cobc.exe'

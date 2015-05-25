@@ -75,9 +75,9 @@ def check_compiler():
     import sys
     if not GnuCobolCompiler().is_working():
         if sys.platform == 'win32':
-            msg = 'OpenCobol is bundled with the IDE. Ensure that ' \
+            msg = 'OpenCOBOL is bundled with the IDE. Ensure that ' \
                   'the IDE is installed in a path without spaces and ' \
-                  'that the OpenCobol folder sits next to the executable.'
+                  'that the OpenCOBOL folder sits next to the executable.'
         elif sys.platform == 'darwin':
             msg = 'You have to install the package open-cobol using Homebrew '\
                   'or MacPorts. \n' \
@@ -147,7 +147,7 @@ class GnuCobolCompiler(QtCore.QObject):
     @staticmethod
     def get_version():
         """
-        Returns the GnuCobol compiler version as a string
+        Returns the GnuCOBOL compiler version as a string
         """
         cmd = ['cobc', '--version']
         try:
@@ -163,7 +163,7 @@ class GnuCobolCompiler(QtCore.QObject):
                 p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
                                      stderr=subprocess.PIPE)
         except OSError:
-            _logger().exception('OpenCobol compiler not found')
+            _logger().exception('OpenCOBOL compiler not found')
             return 'Not installed'
         else:
             stdout, stderr = p.communicate()
@@ -177,7 +177,7 @@ class GnuCobolCompiler(QtCore.QObject):
 
     def is_working(self):
         """
-        Checks if the GNU Cobol compiler is working.
+        Checks if the GNUCobol compiler is working.
         """
         version = self.get_version()
         if version == 'Not installed':
@@ -194,7 +194,7 @@ class GnuCobolCompiler(QtCore.QObject):
                 else:
                     _logger().warning('cobc.exe found but not usable.')
             return False
-        _logger().info('OpenCobol compiler v.%s' % version)
+        _logger().info('OpenCOBOL compiler v.%s' % version)
         return True
 
     def extension_for_type(self, file_type):

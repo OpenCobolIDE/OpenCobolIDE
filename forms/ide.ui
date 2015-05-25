@@ -572,7 +572,7 @@
    </widget>
    <widget class="QMenu" name="menuCobol">
     <property name="title">
-     <string>&amp;Cobol</string>
+     <string>&amp;COBOL</string>
     </property>
     <widget class="QMenu" name="menuProgramType">
      <property name="title">

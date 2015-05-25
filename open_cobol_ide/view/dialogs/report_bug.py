@@ -83,7 +83,7 @@ class DlgReportBug(QtWidgets.QDialog):
             ' (' + ' '.join(platform.linux_distribution()) + ')' if is_linux
             else '',
             '- OpenCobolIDE: %s' % __version__,
-            '- GnuCobol: %s' % GnuCobolCompiler().get_version(),
+            '- GnuCOBOL: %s' % GnuCobolCompiler().get_version(),
             '- Python: %s (%dbits)' % (platform.python_version(), 64
                                        if sys.maxsize > 2**32 else 32),
             '- Qt: %s' % QtCore.QT_VERSION_STR,
