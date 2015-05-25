@@ -16,28 +16,30 @@ class DlgCheckCompiler(QtWidgets.QDialog):
         self.ui.buttonBox.button(self.ui.buttonBox.Apply).setText('Check compiler')
         self.ui.buttonBox.button(self.ui.buttonBox.Apply).clicked.connect(self._check_compiler)
 
-    def _check_compiler(self):
+    @staticmethod
+    def check_compiler(compiler):
         from open_cobol_ide.view.dialogs.preferences import DEFAULT_TEMPLATE
-
         cbl_path = os.path.join(tempfile.gettempdir(), 'test.cbl')
         with open(cbl_path, 'w') as f:
             f.write(DEFAULT_TEMPLATE)
-
         output = os.path.join(tempfile.gettempdir(),
             'test' + ('.exe' if system.windows else ''))
-
         p = QtCore.QProcess()
-        print(self._compiler, ['-x', '-o', output, cbl_path])
-        p.start(self._compiler, ['-x', '-o', output, cbl_path])
+        p.start(compiler, ['-x', '-o', output, cbl_path])
         p.waitForFinished()
         stdout = bytes(p.readAllStandardOutput()).decode(locale.getpreferredencoding())
         stderr = bytes(p.readAllStandardError()).decode(locale.getpreferredencoding())
-        self.ui.label.setText('Output')
         output = stderr + stdout
-        if p.exitStatus() == 0:
+        if p.exitCode() == 0:
             output = 'Compiler works!\n' + output
+        else:
+            output = 'Complier check failed:\n' + output
+        return output, p.exitCode()
+
+    def _check_compiler(self):
+        output, exit_code = self.check_compiler(self._compiler)
+        self.ui.label.setText('Output:')
         self.ui.plainTextEdit.setPlainText(output)
-        self.ui.buttonBox.button(self.ui.buttonBox.Ok).setEnabled(p.exitCode() == 0)
 
     @classmethod
     def check(cls, parent, compiler_path, version):

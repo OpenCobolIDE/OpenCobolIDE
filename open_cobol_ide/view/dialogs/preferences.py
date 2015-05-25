@@ -102,6 +102,17 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.stackedWidgetSQL.setCurrentIndex(0)
         else:
             self.stackedWidgetSQL.setCurrentIndex(1)
+        self.toolButtonCheckCompiler.clicked.connect(self._check_compiler)
+
+    def _check_compiler(self):
+        pgm = 'cobc' if not system.windows else 'cobc.exe'
+        pth = os.path.join(self.lineEditCompilerPath.text(), pgm)
+        output, exit_code = DlgCheckCompiler.check_compiler(pth)
+        if exit_code == 0:
+            fct = QtWidgets.QMessageBox.information
+        else:
+            fct = QtWidgets.QMessageBox.warning
+        fct(self, 'Check compiler', output)
 
     def _add_lib_path(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(

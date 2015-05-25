@@ -92,8 +92,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>639</width>
-               <height>568</height>
+               <width>309</width>
+               <height>495</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -487,8 +487,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>639</width>
-               <height>568</height>
+               <width>371</width>
+               <height>302</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -880,6 +880,13 @@ as possible to get back to the previous indentation level.</string>
                   </property>
                  </widget>
                 </item>
+                <item>
+                 <widget class="QToolButton" name="toolButtonCheckCompiler">
+                  <property name="text">
+                   <string>Check compiler</string>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
               <item row="13" column="0">
@@ -1030,8 +1037,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>639</width>
-               <height>568</height>
+               <width>192</width>
+               <height>57</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_5">
@@ -1090,8 +1097,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>639</width>
-               <height>549</height>
+               <width>308</width>
+               <height>419</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
