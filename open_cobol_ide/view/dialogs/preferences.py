@@ -100,6 +100,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditVCVARS.hide()
             self.toolButtonVCVARS.hide()
             self.stackedWidgetSQL.setCurrentIndex(0)
+            self.groupBoxEnvVars.hide()
         else:
             self.stackedWidgetSQL.setCurrentIndex(1)
         self.toolButtonCheckCompiler.clicked.connect(self._check_compiler)
