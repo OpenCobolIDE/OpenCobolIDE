@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/Documents/OpenCobolIDE/forms/ide.ui'
+# Form implementation generated from reading ui file 'C:\Dev\OpenCobolIDE\forms\ide.ui'
 #
 # Created by: PyQt5 UI code generator 5.4.1
 #
@@ -19,8 +19,8 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
-        self.gridLayout.setSpacing(0)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout.setSpacing(0)
         self.gridLayout.setObjectName("gridLayout")
         self.stackedWidget = QtWidgets.QStackedWidget(self.centralwidget)
         self.stackedWidget.setObjectName("stackedWidget")
@@ -134,8 +134,8 @@ class Ui_MainWindow(object):
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.page_2)
-        self.gridLayout_2.setSpacing(0)
         self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout_2.setSpacing(0)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.tabWidgetEditors = TabWidget(self.page_2)
         self.tabWidgetEditors.setOrientation(QtCore.Qt.Horizontal)
@@ -158,8 +158,8 @@ class Ui_MainWindow(object):
         self.dockWidgetContents = QtWidgets.QWidget()
         self.dockWidgetContents.setObjectName("dockWidgetContents")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.dockWidgetContents)
-        self.gridLayout_3.setSpacing(0)
         self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout_3.setSpacing(0)
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.tabWidgetLogs = QtWidgets.QTabWidget(self.dockWidgetContents)
         self.tabWidgetLogs.setObjectName("tabWidgetLogs")
@@ -189,8 +189,8 @@ class Ui_MainWindow(object):
         self.tabProgramOutput = QtWidgets.QWidget()
         self.tabProgramOutput.setObjectName("tabProgramOutput")
         self.gridLayout_5 = QtWidgets.QGridLayout(self.tabProgramOutput)
-        self.gridLayout_5.setSpacing(6)
         self.gridLayout_5.setContentsMargins(6, 6, 6, 6)
+        self.gridLayout_5.setSpacing(6)
         self.gridLayout_5.setObjectName("gridLayout_5")
         self.consoleOutput = InteractiveConsole(self.tabProgramOutput)
         self.consoleOutput.setObjectName("consoleOutput")
@@ -201,7 +201,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1054, 29))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1054, 21))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -231,8 +231,8 @@ class Ui_MainWindow(object):
         self.dockWidgetContents_2 = QtWidgets.QWidget()
         self.dockWidgetContents_2.setObjectName("dockWidgetContents_2")
         self.gridLayout_7 = QtWidgets.QGridLayout(self.dockWidgetContents_2)
-        self.gridLayout_7.setSpacing(3)
         self.gridLayout_7.setContentsMargins(3, 3, 3, 3)
+        self.gridLayout_7.setSpacing(3)
         self.gridLayout_7.setObjectName("gridLayout_7")
         self.twNavigation = OutlineTreeWidget(self.dockWidgetContents_2)
         self.twNavigation.setObjectName("twNavigation")
@@ -247,8 +247,8 @@ class Ui_MainWindow(object):
         self.dockWidgetContents_3 = QtWidgets.QWidget()
         self.dockWidgetContents_3.setObjectName("dockWidgetContents_3")
         self.gridLayout_8 = QtWidgets.QGridLayout(self.dockWidgetContents_3)
-        self.gridLayout_8.setSpacing(3)
         self.gridLayout_8.setContentsMargins(3, 3, 3, 3)
+        self.gridLayout_8.setSpacing(3)
         self.gridLayout_8.setObjectName("gridLayout_8")
         self.tableWidgetOffsets = PicOffsetsTable(self.dockWidgetContents_3)
         self.tableWidgetOffsets.setMinimumSize(QtCore.QSize(300, 0))
@@ -415,7 +415,7 @@ class Ui_MainWindow(object):
         self.listWidgetRecents.setStatusTip(_translate("MainWindow", "Recent files"))
         self.toolBarFile.setWindowTitle(_translate("MainWindow", "Toolbar File"))
         self.toolBarCode.setWindowTitle(_translate("MainWindow", "Toolbar Code"))
-        self.dockWidgetLogs.setWindowTitle(_translate("MainWindow", "&Logs"))
+        self.dockWidgetLogs.setWindowTitle(_translate("MainWindow", "Logs"))
         self.tabWidgetLogs.setTabText(self.tabWidgetLogs.indexOf(self.tabCompiler), _translate("MainWindow", "Compiler"))
         self.errorsTable.setStatusTip(_translate("MainWindow", "The list of errors found in your program"))
         self.tabWidgetLogs.setTabText(self.tabWidgetLogs.indexOf(self.tabCompiler1), _translate("MainWindow", "Issues"))
@@ -433,10 +433,10 @@ class Ui_MainWindow(object):
         self.menuCobol.setTitle(_translate("MainWindow", "&Cobol"))
         self.menuProgramType.setTitle(_translate("MainWindow", "&Program type"))
         self.menu.setTitle(_translate("MainWindow", "?"))
-        self.dockWidgetNavPanel.setWindowTitle(_translate("MainWindow", "Navi&gation"))
+        self.dockWidgetNavPanel.setWindowTitle(_translate("MainWindow", "Navigation"))
         self.twNavigation.setToolTip(_translate("MainWindow", "Show the current editor structure"))
         self.twNavigation.setStatusTip(_translate("MainWindow", "Show the current editor structure"))
-        self.dockWidgetOffsets.setWindowTitle(_translate("MainWindow", "Offset calc&ulator"))
+        self.dockWidgetOffsets.setWindowTitle(_translate("MainWindow", "Offset calculator"))
         self.tableWidgetOffsets.setToolTip(_translate("MainWindow", "Show PIC fields offsets"))
         self.tableWidgetOffsets.setStatusTip(_translate("MainWindow", "Show PIC fields offsets"))
         self.tableWidgetOffsets.setSortingEnabled(True)
@@ -448,7 +448,7 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Offset"))
         item = self.tableWidgetOffsets.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "PIC"))
-        self.dockWidgetFileSystem.setWindowTitle(_translate("MainWindow", "File s&ystem"))
+        self.dockWidgetFileSystem.setWindowTitle(_translate("MainWindow", "File system"))
         self.btFSLock.setToolTip(_translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Lock</span> current file path to prevent the view from changing when the current editor changes.</p></body></html>"))
         self.actionQuit.setText(_translate("MainWindow", "&Quit"))
         self.actionQuit.setToolTip(_translate("MainWindow", "Exit application"))
@@ -505,7 +505,7 @@ class Ui_MainWindow(object):
         self.actionCancel.setStatusTip(_translate("MainWindow", "Cancel the current operation (compile or run)"))
         self.actionReport_a_bug.setText(_translate("MainWindow", "&Report a bug"))
 
-from pyqode.core.widgets import ErrorsTable, InteractiveConsole, FileSystemTreeView
-from open_cobol_ide.view.widgets import RecentFilesListWidget, TabWidget
 from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
+from open_cobol_ide.view.widgets import TabWidget, RecentFilesListWidget
+from pyqode.core.widgets import ErrorsTable, FileSystemTreeView, InteractiveConsole
 from . import ide_rc
