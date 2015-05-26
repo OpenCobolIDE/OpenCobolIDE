@@ -22,9 +22,23 @@ class DlgCheckCompiler(QtWidgets.QDialog):
 
     def _check_compiler(self):
         output, exit_code = GnuCobolCompiler.check_compiler(self._compiler)
+
+        if exit_code == 0:
+            output = 'Compiler works!'
+        else:
+            output = 'Complier check failed:\n\nExit code: %d\nOutput:%s' % (
+                exit_code, output)
+
         self.ui.label.setText('Output:')
         self.ui.plainTextEdit.setPlainText(output)
-        self.ui.buttonBox.button(self.ui.buttonBox.Ok).setEnabled(exit_code == 0)
+
+        if exit_code != 0:
+            self.ui.plainTextEdit.appendPlainText(
+                '\nTip: You might need to adapt the environment variables set by the '
+                'IDE to make it work.')
+        # allow the user to choose a non working compiler because user might need
+        # to setup environment variable to make it compiler work.
+        self.ui.buttonBox.button(self.ui.buttonBox.Ok).setEnabled(True)
 
     @classmethod
     def check(cls, parent, compiler_path, version):

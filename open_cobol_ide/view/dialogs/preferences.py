@@ -119,9 +119,12 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         pth = os.path.join(self.lineEditCompilerPath.text(), pgm)
         output, exit_code = compilers.GnuCobolCompiler.check_compiler(pth)
         if exit_code == 0:
+            output = 'Compiler works!'
             fct = QtWidgets.QMessageBox.information
         else:
             fct = QtWidgets.QMessageBox.warning
+            output = 'Complier check failed:\n\nExit code: %d\nOutput:%s' % (
+                exit_code, output)
         fct(self, 'Check compiler', output)
 
     def _add_lib_path(self):
