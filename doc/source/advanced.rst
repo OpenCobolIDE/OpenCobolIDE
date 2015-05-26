@@ -4,23 +4,36 @@ Advanced topics
 
 .. _windows-gnu-cobol:
 
-Setup a custom compiler on Windows (GnuCobol built with Visual Studio)
-----------------------------------------------------------------------
+Setup a custom compiler on Windows
+----------------------------------
 
-Starting from version 4.3, it is possible to use another GnuCobol compiler than the one that is bundled
-with the IDE.
+Starting from version 4.6.0, you have all the tools to setup a custom GnuCOBOL compiler on windows.
 
-This section describes how to setup OpenCobolIDE to use kiska's GnuCobol 2.0 compiled with Visual Studio.
+The first step is to download or build the compiler and make sure it works from the command line.
+
+Then fire up OpenCobolIDE, open the preferences dialog and go to the compiler tab:
+
+    - specify the compiler path in  "Custom compiler path". When you choose a new compiler, you will
+      be presented with a dialog that let you check if the compiler works. If the test failed, then this
+      might be because you need to adjust some environment variables
+    - adjust the environment variables (PATH and COBC_CONFIG_DIR are usually required, you might also need
+      to adjust the include and copy path depending on the compiler you chose). You may disable variables
+      that you don't need by removing the check mark.
+
+      .. note:: when you've changed an environmnent variable, you can check if the compiler works by clicking on the
+                ``check compiler`` button.
+
+    - if the compiler is build with MSVC, you will also need to indicate the path of vcvars32.bat of the
+      compiler used to build GnuCOBOL. If using Visual Studio 2010, you can find this file in
+      ``c:\Program Files(x86)\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat``
+
+Here is the setup I use for working with `GnuCOBOL 2.0 MSVC`_:
+
+   .. image:: _static/custom_compiler_windows.png
+        :align: center
 
 
-1) Download and install Visual Studio C++ 2010 (the express edition is OK) from miscrosoft.
-2) Download GnuCobol 2.0 from http://www.kiska.net/opencobol/2.0/index.html (the 32 bit version is preferred)
-3) Extract the compiler and install it to ``C:\``, you should have ``c:\OpenCobol``.
-4) Run OpenCobolIDE, open the preferences dialog and go to the compiler tab
-5) Select ``c:\OpenCobol`` for the **custom compiler path**
-6) Select the visual studio **vcvars32.bat** path (
-   ``c:\Program Files(x86)\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat``)
-7) Create a simple hello world cobol program, compile and run it to make sure everything works OK.
+.. _GnuCOBOL 2.0 MSVC: http://www.kiska.net/opencobol/2.0/index.html
 
 
 .. _sql-guide:
