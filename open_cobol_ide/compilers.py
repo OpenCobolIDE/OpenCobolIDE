@@ -19,6 +19,7 @@ from pyqode.qt import QtCore
 
 from open_cobol_ide import system
 from open_cobol_ide.enums import FileType
+from open_cobol_ide.memoize import memoized
 from open_cobol_ide.settings import Settings
 
 
@@ -176,8 +177,9 @@ class GnuCobolCompiler(QtCore.QObject):
                 s, e = v.span()
                 return lversion[s: e]
 
-    @staticmethod
-    def check_compiler(compiler):
+    @classmethod
+    @memoized
+    def check_compiler(cls, compiler):
         from open_cobol_ide.view.dialogs.preferences import DEFAULT_TEMPLATE
         cbl_path = os.path.join(tempfile.gettempdir(), 'test.cbl')
         with open(cbl_path, 'w') as f:
@@ -187,10 +189,10 @@ class GnuCobolCompiler(QtCore.QObject):
         p = QtCore.QProcess()
         args = ['-x', '-o', output, cbl_path]
         p.start(compiler, args)
-        _logger().info('check compiler')
-        _logger().info('process environment: %r',
-                       p.processEnvironment().toStringList())
-        _logger().info('command: %s %s', compiler, ' '.join(args))
+        _logger().debug('check compiler')
+        _logger().debug('process environment: %r',
+                        p.processEnvironment().toStringList())
+        _logger().debug('command: %s %s', compiler, ' '.join(args))
         p.waitForFinished()
         stdout = bytes(p.readAllStandardOutput()).decode(
             locale.getpreferredencoding())
@@ -201,25 +203,23 @@ class GnuCobolCompiler(QtCore.QObject):
             exit_code = 139
         else:
             exit_code = p.exitCode()
-        _logger().info('process output: %r', output)
-        _logger().info('process exit code: %r', exit_code)
-        _logger().info('compiler works: %s',
+        _logger().debug('process output: %r', output)
+        _logger().debug('process exit code: %r', exit_code)
+        _logger().debug('compiler works: %s',
                        'Yes' if exit_code == 0 else 'No')
         if exit_code == 0:
             output = 'Compiler works!\n' + output
         else:
             output = 'Complier check failed:\n\nExit code: %d\nOutput:%s' % (
                 exit_code, output)
+        _logger().info('GnuCOBOL compiler check: %s',
+                        'success' if exit_code == 0 else 'fail')
         return output, p.exitCode()
 
     def is_working(self):
         """
         Checks if the GNUCobol compiler is working.
         """
-        version = self.get_version()
-        _logger().info('OpenCOBOL compiler v.%s' % version)
-        if not version:
-            return False
         if Settings().custom_compiler_path:
             pth = os.path.join(Settings().custom_compiler_path, 'cobc')
         else:
@@ -459,7 +459,7 @@ class DbpreCompiler(QtCore.QObject):
             dbpre_path = Settings().dbpre
         self.dbpre_path = dbpre_path
 
-    def get_version(self):
+    def get_version(self, path=None):
         """
         Returns the GnuCobol compiler version as a string
         """

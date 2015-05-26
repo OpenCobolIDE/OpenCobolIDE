@@ -437,6 +437,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.reset()
 
     def apply(self):
+        # force next check (otherwise the cached result will be used)
+        compilers.GnuCobolCompiler.check_compiler.reset()
         settings = Settings()
         settings.display_lines = self.checkBoxViewLineNumber.isChecked()
         settings.highlight_caret = self.checkBoxHighlightCurrentLine.isChecked()

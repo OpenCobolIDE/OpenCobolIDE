@@ -35,7 +35,7 @@ class CobolCodeEdit(CodeEditBase):
 
     def enable_linter(self):
         self.linter_mode.enabled = GnuCobolCompiler().is_working()
-        _logger().info('linter enabled: %r', self.linter_mode.enabled)
+        _logger().debug('linter enabled: %r', self.linter_mode.enabled)
 
     def close(self, clear=True):
         super().close(clear=clear)

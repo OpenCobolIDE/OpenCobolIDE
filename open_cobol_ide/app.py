@@ -13,7 +13,7 @@ from open_cobol_ide import __version__, logger, system
 from open_cobol_ide.controllers import (
     CobolController, EditController, FileController, HelpController,
     HomeController, ViewController)
-from open_cobol_ide.compilers import check_compiler, CompilerNotFound
+from open_cobol_ide.compilers import check_compiler, CompilerNotFound, GnuCobolCompiler
 from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.main_window import MainWindow
 
@@ -77,6 +77,8 @@ class Application:
                 'Failed to find GnuCOBOL compiler!\n\n%s.\n\n'
                 "The IDE will continue to work but you won't be able to "
                 'compile any file' % e)
+        else:
+            _logger().info('GnuCOBOL version: %s', GnuCobolCompiler.get_version())
 
         # open specified files
         for f in files:
