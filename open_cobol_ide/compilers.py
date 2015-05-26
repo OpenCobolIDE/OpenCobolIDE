@@ -104,10 +104,12 @@ class VisualStudioWrapperBatch:
     environment before running the cobc command, this is needed to use the
     kiska builds on Windows.
     """
-    CODE_TEMPLATE = """set OLDDIR=%CD%
+    CODE_TEMPLATE = """@echo off
+set OLDDIR=%CD%
 chdir {0}
 call VCVARS32
 chdir /d %OLDDIR%
+@echo on
 call cobc %*
 """
     FILENAME = 'cobc_wrapper.bat'
@@ -180,6 +182,10 @@ class GnuCobolCompiler(QtCore.QObject):
     @classmethod
     @memoized
     def check_compiler(cls, compiler):
+        if Settings().vcvars32:
+            VisualStudioWrapperBatch.generate()
+            compiler = VisualStudioWrapperBatch.path()
+
         from open_cobol_ide.view.dialogs.preferences import DEFAULT_TEMPLATE
         cbl_path = os.path.join(tempfile.gettempdir(), 'test.cbl')
         with open(cbl_path, 'w') as f:
@@ -205,13 +211,6 @@ class GnuCobolCompiler(QtCore.QObject):
             exit_code = p.exitCode()
         _logger().debug('process output: %r', output)
         _logger().debug('process exit code: %r', exit_code)
-        _logger().debug('compiler works: %s',
-                       'Yes' if exit_code == 0 else 'No')
-        if exit_code == 0:
-            output = 'Compiler works!\n' + output
-        else:
-            output = 'Complier check failed:\n\nExit code: %d\nOutput:%s' % (
-                exit_code, output)
         _logger().info('GnuCOBOL compiler check: %s',
                         'success' if exit_code == 0 else 'fail')
         return output, p.exitCode()
@@ -224,10 +223,6 @@ class GnuCobolCompiler(QtCore.QObject):
             pth = os.path.join(Settings().custom_compiler_path, 'cobc')
         else:
             pth = 'cobc'
-
-        if Settings().vcvars32:
-            VisualStudioWrapperBatch.generate()
-            pth = VisualStudioWrapperBatch.path()
 
         _, exit_code = self.check_compiler(pth)
         return exit_code == 0
