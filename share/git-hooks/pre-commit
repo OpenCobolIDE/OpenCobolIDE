@@ -1,0 +1,2 @@
+#!/bin/sh
+python .git/hooks/pre-commit.py
