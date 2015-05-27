@@ -332,8 +332,7 @@ class Settings(object):
                 cwd = os.getcwd()
             default = os.path.join(cwd, 'OpenCobol', 'bin')
         else:
-            # todo maybe use `which cobc`
-            default = ''
+            default = os.path.dirname(system.which('cobc'))
         return default
 
     @property
