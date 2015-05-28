@@ -62,8 +62,7 @@ def get_file_type(path):
         ftype = FileType.EXECUTABLE
         with open(path, 'r', encoding=encoding) as f:
             content = f.read().upper()
-        if re.match(r'.*PROCEDURE.*DIVISION.*[\n]?.*USING', content,
-                    re.DOTALL):
+        if re.match(r'.*PROCEDURE[\s\n]+DIVISION[\s\n]+USING', content, re.DOTALL):
             ftype = FileType.MODULE
     _logger().debug('file type: %r', ftype)
     return ftype
