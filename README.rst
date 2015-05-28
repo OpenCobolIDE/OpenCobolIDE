@@ -1,20 +1,23 @@
 OpenCobolIDE
 ------------
-.. image:: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE.png?branch=master
-    :target: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE
-    :alt: Travis-CI build status
 
-.. image:: https://pypip.in/d/OpenCobolIDE/badge.png
-    :target: https://crate.io/packages/OpenCobolIDE/
-    :alt: Number of PyPI downloads
+.. image:: https://img.shields.io/pypi/v/OpenCobolIDE.svg
+   :target: https://pypi.python.org/pypi/OpenCobolIDE/
+   :alt: Latest PyPI version
 
-.. image:: https://pypip.in/v/OpenCobolIDE/badge.png
-    :target: https://crate.io/packages/OpenCobolIDE/
-    :alt: Latest PyPI version
-    
-.. image:: https://coveralls.io/repos/OpenCobolIDE/OpenCobolIDE/badge.png?branch=master     
-   :target: https://coveralls.io/r/OpenCobolIDE/OpenCobolIDE?branch=master       
-   :alt: Coverage Status                       
+.. image:: https://img.shields.io/pypi/dm/OpenCobolIDE.svg
+   :target: https://pypi.python.org/pypi/OpenCobolIDE/
+   :alt: Number of PyPI downloads
+
+.. image:: https://img.shields.io/pypi/l/OpenCobolIDE.svg
+
+.. image:: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE.svg?branch=master
+   :target: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE
+   :alt: Travis-CI build status
+
+.. image:: https://coveralls.io/repos/OpenCobolIDE/OpenCobolIDE/badge.svg?branch=master
+   :target: https://coveralls.io/r/OpenCobolIDE/OpenCobolIDE?branch=master
+   :alt: Coverage Status
 
 
 OpenCobolIDE is a simple and lightweight cobol IDE based on the GnuCobol
