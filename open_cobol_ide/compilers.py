@@ -61,8 +61,10 @@ def get_file_type(path):
     except KeyError:
         ftype = FileType.EXECUTABLE
         with open(path, 'r', encoding=encoding) as f:
-            if 'PROCEDURE DIVISION USING' in f.read().upper():
-                ftype = FileType.MODULE
+            content = f.read().upper()
+        if re.match(r'.*PROCEDURE.*DIVISION.*[\n]?.*USING', content,
+                    re.DOTALL):
+            ftype = FileType.MODULE
     _logger().debug('file type: %r', ftype)
     return ftype
 
@@ -383,7 +385,8 @@ class GnuCobolCompiler(QtCore.QObject):
                 retval.append(msg)
         return retval
 
-    def get_dependencies(self, filename, recursive=True):
+    @classmethod
+    def get_dependencies(cls, filename, recursive=True):
         """
         Gets the dependencies of a cobol program/module.
 
@@ -396,22 +399,21 @@ class GnuCobolCompiler(QtCore.QObject):
         encoding = _get_encoding(filename)
         directory = os.path.dirname(filename)
         dependencies = []
-        prog = re.compile(r'CALL ".*"')
+        prog = re.compile(r'(CALL[\s\n]*.*".*")')
         with open(filename, 'r', encoding=encoding) as f:
-            for line in f.readlines():
-                match = prog.search(line)
-                if match:
-                    start, end = match.span()
-                    txt = line[start:end]
-                    module_base_name = txt[txt.find('"'):].replace('"', '')
-                    # try to see if the module can be found in the current
-                    # directory
-                    for ext in Settings().all_extensions:
-                        pth = os.path.join(directory, module_base_name + ext)
-                        if os.path.exists(pth) and pth.lower() not in dependencies:
-                            dependencies.append(pth)
-                            if recursive:
-                                dependencies += self.get_dependencies(pth)
+            content = f.read()
+            for m in prog.findall(content):
+                module_base_name = m.replace('\n', '').replace('CALL', '').\
+                    replace('call', '').replace("'", '').replace('"', '').strip()
+                # try to see if the module can be found in the current
+                # directory
+                for ext in Settings().all_extensions:
+                    pth = os.path.join(directory, module_base_name + ext)
+                    if os.path.exists(pth) and pth.lower() not in dependencies:
+                        dependencies.append(pth)
+                        if recursive:
+                            dependencies += cls.get_dependencies(pth)
+
         dependencies = list(set(dependencies))
         _logger().debug('dependencies of %s: %r', filename, dependencies)
         return dependencies
@@ -724,3 +726,7 @@ class EsqlOCCompiler(QtCore.QObject):
         status, messages = self._compile_with_cobc(os.path.join(
             os.path.dirname(path), cob_file))
         return status, messages
+
+
+if __name__ == '__main__':
+    GnuCobolCompiler.get_dependencies('/home/colin/A.cbl')
