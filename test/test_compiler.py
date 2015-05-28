@@ -33,6 +33,7 @@ def test_get_version():
 @pytest.mark.parametrize('path, ftype', [
     ('test/testfiles/TEST-PRINTER.cbl', FileType.EXECUTABLE),
     ('test/testfiles/VIRTUAL-PRINTER.cbl', FileType.MODULE),
+    ('test/testfiles/VIRTUAL-PRINTER2.cbl', FileType.MODULE),
 ])
 def test_get_file_type(path, ftype):
     assert get_file_type(path) == ftype
@@ -136,7 +137,11 @@ def test_compile(path, ftype, expected_results, output_file_path):
     ('test/testfiles/TEST-PRINTER.cbl',
      ['test/testfiles/VIRTUAL-PRINTER.cbl'] if system.linux else
      ['test/testfiles/VIRTUAL-PRINTER.cbl',
-      'test/testfiles/VIRTUAL-PRINTER.CBL'])
+      'test/testfiles/VIRTUAL-PRINTER.CBL']),
+    ('test/testfiles/TEST-PRINTER2.cbl',
+     ['test/testfiles/VIRTUAL-PRINTER.cbl', 'test/testfiles/VIRTUAL-PRINTER2.cbl'] if system.linux else
+     ['test/testfiles/VIRTUAL-PRINTER.cbl', 'test/testfiles/VIRTUAL-PRINTER.CBL',
+      'test/testfiles/VIRTUAL-PRINTER2.cbl', 'test/testfiles/VIRTUAL-PRINTER2.CBL'])
 ])
 def test_get_dependencies(filename, expected_results):
     results = GnuCobolCompiler().get_dependencies(filename)
