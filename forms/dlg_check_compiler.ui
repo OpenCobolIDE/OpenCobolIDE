@@ -48,7 +48,7 @@ Packaged Feb 06 2009 10:30:55 CET</string>
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Close</set>
      </property>
      <property name="centerButtons">
       <bool>false</bool>

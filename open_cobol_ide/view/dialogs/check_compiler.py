@@ -20,7 +20,6 @@ class DlgCheckCompiler(QtWidgets.QDialog):
             'Check compilation')
         self.ui.buttonBox.button(self.ui.buttonBox.Apply).clicked.connect(
             self._check_compiler)
-        self.ui.buttonBox.button(self.ui.buttonBox.Ok).setEnabled(False)
         self.ui.buttonBox.button(self.ui.buttonBox.Apply).setDisabled(
             not version)
 
