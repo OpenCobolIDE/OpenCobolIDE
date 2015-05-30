@@ -596,6 +596,8 @@
     <addaction name="actionAbout"/>
     <addaction name="separator"/>
     <addaction name="actionReport_a_bug"/>
+    <addaction name="separator"/>
+    <addaction name="actionRestore_factory_defaults"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -1069,6 +1071,11 @@
    </property>
    <property name="text">
     <string>&amp;Report a bug</string>
+   </property>
+  </action>
+  <action name="actionRestore_factory_defaults">
+   <property name="text">
+    <string>Restore factory defaults</string>
    </property>
   </action>
   <zorder>dockWidgetNavPanel</zorder>

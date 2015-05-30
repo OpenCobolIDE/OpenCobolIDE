@@ -8,7 +8,7 @@ import logging
 import mimetypes
 import os
 import sys
-from pyqode.qt import QtWidgets, QT_API, PYQT5_API, PYSIDE_API
+from pyqode.qt import QtCore, QtWidgets, QT_API, PYQT5_API, PYSIDE_API
 from open_cobol_ide import __version__, logger, system
 from open_cobol_ide.controllers import (
     CobolController, EditController, FileController, HelpController,
@@ -78,11 +78,18 @@ class Application:
                 "The IDE will continue to work but you won't be able to "
                 'compile any file' % e)
         else:
-            _logger().info('GnuCOBOL version: %s', GnuCobolCompiler.get_version())
-
+            _logger().info('GnuCOBOL version: %s',
+                           GnuCobolCompiler.get_version())
         # open specified files
         for f in files:
             self.file.open_file(f)
+
+    def restart(self):
+        """
+        Restarts the IDE.
+        """
+        QtCore.QProcess.startDetached(sys.executable, sys.argv)
+        sys.exit(0)
 
     def close(self):
         self.view = None

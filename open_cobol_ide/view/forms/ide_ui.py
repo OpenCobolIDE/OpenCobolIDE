@@ -358,6 +358,8 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon.fromTheme("tools-report-bug")
         self.actionReport_a_bug.setIcon(icon)
         self.actionReport_a_bug.setObjectName("actionReport_a_bug")
+        self.actionRestore_factory_defaults = QtWidgets.QAction(MainWindow)
+        self.actionRestore_factory_defaults.setObjectName("actionRestore_factory_defaults")
         self.dockWidgetNavPanel.raise_()
         self.toolBarFile.addAction(self.actionNew)
         self.toolBarFile.addAction(self.actionOpen)
@@ -391,6 +393,8 @@ class Ui_MainWindow(object):
         self.menu.addAction(self.actionAbout)
         self.menu.addSeparator()
         self.menu.addAction(self.actionReport_a_bug)
+        self.menu.addSeparator()
+        self.menu.addAction(self.actionRestore_factory_defaults)
         self.menuBar.addAction(self.menuFile.menuAction())
         self.menuBar.addAction(self.menuEdit.menuAction())
         self.menuBar.addAction(self.menuView.menuAction())
@@ -504,8 +508,9 @@ class Ui_MainWindow(object):
         self.actionCancel.setToolTip(_translate("MainWindow", "Cancel the current operation (compile or run)"))
         self.actionCancel.setStatusTip(_translate("MainWindow", "Cancel the current operation (compile or run)"))
         self.actionReport_a_bug.setText(_translate("MainWindow", "&Report a bug"))
+        self.actionRestore_factory_defaults.setText(_translate("MainWindow", "Restore factory defaults"))
 
+from pyqode.core.widgets import FileSystemTreeView, ErrorsTable, InteractiveConsole
 from open_cobol_ide.view.widgets import TabWidget, RecentFilesListWidget
-from pyqode.cobol.widgets import PicOffsetsTable, OutlineTreeWidget
-from pyqode.core.widgets import FileSystemTreeView, InteractiveConsole, ErrorsTable
+from pyqode.cobol.widgets import OutlineTreeWidget, PicOffsetsTable
 from . import ide_rc

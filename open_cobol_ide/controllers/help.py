@@ -1,4 +1,5 @@
 from pyqode.qt import QtCore, QtGui
+from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.dialogs.about import DlgAbout
 from open_cobol_ide.view.dialogs.report_bug import DlgReportBug
 from .base import Controller
@@ -16,6 +17,8 @@ class HelpController(Controller):
         self.ui.actionHelp.triggered.connect(self.show_help_contents)
         self.ui.actionAbout.triggered.connect(self.show_about_dlg)
         self.ui.actionReport_a_bug.triggered.connect(self.report_bug)
+        self.ui.actionRestore_factory_defaults.triggered.connect(
+            self.restore_factory_defaults)
 
     def show_help_contents(self):
         """
@@ -32,3 +35,7 @@ class HelpController(Controller):
 
     def report_bug(self):
         DlgReportBug.report_bug(self.main_window)
+
+    def restore_factory_defaults(self):
+        Settings().clear()
+        self.app.restart()
