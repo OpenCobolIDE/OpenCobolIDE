@@ -88,7 +88,7 @@ class Application:
         """
         Restarts the IDE.
         """
-        QtCore.QProcess.startDetached(sys.executable, sys.argv)
+        QtCore.QProcess.startDetached(sys.executable)
         sys.exit(0)
 
     def close(self):
