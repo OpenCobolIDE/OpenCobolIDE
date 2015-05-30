@@ -153,13 +153,13 @@ class GnuCobolCompiler(QtCore.QObject):
         """
         Returns the GnuCOBOL compiler version as a string
         """
-        cmd = ['cobc', '--version']
+        cmd = [system.which('cobc'), '--version']
         try:
             _logger().debug('getting cobc version: %s' % ' '.join(cmd))
             if sys.platform == 'win32':
                 startupinfo = subprocess.STARTUPINFO()
                 startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-                cmd[0] = os.path.join(Settings().custom_compiler_path, 'cobc')
+                cmd[0] = os.path.join(Settings().compiler_path, 'cobc')
                 p = subprocess.Popen(
                     cmd, shell=False, startupinfo=startupinfo,
                     stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -168,7 +168,8 @@ class GnuCobolCompiler(QtCore.QObject):
                 p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
                                      stderr=subprocess.PIPE)
         except OSError:
-            _logger().exception('GnuCOBOL compiler not found')
+            _logger().exception('GnuCOBOL compiler not found (command: %s)' %
+                                cmd)
             return 'Not installed'
         else:
             stdout, stderr = p.communicate()
@@ -220,8 +221,8 @@ class GnuCobolCompiler(QtCore.QObject):
         """
         Checks if the GNUCobol compiler is working.
         """
-        if Settings().custom_compiler_path:
-            pth = os.path.join(Settings().custom_compiler_path, 'cobc')
+        if Settings().compiler_path:
+            pth = os.path.join(Settings().compiler_path, 'cobc')
         else:
             pth = 'cobc'
 
@@ -244,7 +245,7 @@ class GnuCobolCompiler(QtCore.QObject):
         if sys.platform == "win32":
             # copy the dll
             files = glob.glob(os.path.join(
-                Settings().custom_compiler_path, "*.dll"))
+                Settings().compiler_path, "*.dll"))
             for f in files:
                 shutil.copy(f, path)
 
@@ -342,11 +343,11 @@ class GnuCobolCompiler(QtCore.QObject):
             if system.windows and ' ' in ifn:
                 ifn = '"%s"' % ifn
             options.append(ifn)
-        if Settings().custom_compiler_path and Settings().vcvars32:
+        if Settings().compiler_path and Settings().vcvars32:
             VisualStudioWrapperBatch.generate()
             pgm = VisualStudioWrapperBatch.path()
         else:
-            pgm = 'cobc' if not Settings().custom_compiler_path else os.path.join(Settings().custom_compiler_path, 'cobc')
+            pgm = 'cobc' if not Settings().compiler_path else os.path.join(Settings().compiler_path, 'cobc')
         return pgm, options
 
     @staticmethod

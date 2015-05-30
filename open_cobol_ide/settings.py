@@ -336,12 +336,18 @@ class Settings(object):
         return default
 
     @property
-    def custom_compiler_path(self):
+    def compiler_path(self):
         default = self.default_compiler_path()
-        return self._settings.value('customCompilerPath', default)
+        path = self._settings.value('customCompilerPath', default)
+        if not path:
+            # if path is empty, try to get it from environment
+            cobc_path = system.which('cobc')
+            if cobc_path is not None:
+                path = os.path.dirname(cobc_path)
+        return path
 
-    @custom_compiler_path.setter
-    def custom_compiler_path(self, value):
+    @compiler_path.setter
+    def compiler_path(self, value):
         # add to PATH
         sep = ';' if sys.platform == 'win32' else ':'
         os.environ['PATH'] += sep + value
@@ -571,7 +577,7 @@ class Settings(object):
 
     # environment variables
     def default_path(self):
-        path = os.pathsep.join([self.custom_compiler_path])
+        path = os.pathsep.join([self.compiler_path])
         return path
 
     @property
@@ -591,7 +597,7 @@ class Settings(object):
         self._settings.setValue('env/PATH_Enabled', int(value))
 
     def default_config_dir(self):
-        root = os.path.abspath(os.path.join(self.custom_compiler_path, '..'))
+        root = os.path.abspath(os.path.join(self.compiler_path, '..'))
         default = os.path.join(root, 'config')
         return default
 
@@ -613,7 +619,7 @@ class Settings(object):
         self._settings.setValue('env/COB_CONFIG_DIR_Enabled', int(value))
 
     def default_copy_dir(self):
-        root = os.path.abspath(os.path.join(self.custom_compiler_path, '..'))
+        root = os.path.abspath(os.path.join(self.compiler_path, '..'))
         default = os.path.join(root, 'copy')
         return default
 
@@ -635,7 +641,7 @@ class Settings(object):
         self._settings.setValue('env/COB_COPY_DIR_Enabled', int(value))
 
     def default_include_dir(self):
-        root = os.path.abspath(os.path.join(self.custom_compiler_path, '..'))
+        root = os.path.abspath(os.path.join(self.compiler_path, '..'))
         default = os.path.join(root, 'include')
         return default
 
@@ -657,7 +663,7 @@ class Settings(object):
         self._settings.setValue('env/COB_INCLUDE_PATH_Enabled', int(value))
 
     def default_lib_path(self):
-        root = os.path.abspath(os.path.join(self.custom_compiler_path, '..'))
+        root = os.path.abspath(os.path.join(self.compiler_path, '..'))
         default = os.path.join(root, 'lib')
         return default
 

@@ -321,7 +321,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.checkBoxFreeFormat.setChecked(settings.free_format)
             self.comboBoxStandard.setCurrentIndex(
                 int(settings.cobol_standard))
-            self.lineEditCompilerPath.setText(settings.custom_compiler_path)
+            self.lineEditCompilerPath.setText(settings.compiler_path)
             flags = Settings().compiler_flags
             self.cb_debugging_line.setChecked(
                 self.cb_debugging_line.text() in flags)
@@ -405,7 +405,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.output_directory = 'bin'
             settings.free_format = False
             settings.cobol_standard = GnuCobolStandard.default
-            settings.custom_compiler_path = Settings.default_compiler_path()
+            settings.compiler_path = Settings.default_compiler_path()
             settings.compiler_flags = ['-debug']
             settings.library_search_path = ''
             settings.libraries = ''
@@ -458,7 +458,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.external_terminal = self.checkBoxRunExtTerm.isChecked()
         settings.external_terminal_command = self.lineEditRunTerm.text()
         settings.lower_case_keywords = self.rbLowerCaseKwds.isChecked()
-        settings.custom_compiler_path = self.lineEditCompilerPath.text()
+        settings.compiler_path = self.lineEditCompilerPath.text()
         if system.windows:
             settings.vcvars32 = self.lineEditVCVARS.text()
             settings.path = self.PATH.text()
