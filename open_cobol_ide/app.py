@@ -125,19 +125,6 @@ class Application:
         Inits the environment
         :return:
         """
-        if sys.platform == 'win32':
-            cls._windows_init()
-        elif sys.platform == 'darwin':
-            cls._osx_init()
-
-    @staticmethod
-    def _windows_init():
-        """
-        Windows specific initialisation:
-
-        - set env var to embedded GnuCOBOL variable
-        - set PATH to cobol library path only (erase previous values)
-        """
         s = Settings()
         if s.path_enabled:
             os.environ['PATH'] = s.path + os.pathsep + os.environ['PATH']
@@ -166,7 +153,8 @@ class Application:
             os.environ['COB_INCLUDE_PATH'] = s.cob_include_path
         else:
             try:
-                os.environ['COB_INCLUDE_PATH'] = _original_env['COB_INCLUDE_PATH']
+                os.environ['COB_INCLUDE_PATH'] = _original_env[
+                    'COB_INCLUDE_PATH']
             except KeyError:
                 if 'COB_INCLUDE_PATH' in os.environ:
                     os.environ['COB_INCLUDE_PATH'] = ''
@@ -178,6 +166,8 @@ class Application:
             except KeyError:
                 if 'COB_LIB_PATH' in os.environ:
                     os.environ['COB_LIB_PATH'] = ''
+        if system.darwin:
+            Application._osx_init()
 
     @staticmethod
     def _osx_init():

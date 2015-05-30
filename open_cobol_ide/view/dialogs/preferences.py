@@ -101,7 +101,6 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditVCVARS.hide()
             self.toolButtonVCVARS.hide()
             self.stackedWidgetSQL.setCurrentIndex(0)
-            self.groupBoxEnvVars.hide()
         else:
             self.stackedWidgetSQL.setCurrentIndex(1)
         self.toolButtonCheckCompiler.clicked.connect(self._check_compiler)
@@ -110,6 +109,12 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.cbCOB_COPY_DIR.stateChanged.connect(self.COB_COPY_DIR.setEnabled)
         self.cbCOB_INCLUDE_PATH.stateChanged.connect(self.COB_INCLUDE_PATH.setEnabled)
         self.cbCOB_LIB_PATH.stateChanged.connect(self.COB_LIB_PATH.setEnabled)
+
+        self.PATH.setEnabled(self.cbPATH.isChecked())
+        self.COB_CONFIG_DIR.setEnabled(self.cbCOB_CONFIG_DIR.isChecked())
+        self.COB_COPY_DIR.setEnabled(self.cbCOB_COPY_DIR.isChecked())
+        self.COB_INCLUDE_PATH.setEnabled(self.cbCOB_INCLUDE_PATH.isChecked())
+        self.COB_LIB_PATH.setEnabled(self.cbCOB_LIB_PATH.isChecked())
 
     def _check_compiler(self):
         from open_cobol_ide.app import Application
