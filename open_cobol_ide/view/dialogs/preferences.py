@@ -116,21 +116,26 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.COB_INCLUDE_PATH.setEnabled(self.cbCOB_INCLUDE_PATH.isChecked())
         self.COB_LIB_PATH.setEnabled(self.cbCOB_LIB_PATH.isChecked())
 
-    def _check_compiler(self):
+    def _check_compiler(self, *_):
         from open_cobol_ide.app import Application
         self.apply()
         Application.init_env()
+        path = self.lineEditCompilerPath.text()
         pgm = 'cobc' if not system.windows else 'cobc.exe'
-        pth = os.path.join(self.lineEditCompilerPath.text(), pgm)
-        output, exit_code = compilers.GnuCobolCompiler.check_compiler(pth)
-        if exit_code == 0:
-            output = 'Compiler works!'
-            fct = QtWidgets.QMessageBox.information
+        pth = os.path.join(path, pgm)
+        if os.path.exists(pth):
+            p = QtCore.QProcess()
+            p.start(pth, ['--version'])
+            p.waitForFinished()
+            output = bytes(p.readAllStandardOutput()).decode(
+                locale.getpreferredencoding())
+            if DlgCheckCompiler.check(self, pth, output):
+                self.lineEditCompilerPath.setText(os.path.normpath(path))
         else:
-            fct = QtWidgets.QMessageBox.warning
-            output = 'Complier check failed:\n\nExit code: %d\nOutput:%s' % (
-                exit_code, output)
-        fct(self, 'Check compiler', output)
+            QtWidgets.QMessageBox.warning(
+                self, 'Invalid compiler path',
+                'Not a valid compiler path because it does not contain '
+                '%s!' % pgm)
 
     def _add_lib_path(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(
@@ -160,20 +165,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self, 'Select custom GnuCOBOL directory',
             self.lineEditCompilerPath.text())
         if path:
-            pgm = 'cobc' if not system.windows else 'cobc.exe'
-            pth = os.path.join(path, pgm)
-            if os.path.exists(pth):
-                p = QtCore.QProcess()
-                p.start(pth, ['--version'])
-                p.waitForFinished()
-                output = bytes(p.readAllStandardOutput()).decode(locale.getpreferredencoding())
-                if DlgCheckCompiler.check(self, pth, output):
-                    self.lineEditCompilerPath.setText(os.path.normpath(path))
-            else:
-                QtWidgets.QMessageBox.warning(
-                    self, 'Invalid compiler path',
-                    'Not a valid compiler path because it does not contain '
-                    '%s!' % pgm)
+            self._check_compiler()
 
     def _select_esqloc(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(

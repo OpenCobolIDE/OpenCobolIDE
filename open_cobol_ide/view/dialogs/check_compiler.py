@@ -9,16 +9,20 @@ from open_cobol_ide import system
 
 class DlgCheckCompiler(QtWidgets.QDialog):
     def __init__(self, compiler, version, parent):
-        super().__init__(parent, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint |
-                         QtCore.Qt.WindowCloseButtonHint)
+        super().__init__(
+            parent, QtCore.Qt.WindowSystemMenuHint |
+            QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowCloseButtonHint)
         self._compiler = compiler
         self.ui = dlg_check_compiler_ui.Ui_Dialog()
         self.ui.setupUi(self)
         self.ui.plainTextEdit.setPlainText(version)
-        self.ui.buttonBox.button(self.ui.buttonBox.Apply).setText('Check compiler')
-        self.ui.buttonBox.button(self.ui.buttonBox.Apply).clicked.connect(self._check_compiler)
+        self.ui.buttonBox.button(self.ui.buttonBox.Apply).setText(
+            'Check compilation')
+        self.ui.buttonBox.button(self.ui.buttonBox.Apply).clicked.connect(
+            self._check_compiler)
         self.ui.buttonBox.button(self.ui.buttonBox.Ok).setEnabled(False)
-        self.ui.buttonBox.button(self.ui.buttonBox.Apply).setDisabled(not version)
+        self.ui.buttonBox.button(self.ui.buttonBox.Apply).setDisabled(
+            not version)
 
     def _check_compiler(self):
         output, exit_code = GnuCobolCompiler.check_compiler(self._compiler)
