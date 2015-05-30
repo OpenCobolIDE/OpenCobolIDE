@@ -159,7 +159,6 @@ class GnuCobolCompiler(QtCore.QObject):
             if sys.platform == 'win32':
                 startupinfo = subprocess.STARTUPINFO()
                 startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-                cmd[0] = os.path.join(Settings().compiler_path, 'cobc')
                 p = subprocess.Popen(
                     cmd, shell=False, startupinfo=startupinfo,
                     stdout=subprocess.PIPE, stderr=subprocess.PIPE,
