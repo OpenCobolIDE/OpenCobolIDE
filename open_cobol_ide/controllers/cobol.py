@@ -145,8 +145,7 @@ class CobolController(Controller):
             self.ui.actionProgram.setChecked(ftype == FileType.EXECUTABLE)
             self.ui.actionSubprogram.setChecked(ftype != FileType.EXECUTABLE)
             for item in self.run_buttons + [self.ui.actionRun]:
-                item.setEnabled(ftype == FileType.EXECUTABLE and
-                                not self.ui.consoleOutput.is_running)
+                item.setEnabled(not self.ui.consoleOutput.is_running)
 
     def _on_program_type_changed(self, action):
         """
@@ -236,8 +235,7 @@ class CobolController(Controller):
 
         """
         self.enable_compile(True)
-        self.enable_run(
-            self.app.edit.current_editor.file_type == FileType.EXECUTABLE)
+        self.enable_run(True)
         self.ui.tabWidgetLogs.setCurrentIndex(LOG_PAGE_ISSUES)
         if self._run_requested:
             self._run_requested = False
@@ -288,7 +286,7 @@ class CobolController(Controller):
         self._run_requested = True
         self.compile()
 
-    def _run_in_external_terminal(self, program, wd):
+    def _run_in_external_terminal(self, program, wd, file_type):
         """
         Runs a program in an external terminal.
 
@@ -300,15 +298,25 @@ class CobolController(Controller):
         pyqode_console = system.which('pyqode-console')
         if system.windows:
             cmd = [pyqode_console, program]
+            if file_type == FileType.MODULE:
+                cmd.insert(1, system.which('cobcrun'))
             subprocess.Popen(cmd, cwd=wd,
                              creationflags=subprocess.CREATE_NEW_CONSOLE)
         elif system.darwin:
             cmd = ['open', program]
+            if file_type == FileType.MODULE:
+                cmd.insert(1, system.which('cobcrun'))
             subprocess.Popen(cmd, cwd=wd)
         else:
+            if file_type == FileType.EXECUTABLE:
+                cmd = ['"%s %s"' % (pyqode_console, program)]
+            else:
+                program = QtCore.QFileInfo(program).baseName()
+                cmd = ['"%s %s %s"' % (pyqode_console, system.which('cobcrun'),
+                                       program)]
             cmd = (Settings().external_terminal_command.strip().split(' ') +
-                   ['"%s %s"' % (pyqode_console, program)])
-            # os.system(' '.join(cmd))
+                   cmd)
+            print(cmd)
             subprocess.Popen(' '.join(cmd), cwd=wd, shell=True)
         _logger().info('running program in external terminal: %s',
                        ' '.join(cmd))
@@ -322,31 +330,37 @@ class CobolController(Controller):
         # to the current editor file
         editor = self.app.edit.current_editor
         file_type = editor.file_type
-        if file_type == FileType.EXECUTABLE:
-            self.ui.tabWidgetLogs.setCurrentIndex(LOG_PAGE_RUN)
-            self.ui.dockWidgetLogs.show()
-            self.ui.consoleOutput.clear()
-            output_dir = Settings().output_directory
-            if not os.path.isabs(output_dir):
-                output_dir = os.path.join(
-                    os.path.dirname(editor.file.path), output_dir)
-            wd = output_dir
-            program = os.path.join(
-                wd, os.path.splitext(editor.file.name)[0] +
-                GnuCobolCompiler().extension_for_type(file_type))
-            if not os.path.exists(program):
-                _logger().warning('cannot run %s, file does not exists',
-                                  program)
-                return
-            if Settings().external_terminal:
-                self._run_in_external_terminal(program, wd)
-                self.enable_run(True)
-                self.enable_compile(True)
+        self.ui.tabWidgetLogs.setCurrentIndex(LOG_PAGE_RUN)
+        self.ui.dockWidgetLogs.show()
+        self.ui.consoleOutput.clear()
+        output_dir = Settings().output_directory
+        if not os.path.isabs(output_dir):
+            output_dir = os.path.join(
+                os.path.dirname(editor.file.path), output_dir)
+        wd = output_dir
+        filename = os.path.splitext(editor.file.name)[0] + \
+            GnuCobolCompiler().extension_for_type(file_type)
+        program = os.path.join(wd, filename)
+        if not os.path.exists(program):
+            _logger().warning('cannot run %s, file does not exists',
+                              program)
+            return
+        if Settings().external_terminal:
+            self._run_in_external_terminal(program, wd, file_type)
+            self.enable_run(True)
+            self.enable_compile(True)
+        else:
+            _logger().info('running program')
+            self.ui.consoleOutput.setFocus(True)
+            for item in self.run_buttons + [self.ui.actionRun]:
+                item.setEnabled(False)
+            if file_type == FileType.MODULE:
+                cobcrun = system.which('cobcrun')
+                program = os.path.splitext(editor.file.name)[0]
+                print(wd)
+                self.ui.consoleOutput.start_process(
+                    cobcrun, [os.path.splitext(editor.file.name)[0]], cwd=wd)
             else:
-                _logger().info('running program')
-                self.ui.consoleOutput.setFocus(True)
-                for item in self.run_buttons + [self.ui.actionRun]:
-                    item.setEnabled(False)
                 self.ui.consoleOutput.start_process(program, cwd=wd)
 
     def _on_run_finished(self):
@@ -369,5 +383,4 @@ class CobolController(Controller):
             self._compilation_thread.terminate()
         self.ui.consoleOutput.stop_process()
         self.enable_compile(True)
-        self.enable_run(self.app.edit.current_editor.file_type ==
-                        FileType.EXECUTABLE)
+        self.enable_run(True)
