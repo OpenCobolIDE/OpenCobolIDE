@@ -296,6 +296,8 @@ class CobolController(Controller):
         self.ui.consoleOutput.append(
             "Launched in external terminal")
         pyqode_console = system.which('pyqode-console')
+        if file_type == FileType.MODULE:
+            program = QtCore.QFileInfo(program).baseName()
         if system.windows:
             cmd = [pyqode_console, program]
             if file_type == FileType.MODULE:
@@ -311,7 +313,6 @@ class CobolController(Controller):
             if file_type == FileType.EXECUTABLE:
                 cmd = ['"%s %s"' % (pyqode_console, program)]
             else:
-                program = QtCore.QFileInfo(program).baseName()
                 cmd = ['"%s %s %s"' % (pyqode_console, system.which('cobcrun'),
                                        program)]
             cmd = (Settings().external_terminal_command.strip().split(' ') +
