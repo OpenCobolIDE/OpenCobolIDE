@@ -165,6 +165,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self, 'Select custom GnuCOBOL directory',
             self.lineEditCompilerPath.text())
         if path:
+            self.lineEditCompilerPath.setText(path)
             self._check_compiler()
 
     def _select_esqloc(self):
