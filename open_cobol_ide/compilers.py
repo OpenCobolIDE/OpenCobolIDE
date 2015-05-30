@@ -77,9 +77,9 @@ def check_compiler():
     import sys
     if not GnuCobolCompiler().is_working():
         if sys.platform == 'win32':
-            msg = 'OpenCOBOL is bundled with the IDE. Ensure that ' \
+            msg = 'GnuCOBOL is bundled with the IDE. Ensure that ' \
                   'the IDE is installed in a path without spaces and ' \
-                  'that the OpenCOBOL folder sits next to the executable.'
+                  'that the GnuCOBOL folder sits next to the executable.'
         elif sys.platform == 'darwin':
             msg = 'You have to install the package open-cobol using Homebrew '\
                   'or MacPorts. \n' \
@@ -168,7 +168,7 @@ class GnuCobolCompiler(QtCore.QObject):
                 p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
                                      stderr=subprocess.PIPE)
         except OSError:
-            _logger().exception('OpenCOBOL compiler not found')
+            _logger().exception('GnuCOBOL compiler not found')
             return 'Not installed'
         else:
             stdout, stderr = p.communicate()
