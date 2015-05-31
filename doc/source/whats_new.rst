@@ -1,7 +1,7 @@
 What's New?
 ===========
 This page lists the most prominent milestones achieved by the OpenCobolIDE
-developers. For more specific details about what is planned and what has been 
+developers. For more specific details about what is planned and what has been
 accomplished, please visit the `issues page on github`_.
 
 Next Version
@@ -14,11 +14,45 @@ on...
 
 Changelog
 ---------
+4.6.0
++++++
+
+New features/Improvements:
+    - Add ability to control where the binaries will be placed
+    - Add environment variable settings for compiler (PATH, COBC_CONFIG_DIR,...)
+    - Add dialog and a button to check whether your compiler works or not (
+      check compilation of a simple hello world)
+    - Add .lst to default list of cobol extensions
+    - Add a compiler output log view with the complete output of the cobc
+      commands
+    - Fix some spelling errors and always use GnuCOBOL instead of OpenCOBOL
+    - Show PICTURE in navigation item's tooltip (this works but still requires
+      some work on the parser to be fully finished)
+    - Add ability to run module with cobcrun
+
+
+Fixed bugs:
+    - Fix a crash with corrupted recent files list
+    - Fix fullscreen mode not setup on startup but recognized in the options
+    - Fix Ctrl+Home not working as expected (go to first line)
+    - Fix bug with linter that does not take compiler options into account
+      (file not found error for copybooks)
+    - Fix misleading compiler settings label
+    - Fix file system view reloaded when parent directory has not changed
+    - Remove dock widgets hotkeys not working on windows (remove the "&" from
+      the dock widgets' titles)
+    - Fix SECTION/DIVISION not correctly recognized in navigation panel and
+      fold panel if there are some spaces between the keyword and the period.
+    - Fix linter running when compiler is not working
+    - Fix detection of file type (EXECUTABLE/MODULE) and dependencies of file
+      when there are some newlines between CALL, USING and the PAREMTER of the
+      call
+
 4.5.1
 ++++++
 
 New features:
-    - add ability to set custom file extension association with the different 
+    - add ability to set custom file extension association with the different
       compiler (cobc, dbpre and esqlOC)
 
 Fixed bugs:
