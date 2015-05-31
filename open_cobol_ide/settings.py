@@ -577,7 +577,7 @@ class Settings(object):
 
     # environment variables
     def default_path(self):
-        path = os.pathsep.join([self.compiler_path])
+        path = os.pathsep.join([self.default_compiler_path()])
         return path
 
     @property
