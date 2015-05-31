@@ -14,6 +14,11 @@ on...
 
 Changelog
 ---------
+4.6.1
+------
+
+Fix a potential failure on startup (probably just on Windows)
+
 4.6.0
 +++++
 
