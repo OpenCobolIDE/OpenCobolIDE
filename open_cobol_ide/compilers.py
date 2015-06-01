@@ -409,9 +409,10 @@ class GnuCobolCompiler(QtCore.QObject):
                 for ext in Settings().all_extensions:
                     pth = os.path.join(directory, module_base_name + ext)
                     if os.path.exists(pth) and pth.lower() not in dependencies:
-                        dependencies.append(pth)
-                        if recursive:
-                            dependencies += cls.get_dependencies(pth)
+                        if filename != pth:
+                            dependencies.append(pth)
+                            if recursive:
+                                dependencies += cls.get_dependencies(pth)
 
         dependencies = list(set(dependencies))
         _logger().debug('dependencies of %s: %r', filename, dependencies)
@@ -728,4 +729,4 @@ class EsqlOCCompiler(QtCore.QObject):
 
 
 if __name__ == '__main__':
-    GnuCobolCompiler.get_dependencies('/home/colin/A.cbl')
+    GnuCobolCompiler.get_dependencies('/home/colin/COBDUMP.cbl')
