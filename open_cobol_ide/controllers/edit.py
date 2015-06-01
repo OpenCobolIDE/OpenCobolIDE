@@ -185,7 +185,7 @@ class EditController(Controller):
                 Settings().lock_fs_path = ''
                 self.ui.btFSLock.setChecked(False)
             if not self.ui.btFSLock.isChecked():
-                new_root = editor.file.path
+                new_root = os.path.dirname(editor.file.path)
                 if new_root != self.ui.tvFileSystem.root_path:
                     self.ui.tvFileSystem.set_root_path(new_root)
             self.ui.tableWidgetOffsets.set_editor(editor)
