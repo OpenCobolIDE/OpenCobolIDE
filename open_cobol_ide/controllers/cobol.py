@@ -317,7 +317,6 @@ class CobolController(Controller):
                                        program)]
             cmd = (Settings().external_terminal_command.strip().split(' ') +
                    cmd)
-            print(cmd)
             subprocess.Popen(' '.join(cmd), cwd=wd, shell=True)
         _logger().info('running program in external terminal: %s',
                        ' '.join(cmd))
@@ -357,8 +356,6 @@ class CobolController(Controller):
                 item.setEnabled(False)
             if file_type == FileType.MODULE:
                 cobcrun = system.which('cobcrun')
-                program = os.path.splitext(editor.file.name)[0]
-                print(wd)
                 self.ui.consoleOutput.start_process(
                     cobcrun, [os.path.splitext(editor.file.name)[0]], cwd=wd)
             else:
