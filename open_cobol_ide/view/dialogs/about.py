@@ -61,9 +61,6 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
             self.textEditLog.setText(f.read())
         self.checkBoxVerbose.toggled.connect(self._on_verbose_toggled)
 
-    def keyPressEvent(self, e):
-        self.close()
-
     def _on_verbose_toggled(self, state):
         Settings().verbose = state
         if not DlgAbout._flg_verbose:
