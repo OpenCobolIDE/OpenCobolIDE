@@ -392,10 +392,13 @@ class Settings(object):
 
     @property
     def cobc_extensions(self):
-        return eval(self._settings.value('cobcExtensions', "['.cob', '.cbl', '.pco', '.cpy', '.lst']"))
+        values = eval(self._settings.value('cobcExtensions',
+                      "['.cob', '.cbl', '.pco', '.cpy', '.lst']"))
+        return [v.lower() for v in values]
 
     @cobc_extensions.setter
     def cobc_extensions(self, exts):
+        exts = [ext.lower() for ext in exts]
         self._settings.setValue('cobcExtensions', repr(exts))
 
     # Cobol settings
@@ -485,18 +488,22 @@ class Settings(object):
 
     @property
     def esqloc_extensions(self):
-        return eval(self._settings.value('esqlOcExtensions', "['.sqb']"))
+        values = eval(self._settings.value('esqlOcExtensions', "['.sqb']"))
+        return [v.lower() for v in values]
 
     @esqloc_extensions.setter
     def esqloc_extensions(self, exts):
+        exts = [v.lower() for v in exts]
         self._settings.setValue('esqlOcExtensions', repr(exts))
 
     @property
     def dbpre_extensions(self):
-        return eval(self._settings.value('dbpreExtensions', "['.scb']"))
+        values = eval(self._settings.value('dbpreExtensions', "['.scb']"))
+        return [v.lower() for v in values]
 
     @dbpre_extensions.setter
     def dbpre_extensions(self, exts):
+        exts = [v.lower() for v in exts]
         self._settings.setValue('dbpreExtensions', repr(exts))
 
     @property
