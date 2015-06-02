@@ -62,8 +62,9 @@ setup(
     description=DESCRIPTION,
     long_description=LONG_DESC,
     install_requires=requirements,
-    entry_points={'gui_scripts': ['OpenCobolIDE = open_cobol_ide.main:main'],
-                  'console_scripts': ['OpenCobolIDE-Console = open_cobol_ide.main:main']
+    entry_points={'gui_scripts': ['opencobolide = open_cobol_ide.main:main'],
+                  'console_scripts':
+                  ['opencobolide-console = open_cobol_ide.main:main']
                   if sys.platform == 'win32' else []},
     cmdclass=cmdclass,
     classifiers=[

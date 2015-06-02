@@ -31,6 +31,8 @@ from the AUR: https://aur.archlinux.org/packages/open-cobol-ide/
           PyQt5 by default. To force the use of PyQt4, you should set the
           ``QT_API`` environment variable to ``pyqt4``.
 
+.. note:: starting from v4.6.2, the name of the executable is lowercase:
+          opencobolide instead of OpenCobolIDE.
 
 Windows
 -------

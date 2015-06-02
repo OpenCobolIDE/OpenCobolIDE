@@ -2,8 +2,8 @@
 Encoding=UTF-8
 Name=OpenCobolIDE
 Comment=A simple lightweight cobol IDE based on OpenCobol
-TryExec=OpenCobolIDE
-Exec=OpenCobolIDE %F
+TryExec=opencobolide
+Exec=opencobolide %F
 Terminal=false
 Type=Application
 Icon=/usr/share/pixmaps/OpenCobolIDE.png

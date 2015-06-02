@@ -70,6 +70,8 @@ Installation
 GNU/Linux
 #########
 
+*Note: starting from v4.6.2, the installed executable name is lowercase: opencobolide*
+
 Ubuntu
 ++++++
 
