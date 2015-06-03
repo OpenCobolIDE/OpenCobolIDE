@@ -172,13 +172,10 @@ class GnuCobolCompiler(QtCore.QObject):
             return 'Not installed'
         else:
             stdout, stderr = p.communicate()
-            stdout = str(stdout)
+            stdout = str(stdout.decode(locale.getpreferredencoding()))
             lversion = stdout.splitlines()[0]
             _logger().debug('parsing version line: %s' % lversion)
-            prog = re.compile(r'\d.\d.\d')
-            for v in prog.finditer(lversion):
-                s, e = v.span()
-                return lversion[s: e]
+            return lversion
 
     @classmethod
     @memoized
