@@ -93,8 +93,8 @@ if windows:
     build_dir = os.path.join(os.getcwd(), glob.glob('build/*')[0])
     cobc_dir = os.path.join(build_dir, 'OpenCobol')
     if not os.path.exists(cobc_dir):
-        shutil.copytree(os.path.join(os.getcwd(), 'OpenCobol'),
-                        os.path.join(build_dir, 'OpenCobol'))
+        shutil.copytree(os.path.join(os.getcwd(), 'GnuCOBOL-Win32-MinGW'),
+                        os.path.join(build_dir, 'GnuCOBOL'))
 
     print(
         '\n### Creating windows installer using Inno Setup\n'
