@@ -1,0 +1,3 @@
+[submodule "GnuCOBOL-Win32-MinGW"]
+	path = GnuCOBOL-Win32-MinGW
+	url = https://github.com/OpenCobolIDE/GnuCOBOL-Win32-MinGW.git
