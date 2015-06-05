@@ -235,7 +235,7 @@ class GnuCobolCompiler(QtCore.QObject):
         """
         return self.extensions[int(file_type)]
 
-    def prepare_bin_dir(self, path):
+    def prepare_bin_dir(self, path, output_full_path):
         assert not os.path.isfile(path)  # must be a directory
         if not os.path.exists(path):
             os.makedirs(path)
@@ -245,6 +245,12 @@ class GnuCobolCompiler(QtCore.QObject):
                 Settings().compiler_path, "*.dll"))
             for f in files:
                 shutil.copy(f, path)
+        if os.path.exists(output_full_path):
+            try:
+                os.remove(output_full_path)
+            except OSError:
+                _logger().exception(
+                    'Failed to previous binary file: %s' % output_full_path)
 
     def compile(self, file_path, file_type, object_files=None,
                 additional_options=None, output_dir=None):
@@ -264,13 +270,15 @@ class GnuCobolCompiler(QtCore.QObject):
             output_dir = Settings().output_directory
         if not os.path.isabs(output_dir):
             output_dir = os.path.abspath(os.path.join(path, output_dir))
-        # ensure bin dir exists
-        self.prepare_bin_dir(output_dir)
         # run command using qt process api, this is blocking.
         if object_files:
             inputs = [filename] + object_files
         else:
             inputs = [filename]
+        # ensure bin dir exists
+        output_full_path = os.path.join(
+            output_dir, self._get_output_filename(inputs))
+        self.prepare_bin_dir(output_dir, output_full_path)
         pgm, options = self.make_command(inputs, file_type, output_dir,
                                          additional_options)
         process = QtCore.QProcess()
@@ -283,13 +291,20 @@ class GnuCobolCompiler(QtCore.QObject):
         process.start(pgm, options)
         self.started.emit(cmd)
         process.waitForFinished()
-        status = process.exitCode()
+        if process.exitStatus() != process.Crashed:
+            status = process.exitCode()
+        else:
+            status = 139
         output = process.readAllStandardOutput().data().decode(
             locale.getpreferredencoding())
         self.output_available.emit(output)
         messages = self.parse_output(output, file_path)
-        _logger().info('output: %s', output)
-        if status != 0 and not len(messages):
+        binary_created = os.path.exists(output_full_path)
+        _logger().info('compiler process exit code: %d', status)
+        _logger().info('compiler process output: %s', output)
+        _logger().info('binary file created: %s - exisits: %r',
+                       output_full_path, binary_created)
+        if status != 0 or not binary_created:
             # compilation failed but the parser failed to extract cobol related
             # messages, there might be an issue at the C level or at the
             # linker level
@@ -297,6 +312,9 @@ class GnuCobolCompiler(QtCore.QObject):
                              None, None, file_path))
         _logger().debug('compile results: %r - %r', status, messages)
         return status, messages
+
+    def _get_output_filename(self, inputs):
+        return os.path.splitext(inputs[0])[0]
 
     def make_command(self, input_file_names, file_type, output_dir=None,
                      additional_options=None):
@@ -314,7 +332,7 @@ class GnuCobolCompiler(QtCore.QObject):
         """
         from .settings import Settings
         settings = Settings()
-        output_file_name = os.path.splitext(input_file_names[0])[0]
+        output_file_name = self._get_output_filename(input_file_names)
         options = []
         if file_type == FileType.EXECUTABLE:
             options.append('-x')
