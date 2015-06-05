@@ -26,7 +26,7 @@ def test_is_working():
 
 
 def test_get_version():
-    prog = re.compile(r'^\d.\d.\d$')
+    prog = re.compile(r'^.*\d.\d.\d$')
     assert prog.match(GnuCobolCompiler().get_version()) is not None
 
 
@@ -145,4 +145,4 @@ def test_compile(path, ftype, expected_results, output_file_path):
 ])
 def test_get_dependencies(filename, expected_results):
     results = GnuCobolCompiler().get_dependencies(filename)
-    assert results == expected_results
+    assert sorted(results) == sorted(expected_results)
