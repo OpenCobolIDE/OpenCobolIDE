@@ -74,9 +74,9 @@ class Application:
         except CompilerNotFound as e:
             QtWidgets.QMessageBox.warning(
                 self.win, 'COBOL compiler not found',
-                'Failed to find GnuCOBOL compiler!\n\n%s.\n\n'
+                'Failed to find GnuCOBOL compiler!\n\n%s\n\n'
                 "The IDE will continue to work but you won't be able to "
-                'compile any file' % e)
+                'compile any file...' % e)
         else:
             _logger().info('GnuCOBOL version: %s',
                            GnuCobolCompiler.get_version())
