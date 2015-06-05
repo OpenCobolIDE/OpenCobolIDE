@@ -210,7 +210,7 @@ class GnuCobolCompiler(QtCore.QObject):
         _logger().debug('process output: %r', output)
         _logger().debug('process exit code: %r', exit_code)
         _logger().info('GnuCOBOL compiler check: %s',
-                        'success' if exit_code == 0 else 'fail')
+                       'success' if exit_code == 0 else 'fail')
         return output, p.exitCode()
 
     def is_working(self):
@@ -343,7 +343,7 @@ class GnuCobolCompiler(QtCore.QObject):
             VisualStudioWrapperBatch.generate()
             pgm = VisualStudioWrapperBatch.path()
         else:
-            pgm = 'cobc' if not Settings().compiler_path else os.path.join(Settings().compiler_path, 'cobc')
+            pgm = system.which('cobc')
         return pgm, options
 
     @staticmethod
