@@ -1,4 +1,4 @@
-from pyqode.qt import QtCore, QtGui
+from pyqode.qt import QtCore, QtGui, QtWidgets
 from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.dialogs.about import DlgAbout
 from open_cobol_ide.view.dialogs.report_bug import DlgReportBug
@@ -37,5 +37,12 @@ class HelpController(Controller):
         DlgReportBug.report_bug(self.main_window)
 
     def restore_factory_defaults(self):
-        Settings().clear()
-        self.app.restart()
+        answer = QtWidgets.QMessageBox.question(
+            self.main_window, 'Restory factory defaults?',
+            'Are you sure you want to restore factory defaults?\n\n'
+            'Clicking yes will remove all your preferences and restart the '
+            "IDE with clean settings. Use this only if you're experiencing a "
+            "problem!")
+        if answer == QtWidgets.QMessageBox.Yes:
+            Settings().clear()
+            self.app.restart()
