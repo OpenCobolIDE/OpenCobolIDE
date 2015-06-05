@@ -174,6 +174,7 @@ class GnuCobolCompiler(QtCore.QObject):
             stdout, stderr = p.communicate()
             stdout = str(stdout.decode(locale.getpreferredencoding()))
             lversion = stdout.splitlines()[0]
+            lversion = lversion.replace('cobc (', '').replace(')', '')
             _logger().debug('parsing version line: %s' % lversion)
             return lversion
 
