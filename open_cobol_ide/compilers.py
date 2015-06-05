@@ -277,7 +277,7 @@ class GnuCobolCompiler(QtCore.QObject):
             inputs = [filename]
         # ensure bin dir exists
         output_full_path = os.path.join(
-            output_dir, self._get_output_filename(inputs))
+            output_dir, self._get_output_filename(inputs, file_type))
         self.prepare_bin_dir(output_dir, output_full_path)
         pgm, options = self.make_command(inputs, file_type, output_dir,
                                          additional_options)
@@ -302,7 +302,7 @@ class GnuCobolCompiler(QtCore.QObject):
         binary_created = os.path.exists(output_full_path)
         _logger().info('compiler process exit code: %d', status)
         _logger().info('compiler process output: %s', output)
-        _logger().info('binary file created: %s - exisits: %r',
+        _logger().info('binary file (%s) created:  %r',
                        output_full_path, binary_created)
         if status != 0 or not binary_created:
             # compilation failed but the parser failed to extract cobol related
@@ -313,8 +313,9 @@ class GnuCobolCompiler(QtCore.QObject):
         _logger().debug('compile results: %r - %r', status, messages)
         return status, messages
 
-    def _get_output_filename(self, inputs):
-        return os.path.splitext(inputs[0])[0]
+    def _get_output_filename(self, inputs, file_type):
+        return os.path.splitext(inputs[0])[0] + self.extension_for_type(
+            file_type)
 
     def make_command(self, input_file_names, file_type, output_dir=None,
                      additional_options=None):
@@ -332,11 +333,11 @@ class GnuCobolCompiler(QtCore.QObject):
         """
         from .settings import Settings
         settings = Settings()
-        output_file_name = self._get_output_filename(input_file_names)
+        output_file_name = self._get_output_filename(
+            input_file_names, file_type)
         options = []
         if file_type == FileType.EXECUTABLE:
             options.append('-x')
-        output_file_name += self.extension_for_type(file_type)
         options.append('-o')
         options.append(os.path.join(output_dir, output_file_name))
         options.append('-std=%s' % str(settings.cobol_standard).replace(
