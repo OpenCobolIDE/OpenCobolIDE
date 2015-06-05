@@ -82,7 +82,9 @@ class FileController(Controller):
         Prompts the user for a file to open and open it.
         """
         paths, _ = QtWidgets.QFileDialog.getOpenFileNames(
-            self.main_window, 'Open a file', directory=Settings().last_path)
+            self.main_window, 'Open a file', directory=Settings().last_path,
+            filter=widgets.splittable_tab_widget.CodeEditTabWidget.get_filter(
+                'text/x-cobol') + ';;Other files (*)')
         if paths:
             for path in paths:
                 self.open_file(path)
