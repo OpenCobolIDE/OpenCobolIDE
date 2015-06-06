@@ -39,6 +39,11 @@ class Application:
             mimetypes.add_type('text/x-cobol', ext.upper())
 
     def __init__(self, parse_args=True):
+        if hasattr(sys, 'frozen') and sys.platform == 'win32':
+            sys.stdout = open(os.path.join(system.get_cache_directory(),
+                                           'ocide_stdout.log'), 'w')
+            sys.stderr = open(os.path.join(system.get_cache_directory(),
+                                           'ocide_stderr.log'), 'w')
         self.init_env()
         self.app = QtWidgets.QApplication(sys.argv)
         if parse_args and not system.darwin:
