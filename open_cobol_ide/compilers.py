@@ -437,7 +437,7 @@ class GnuCobolCompiler(QtCore.QObject):
                     pth = os.path.join(directory, module_base_name + ext)
                     if os.path.exists(pth) and pth.lower() not in dependencies:
                         if filename != pth:
-                            dependencies.append(pth)
+                            dependencies.append(os.path.normpath(pth))
                             if recursive:
                                 dependencies += cls.get_dependencies(pth)
 
