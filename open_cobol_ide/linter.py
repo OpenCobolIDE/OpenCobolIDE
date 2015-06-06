@@ -55,7 +55,9 @@ def lint(request_data):
         # code might not have been saved yet, run cobc on a tmp file
         # we use a time stamp to avoid overwriting the file another cobc
         # instance might be compiling.
-        tmp_name = 'ocide_linter_%s.cbl' % str(int(time.time()))
+        file_name = os.path.split(path)[1]
+        file_name, ext = os.path.splitext(file_name)
+        tmp_name = '%s.%s%s' % (file_name, str(int(time.time())), ext)
         tmp_pth = os.path.join(tempfile.gettempdir(), tmp_name)
         with open(tmp_pth, 'w') as f:
             f.write(code)
