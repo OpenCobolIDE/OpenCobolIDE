@@ -176,11 +176,11 @@ class GnuCobolCompiler(QtCore.QObject):
                 stdout = str(stdout.decode(locale.getpreferredencoding()))
             except UnicodeDecodeError:
                 stdout = None
+                lversion = 'Failed to parse cobc output'
+            else:
                 lversion = stdout.splitlines()[0]
                 lversion = lversion.replace('cobc (', '').replace(')', '')
                 _logger().debug('parsing version line: %s' % lversion)
-            else:
-                lversion = 'Failed to parse cobc output'
             return lversion
 
     @classmethod
@@ -228,11 +228,7 @@ class GnuCobolCompiler(QtCore.QObject):
         """
         Checks if the GNUCobol compiler is working.
         """
-        if Settings().compiler_path:
-            pth = os.path.join(Settings().compiler_path, 'cobc')
-        else:
-            pth = 'cobc'
-
+        pth = system.which('cobc')
         _, exit_code = self.check_compiler(pth)
         return exit_code == 0
 
