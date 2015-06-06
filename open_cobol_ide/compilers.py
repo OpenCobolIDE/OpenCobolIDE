@@ -172,10 +172,15 @@ class GnuCobolCompiler(QtCore.QObject):
             return 'Not installed'
         else:
             stdout, stderr = p.communicate()
-            stdout = str(stdout.decode(locale.getpreferredencoding()))
-            lversion = stdout.splitlines()[0]
-            lversion = lversion.replace('cobc (', '').replace(')', '')
-            _logger().debug('parsing version line: %s' % lversion)
+            try:
+                stdout = str(stdout.decode(locale.getpreferredencoding()))
+            except UnicodeDecodeError:
+                stdout = None
+                lversion = stdout.splitlines()[0]
+                lversion = lversion.replace('cobc (', '').replace(')', '')
+                _logger().debug('parsing version line: %s' % lversion)
+            else:
+                lversion = 'Failed to parse cobc output'
             return lversion
 
     @classmethod
@@ -199,12 +204,17 @@ class GnuCobolCompiler(QtCore.QObject):
                         p.processEnvironment().toStringList())
         _logger().debug('command: %s %s', compiler, ' '.join(args))
         p.waitForFinished()
-        stdout = bytes(p.readAllStandardOutput()).decode(
-            locale.getpreferredencoding())
-        stderr = bytes(p.readAllStandardError()).decode(
-            locale.getpreferredencoding())
-        output = stderr + stdout
-        if p.exitStatus() == p.Crashed:
+        try:
+            stdout = bytes(p.readAllStandardOutput()).decode(
+                locale.getpreferredencoding())
+            stderr = bytes(p.readAllStandardError()).decode(
+                locale.getpreferredencoding())
+        except UnicodeDecodeError:
+            # something is wrong in the output, the compiler might be broker
+            output = None
+        else:
+            output = stderr + stdout
+        if p.exitStatus() == p.Crashed or output is None:
             exit_code = 139
         else:
             exit_code = p.exitCode()
@@ -295,8 +305,12 @@ class GnuCobolCompiler(QtCore.QObject):
             status = process.exitCode()
         else:
             status = 139
-        output = process.readAllStandardOutput().data().decode(
-            locale.getpreferredencoding())
+        try:
+            output = process.readAllStandardOutput().data().decode(
+                locale.getpreferredencoding())
+        except UnicodeDecodeError:
+            output = 'Failed to decode compiler output with encoding %s' % \
+                     locale.getpreferredencoding()
         self.output_available.emit(output)
         messages = self.parse_output(output, file_path)
         binary_created = os.path.exists(output_full_path)
@@ -539,8 +553,12 @@ class DbpreCompiler(QtCore.QObject):
         self.started.emit(cmd)
         process.waitForFinished()
         status = process.exitCode()
-        output = process.readAllStandardOutput().data().decode(
-            locale.getpreferredencoding())
+        try:
+            output = process.readAllStandardOutput().data().decode(
+                locale.getpreferredencoding())
+        except UnicodeDecodeError:
+            output = 'Failed to decode dbpre output with encoding: %s' % \
+                locale.getpreferredencoding()
         self.output_available.emit(output)
         return output, status
 
@@ -701,8 +719,12 @@ class EsqlOCCompiler(QtCore.QObject):
         self.started.emit(cmd)
         process.waitForFinished()
         status = process.exitCode()
-        output = process.readAllStandardOutput().data().decode(
-            locale.getpreferredencoding())
+        try:
+            output = process.readAllStandardOutput().data().decode(
+                locale.getpreferredencoding())
+        except UnicodeDecodeError:
+            output = 'Failed to decode esqloc output with encoding: ' % \
+                locale.getpreferredencoding()
         self.output_available.emit(output)
         return output, status, destination
 
