@@ -44,7 +44,7 @@ def which(program):
     fpath, fname = os.path.split(program)
     if fpath:
         if is_exe(program):
-            return program
+            return os.path.normpath(program)
     else:
         dirs = os.environ["PATH"].split(os.pathsep)
         dirs.append(os.path.join(os.path.dirname(sys.executable), 'Scripts'))
@@ -57,7 +57,7 @@ def which(program):
             path = path.strip('"')
             exe_file = os.path.join(path, pgm)
             if is_exe(exe_file):
-                return exe_file
+                return os.path.normpath(exe_file)
 
     return None
 
