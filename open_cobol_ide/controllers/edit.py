@@ -208,7 +208,7 @@ class EditController(Controller):
                 self.app.cobol.enable_compile(
                     not self.ui.consoleOutput.is_running)
                 self.app.cobol.enable_run(
-                    is_executable and not self.ui.consoleOutput.is_running)
+                    not self.ui.consoleOutput.is_running)
             self._update_status_bar_labels()
             _logger().info('current editor changed: %s', editor.file.path)
 
