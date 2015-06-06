@@ -1,10 +1,6 @@
-import locale
-import os
-import tempfile
 from open_cobol_ide.compilers import GnuCobolCompiler
 from pyqode.qt import QtCore, QtWidgets
 from open_cobol_ide.view.forms import dlg_check_compiler_ui
-from open_cobol_ide import system
 
 
 class DlgCheckCompiler(QtWidgets.QDialog):
@@ -37,11 +33,8 @@ class DlgCheckCompiler(QtWidgets.QDialog):
 
         if exit_code != 0:
             self.ui.plainTextEdit.appendPlainText(
-                '\nTip: You might need to adapt the environment variables set by the '
-                'IDE to make it work.')
-        # allow the user to choose a non working compiler because user might need
-        # to setup environment variable to make it compiler work.
-        self.ui.buttonBox.button(self.ui.buttonBox.Ok).setEnabled(True)
+                '\nTip: You might need to adapt the environment variables set '
+                'by the IDE to make it work.')
 
     @classmethod
     def check(cls, parent, compiler_path, version):
