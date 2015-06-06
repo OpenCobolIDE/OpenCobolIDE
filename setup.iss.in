@@ -29,6 +29,7 @@ SetupIconFile=forms\rc\silex-icon.ico
 Compression=lzma
 SolidCompression=yes
 ChangesAssociations=yes
+SignTool=digicert
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -52,7 +53,7 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Fil
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [Registry]
-Root: HKCR; Subkey: ".cbl"; ValueType: string; ValueName: ""; ValueData: "text-x-cobol"; Flags: uninsdeletevalue 
+Root: HKCR; Subkey: ".cbl"; ValueType: string; ValueName: ""; ValueData: "text-x-cobol"; Flags: uninsdeletevalue
 Root: HKCR; Subkey: ".cob"; ValueType: string; ValueName: ""; ValueData: "text-x-cobol"; Flags: uninsdeletevalue
 Root: HKCR; Subkey: ".pco"; ValueType: string; ValueName: ""; ValueData: "text-x-cobol"; Flags: uninsdeletevalue
 Root: HKCR; Subkey: ".cpy"; ValueType: string; ValueName: ""; ValueData: "text-x-cobol"; Flags: uninsdeletevalue

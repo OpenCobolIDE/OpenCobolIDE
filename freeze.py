@@ -86,11 +86,16 @@ setup(name=app_name,
       ])
 
 if windows:
+    build_dir = os.path.join(os.getcwd(), glob.glob('build/*')[0])
+    print('Signing our binaries\n'
+          '#####################################################################')
+    for executable in ['OpenCobolIDE.exe', 'cobol-backend.exe', 'core-backend.exe']:
+        path = os.path.join(build_dir, executable)
+        os.system('c:\DigiCertUtil.exe sign /noInput %s' % path)
     print(
         '### Copying OpenCobol distribution\n'
         '#####################################################################'
         '\n')
-    build_dir = os.path.join(os.getcwd(), glob.glob('build/*')[0])
     cobc_dir = os.path.join(build_dir, 'GnuCOBOL')
     if not os.path.exists(cobc_dir):
         shutil.copytree(os.path.join(os.getcwd(), 'GnuCOBOL-Win32-MinGW'),
