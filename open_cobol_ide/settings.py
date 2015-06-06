@@ -328,9 +328,10 @@ class Settings(object):
             if getattr(sys, 'frozen', False):
                 # The application is frozen
                 cwd = os.path.dirname(sys.executable)
+                default = os.path.join(cwd, 'GnuCOBOL', 'bin')
             else:
                 cwd = os.getcwd()
-            default = os.path.join(cwd, 'GnuCOBOL', 'bin')
+                default = os.path.join(cwd, 'GnuCOBOL-Win32-MinGW', 'bin')
         else:
             default = os.path.dirname(system.which('cobc'))
         return default
@@ -582,7 +583,8 @@ class Settings(object):
 
     @property
     def all_extensions(self):
-        return self.cobc_extensions + self.esqloc_extensions + self.dbpre_extensions
+        return self.cobc_extensions + self.esqloc_extensions + \
+            self.dbpre_extensions
 
     # environment variables
     def default_path(self):
@@ -598,6 +600,7 @@ class Settings(object):
                 paths.append(p)
         if not paths:
             paths = [self.default_path()]
+        print(paths)
         return os.pathsep.join(paths)
 
     @path.setter
