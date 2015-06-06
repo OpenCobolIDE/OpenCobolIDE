@@ -137,14 +137,11 @@ def test_compile(path, ftype, expected_results, output_file_path):
     ('test/testfiles/HelloWorld.cbl', []),
     # test 2
     ('test/testfiles/TEST-PRINTER.cbl',
-     ['test/testfiles/VIRTUAL-PRINTER.cbl'] if system.linux else
-     ['test\\testfiles\\VIRTUAL-PRINTER.cbl']),
+     [os.path.normpath('test/testfiles/VIRTUAL-PRINTER.cbl')]),
     # test 3
     ('test/testfiles/TEST-PRINTER2.cbl',
-     ['test/testfiles/VIRTUAL-PRINTER.cbl',
-      'test/testfiles/VIRTUAL-PRINTER2.cbl'] if system.linux else
-     ['test\\testfiles\\VIRTUAL-PRINTER.cbl',
-      'test\\testfiles\\VIRTUAL-PRINTER2.cbl'])
+     [os.path.normpath('test/testfiles/VIRTUAL-PRINTER.cbl'),
+      os.path.normpath('test/testfiles/VIRTUAL-PRINTER2.cbl')])
 ])
 def test_get_dependencies(filename, expected_results):
     results = GnuCobolCompiler().get_dependencies(filename)
