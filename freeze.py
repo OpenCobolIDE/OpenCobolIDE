@@ -89,7 +89,8 @@ if windows:
     build_dir = os.path.join(os.getcwd(), glob.glob('build/*')[0])
     print('Signing our binaries\n'
           '#####################################################################')
-    for executable in ['OpenCobolIDE.exe', 'cobol-backend.exe', 'core-backend.exe']:
+    for executable in ['OpenCobolIDE.exe', 'cobol-backend.exe', 'core-backend.exe',
+                       'pyqode-console.exe']:
         path = os.path.join(build_dir, executable)
         os.system('c:\DigiCertUtil.exe sign /noInput %s' % path)
     print(
