@@ -14,8 +14,41 @@ on...
 
 Changelog
 ---------
+
+4.6.2
+-----
+
+Bug fix release + major improvements to the installer on Windows.
+
+New features:
+    - [Windows] Installer + own binaries are now digitally signed
+    - [Windows] The bundled compiler has been update from OpenCOBOL 1.1 to GnuCOBOL 1.1,
+      see the list of differences here: http://opencobol.add1tocobol.com/gnucobol/#what-are-the-differences-between-opencobol-1-1-and-gnucobol-1-1
+    - You can now set the full compiler path instead of just the directory (e.g. /usr/bin/cobc instead of /usr/bin)
+    - Improve cobc --version parser to include the project name (GnuCOBOL, GnuCOBOL C++,...)
+    - Due to a bug with pip and the new wheel package, the executable name on linux is now lowercase (opencobolide instead
+      of OpenCobolIDE).
+    - Add missing extensions to save as dialog and fix filters of open file dialog.
+    - Show a warning before executing restore to factory defaults.
+
+Fixed bugs:
+    - Fix installation of desktop files on linux.
+    - File system view was still fully reloaded needlessly
+    - Fix consistency in cobc commands (sometimes full path were used sometimes not)
+    - Fix about dialog closing on [CTRL]
+    - Fix an infinite recursion in get_dependencies if a module call itself
+    - Fix case of associated compiler extensions
+    - Fix a bug with file watcher if a file has been deleted externally and user choose to keep it in the editor
+    - Fix unicode decode error when the compiler is broken on windows
+    - Fix a few typos
+    - Fix creation of temporary files by linter (now they are back to the system temp folder)
+    - Fix shortcut conflict: F3 used for both goto and find next. The goto shortcuts has been reassigned to F7
+    - Fix misleading/false positive compilation message in case compiler failed but no output was given. Now the IDE
+      will remove files before compiling and will check that the expected file has been created before claiming for
+      success.
+
 4.6.1
-------
+-----
 
 Fix a potential failure on startup (probably just on Windows)
 
