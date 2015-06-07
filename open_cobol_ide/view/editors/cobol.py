@@ -21,7 +21,6 @@ class CobolCodeEdit(CodeEditBase):
     Cobol code editor. We specialise the pyqode.cobol code edit to add support
     for our settings system and for some custom properties (such as the
     file type).
-
     """
 
     def __init__(self, bt_compile=None, bt_run=None, parent=None):

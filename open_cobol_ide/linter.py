@@ -33,7 +33,7 @@ def make_linter_command(cobol_file_name, original_file_path):
         VisualStudioWrapperBatch.generate()
         pgm = VisualStudioWrapperBatch.path()
     else:
-        pgm = system.which('cobc')
+        pgm = Settings().compiler_path
     return pgm, args
 
 

@@ -120,22 +120,18 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         from open_cobol_ide.app import Application
         self.apply()
         Application.init_env()
-        path = self.lineEditCompilerPath.text()
-        pgm = 'cobc' if not system.windows else 'cobc.exe'
-        pth = os.path.join(path, pgm)
+        pth = self.lineEditCompilerPath.text()
         if os.path.exists(pth):
             p = QtCore.QProcess()
             p.start(pth, ['--version'])
             p.waitForFinished()
             output = bytes(p.readAllStandardOutput()).decode(
                 locale.getpreferredencoding())
-            if DlgCheckCompiler.check(self, pth, output):
-                self.lineEditCompilerPath.setText(os.path.normpath(path))
+            DlgCheckCompiler.check(self, pth, output)
         else:
             QtWidgets.QMessageBox.warning(
                 self, 'Invalid compiler path',
-                'Not a valid compiler path because it does not contain '
-                '%s!' % pgm)
+                'Not a valid compiler path, path does not exists: %s!' % pth)
 
     def _add_lib_path(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(
@@ -161,8 +157,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                     "%r is not a valid VCVARS32 batch file" % path)
 
     def _select_custom_compiler_path(self):
-        path = QtWidgets.QFileDialog.getExistingDirectory(
-            self, 'Select custom GnuCOBOL directory',
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, 'Select path to a GnuCOBOL compiler executable',
             self.lineEditCompilerPath.text())
         if path:
             self.lineEditCompilerPath.setText(path)

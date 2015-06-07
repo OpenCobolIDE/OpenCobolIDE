@@ -328,52 +328,30 @@ class Settings(object):
             if getattr(sys, 'frozen', False):
                 # The application is frozen
                 cwd = os.path.dirname(sys.executable)
-                default = os.path.join(cwd, 'GnuCOBOL', 'bin')
+                default = os.path.join(cwd, 'GnuCOBOL', 'bin', 'cobc.exe')
             else:
                 cwd = os.getcwd()
-                default = os.path.join(cwd, 'GnuCOBOL-Win32-MinGW', 'bin')
+                default = os.path.join(cwd, 'GnuCOBOL-Win32-MinGW', 'bin',
+                                       'cobc.exe')
         else:
-            default = os.path.dirname(system.which('cobc'))
-        return default
-
-    @staticmethod
-    def old_default_compiler_path():
-        if system.windows:
-            # get the bundled compiler path as default compiler on windows
-            if getattr(sys, 'frozen', False):
-                # The application is frozen
-                cwd = os.path.dirname(sys.executable)
-                default = os.path.join(cwd, 'OpenCobol', 'bin')
-            else:
-                cwd = os.getcwd()
-                default = os.path.join(cwd, 'OpenCobol', 'bin')
-        else:
-            default = os.path.dirname(system.which('cobc'))
+            default = system.which('cobc')
         return default
 
     @property
     def compiler_path(self):
         default = self.default_compiler_path()
-        path = self._settings.value('customCompilerPath', default)
-        reset_flg = int(self._settings.value('resetCompilerPath', 1))
-        if not os.path.exists(path) or (
-                reset_flg and path == self.old_default_compiler_path()):
+        path = self._settings.value('compilerPath', default)
+        if not os.path.exists(path) or not os.path.isfile(path):
             path = default
             self.compiler_path = path
-        self._settings.setValue('resetCompilerPath', 0)
-        if not path:
-            # if path is empty, try to get it from environment
-            cobc_path = system.which('cobc')
-            if cobc_path is not None:
-                path = os.path.dirname(cobc_path)
         return path
 
     @compiler_path.setter
     def compiler_path(self, value):
         # add to PATH
         sep = ';' if sys.platform == 'win32' else ':'
-        os.environ['PATH'] += sep + value
-        self._settings.setValue('customCompilerPath', value)
+        os.environ['PATH'] += sep + os.path.dirname(value)
+        self._settings.setValue('compilerPath', value)
 
     @property
     def vcvars32(self):
@@ -607,192 +585,163 @@ class Settings(object):
 
     # environment variables
     def default_path(self):
-        path = os.pathsep.join([self.default_compiler_path()])
+        path = os.pathsep.join([os.path.dirname(self.default_compiler_path())])
         return path
 
-    def old_default_path(self):
-        path = os.pathsep.join([self.old_default_compiler_path()])
-        return path
-
+    # ------------
+    # PATH
+    # ------------
     @property
     def path(self):
-        pth = self._settings.value('env/PATH', self.default_path())
-        paths = [self.compiler_path]
-        flg_reset = int(self._settings.value('flgResetPath', 1))
+        pth = self._settings.value('environment/PATH', self.default_path())
+        paths = []
         for p in pth.split(os.pathsep):
             if os.path.exists(p):
-                if p == self.old_default_path() and flg_reset:
-                    self._settings.setValue('flgResetPath', 0)
-                    flg_reset = 0
-                    continue
                 paths.append(p)
         paths = list(set(paths))
         if not paths:
             paths = [self.default_path()]
-
         retval = os.pathsep.join(paths)
-        self.path = retval
         return retval
 
     @path.setter
     def path(self, value):
-        self._settings.setValue('env/PATH', value)
+        self._settings.setValue('environment/PATH', value)
 
     @property
     def path_enabled(self):
         return bool(int(self._settings.value(
-            'env/PATH_Enabled', 1 if system.windows else 0)))
+            'environment/PATH_Enabled', 1 if system.windows else 0)))
 
     @path_enabled.setter
     def path_enabled(self, value):
-        self._settings.setValue('env/PATH_Enabled', int(value))
+        self._settings.setValue('environment/PATH_Enabled', int(value))
 
+    # -----------------
+    # COB_CONFIG_DIR
+    # -----------------
     def default_config_dir(self):
-        root = os.path.abspath(os.path.join(self.compiler_path, '..'))
-        default = os.path.join(root, 'config')
-        return default
-
-    def old_default_config_dir(self):
-        root = os.path.abspath(
-            os.path.join(self.old_default_compiler_path(), '..'))
+        root = os.path.abspath(os.path.join(
+            os.path.dirname(self.compiler_path), '..'))
         default = os.path.join(root, 'config')
         return default
 
     @property
     def cob_config_dir(self):
         default = self.default_config_dir()
-        value = self._settings.value('env/COB_CONFIG_DIR', default)
-        flg_reset = self._settings.value('flgResetConfigDir', 1)
-        if not os.path.exists(value) or (
-                    value == self.old_default_config_dir() and flg_reset):
-            self.cob_config_dir = default
+        value = self._settings.value('environment/COB_CONFIG_DIR', default)
+        if not os.path.exists(value):
             value = default
-        flg_reset = self._settings.setValue('flgResetConfigDir', 0)
         return value
 
     @cob_config_dir.setter
     def cob_config_dir(self, value):
-        self._settings.setValue('env/COB_CONFIG_DIR', value)
+        self._settings.setValue('environment/COB_CONFIG_DIR', value)
 
     @property
     def cob_config_dir_enabled(self):
         return bool(int(
-            self._settings.value('env/COB_CONFIG_DIR_Enabled',
+            self._settings.value('environment/COB_CONFIG_DIR_Enabled',
                                  True if system.windows else False)))
 
     @cob_config_dir_enabled.setter
     def cob_config_dir_enabled(self, value):
         value = self._settings.setValue(
-            'env/COB_CONFIG_DIR_Enabled', int(value))
+            'environment/COB_CONFIG_DIR_Enabled', int(value))
 
+    # -----------------
+    # COB_COPY_DIR
+    # -----------------
     def default_copy_dir(self):
-        root = os.path.abspath(os.path.join(self.compiler_path, '..'))
-        default = os.path.join(root, 'copy')
-        return default
-
-    def old_default_copy_dir(self):
         root = os.path.abspath(os.path.join(
-            self.old_default_compiler_path(), '..'))
+            os.path.dirname(self.compiler_path), '..'))
         default = os.path.join(root, 'copy')
         return default
 
     @property
     def cob_copy_dir(self):
         default = self.default_copy_dir()
-        value = self._settings.value('env/COB_COPY_DIR', default)
-        flg_reset = self._settings.value('flgResetCopyDir', 1)
-        if not os.path.exists(value) or (
-                flg_reset and value == self.old_default_copy_dir()):
+        value = self._settings.value('environment/COB_COPY_DIR', default)
+        if not os.path.exists(value):
             value = default
-            self.cob_copy_dir = value
-        self._settings.setValue('flgResetCopyDir', 0)
         return value
 
     @cob_copy_dir.setter
     def cob_copy_dir(self, value):
-        self._settings.setValue('env/COB_COPY_DIR', value)
+        self._settings.setValue('environment/COB_COPY_DIR', value)
 
     @property
     def cob_copy_dir_enabled(self):
         return bool(int(self._settings.value(
-            'env/COB_COPY_DIR_Enabled', True if system.windows else False)))
+            'environment/COB_COPY_DIR_Enabled',
+            True if system.windows else False)))
 
     @cob_copy_dir_enabled.setter
     def cob_copy_dir_enabled(self, value):
-        self._settings.setValue('env/COB_COPY_DIR_Enabled', int(value))
+        self._settings.setValue('environment/COB_COPY_DIR_Enabled', int(value))
 
+    # -----------------
+    # COB_INCLUDE_PATH
+    # -----------------
     def default_include_dir(self):
-        root = os.path.abspath(os.path.join(self.compiler_path, '..'))
-        default = os.path.join(root, 'include')
-        return default
-
-    def old_default_include_dir(self):
         root = os.path.abspath(os.path.join(
-            self.old_default_compiler_path(), '..'))
+            os.path.dirname(self.compiler_path), '..'))
         default = os.path.join(root, 'include')
         return default
 
     @property
     def cob_include_path(self):
         default = self.default_include_dir()
-        value = self._settings.value('env/COB_INCLUDE_PATH', default)
-        flg_reset = self._settings.value('flgResetIncDir', 1)
-        if not os.path.exists(value) or (
-                flg_reset and value == self.old_default_include_dir()):
+        value = self._settings.value('environment/COB_INCLUDE_PATH', default)
+        if not os.path.exists(value):
             value = default
-            self.cob_include_path = value
-        self._settings.setValue('flgResetIncDir', 0)
         return value
 
     @cob_include_path.setter
     def cob_include_path(self, value):
-        self._settings.setValue('env/COB_INCLUDE_PATH', value)
+        self._settings.setValue('environment/COB_INCLUDE_PATH', value)
 
     @property
     def cob_include_path_enabled(self):
         return bool(int(self._settings.value(
-            'env/COB_INCLUDE_PATH_Enabled',
+            'environment/COB_INCLUDE_PATH_Enabled',
             True if system.windows else False)))
 
     @cob_include_path_enabled.setter
     def cob_include_path_enabled(self, value):
-        self._settings.setValue('env/COB_INCLUDE_PATH_Enabled', int(value))
+        self._settings.setValue('environment/COB_INCLUDE_PATH_Enabled',
+                                int(value))
 
+    # -----------------
+    # COB_LIB_PATH
+    # -----------------
     def default_lib_path(self):
-        root = os.path.abspath(os.path.join(self.compiler_path, '..'))
-        default = os.path.join(root, 'lib')
-        return default
-
-    def old_default_lib_path(self):
         root = os.path.abspath(os.path.join(
-            self.old_default_compiler_path(), '..'))
+            os.path.dirname(self.compiler_path), '..'))
         default = os.path.join(root, 'lib')
         return default
 
     @property
     def cob_lib_path(self):
         default = self.default_lib_path()
-        value = self._settings.value('env/COB_LIB_PATH', default)
-        flg_reset = self._settings.value('flgResetLibDir', 1)
-        if not os.path.exists(value) or (
-                flg_reset and value == self.old_default_lib_path()):
+        value = self._settings.value('environment/COB_LIB_PATH', default)
+        if not os.path.exists(value):
             value = default
-            self.cob_lib_path = value
-        self._settings.setValue('flgResetLibDir', 0)
         return value
 
     @cob_lib_path.setter
     def cob_lib_path(self, value):
-        self._settings.setValue('env/COB_LIB_PATH', value)
+        self._settings.setValue('environment/COB_LIB_PATH', value)
 
     @property
     def cob_lib_path_enabled(self):
         return bool(int(self._settings.value(
-            'env/COB_LIB_PATH_Enabled', True if system.windows else False)))
+            'environment/COB_LIB_PATH_Enabled',
+            True if system.windows else False)))
 
     @cob_lib_path_enabled.setter
     def cob_lib_path_enabled(self, value):
-        self._settings.setValue('env/COB_LIB_PATH_Enabled', int(value))
+        self._settings.setValue('environment/COB_LIB_PATH_Enabled', int(value))
 
 
 if __name__ == '__main__':

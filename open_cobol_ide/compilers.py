@@ -153,7 +153,7 @@ class GnuCobolCompiler(QtCore.QObject):
         """
         Returns the GnuCOBOL compiler version as a string
         """
-        cmd = [system.which('cobc'), '--version']
+        cmd = [Settings().compiler_path, '--version']
         try:
             _logger().debug('getting cobc version: %s' % ' '.join(cmd))
             if sys.platform == 'win32':
@@ -228,7 +228,7 @@ class GnuCobolCompiler(QtCore.QObject):
         """
         Checks if the GNUCobol compiler is working.
         """
-        pth = system.which('cobc')
+        pth = Settings().compiler_path
         _, exit_code = self.check_compiler(pth)
         return exit_code == 0
 
@@ -373,7 +373,7 @@ class GnuCobolCompiler(QtCore.QObject):
             VisualStudioWrapperBatch.generate()
             pgm = VisualStudioWrapperBatch.path()
         else:
-            pgm = system.which('cobc')
+            pgm = Settings().compiler_path
         return pgm, options
 
     @staticmethod
