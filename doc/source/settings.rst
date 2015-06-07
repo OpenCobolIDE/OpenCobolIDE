@@ -40,6 +40,19 @@ Code completion options:
   A value of 1 make the code completion trigger automatically as soon as you type.
 - **Prosed keywords**: let you choose a convention for the cobol keywords: lower-case or UPPER-CASE keywords
 
+EOL  options:
++++++++++++++
+
+This group let you change how line endings are handled by the editor.
+
+- Preferred EOL: Specify you preferred EOL, this EOL will be used for creating/saving files
+- Auto-detect EOL: If checked, the editor will try to auto detect and keep the original line ending. If false, the
+  preferred EOL will be used instead of the original line ending when you save a file.
+
+Comments
+++++++++
+
+Choose the comment symbol to use for the Comment/Uncomment action. Default is '*> ' but you could also set '* '.
 
 Style settings
 --------------
@@ -83,6 +96,17 @@ This tab let you change the GnuCobol compiler settings.
              to set custom compiler settings per file. Open a issue on the bug tracker if you feel like this feature
              is needed!
 
+Output directory
+++++++++++++++++
+
+This option let you chose where to put the binaries, by default binaries will be placed into a *bin* folder next
+to the source file. You can define another relative or absolute directory if you want.
+
+Associated extensions
++++++++++++++++++++++
+
+Associate custom extension with the GnuCobol compiler. Extensions should be dotted (.cbl) and lowercase. The uppercase
+version will be handled by the ide automatically.
 
 Standard
 ++++++++
@@ -94,8 +118,8 @@ Free format
 
 Enable/Disable coding in free format.
 
-C compiler flags
-++++++++++++++++
+Compiler flags
+++++++++++++++
 
 This let you change some common C compiler settings. Every checkbox has a tooltip that describes what the setting is
 used for.
@@ -106,19 +130,32 @@ Library paths
 +++++++++++++
 
 This option let you add custom library paths, e.g. to locate a c library that you need to link with (such as
-mysqlclient)
+mysqlclient). *-L flag*
 
 Libraries
 +++++++++
 
-This option let you specify the libraries you want to link with. Separate them with a blank space.
+This option let you specify the libraries you want to link with. Separate them with a blank space. *-l flag*
 
-Custom compiler path
-++++++++++++++++++++
+Compiler path
++++++++++++++
 
-Let you specify a custom compiler path. This option is not used on Linux. You can use it on Window to point the IDE to
-the location of a custom GnuCobol build. On OS X you may want to use this setting to help the IDE find the cobc
-executable if you did not installed it in a standard path.
+This option let you specify the full path to a working GnuCOBOL compiler. When you change this path you can
+check whether your compiler is working by clicking on the "Check compiler" button. The following dialog will then
+show up.
+
+Press "Check compilation" to check if the compiler is able to compile a simple hello world executable. If you don't
+get "Compiler works", read the compiler output carefully. If it is not working, you might need to adjust the
+environment variables.
+
+- PATH: prefix paths to the PATH environment variable
+- COB_CONFIG_DIR: Hmm, news says this was dropped, but it’ll effect where .conf dialect support files are found.
+- COB_COPY_DIR: Path to COPY books.
+- COB_INCLUDE_PATH
+- COB_LIB_PATH
+
+.. note:: Each environment variables has an associated checkbox, it won't be used unless the check box is checked.
+
 
 VCVARS32 path:
 ++++++++++++++
@@ -128,7 +165,6 @@ VCVARS32 path:
 This option let you specify the path to VCVARS32.bat which is needed if you are using a custom GnuCompiler built with
 Visual Studio. VCVARS32.bat can be found in the ``Bin`` folder of your Visual C++ installation. Just make sure to use
 the same visual studio version as the one used to build the compiler.
-
 
 Run settings
 ------------
