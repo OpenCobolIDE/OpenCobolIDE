@@ -14,6 +14,9 @@ from pyqode.core.backend import server as core_server
 from pyqode.cobol.backend import server
 from pyqode.core.api.syntax_highlighter import get_all_styles
 
+version = __version__
+if '.dev' in version or '.a' in version or '.b' in version or '.rc' in version:
+    version = version[:version.index('.dev')]
 
 # Detect system
 windows = sys.platform == 'win32'
@@ -72,7 +75,7 @@ print(
     '### Freezing application\n'
     '#####################################################################\n')
 setup(name=app_name,
-      version=__version__,
+      version=version,
       options={'build_exe': options, 'bdist_mac': {
           'iconfile': app_icon, 'custom_info_plist': 'share/Info.plist'}},
       executables=[
@@ -112,7 +115,7 @@ if windows:
             lines = src.readlines()
             data = []
             for l in lines:
-                l = l.replace('@VERSION@', __version__)
+                l = l.replace('@VERSION@', version)
                 l = l.replace('@BUILD_DIR@', build_dir)
                 data.append(l)
             dst.writelines(data)

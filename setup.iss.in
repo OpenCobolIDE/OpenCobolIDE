@@ -38,6 +38,9 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
+[Dirs]
+Name: "{app}"; Permissions: everyone-full
+
 [Files]
 Source: "@BUILD_DIR@\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "share\cobol-mimetype.ico"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
