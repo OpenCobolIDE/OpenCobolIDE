@@ -43,9 +43,9 @@ install:
        cd ..;
        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib;
    fi
- - pip install --quiet git+https://github.com/pyQode/pyqode.qt.git
- - pip install --quiet git+https://github.com/pyQode/pyqode.core.git
- - pip install --quiet git+https://github.com/pyQode/pyqode.cobol.git
+ - pip install --quiet git+https://github.com/pyQode/pyqode.qt.git@dev
+ - pip install --quiet git+https://github.com/pyQode/pyqode.core.git@dev
+ - pip install --quiet git+https://github.com/pyQode/pyqode.cobol.git@dev
 script:
  - pip install .
  - cobc --version
