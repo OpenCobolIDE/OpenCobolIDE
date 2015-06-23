@@ -44,9 +44,13 @@ if int('%s%s' % sys.version_info[:2]) < 34:
 
 data_files = []
 if sys.platform == 'linux':
-    data_files.append(('share/applications',
+    data_files.append(('/usr/share/applications',
                        ['share/OpenCobolIDE.desktop']))
-    data_files.append(('share/pixmaps', ['share/OpenCobolIDE.png']))
+    data_files.append(('/usr/share/pixmaps', ['share/OpenCobolIDE.png']))
+
+
+if 'bdist_wheel' in sys.argv:
+    raise RuntimeError("This setup.py does not support wheels")
 
 
 setup(
