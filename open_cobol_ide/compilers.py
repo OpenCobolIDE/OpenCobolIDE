@@ -111,7 +111,7 @@ chdir {0}
 call VCVARS32
 chdir /d %OLDDIR%
 @echo on
-call cobc %*
+call {1} %*
 """
     FILENAME = 'cobc_wrapper.bat'
 
@@ -121,9 +121,11 @@ call cobc %*
 
     @classmethod
     def generate(cls):
+        print(cls.path())
         with open(cls.path(), 'w') as f:
             f.write(cls.CODE_TEMPLATE.format(
-                os.path.dirname(Settings().vcvars32)))
+                os.path.dirname(Settings().vcvars32),
+                Settings().compiler_path))
 
 
 class GnuCobolCompiler(QtCore.QObject):
