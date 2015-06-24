@@ -399,7 +399,7 @@ class Settings(object):
 
     @cobc_extensions.setter
     def cobc_extensions(self, exts):
-        exts = [ext.lower() for ext in exts]
+        exts = list(set([ext.lower() for ext in exts]))
         self._settings.setValue('cobcExtensions', repr(exts))
 
     # Cobol settings
@@ -494,7 +494,7 @@ class Settings(object):
 
     @esqloc_extensions.setter
     def esqloc_extensions(self, exts):
-        exts = [v.lower() for v in exts]
+        exts = list(set([v.lower() for v in exts]))
         self._settings.setValue('esqlOcExtensions', repr(exts))
 
     @property
@@ -504,7 +504,7 @@ class Settings(object):
 
     @dbpre_extensions.setter
     def dbpre_extensions(self, exts):
-        exts = [v.lower() for v in exts]
+        exts = list(set([v.lower() for v in exts]))
         self._settings.setValue('dbpreExtensions', repr(exts))
 
     @property
