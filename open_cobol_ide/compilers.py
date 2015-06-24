@@ -166,7 +166,7 @@ class GnuCobolCompiler(QtCore.QObject):
             else:
                 p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
                                      stderr=subprocess.PIPE)
-        except OSError:
+        except (OSError, TypeError):
             _logger().exception('GnuCOBOL compiler not found (command: %s)' %
                                 cmd)
             return 'Not installed'
@@ -187,7 +187,12 @@ class GnuCobolCompiler(QtCore.QObject):
     @memoized
     def check_compiler(cls, compiler):
         if Settings().vcvars32:
-            VisualStudioWrapperBatch.generate()
+            try:
+                VisualStudioWrapperBatch.generate()
+            except OSError as e:
+                _logger().exception('failed to generate visual studio wrapper '
+                                    'batch')
+                return str(e), 1
             compiler = VisualStudioWrapperBatch.path()
 
         from open_cobol_ide.view.dialogs.preferences import DEFAULT_TEMPLATE
@@ -229,8 +234,10 @@ class GnuCobolCompiler(QtCore.QObject):
         Checks if the GNUCobol compiler is working.
         """
         pth = Settings().compiler_path
-        _, exit_code = self.check_compiler(pth)
-        return exit_code == 0
+        if pth:
+            _, exit_code = self.check_compiler(pth)
+            return exit_code == 0
+        return False
 
     def extension_for_type(self, file_type):
         """

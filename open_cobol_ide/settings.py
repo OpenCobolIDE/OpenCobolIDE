@@ -341,7 +341,7 @@ class Settings(object):
     def compiler_path(self):
         default = self.default_compiler_path()
         path = self._settings.value('compilerPath', default)
-        if not os.path.exists(path) or not os.path.isfile(path):
+        if not path or not os.path.exists(path) or not os.path.isfile(path):
             path = default
             self.compiler_path = path
         return path
@@ -349,8 +349,9 @@ class Settings(object):
     @compiler_path.setter
     def compiler_path(self, value):
         # add to PATH
-        sep = ';' if sys.platform == 'win32' else ':'
-        os.environ['PATH'] += sep + os.path.dirname(value)
+        if value:
+            sep = ';' if sys.platform == 'win32' else ':'
+            os.environ['PATH'] += sep + os.path.dirname(value)
         self._settings.setValue('compilerPath', value)
 
     @property
