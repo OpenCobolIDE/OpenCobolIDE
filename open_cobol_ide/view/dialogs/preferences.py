@@ -48,7 +48,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
     ]
 
     def __init__(self, parent):
-        super().__init__(parent, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint |
+        super().__init__(parent, QtCore.Qt.WindowSystemMenuHint |
+                         QtCore.Qt.WindowTitleHint |
                          QtCore.Qt.WindowCloseButtonHint)
         self.setupUi(self)
         themes = system.icon_themes()
@@ -338,16 +339,16 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.le_compiler_flags.setText(' '.join(flags))
             if system.windows:
                 self.lineEditVCVARS.setText(settings.vcvars32)
-                self.PATH.setText(settings.path)
-                self.cbPATH.setChecked(settings.path_enabled)
-                self.COB_CONFIG_DIR.setText(settings.cob_config_dir)
-                self.cbCOB_CONFIG_DIR.setChecked(settings.cob_config_dir_enabled)
-                self.COB_COPY_DIR.setText(settings.cob_copy_dir)
-                self.cbCOB_COPY_DIR.setChecked(settings.cob_copy_dir_enabled)
-                self.COB_INCLUDE_PATH.setText(settings.cob_include_path)
-                self.cbCOB_INCLUDE_PATH.setChecked(settings.cob_include_path_enabled)
-                self.COB_LIB_PATH.setText(settings.cob_lib_path)
-                self.cbCOB_LIB_PATH.setChecked(settings.cob_lib_path_enabled)
+            self.PATH.setText(settings.path)
+            self.cbPATH.setChecked(settings.path_enabled)
+            self.COB_CONFIG_DIR.setText(settings.cob_config_dir)
+            self.cbCOB_CONFIG_DIR.setChecked(settings.cob_config_dir_enabled)
+            self.COB_COPY_DIR.setText(settings.cob_copy_dir)
+            self.cbCOB_COPY_DIR.setChecked(settings.cob_copy_dir_enabled)
+            self.COB_INCLUDE_PATH.setText(settings.cob_include_path)
+            self.cbCOB_INCLUDE_PATH.setChecked(settings.cob_include_path_enabled)
+            self.COB_LIB_PATH.setText(settings.cob_lib_path)
+            self.cbCOB_LIB_PATH.setChecked(settings.cob_lib_path_enabled)
 
         # SQL Cobol
         if self.tabWidget.currentIndex() == 4 or all_tabs:
@@ -455,18 +456,17 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.external_terminal_command = self.lineEditRunTerm.text()
         settings.lower_case_keywords = self.rbLowerCaseKwds.isChecked()
         settings.compiler_path = self.lineEditCompilerPath.text()
-        if system.windows:
-            settings.vcvars32 = self.lineEditVCVARS.text()
-            settings.path = self.PATH.text()
-            settings.path_enabled = self.cbPATH.isChecked()
-            settings.cob_config_dir = self.COB_CONFIG_DIR.text()
-            settings.cob_config_dir_enabled = self.cbCOB_CONFIG_DIR.isChecked()
-            settings.cob_copy_dir = self.COB_COPY_DIR.text()
-            settings.cob_copy_dir_enabled = self.cbCOB_COPY_DIR.isChecked()
-            settings.cob_include_path = self.COB_INCLUDE_PATH.text()
-            settings.cob_include_path_enabled = self.cbCOB_INCLUDE_PATH.isChecked()
-            settings.cob_lib_path = self.COB_LIB_PATH.text()
-            settings.cob_lib_path_enabled = self.cbCOB_LIB_PATH.isChecked()
+        settings.vcvars32 = self.lineEditVCVARS.text()
+        settings.path = self.PATH.text()
+        settings.path_enabled = self.cbPATH.isChecked()
+        settings.cob_config_dir = self.COB_CONFIG_DIR.text()
+        settings.cob_config_dir_enabled = self.cbCOB_CONFIG_DIR.isChecked()
+        settings.cob_copy_dir = self.COB_COPY_DIR.text()
+        settings.cob_copy_dir_enabled = self.cbCOB_COPY_DIR.isChecked()
+        settings.cob_include_path = self.COB_INCLUDE_PATH.text()
+        settings.cob_include_path_enabled = self.cbCOB_INCLUDE_PATH.isChecked()
+        settings.cob_lib_path = self.COB_LIB_PATH.text()
+        settings.cob_lib_path_enabled = self.cbCOB_LIB_PATH.isChecked()
         settings.free_format = self.checkBoxFreeFormat.isChecked()
         settings.comment_indicator = self.lineEditCommentIndicator.text()
         settings.cobol_standard = GnuCobolStandard(
@@ -500,9 +500,11 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.completion_filter_mode = \
             self.comboCcFilterMode.currentIndex()
         settings.cobc_extensions = [
-            ext for ext in self.lineEditCobcExts.text().split(';') if ext]
+            ext.lower() for ext in
+            self.lineEditCobcExts.text().split(';') if ext]
         settings.dbpre_extensions = [
-            ext for ext in self.lineEditDbpreExts.text().split(';') if ext]
+            ext.lower() for ext in
+            self.lineEditDbpreExts.text().split(';') if ext]
         settings.esqloc_extensions = [
             ext for ext in self.lineEditesqlOcExts.text().split(';') if ext]
 
