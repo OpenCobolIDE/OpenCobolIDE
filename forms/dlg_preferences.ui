@@ -24,7 +24,16 @@
     <normaloff>:/ide-icons/rc/silex-192x192.png</normaloff>:/ide-icons/rc/silex-192x192.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
     <number>6</number>
    </property>
    <item row="6" column="0">
@@ -46,7 +55,16 @@
       <string notr="true"/>
      </property>
      <layout class="QGridLayout" name="widget_2">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <property name="spacing">
@@ -91,8 +109,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>639</width>
-               <height>568</height>
+               <width>621</width>
+               <height>626</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -486,8 +504,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>639</width>
-               <height>568</height>
+               <width>641</width>
+               <height>556</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -604,7 +622,7 @@ as possible to get back to the previous indentation level.</string>
                      </property>
                      <property name="currentFont">
                       <font>
-                       <family>BatangChe</family>
+                       <family>Clean</family>
                       </font>
                      </property>
                     </widget>
@@ -692,8 +710,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>639</width>
-               <height>568</height>
+               <width>621</width>
+               <height>697</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_6">
@@ -865,7 +883,7 @@ as possible to get back to the previous indentation level.</string>
                 <item>
                  <widget class="QLineEdit" name="lineEditCompilerPath">
                   <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Custom OpenCobol installation directory. Leave it empty to use the default compiler.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Note that this require a restart of the application for the change to be applied.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Full path to the GnuCobol compiler.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
                   <property name="statusTip">
                    <string>Custom OpenCobol installation directory</string>
@@ -1098,8 +1116,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>639</width>
-               <height>568</height>
+               <width>641</width>
+               <height>556</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_5">
@@ -1158,8 +1176,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>639</width>
-               <height>549</height>
+               <width>621</width>
+               <height>543</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -1326,7 +1344,16 @@ as possible to get back to the previous indentation level.</string>
                      </item>
                      <item row="2" column="1">
                       <layout class="QVBoxLayout" name="verticalLayout_6">
-                       <property name="margin">
+                       <property name="leftMargin">
+                        <number>3</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>3</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>3</number>
+                       </property>
+                       <property name="bottomMargin">
                         <number>3</number>
                        </property>
                        <item>
