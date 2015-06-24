@@ -201,10 +201,10 @@ class GnuCobolCompiler(QtCore.QObject):
         cbl_path = os.path.join(tempfile.gettempdir(), 'test.cbl')
         with open(cbl_path, 'w') as f:
             f.write(DEFAULT_TEMPLATE)
-        output = os.path.join(tempfile.gettempdir(),
-                              'test' + ('.exe' if system.windows else ''))
+        dest = os.path.join(tempfile.gettempdir(),
+                            'test' + ('.exe' if system.windows else ''))
         p = QtCore.QProcess()
-        args = ['-x', '-o', output, cbl_path]
+        args = ['-x', '-o', dest, cbl_path]
         p.start(compiler, args)
         _logger().debug('check compiler')
         _logger().debug('process environment: %r',
@@ -229,6 +229,11 @@ class GnuCobolCompiler(QtCore.QObject):
         _logger().debug('process exit code: %r', exit_code)
         _logger().info('GnuCOBOL compiler check: %s',
                        'success' if exit_code == 0 else 'fail')
+        try:
+            os.remove(dest)
+            os.remove(cbl_path)
+        except OSError:
+            pass
         return output, p.exitCode()
 
     def is_working(self):
