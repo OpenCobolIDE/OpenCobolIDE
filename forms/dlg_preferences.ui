@@ -504,8 +504,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>641</width>
-               <height>556</height>
+               <width>364</width>
+               <height>355</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -883,10 +883,10 @@ as possible to get back to the previous indentation level.</string>
                 <item>
                  <widget class="QLineEdit" name="lineEditCompilerPath">
                   <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Full path to the GnuCobol compiler.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Full path to the GnuCOBOL compiler.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
                   <property name="statusTip">
-                   <string>Custom OpenCobol installation directory</string>
+                   <string>Full path to the GnuCOBOL compiler.</string>
                   </property>
                  </widget>
                 </item>
@@ -1116,8 +1116,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>641</width>
-               <height>556</height>
+               <width>192</width>
+               <height>69</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_5">
@@ -1176,7 +1176,7 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>621</width>
+               <width>333</width>
                <height>543</height>
               </rect>
              </property>
