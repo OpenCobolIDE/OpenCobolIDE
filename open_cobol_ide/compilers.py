@@ -295,6 +295,14 @@ class GnuCobolCompiler(QtCore.QObject):
         # ensure bin dir exists
         output_full_path = os.path.join(
             output_dir, self._get_output_filename(inputs, file_type))
+        if os.path.exists(output_full_path) and \
+            os.path.getmtime(file_path) <= \
+                os.path.getmtime(output_full_path):
+            desc = 'Compilation skipped, up to date...'
+            self.output_available.emit(desc)
+            msg = (desc, CheckerMessages.INFO, -1, 0, None, None, file_path)
+            return 0, [msg]
+
         self.prepare_bin_dir(output_dir, output_full_path)
         pgm, options = self.make_command(inputs, file_type, output_dir,
                                          additional_options)
@@ -445,8 +453,9 @@ class GnuCobolCompiler(QtCore.QObject):
         with open(filename, 'r', encoding=encoding) as f:
             content = f.read()
             for m in prog.findall(content):
-                module_base_name = m.replace('\n', '').replace('CALL', '').\
-                    replace('call', '').replace("'", '').replace('"', '').strip()
+                module_base_name = m.replace(
+                    '\n', '').replace('CALL', '').replace('call', '').replace(
+                    "'", '').replace('"', '').strip()
                 # try to see if the module can be found in the current
                 # directory
                 for ext in Settings().all_extensions:
