@@ -67,11 +67,6 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.tabWidget.setTabIcon(3, QtGui.QIcon.fromTheme(
             'media-playback-start', QtGui.QIcon(
                 ':/ide-icons/rc/media-playback-start.png')))
-        self.toolButtonAddLibPath.setIcon(QtGui.QIcon.fromTheme(
-            'list-add', QtGui.QIcon(':/ide-icons/rc/list-add.png')))
-        self.toolButtonRemoveLibPath.setIcon(
-            QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(
-                ':/ide-icons/rc/list-remove.png')))
         self.buttonBox.button(self.buttonBox.Reset).clicked.connect(self.reset)
         self.buttonBox.button(self.buttonBox.RestoreDefaults).clicked.connect(
             self.restore_defaults)
@@ -94,7 +89,13 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.toolButtonCustomCompilerPath.clicked.connect(
             self._select_custom_compiler_path)
         self.toolButtonAddLibPath.clicked.connect(self._add_lib_path)
+        self.toolButtonAddRelativeLibPath.clicked.connect(
+            self._add_rel_lib_path)
         self.toolButtonRemoveLibPath.clicked.connect(self._rm_lib_path)
+        self.btAddAbsoluteCopyPath.clicked.connect(self._add_copy_path)
+        self.btAddRelativeCopyPath.clicked.connect(
+            self._add_rel_copy_path)
+        self.btRemoveCopyPath.clicked.connect(self._rm_copy_path)
         self.toolButtonESQLOC.clicked.connect(self._select_esqloc)
         self.reset(all_tabs=True)
         if not system.windows:
@@ -140,10 +141,34 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         if path:
             self.listWidgetLibPaths.addItem(path)
 
+    def _add_rel_lib_path(self):
+        path, status = QtWidgets.QInputDialog.getText(
+            self, 'Add relative library path', 'Path:')
+        if status:
+            self.listWidgetLibPaths.addItem(path)
+
     def _rm_lib_path(self):
         items = self.listWidgetLibPaths.selectedItems()
         for item in items:
             self.listWidgetLibPaths.takeItem(self.listWidgetLibPaths.row(item))
+
+    def _add_copy_path(self):
+        path = QtWidgets.QFileDialog.getExistingDirectory(
+            self, 'Select a copybook path')
+        if path:
+            self.listWidgetCopyPaths.addItem(path)
+
+    def _add_rel_copy_path(self):
+        path, status = QtWidgets.QInputDialog.getText(
+            self, 'Add relative copybook path', 'Path:')
+        if status:
+            self.listWidgetCopyPaths.addItem(path)
+
+    def _rm_copy_path(self):
+        items = self.listWidgetCopyPaths.selectedItems()
+        for item in items:
+            self.listWidgetCopyPaths.takeItem(
+                self.listWidgetCopyPaths.row(item))
 
     def _select_vcvars32(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
@@ -336,6 +361,9 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.listWidgetLibPaths.addItems(
                 [pth for pth in settings.library_search_path.split(';')
                  if pth])
+            self.listWidgetCopyPaths.addItems(
+                [pth for pth in settings.copybook_paths.split(';')
+                 if pth])
             self.le_compiler_flags.setText(' '.join(flags))
             if system.windows:
                 self.lineEditVCVARS.setText(settings.vcvars32)
@@ -404,21 +432,22 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.cobol_standard = GnuCobolStandard.default
             settings.compiler_path = Settings.default_compiler_path()
             settings.compiler_flags = ['-debug']
+            settings.copybook_paths = ''
             settings.library_search_path = ''
             settings.libraries = ''
             settings.cobc_extensions = ['.cob', '.cbl', '.pco', '.cpy', '.lst']
             if system.windows:
                 settings.vcvars32 = ''
-                settings.path = settings.default_path()
-                settings.path_enabled = True
-                settings.cob_config_dir = settings.default_config_dir()
-                settings.cob_config_dir_enabled = True
-                settings.cob_copy_dir = settings.default_copy_dir()
-                settings.cob_copy_dir_enabled = True
-                settings.cob_include_path = settings.default_include_dir()
-                settings.cob_include_path_enabled = True
-                settings.cob_lib_path = settings.default_lib_path()
-                settings.cob_lib_path_enabled = True
+            settings.path = settings.default_path()
+            settings.path_enabled = True
+            settings.cob_config_dir = settings.default_config_dir()
+            settings.cob_config_dir_enabled = True
+            settings.cob_copy_dir = settings.default_copy_dir()
+            settings.cob_copy_dir_enabled = True
+            settings.cob_include_path = settings.default_include_dir()
+            settings.cob_include_path_enabled = True
+            settings.cob_lib_path = settings.default_lib_path()
+            settings.cob_lib_path_enabled = True
         elif index == 4:
             settings.dbpre = ''
             settings.dbpre_extensions = ['.scb']
@@ -479,6 +508,10 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         for i in range(self.listWidgetLibPaths.count()):
             paths.append(self.listWidgetLibPaths.item(i).text())
         settings.library_search_path = ';'.join(paths)
+        paths = []
+        for i in range(self.listWidgetCopyPaths.count()):
+            paths.append(self.listWidgetCopyPaths.item(i).text())
+        settings.copybook_paths = ';'.join(paths)
         settings.libraries = self.lineEditLibs.text()
         settings.output_directory = self.lineEditOutputDirectory.text()
         cb_flags = [self.cb_g, self.cb_ftrace, self.cb_ftraceall,

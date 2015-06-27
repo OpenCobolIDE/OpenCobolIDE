@@ -376,6 +376,14 @@ class Settings(object):
         self._settings.setValue('compilerFlags', repr(value))
 
     @property
+    def copybook_paths(self):
+        return self._settings.value('copybook_paths', '')
+
+    @copybook_paths.setter
+    def copybook_paths(self, value):
+        self._settings.setValue('copybook_paths', value)
+
+    @property
     def library_search_path(self):
         return self._settings.value('library_search_path', '')
 

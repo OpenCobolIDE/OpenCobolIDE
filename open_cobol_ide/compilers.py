@@ -369,6 +369,11 @@ class GnuCobolCompiler(QtCore.QObject):
         options += settings.compiler_flags
         if settings.free_format:
             options.append('-free')
+        if settings.copybook_paths:
+            for pth in settings.copybook_paths.split(';'):
+                if not pth:
+                    continue
+                options.append('-I%s' % pth)
         if settings.library_search_path:
             for pth in settings.library_search_path.split(';'):
                 if pth:
