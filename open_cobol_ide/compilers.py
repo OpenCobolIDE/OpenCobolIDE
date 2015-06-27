@@ -449,7 +449,7 @@ class GnuCobolCompiler(QtCore.QObject):
         encoding = _get_encoding(filename)
         directory = os.path.dirname(filename)
         dependencies = []
-        prog = re.compile(r'(^\s*CALL[\s\n]*.*".*")')
+        prog = re.compile(r'(^(\s|\d|\w)*CALL[\s\n]*.*".*")')
         with open(filename, 'r', encoding=encoding) as f:
             content = f.read()
             for m in prog.findall(content):
