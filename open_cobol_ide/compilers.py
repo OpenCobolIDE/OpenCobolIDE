@@ -298,8 +298,8 @@ class GnuCobolCompiler(QtCore.QObject):
         if os.path.exists(output_full_path) and \
             os.path.getmtime(file_path) <= \
                 os.path.getmtime(output_full_path):
-            desc = 'Compilation skipped, up to date...'
-            self.output_available.emit(desc)
+            desc = 'compilation skipped, up to date...'
+            self.output_available.emit('%s: %s' % (file_path, desc))
             msg = (desc, CheckerMessages.INFO, -1, 0, None, None, file_path)
             return 0, [msg]
 
@@ -449,22 +449,25 @@ class GnuCobolCompiler(QtCore.QObject):
         encoding = _get_encoding(filename)
         directory = os.path.dirname(filename)
         dependencies = []
-        prog = re.compile(r'(^(\s|\d|\w)*CALL[\s\n]*.*".*")')
+        prog = re.compile(r'(^(\s|\d|\w)*CALL[\s\n]*.*".*")', re.MULTILINE)
         with open(filename, 'r', encoding=encoding) as f:
             content = f.read()
             for m in prog.findall(content):
-                module_base_name = m.replace(
-                    '\n', '').replace('CALL', '').replace('call', '').replace(
-                    "'", '').replace('"', '').strip()
-                # try to see if the module can be found in the current
-                # directory
-                for ext in Settings().all_extensions:
-                    pth = os.path.join(directory, module_base_name + ext)
-                    if os.path.exists(pth) and pth.lower() not in dependencies:
-                        if filename != pth:
-                            dependencies.append(os.path.normpath(pth))
-                            if recursive:
-                                dependencies += cls.get_dependencies(pth)
+                for m in m:
+                    try:
+                        module_base_name = re.findall('"(.*)"', m)[0]
+                    except IndexError:
+                        continue
+                    # try to see if the module can be found in the current
+                    # directory
+                    for ext in Settings().all_extensions:
+                        pth = os.path.join(directory, module_base_name + ext)
+                        if os.path.exists(pth) and \
+                                pth.lower() not in dependencies:
+                            if filename != pth:
+                                dependencies.append(os.path.normpath(pth))
+                                if recursive:
+                                    dependencies += cls.get_dependencies(pth)
 
         dependencies = list(set(dependencies))
         _logger().debug('dependencies of %s: %r', filename, dependencies)
