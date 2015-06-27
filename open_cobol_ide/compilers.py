@@ -105,11 +105,8 @@ class VisualStudioWrapperBatch:
     environment before running the cobc command, this is needed to use the
     kiska builds on Windows.
     """
-    CODE_TEMPLATE = """@echo off
-set OLDDIR=%CD%
-chdir {0}
-call VCVARS32
-chdir /d %OLDDIR%
+    CODE_TEMPLATE = r"""@echo off
+call "{0}\vcvars32.bat"
 @echo on
 call {1} %*
 """
