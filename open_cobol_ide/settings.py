@@ -313,6 +313,14 @@ class Settings(object):
     # Compiler settings
     # ----------------------
     @property
+    def autodetect_submodules(self):
+        return bool(int(self._settings.value('autoDetectSubmodules', 1)))
+
+    @autodetect_submodules.setter
+    def autodetect_submodules(self, value):
+        self._settings.setValue('autoDetectSubmodules', int(value))
+
+    @property
     def output_directory(self):
         return self._settings.value('outputDirectory', 'bin')
 

@@ -67,7 +67,8 @@ class CompilationThread(QtCore.QThread):
         esqloc.output_available.connect(self.output_available.emit)
 
         files = [self.file_path]
-        files += cobc.get_dependencies(self.file_path, recursive=True)
+        if Settings().autodetect_submodules:
+            files += cobc.get_dependencies(self.file_path, recursive=True)
 
         _logger().info('running compilation thread: %r', files)
 

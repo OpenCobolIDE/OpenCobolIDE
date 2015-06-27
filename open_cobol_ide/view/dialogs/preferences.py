@@ -338,6 +338,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditRunTerm.setText(settings.external_terminal_command)
         # compiler
         if self.tabWidget.currentIndex() == 2 or all_tabs:
+            self.cbAutoDetectSublmodules.setChecked(
+                Settings().autodetect_submodules)
             self.lineEditOutputDirectory.setText(Settings().output_directory)
             self.lineEditCobcExts.setText(';'.join(Settings().cobc_extensions))
             self.checkBoxFreeFormat.setChecked(settings.free_format)
@@ -427,6 +429,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.external_terminal_command = None
         # compiler
         elif index == 2:
+            settings.autodetect_submodules = True
             settings.output_directory = 'bin'
             settings.free_format = False
             settings.cobol_standard = GnuCobolStandard.default
@@ -498,6 +501,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.cob_lib_path_enabled = self.cbCOB_LIB_PATH.isChecked()
         settings.free_format = self.checkBoxFreeFormat.isChecked()
         settings.comment_indicator = self.lineEditCommentIndicator.text()
+        settings.autodetect_submodules = \
+            self.cbAutoDetectSublmodules.isChecked()
         settings.cobol_standard = GnuCobolStandard(
             self.comboBoxStandard.currentIndex())
         settings.icon_theme = self.comboBoxIconTheme.currentText()
