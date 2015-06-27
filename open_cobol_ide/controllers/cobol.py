@@ -266,8 +266,10 @@ class CobolController(Controller):
                     path=filename))
         else:
             for msg in messages:
-                self._errors += 1
-                self.ui.errorsTable.add_message(CheckerMessage(*msg))
+                msg = CheckerMessage(*msg)
+                if msg.status == CheckerMessages.ERROR:
+                    self._errors += 1
+                self.ui.errorsTable.add_message(msg)
 
     def _goto_error_msg(self, msg):
         """
