@@ -15,6 +15,25 @@ on...
 Changelog
 ---------
 
+4.6.3
+-----
+
+New features:
+    - add an option for specifying copybook paths
+    - make auto-detect dependencies an optional feature
+
+Fixed bugs:
+    - Fix crash on startup if check_compiler failed or if compiler not installed on linux
+    - Use full compiler path when VCVARS32 is set
+    - Remove duplicates in custom compiler extensions
+    - Fix linter errors with relative coybook paths in compiler options
+    - Fix compiler preferences not applied on linux/osx
+    - Fix misleading tooltip in compiler path line edit
+    - Fix info messages interpreted as error messages
+    - Fix file recompiled if source is up to date, now the IDE will compare modification time and will skip compilation
+      if the source is older than the binary.
+    - Fix get_dependencies results: comment should be ignored
+
 4.6.2
 -----
 
