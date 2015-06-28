@@ -67,7 +67,8 @@ class CompilationThread(QtCore.QThread):
         esqloc.output_available.connect(self.output_available.emit)
 
         files = [self.file_path]
-        files += cobc.get_dependencies(self.file_path, recursive=True)
+        if Settings().autodetect_submodules:
+            files += cobc.get_dependencies(self.file_path, recursive=True)
 
         _logger().info('running compilation thread: %r', files)
 
@@ -266,8 +267,10 @@ class CobolController(Controller):
                     path=filename))
         else:
             for msg in messages:
-                self._errors += 1
-                self.ui.errorsTable.add_message(CheckerMessage(*msg))
+                msg = CheckerMessage(*msg)
+                if msg.status == CheckerMessages.ERROR:
+                    self._errors += 1
+                self.ui.errorsTable.add_message(msg)
 
     def _goto_error_msg(self, msg):
         """

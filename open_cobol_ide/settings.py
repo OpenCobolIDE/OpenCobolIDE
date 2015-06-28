@@ -313,6 +313,14 @@ class Settings(object):
     # Compiler settings
     # ----------------------
     @property
+    def autodetect_submodules(self):
+        return bool(int(self._settings.value('autoDetectSubmodules', 1)))
+
+    @autodetect_submodules.setter
+    def autodetect_submodules(self, value):
+        self._settings.setValue('autoDetectSubmodules', int(value))
+
+    @property
     def output_directory(self):
         return self._settings.value('outputDirectory', 'bin')
 
@@ -376,6 +384,14 @@ class Settings(object):
         self._settings.setValue('compilerFlags', repr(value))
 
     @property
+    def copybook_paths(self):
+        return self._settings.value('copybook_paths', '')
+
+    @copybook_paths.setter
+    def copybook_paths(self, value):
+        self._settings.setValue('copybook_paths', value)
+
+    @property
     def library_search_path(self):
         return self._settings.value('library_search_path', '')
 
@@ -399,7 +415,7 @@ class Settings(object):
 
     @cobc_extensions.setter
     def cobc_extensions(self, exts):
-        exts = [ext.lower() for ext in exts]
+        exts = list(set([ext.lower() for ext in exts]))
         self._settings.setValue('cobcExtensions', repr(exts))
 
     # Cobol settings
@@ -494,7 +510,7 @@ class Settings(object):
 
     @esqloc_extensions.setter
     def esqloc_extensions(self, exts):
-        exts = [v.lower() for v in exts]
+        exts = list(set([v.lower() for v in exts]))
         self._settings.setValue('esqlOcExtensions', repr(exts))
 
     @property
@@ -504,7 +520,7 @@ class Settings(object):
 
     @dbpre_extensions.setter
     def dbpre_extensions(self, exts):
-        exts = [v.lower() for v in exts]
+        exts = list(set([v.lower() for v in exts]))
         self._settings.setValue('dbpreExtensions', repr(exts))
 
     @property

@@ -7,7 +7,7 @@ import tempfile
 import time
 from pyqode.qt import QtCore
 from pyqode.core.modes import CheckerMode
-from open_cobol_ide import settings, system
+from open_cobol_ide import settings
 from open_cobol_ide.compilers import VisualStudioWrapperBatch, GnuCobolCompiler
 
 
@@ -18,8 +18,19 @@ def make_linter_command(cobol_file_name, original_file_path):
     args.append('-std=%s' % str(settings.cobol_standard).replace(
         'GnuCobolStandard.', ''))
     args += settings.compiler_flags
+    original_path = os.path.dirname(original_file_path)
     if settings.free_format:
         args.append('-free')
+    if settings.copybook_paths:
+        for pth in settings.copybook_paths.split(';'):
+            if not pth:
+                continue
+            if not os.path.isabs(pth):
+                # expand relative path based on the original source path
+                # See github issue #119
+                pth = os.path.abspath(os.path.join(original_path, pth))
+            args.append('-I%s' % pth)
+
     if settings.library_search_path:
         for pth in settings.library_search_path.split(';'):
             if pth:

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>677</width>
-    <height>658</height>
+    <width>672</width>
+    <height>941</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -91,8 +91,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>639</width>
-               <height>568</height>
+               <width>634</width>
+               <height>851</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -486,8 +486,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>639</width>
-               <height>568</height>
+               <width>634</width>
+               <height>851</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -692,22 +692,170 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>639</width>
-               <height>568</height>
+               <width>634</width>
+               <height>851</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_6">
               <property name="fieldGrowthPolicy">
                <enum>QFormLayout::ExpandingFieldsGrow</enum>
               </property>
-              <item row="2" column="0">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_compiler_path">
+                <property name="text">
+                 <string>Compiler path:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_9">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLineEdit" name="lineEditCompilerPath">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Full path to the GnuCOBOL compiler.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="statusTip">
+                   <string>Full path to the GnuCOBOL compiler.</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="toolButtonCustomCompilerPath">
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="toolButtonCheckCompiler">
+                  <property name="text">
+                   <string>Check compiler</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="1" column="1">
+               <widget class="QGroupBox" name="groupBoxEnvVars">
+                <property name="title">
+                 <string>Environment variables</string>
+                </property>
+                <layout class="QFormLayout" name="formLayout_12">
+                 <property name="fieldGrowthPolicy">
+                  <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+                 </property>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="PATH"/>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="COB_CONFIG_DIR"/>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLineEdit" name="COB_COPY_DIR"/>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QLineEdit" name="COB_INCLUDE_PATH"/>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QLineEdit" name="COB_LIB_PATH"/>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QCheckBox" name="cbPATH">
+                   <property name="text">
+                    <string>PATH:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QCheckBox" name="cbCOB_CONFIG_DIR">
+                   <property name="text">
+                    <string>COB_CONFIG_DIR:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QCheckBox" name="cbCOB_COPY_DIR">
+                   <property name="text">
+                    <string>COB_COPY_DIR:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QCheckBox" name="cbCOB_INCLUDE_PATH">
+                   <property name="text">
+                    <string>COB_INCLUDE_PATH:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QCheckBox" name="cbCOB_LIB_PATH">
+                   <property name="text">
+                    <string>COB_LIB_PATH:</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="labelVCVARS">
+                <property name="text">
+                 <string>VCVARS32 path:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_8">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLineEdit" name="lineEditVCVARS">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to VCVARS32.bat. VCVARS32.bat is needed if you're using a GnuCobol compiler built with Visual Studio.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;The VCVARS32.bat file is located under the bin directory of you Visual C++ installation. Make sure to use the same version as the one used to build the compiler!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="toolButtonVCVARS">
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_36">
+                <property name="text">
+                 <string>Output directory:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QLineEdit" name="lineEditOutputDirectory"/>
+              </item>
+              <item row="5" column="0">
+               <widget class="QLabel" name="label_32">
+                <property name="text">
+                 <string>Associated extensions:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QLineEdit" name="lineEditCobcExts"/>
+              </item>
+              <item row="6" column="0">
                <widget class="QLabel" name="label_8">
                 <property name="text">
                  <string>Standard:</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
+              <item row="6" column="1">
                <widget class="QComboBox" name="comboBoxStandard">
                 <item>
                  <property name="text">
@@ -746,14 +894,14 @@ as possible to get back to the previous indentation level.</string>
                 </item>
                </widget>
               </item>
-              <item row="3" column="0">
+              <item row="7" column="0">
                <widget class="QLabel" name="label_9">
                 <property name="text">
                  <string>Free format:</string>
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
+              <item row="7" column="1">
                <widget class="QCheckBox" name="checkBoxFreeFormat">
                 <property name="toolTip">
                  <string>Code and compile with free format support</string>
@@ -763,177 +911,14 @@ as possible to get back to the previous indentation level.</string>
                 </property>
                </widget>
               </item>
-              <item row="4" column="0">
+              <item row="8" column="0">
                <widget class="QLabel" name="label_15">
                 <property name="text">
                  <string>Compiler flags</string>
                 </property>
                </widget>
               </item>
-              <item row="9" column="1">
-               <widget class="QLineEdit" name="le_compiler_flags">
-                <property name="toolTip">
-                 <string>You can add other compiler flags here</string>
-                </property>
-               </widget>
-              </item>
-              <item row="10" column="0">
-               <widget class="QLabel" name="label_17">
-                <property name="text">
-                 <string>Library paths:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="10" column="1">
-               <layout class="QHBoxLayout" name="horizontalLayout_10">
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QListWidget" name="listWidgetLibPaths"/>
-                </item>
-                <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_4">
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <widget class="QToolButton" name="toolButtonAddLibPath">
-                    <property name="text">
-                     <string>...</string>
-                    </property>
-                    <property name="icon">
-                     <iconset resource="ide.qrc">
-                      <normaloff>:/ide-icons/rc/list-add.png</normaloff>:/ide-icons/rc/list-add.png</iconset>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QToolButton" name="toolButtonRemoveLibPath">
-                    <property name="text">
-                     <string>...</string>
-                    </property>
-                    <property name="icon">
-                     <iconset resource="ide.qrc">
-                      <normaloff>:/ide-icons/rc/list-remove.png</normaloff>:/ide-icons/rc/list-remove.png</iconset>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <spacer name="verticalSpacer_3">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>20</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                 </layout>
-                </item>
-               </layout>
-              </item>
-              <item row="11" column="0">
-               <widget class="QLabel" name="label_18">
-                <property name="text">
-                 <string>Libraries</string>
-                </property>
-               </widget>
-              </item>
-              <item row="11" column="1">
-               <widget class="QLineEdit" name="lineEditLibs">
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the libraries you would like your programs to link with here (-l option)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-              <item row="12" column="0">
-               <widget class="QLabel" name="label_compiler_path">
-                <property name="text">
-                 <string>Compiler path:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="12" column="1">
-               <layout class="QHBoxLayout" name="horizontalLayout_9">
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QLineEdit" name="lineEditCompilerPath">
-                  <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Custom OpenCobol installation directory. Leave it empty to use the default compiler.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Note that this require a restart of the application for the change to be applied.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                  <property name="statusTip">
-                   <string>Custom OpenCobol installation directory</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QToolButton" name="toolButtonCustomCompilerPath">
-                  <property name="text">
-                   <string>...</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QToolButton" name="toolButtonCheckCompiler">
-                  <property name="text">
-                   <string>Check compiler</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item row="14" column="0">
-               <widget class="QLabel" name="labelVCVARS">
-                <property name="text">
-                 <string>VCVARS32 path:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="14" column="1">
-               <layout class="QHBoxLayout" name="horizontalLayout_8">
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QLineEdit" name="lineEditVCVARS">
-                  <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to VCVARS32.bat. VCVARS32.bat is needed if you're using a GnuCobol compiler built with Visual Studio.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;The VCVARS32.bat file is located under the bin directory of you Visual C++ installation. Make sure to use the same version as the one used to build the compiler!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QToolButton" name="toolButtonVCVARS">
-                  <property name="text">
-                   <string>...</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_32">
-                <property name="text">
-                 <string>Associated extensions:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLineEdit" name="lineEditCobcExts"/>
-              </item>
-              <item row="9" column="0">
-               <widget class="QLabel" name="label_35">
-                <property name="text">
-                 <string>Extra compiler flags</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="1">
+              <item row="8" column="1">
                <layout class="QGridLayout" name="gridLayout_5">
                 <property name="leftMargin">
                  <number>0</number>
@@ -1000,76 +985,188 @@ as possible to get back to the previous indentation level.</string>
                 </item>
                </layout>
               </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_36">
+              <item row="9" column="0">
+               <widget class="QLabel" name="label_37">
                 <property name="text">
-                 <string>Output directory:</string>
+                 <string>Copybook paths:</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
-               <widget class="QLineEdit" name="lineEditOutputDirectory"/>
+              <item row="9" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_12">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QListWidget" name="listWidgetCopyPaths"/>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_12">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QToolButton" name="btAddAbsoluteCopyPath">
+                    <property name="text">
+                     <string>...</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="ide.qrc">
+                      <normaloff>:/ide-icons/rc/document-open.png</normaloff>:/ide-icons/rc/document-open.png</iconset>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="btAddRelativeCopyPath">
+                    <property name="text">
+                     <string>...</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="ide.qrc">
+                      <normaloff>:/ide-icons/rc/list-add.png</normaloff>:/ide-icons/rc/list-add.png</iconset>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="btRemoveCopyPath">
+                    <property name="text">
+                     <string>...</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="ide.qrc">
+                      <normaloff>:/ide-icons/rc/list-remove.png</normaloff>:/ide-icons/rc/list-remove.png</iconset>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="verticalSpacer_4">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+              <item row="10" column="0">
+               <widget class="QLabel" name="label_17">
+                <property name="text">
+                 <string>Library paths:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="10" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_10">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QListWidget" name="listWidgetLibPaths"/>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_4">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QToolButton" name="toolButtonAddLibPath">
+                    <property name="toolTip">
+                     <string>Add an absolute library path</string>
+                    </property>
+                    <property name="text">
+                     <string>...</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="ide.qrc">
+                      <normaloff>:/ide-icons/rc/document-open.png</normaloff>:/ide-icons/rc/document-open.png</iconset>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="toolButtonAddRelativeLibPath">
+                    <property name="toolTip">
+                     <string>Add a relative library path</string>
+                    </property>
+                    <property name="text">
+                     <string>...</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="ide.qrc">
+                      <normaloff>:/ide-icons/rc/list-add.png</normaloff>:/ide-icons/rc/list-add.png</iconset>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="toolButtonRemoveLibPath">
+                    <property name="text">
+                     <string>...</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="ide.qrc">
+                      <normaloff>:/ide-icons/rc/list-remove.png</normaloff>:/ide-icons/rc/list-remove.png</iconset>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="verticalSpacer_3">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+              <item row="11" column="0">
+               <widget class="QLabel" name="label_18">
+                <property name="text">
+                 <string>Libraries</string>
+                </property>
+               </widget>
+              </item>
+              <item row="11" column="1">
+               <widget class="QLineEdit" name="lineEditLibs">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the libraries you would like your programs to link with here (-l option)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="13" column="0">
+               <widget class="QLabel" name="label_35">
+                <property name="text">
+                 <string>Extra compiler flags</string>
+                </property>
+               </widget>
               </item>
               <item row="13" column="1">
-               <widget class="QGroupBox" name="groupBoxEnvVars">
-                <property name="title">
-                 <string>Environment variables</string>
+               <widget class="QLineEdit" name="le_compiler_flags">
+                <property name="toolTip">
+                 <string>You can add other compiler flags here</string>
                 </property>
-                <layout class="QFormLayout" name="formLayout_12">
-                 <property name="fieldGrowthPolicy">
-                  <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-                 </property>
-                 <item row="0" column="1">
-                  <widget class="QLineEdit" name="PATH"/>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QLineEdit" name="COB_CONFIG_DIR"/>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QLineEdit" name="COB_COPY_DIR"/>
-                 </item>
-                 <item row="4" column="1">
-                  <widget class="QLineEdit" name="COB_INCLUDE_PATH"/>
-                 </item>
-                 <item row="5" column="1">
-                  <widget class="QLineEdit" name="COB_LIB_PATH"/>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QCheckBox" name="cbPATH">
-                   <property name="text">
-                    <string>PATH:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QCheckBox" name="cbCOB_CONFIG_DIR">
-                   <property name="text">
-                    <string>COB_CONFIG_DIR:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QCheckBox" name="cbCOB_COPY_DIR">
-                   <property name="text">
-                    <string>COB_COPY_DIR:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QCheckBox" name="cbCOB_INCLUDE_PATH">
-                   <property name="text">
-                    <string>COB_INCLUDE_PATH:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="5" column="0">
-                  <widget class="QCheckBox" name="cbCOB_LIB_PATH">
-                   <property name="text">
-                    <string>COB_LIB_PATH:</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QCheckBox" name="cbAutoDetectSublmodules">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, the IDE will recursively look for CALL PROGRAM statements to build a list of submodules that will be automatically compiled when you're compiling the main program.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string>Auto-detect and compile submodules</string>
+                </property>
                </widget>
               </item>
              </layout>
@@ -1098,8 +1195,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>639</width>
-               <height>568</height>
+               <width>634</width>
+               <height>851</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_5">
@@ -1158,8 +1255,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>639</width>
-               <height>549</height>
+               <width>634</width>
+               <height>832</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">

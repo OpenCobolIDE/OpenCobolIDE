@@ -105,13 +105,10 @@ class VisualStudioWrapperBatch:
     environment before running the cobc command, this is needed to use the
     kiska builds on Windows.
     """
-    CODE_TEMPLATE = """@echo off
-set OLDDIR=%CD%
-chdir {0}
-call VCVARS32
-chdir /d %OLDDIR%
+    CODE_TEMPLATE = r"""@echo off
+call "{0}\vcvars32.bat"
 @echo on
-call cobc %*
+call {1} %*
 """
     FILENAME = 'cobc_wrapper.bat'
 
@@ -121,9 +118,11 @@ call cobc %*
 
     @classmethod
     def generate(cls):
+        print(cls.path())
         with open(cls.path(), 'w') as f:
             f.write(cls.CODE_TEMPLATE.format(
-                os.path.dirname(Settings().vcvars32)))
+                os.path.dirname(Settings().vcvars32),
+                Settings().compiler_path))
 
 
 class GnuCobolCompiler(QtCore.QObject):
@@ -199,10 +198,10 @@ class GnuCobolCompiler(QtCore.QObject):
         cbl_path = os.path.join(tempfile.gettempdir(), 'test.cbl')
         with open(cbl_path, 'w') as f:
             f.write(DEFAULT_TEMPLATE)
-        output = os.path.join(tempfile.gettempdir(),
-                              'test' + ('.exe' if system.windows else ''))
+        dest = os.path.join(tempfile.gettempdir(),
+                            'test' + ('.exe' if system.windows else ''))
         p = QtCore.QProcess()
-        args = ['-x', '-o', output, cbl_path]
+        args = ['-x', '-o', dest, cbl_path]
         p.start(compiler, args)
         _logger().debug('check compiler')
         _logger().debug('process environment: %r',
@@ -227,6 +226,11 @@ class GnuCobolCompiler(QtCore.QObject):
         _logger().debug('process exit code: %r', exit_code)
         _logger().info('GnuCOBOL compiler check: %s',
                        'success' if exit_code == 0 else 'fail')
+        try:
+            os.remove(dest)
+            os.remove(cbl_path)
+        except OSError:
+            pass
         return output, p.exitCode()
 
     def is_working(self):
@@ -291,6 +295,14 @@ class GnuCobolCompiler(QtCore.QObject):
         # ensure bin dir exists
         output_full_path = os.path.join(
             output_dir, self._get_output_filename(inputs, file_type))
+        if os.path.exists(output_full_path) and \
+            os.path.getmtime(file_path) <= \
+                os.path.getmtime(output_full_path):
+            desc = 'compilation skipped, up to date...'
+            self.output_available.emit('%s: %s' % (file_path, desc))
+            msg = (desc, CheckerMessages.INFO, -1, 0, None, None, file_path)
+            return 0, [msg]
+
         self.prepare_bin_dir(output_dir, output_full_path)
         pgm, options = self.make_command(inputs, file_type, output_dir,
                                          additional_options)
@@ -362,6 +374,11 @@ class GnuCobolCompiler(QtCore.QObject):
         options += settings.compiler_flags
         if settings.free_format:
             options.append('-free')
+        if settings.copybook_paths:
+            for pth in settings.copybook_paths.split(';'):
+                if not pth:
+                    continue
+                options.append('-I%s' % pth)
         if settings.library_search_path:
             for pth in settings.library_search_path.split(';'):
                 if pth:
@@ -432,21 +449,25 @@ class GnuCobolCompiler(QtCore.QObject):
         encoding = _get_encoding(filename)
         directory = os.path.dirname(filename)
         dependencies = []
-        prog = re.compile(r'(CALL[\s\n]*.*".*")')
+        prog = re.compile(r'(^(\s|\d|\w)*CALL[\s\n]*.*".*")', re.MULTILINE)
         with open(filename, 'r', encoding=encoding) as f:
             content = f.read()
             for m in prog.findall(content):
-                module_base_name = m.replace('\n', '').replace('CALL', '').\
-                    replace('call', '').replace("'", '').replace('"', '').strip()
-                # try to see if the module can be found in the current
-                # directory
-                for ext in Settings().all_extensions:
-                    pth = os.path.join(directory, module_base_name + ext)
-                    if os.path.exists(pth) and pth.lower() not in dependencies:
-                        if filename != pth:
-                            dependencies.append(os.path.normpath(pth))
-                            if recursive:
-                                dependencies += cls.get_dependencies(pth)
+                for m in m:
+                    try:
+                        module_base_name = re.findall('"(.*)"', m)[0]
+                    except IndexError:
+                        continue
+                    # try to see if the module can be found in the current
+                    # directory
+                    for ext in Settings().all_extensions:
+                        pth = os.path.join(directory, module_base_name + ext)
+                        if os.path.exists(pth) and \
+                                pth.lower() not in dependencies:
+                            if filename != pth:
+                                dependencies.append(os.path.normpath(pth))
+                                if recursive:
+                                    dependencies += cls.get_dependencies(pth)
 
         dependencies = list(set(dependencies))
         _logger().debug('dependencies of %s: %r', filename, dependencies)
