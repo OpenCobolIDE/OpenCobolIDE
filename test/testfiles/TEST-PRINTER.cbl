@@ -39,24 +39,24 @@
            ACCEPT BUF-NB-LIGNES-PAR-PAGE
 
            MOVE "O"        TO PA-RESET
-           CALL "VIRTUAL-PRINTER" USING PRINTER-PARAM
+           call "VIRTUAL-PRINTER" using PRINTER-PARAM
 
            MOVE "Bonjour"  TO PA-BUFFER
-           CALL "VIRTUAL-PRINTER" USING PRINTER-PARAM
+           call "VIRTUAL-PRINTER" using PRINTER-PARAM
 
            MOVE "La vie est dure et pleine de confiture" to PA-BUFFER
            MOVE "LINES"    TO PA-WHAT
            MOVE "BEFORE"   TO PA-WHEN
            MOVE 5          TO PA-HOWMANY
-           CALL "VIRTUAL-PRINTER" USING PRINTER-PARAM
+           call "VIRTUAL-PRINTER" using PRINTER-PARAM
 
            MOVE "Bonjour"  TO PA-BUFFER
            MOVE "PAGE"    TO PA-WHAT
            MOVE "BEFORE"   TO PA-WHEN
-           CALL "VIRTUAL-PRINTER" USING PRINTER-PARAM
+           call "VIRTUAL-PRINTER" using PRINTER-PARAM
 
            MOVE "Bye bye"  TO PA-BUFFER
-           CALL "VIRTUAL-PRINTER" USING PRINTER-PARAM
+           call "VIRTUAL-PRINTER" using PRINTER-PARAM
 
            DISPLAY "End"
            STOP RUN.
