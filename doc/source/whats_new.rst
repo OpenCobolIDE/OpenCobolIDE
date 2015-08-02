@@ -15,6 +15,15 @@ on...
 Changelog
 ---------
 
+4.6.4
+-----
+
+Fixed bugs:
+
+- fix freeze when compiling a file where column 1-6 are not empty in non-free mode.
+- fix detection of submodule when lowercase keywords are used
+- fix a few issues with PyQt 5.5
+
 4.6.3
 -----
 
