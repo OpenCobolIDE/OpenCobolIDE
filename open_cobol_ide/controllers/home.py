@@ -2,6 +2,7 @@
 Controls the home page.
 
 """
+from pyqode.core.widgets import FileIconProvider
 from pyqode.cobol.api import icons
 from pyqode.cobol.widgets import CobolCodeEdit
 from pyqode.qt import QtCore, QtGui, QtWidgets
@@ -101,8 +102,7 @@ class HomeController(Controller):
                     Settings().all_extensions):
                 icon = QtGui.QIcon(icons.ICON_MIMETYPE)
             else:
-                icon = QtWidgets.QFileIconProvider().icon(
-                    QtCore.QFileInfo(file))
+                icon = FileIconProvider.mimetype_icon(file)
             item.setText(QtCore.QFileInfo(file).fileName())
             item.setToolTip(file)
             item.setIcon(icon)
