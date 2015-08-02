@@ -452,6 +452,8 @@ class GnuCobolCompiler(QtCore.QObject):
         prog = re.compile(r'(^(\s|\d|\w)*CALL[\s\n]*.*".*")', re.MULTILINE)
         with open(filename, 'r', encoding=encoding) as f:
             content = f.read()
+            if not Settings().free_format:
+                content = '\n'.join([' ' * 6 + l[6:] for l in content.splitlines()])
             for m in prog.findall(content):
                 for m in m:
                     try:
