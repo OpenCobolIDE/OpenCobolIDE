@@ -5,26 +5,16 @@ This module contains the FileController.
 import logging
 import os
 from pyqode.core import widgets
-from pyqode.cobol.api import icons
-from pyqode.qt import QtWidgets, QtGui
+from pyqode.qt import QtWidgets
 from open_cobol_ide.view.editors import CobolCodeEdit
 from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.dialogs.new_file import DlgNewFile
 from .base import Controller
+from open_cobol_ide.view.widgets import FileIconProvider
 
 
 def _logger():
     return logging.getLogger(__name__)
-
-
-class FileIconProvider(QtWidgets.QFileIconProvider):
-    def icon(self, file_infos):
-        try:
-            if '.%s' % file_infos.suffix().lower() in Settings().all_extensions:
-                return QtGui.QIcon(icons.ICON_MIMETYPE)
-        except AttributeError:
-            pass
-        return super().icon(file_infos)
 
 
 class FileController(Controller):
@@ -64,6 +54,7 @@ class FileController(Controller):
         self.ui.actionQuit.triggered.connect(self.quit)
         self.ui.tabWidgetEditors.register_code_edit(CobolCodeEdit)
         self.ui.tabWidgetEditors.icon_provider_klass = FileIconProvider
+        self.ui.tvFileSystem.set_icon_provider(FileIconProvider())
 
     def request_new(self, path=None):
         """

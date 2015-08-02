@@ -1,9 +1,11 @@
 """
 Widgets in this module are used as promoted widgets in Qt Designer
 """
+from pyqode.cobol.api import icons
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from pyqode.core.widgets import SplittableCodeEditTabWidget
-from pyqode.core.widgets import FileSystemContextMenu
+from pyqode.core.widgets import FileSystemContextMenu, FileIconProvider as PyQodeIconProvider
+from open_cobol_ide.settings import Settings
 
 
 class RecentFilesListWidget(QtWidgets.QListWidget):
@@ -79,3 +81,12 @@ class FSContextMenu(FileSystemContextMenu):
     def _on_new_file_triggered(self):
         self.app.file.request_new(
             self.tree_view.filePath(self.tree_view.currentIndex()))
+
+
+class FileIconProvider(PyQodeIconProvider):
+    def icon(self, type_or_info):
+        if isinstance(type_or_info, QtCore.QFileInfo):
+            if ('.' + type_or_info.suffix().lower() in
+                    Settings().all_extensions):
+                return QtGui.QIcon(icons.ICON_MIMETYPE)
+        return super().icon(type_or_info)
