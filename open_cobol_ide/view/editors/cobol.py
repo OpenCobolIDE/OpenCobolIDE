@@ -1,5 +1,5 @@
 """
-Contains the cobol code editor widget.
+Contains the COBOL code editor widget.
 
 """
 import logging

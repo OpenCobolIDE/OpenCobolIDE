@@ -1,5 +1,5 @@
 """
-Controls the cobol specific action (compile, run and change program type)
+Controls the COBOL specific action (compile, run and change program type)
 
 """
 import logging
@@ -89,7 +89,7 @@ def _logger():
 
 class CobolController(Controller):
     """
-    Controls the cobol menu (compile, run, file type).
+    Controls the COBOL menu (compile, run, file type).
 
     """
     def __init__(self, app):
@@ -171,11 +171,11 @@ class CobolController(Controller):
             msg = 'GnuCOBOL compiler not found or not working'
         elif dotted_extension.lower() in Settings().dbpre_extensions:
             compiler_works = DbpreCompiler().is_working()
-            msg = 'dbpre compiler not working, please check your SQL cobol ' \
+            msg = 'dbpre compiler not working, please check your SQL COBOL ' \
                 'configuration'
         elif dotted_extension.lower() in Settings().esqloc_extensions:
             compiler_works = EsqlOCCompiler().is_working()
-            msg = 'esqlOC compiler not workign, please check your SQL cobol ' \
+            msg = 'esqlOC compiler not workign, please check your SQL COBOL ' \
                 'configuration'
         return compiler_works, msg
 

@@ -41,8 +41,8 @@ Here is the setup I use for working with `GnuCOBOL 2.0 MSVC`_:
 SQL Cobol Guide
 ---------------
 
-GnuCobol does not support SQL statements (such as EXEC SQL) natively but you may use a pre-compiler that
-will convert your sql statements to pure cobol that can then be compiled with GnuCobol.
+GnuCOBOL does not support SQL statements (such as EXEC SQL) natively but you may use a pre-compiler that
+will convert your sql statements to pure COBOL that can then be compiled with GnuCOBOL.
 
 OpenCobolIDE supports the following pre-compilers:
 
@@ -58,15 +58,15 @@ Read the below section to know how to setup OpenCobolIDE to work with one of the
 
 .. warning:: Pre-compilers are associated with one specific extension (**.scb** for dbpre and **.sqb** for esqlOC).
              Those tools will get used only if the file extension match the associated extension!
-             E.g. pre-compilers will never get called on regular cobol files (.cbl, .cob,...).
+             E.g. pre-compilers will never get called on regular COBOL files (.cbl, .cob,...).
 
 esqlOC (on Windows)
 +++++++++++++++++++
 
-.. warning:: To work with esqlOC, you need to use GnuCobol built with Visual Studio.
+.. warning:: To work with esqlOC, you need to use GnuCOBOL built with Visual Studio.
              Read :ref:`windows-gnu-cobol` to setup the correct compiler.
 
-1) Setup OpenCobolIDE to work with GnuCobol compiled with Visual Studio (make sure you can compile a simple
+1) Setup OpenCobolIDE to work with GnuCOBOL compiled with Visual Studio (make sure you can compile a simple
    HelloWorld)
 2) Download esqlOC and install it somewhere on your drive (prefer a path without spaces such as ``c:\esqloc``).
 3) Open the OpenCobolIDE preferences and go to the **SQL Cobol** tab. There specify the installation directory

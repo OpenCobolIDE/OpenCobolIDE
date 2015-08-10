@@ -784,7 +784,7 @@ class Ui_Dialog(object):
         self.cbCOB_INCLUDE_PATH.setText(_translate("Dialog", "COB_INCLUDE_PATH:"))
         self.cbCOB_LIB_PATH.setText(_translate("Dialog", "COB_LIB_PATH:"))
         self.labelVCVARS.setText(_translate("Dialog", "VCVARS32 path:"))
-        self.lineEditVCVARS.setToolTip(_translate("Dialog", "<html><head/><body><p>Path to VCVARS32.bat. VCVARS32.bat is needed if you\'re using a GnuCobol compiler built with Visual Studio.</p><p><br/></p><p>The VCVARS32.bat file is located under the bin directory of you Visual C++ installation. Make sure to use the same version as the one used to build the compiler!</p></body></html>"))
+        self.lineEditVCVARS.setToolTip(_translate("Dialog", "<html><head/><body><p>Path to VCVARS32.bat. VCVARS32.bat is needed if you\'re using a GnuCOBOL compiler built with Visual Studio.</p><p><br/></p><p>The VCVARS32.bat file is located under the bin directory of you Visual C++ installation. Make sure to use the same version as the one used to build the compiler!</p></body></html>"))
         self.toolButtonVCVARS.setText(_translate("Dialog", "..."))
         self.label_36.setText(_translate("Dialog", "Output directory:"))
         self.label_32.setText(_translate("Dialog", "Associated extensions:"))

@@ -87,7 +87,7 @@ class FSContextMenu(FileSystemContextMenu):
 class FileIconProvider(PyQodeIconProvider):
     def icon(self, type_or_info):
         if isinstance(type_or_info, QtCore.QFileInfo):
-            # cobol file
+            # COBOL file
             if ('.' + type_or_info.suffix().lower() in
                     Settings().all_extensions):
                 return QtGui.QIcon(icons.ICON_MIMETYPE)
