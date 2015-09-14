@@ -1,6 +1,8 @@
+import sys
 from open_cobol_ide.compilers import GnuCobolCompiler
 from pyqode.qt import QtCore, QtWidgets
 from open_cobol_ide.view.forms import dlg_check_compiler_ui
+from open_cobol_ide import system
 
 
 class DlgCheckCompiler(QtWidgets.QDialog):
@@ -33,8 +35,13 @@ class DlgCheckCompiler(QtWidgets.QDialog):
 
         if exit_code != 0:
             self.ui.plainTextEdit.appendPlainText(
-                '\nTip: You might need to adapt the environment variables set '
-                'by the IDE to make it work.')
+                'Tips:\n- You might need to adapt the environment variables '
+                'set by the IDE to make it work.')
+            if system.windows:
+                self.ui.plainTextEdit.appendPlainText(
+                    '- If you see MinGW related errors ensure that there is no'
+                    ' additional installation of MinGW in '
+                    '%s:\MinGW' % sys.executable[0])
 
     @classmethod
     def check(cls, parent, compiler_path, version):
