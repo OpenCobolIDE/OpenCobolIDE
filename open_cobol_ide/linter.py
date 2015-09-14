@@ -84,7 +84,7 @@ def lint(request_data):
         output = process.readAllStandardOutput().data().decode(
             locale.getpreferredencoding())
         print('linter raw output: %s' % output)
-        messages = compiler.parse_output(output, tmp_name)
+        messages = compiler.parse_output(output, process.workingDirectory())
         print('linter parsed output: %r' % messages)
         os.remove(tmp_pth)
         return messages

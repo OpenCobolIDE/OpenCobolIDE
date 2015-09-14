@@ -14,7 +14,7 @@ import tempfile
 
 from pyqode.cobol.widgets import CobolCodeEdit
 from pyqode.core.cache import Cache
-from pyqode.core.modes import CheckerMessages
+from pyqode.core.modes import CheckerMessage, CheckerMessages
 from pyqode.qt import QtCore
 
 from open_cobol_ide import system
@@ -136,6 +136,9 @@ class GnuCobolCompiler(QtCore.QObject):
     #: signal emitted when the compilation process finished and its output
     #: is available for parsing.
     output_available = QtCore.Signal(str)
+
+    OUTPUT_PATTERN = re.compile(
+        r'^[\w\.-_\s]*:\d*:[\w\s]*:[\w\s,-:\'"]*$')
 
     def __init__(self):
         super().__init__()
@@ -327,7 +330,7 @@ class GnuCobolCompiler(QtCore.QObject):
             output = 'Failed to decode compiler output with encoding %s' % \
                      locale.getpreferredencoding()
         self.output_available.emit(output)
-        messages = self.parse_output(output, file_path)
+        messages = self.parse_output(output, process.workingDirectory())
         binary_created = os.path.exists(output_full_path)
         _logger().info('compiler process exit code: %d', status)
         _logger().info('compiler process output: %s', output)
@@ -401,39 +404,55 @@ class GnuCobolCompiler(QtCore.QObject):
         return pgm, options
 
     @staticmethod
-    def parse_output(compiler_output, file_path):
+    def parse_output(output, working_directory):
         """
-        Parses the compiler output
+        Parses the compiler output.
 
-        :param compiler_output: compiler output
-        :param filename: input filename
-        :return: list of tuples. Each tuple are made up of the arguments needed
-            to create a :class:`pyqode.core.modes.CheckerMessage`.
+        :param output: to parse
+        :type output: str
 
+        :param working_directory: the working directory where the compiler
+            command was executed. This helps resolve path to relative
+            copybooks.
+        :type working_directory: str
         """
-        _logger().debug('parsing cobc output: %s' % compiler_output)
-        retval = []
-        exp = r'%s: *\d*:.*:.*$' % os.path.split(file_path)[1]
-        prog = re.compile(exp)
-        # parse compilation results
-        for l in compiler_output.splitlines():
-            if prog.match(l):
-                _logger().debug('MATCHED')
-                status = CheckerMessages.WARNING
-                tokens = l.split(':')
-                line = tokens[1]
-                error_type = tokens[2]
-                desc = ''.join(tokens[3:])
-                if 'error' in error_type.lower():
-                    status = CheckerMessages.ERROR
-                # there does not seems to be any 'warning' messages output
-                # if 'warning' in error_type.lower():
-                #     status = CheckerMessages.WARNING
-                msg = (desc.strip(), status, int(line) - 1, 0,
-                       None, None, file_path)
-                _logger().debug('message: %r', msg)
-                retval.append(msg)
-        return retval
+        issues = []
+        for line in output.splitlines():
+            if GnuCobolCompiler.OUTPUT_PATTERN.match(line) is not None:
+                tokens = [
+                    t.strip() for t in line.split(':')]
+                filename = tokens[0]
+                line = int(tokens[1]) - 1
+                message = ': '.join(tokens[3:])
+                path = os.path.abspath(
+                    os.path.join(working_directory, filename))
+                msg = (message, CheckerMessages.ERROR, int(line), 0, None,
+                       None, path)
+                issues.append(msg)
+        return issues
+        # _logger().debug('parsing cobc output: %s' % compiler_output)
+        # retval = []
+        # exp = r'%s: *\d*:.*:.*$' % os.path.split(file_path)[1]
+        # prog = re.compile(exp)
+        # # parse compilation results
+        # for l in compiler_output.splitlines():
+        #     if prog.match(l):
+        #         _logger().debug('MATCHED')
+        #         status = CheckerMessages.WARNING
+        #         tokens = l.split(':')
+        #         line = tokens[1]
+        #         error_type = tokens[2]
+        #         desc = ''.join(tokens[3:])
+        #         if 'error' in error_type.lower():
+        #             status = CheckerMessages.ERROR
+        #         # there does not seems to be any 'warning' messages output
+        #         # if 'warning' in error_type.lower():
+        #         #     status = CheckerMessages.WARNING
+        #         msg = (desc.strip(), status, int(line) - 1, 0,
+        #                None, None, file_path)
+        #         _logger().debug('message: %r', msg)
+        #         retval.append(msg)
+        # return retval
 
     @classmethod
     def get_dependencies(cls, filename, recursive=True):
