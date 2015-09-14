@@ -1,5 +1,5 @@
 """
-This module contains function and classes for interfacing with the GnuCobol
+This module contains function and classes for interfacing with the GnuCOBOL
 compiler.
 """
 import glob
@@ -70,7 +70,7 @@ def get_file_type(path):
 
 def check_compiler():
     """
-    Checks if a valid cobol compiler can be found.
+    Checks if a valid COBOL compiler can be found.
 
     :raises: CompilerNotFound if no compiler could be found.
     """
@@ -127,7 +127,7 @@ call {1} %*
 
 class GnuCobolCompiler(QtCore.QObject):
     """
-    Provides an interface to the GnuCobol compiler (cobc)
+    Provides an interface to the GnuCOBOL compiler (cobc)
     """
     #: signal emitted when the compilation process started, parameter
     #: is the command
@@ -334,7 +334,7 @@ class GnuCobolCompiler(QtCore.QObject):
         _logger().info('binary file (%s) created:  %r',
                        output_full_path, binary_created)
         if status != 0 or not binary_created:
-            # compilation failed but the parser failed to extract cobol related
+            # compilation failed but the parser failed to extract COBOL related
             # messages, there might be an issue at the C level or at the
             # linker level
             messages.append((output, CheckerMessages.ERROR, - 1, 0,
@@ -438,7 +438,7 @@ class GnuCobolCompiler(QtCore.QObject):
     @classmethod
     def get_dependencies(cls, filename, recursive=True):
         """
-        Gets the dependencies of a cobol program/module.
+        Gets the dependencies of a COBOL program/module.
 
         :param filename: path of the file to analyse.
         :param recursive: True to perform recursive analysis (analyses
@@ -449,7 +449,8 @@ class GnuCobolCompiler(QtCore.QObject):
         encoding = _get_encoding(filename)
         directory = os.path.dirname(filename)
         dependencies = []
-        prog = re.compile(r'(^(\s|\d|\w)*CALL[\s\n]*.*".*")', re.MULTILINE)
+        prog = re.compile(r'(^(\s|\d|\w)*CALL[\s\n]*.*".*")',
+                          re.MULTILINE | re.IGNORECASE)
         with open(filename, 'r', encoding=encoding) as f:
             content = f.read()
             if not Settings().free_format:
@@ -515,7 +516,7 @@ class DbpreCompiler(QtCore.QObject):
 
     def get_version(self, path=None):
         """
-        Returns the GnuCobol compiler version as a string
+        Returns the GnuCOBOL compiler version as a string
         """
         program = self.dbpre_path
         cmd = [program, '--version']
@@ -652,9 +653,9 @@ class DbpreCompiler(QtCore.QObject):
 
     def compile(self, path):
         """
-        Compile an sql cobol file using dbpre.
+        Compile an sql COBOL file using dbpre.
 
-        :param path: path of the sql cobol file (.scb)
+        :param path: path of the sql COBOL file (.scb)
 
         :return: build status, list of error/warning messages to
                  display.
@@ -679,7 +680,7 @@ class EsqlOCCompiler(QtCore.QObject):
 
     esqlOC.exe -static -o file.cob file.sqb
 
-    GnuCobol Commands:
+    GnuCOBOL Commands:
     SET OC_RUNTIME=c:\OpenCobol_bin
     SET esqlOC_RUNTIME=c:\esqlOC\release
     SET COB_CFLAGS=-I %OC_RUNTIME%
@@ -773,9 +774,9 @@ class EsqlOCCompiler(QtCore.QObject):
 
     def compile(self, path):
         """
-        Compile an sql cobol file using dbpre.
+        Compile an sql COBOL file using dbpre.
 
-        :param path: path of the sql cobol file (.scb)
+        :param path: path of the sql COBOL file (.scb)
 
         :return: build status, list of error/warning messages to
                  display.

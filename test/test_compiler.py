@@ -138,6 +138,8 @@ def test_compile(path, ftype, expected_results, output_file_path):
     # test 2
     ('test/testfiles/TEST-PRINTER.cbl',
      [os.path.normpath('test/testfiles/VIRTUAL-PRINTER.cbl')]),
+    ('test/testfiles/TEST-PRINTER3.cbl',
+     [os.path.normpath('test/testfiles/VIRTUAL-PRINTER.cbl')]),
     # test 3
     ('test/testfiles/TEST-PRINTER2.cbl',
      [os.path.normpath('test/testfiles/VIRTUAL-PRINTER.cbl'),

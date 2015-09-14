@@ -5,7 +5,7 @@
 Welcome to OpenCobolIDE documentation!
 ==========================================
 
-OpenCobolIDE is a simple and lightweight cobol IDE based on the
+OpenCobolIDE is a simple and lightweight COBOL IDE based on the
 `OpenCobol/Gnu Cobol`_ compiler and the `pyQode`_ source code editor widget.
 
 

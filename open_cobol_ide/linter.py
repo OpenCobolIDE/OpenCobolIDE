@@ -1,5 +1,5 @@
 """
-Cobol linter; use open cobol to check your your syntax on the fly.
+Cobol linter; use open COBOL to check your your syntax on the fly.
 """
 import locale
 import os
@@ -50,7 +50,7 @@ def make_linter_command(cobol_file_name, original_file_path):
 
 def lint(request_data):
     """
-    Performs linting of a cobol document.
+    Performs linting of a COBOL document.
 
     This method will perform on the pyqode backend.
 

@@ -108,7 +108,7 @@ It is made up of 5 distinct parts:
     - Output: the program output (when you run it).
 
         .. note:: The output console is interactive and accepts stdin but does
-                  not support cobol ``SCREEN SECTION``.
+                  not support COBOL ``SCREEN SECTION``.
                   If you're using the screen section, you should run your
                   program in an external terminal *(Preferences->Build And
                   Run)*

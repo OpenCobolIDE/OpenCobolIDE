@@ -22,7 +22,7 @@ DESCRIPTION = 'A simple COBOL IDE'
 # get long description
 with open('README.rst', 'r') as readme:
     if 'bdist_deb' in sys.argv or 'sdist_dsc' in sys.argv:
-        LONG_DESC = DESCRIPTION + ' based on GnuCobol and PyQode'
+        LONG_DESC = DESCRIPTION + ' based on GnuCOBOL and PyQode'
     else:
         LONG_DESC = readme.read()
 

@@ -20,7 +20,7 @@ OpenCobolIDE
    :alt: Coverage Status
 
 
-OpenCobolIDE is a simple and lightweight cobol IDE based on the GnuCobol
+OpenCobolIDE is a simple and lightweight COBOL IDE based on the GnuCOBOL
 compiler.
 
 
@@ -29,9 +29,9 @@ The software is written in Python using `PyQt5`_ (or `PyQt4`_) and `pyQode`_
 Features:
 ---------
 
-- native (fast) cobol syntax highlighter
-- cobol code completion
-- cobol code folding
+- COBOL syntax highlighter
+- COBOL code completion
+- COBOL code folding
 - navigable tree view of division, sections, paragraphs etc (fully synchronised
   with the code folding panel)
 - smart auto indentation
@@ -53,7 +53,7 @@ OpenCobolIDE is released under the **GPL** version 3
 Requirements
 ------------
 
-- `GnuCobol`_
+- `GnuCOBOL`_
 - `Python3`_
 - `PyQt4`_ or `PyQt5`_
 - `setuptools`_
@@ -111,7 +111,7 @@ Mac OSX
 
 There is a dmg image available here: https://launchpad.net/cobcide/+download
 
-Before running the app, you first have to install the GnuCobol compiler, e.g.
+Before running the app, you first have to install the GnuCOBOL compiler, e.g.
 using homebrew::
 
     brew install open-cobol
@@ -179,7 +179,7 @@ Screenshots
 .. _pyqode.core: https://github.com/pyQode/pyqode.core/
 .. _pyqode.cobol: https://github.com/pyQode/pyqode.cobol/
 .. _pyqode.qt: https://github.com/pyQode/pyqode.qt/
-.. _GnuCobol: http://sourceforge.net/projects/open-cobol/
+.. _GnuCOBOL: http://sourceforge.net/projects/open-cobol/
 .. _setuptools: https://pypi.python.org/pypi/setuptools
 .. _Python3: http://python.org/
 .. _PyQt5: http://www.riverbankcomputing.co.uk/software/pyqt/download

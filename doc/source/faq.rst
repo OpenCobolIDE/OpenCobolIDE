@@ -23,7 +23,7 @@ the issue come from your configuration.
 3) Cannot detect OpenCobol compiler on Mac OSX. What can I do?
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-If you installed the open cobol compiler in a non-standard path, you will have
+If you installed the GnuCOBOL compiler in a non-standard path, you will have
 to tell OpenCobolIDE where to look.
 
 You can specify the path to the compiler in the preferences dialog
@@ -32,8 +32,8 @@ You can specify the path to the compiler in the preferences dialog
 4) Cannot compile source code that contains EXEC SQL statements. What can I do?
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-GnuCobol does not support EXEC SQL statements. You need to use a cobol precompiler that will
-convert your sql statements to regular cobol code that can be compiled with GnuCobol.
+GnuCOBOL does not support EXEC SQL statements. You need to use a COBOL precompiler that will
+convert your sql statements to regular COBOL code that can be compiled with GnuCOBOL.
 
 Read the :ref:`sql-guide`.
 

@@ -15,6 +15,15 @@ on...
 Changelog
 ---------
 
+4.6.4
+-----
+
+Fixed bugs:
+
+- fix freeze when compiling a file where column 1-6 are not empty in non-free mode.
+- fix detection of submodule when lowercase keywords are used
+- fix a few issues with PyQt 5.5
+
 4.6.3
 -----
 
@@ -79,7 +88,7 @@ New features/Improvements:
     - Add environment variable settings for compiler (PATH, COBC_CONFIG_DIR,...)
     - Add dialog and a button to check whether your compiler works or not (
       check compilation of a simple hello world)
-    - Add .lst to default list of cobol extensions
+    - Add .lst to default list of COBOL extensions
     - Add a compiler output log view with the complete output of the cobc
       commands
     - Fix some spelling errors and always use GnuCOBOL instead of OpenCOBOL
@@ -113,7 +122,7 @@ New features:
       compiler (cobc, dbpre and esqlOC)
 
 Fixed bugs:
-    - Fix issues with non cobol files on frozen builds (Windows and OSX only)
+    - Fix issues with non COBOL files on frozen builds (Windows and OSX only)
     - All bugs fixed in pyqode.core 2.6.1
 
 4.5.0
@@ -159,7 +168,7 @@ Fixed bugs:
 New features:
 
 - experimental support for dbpre on Linux
-- experimental support for using a custom GnuCobol compiler on Windows
+- experimental support for using a custom GnuCOBOL compiler on Windows
 - support for custom keywords convention (lower or upper case keyword suggestions)
 - support for very small screens (10 inches)
 - support for opening more than one file
@@ -204,13 +213,13 @@ Fixed bugs:
 
 New features:
 
-- add support for GnuCobol 2.0 on GNU/Linux
+- add support for GnuCOBOL 2.0 on GNU/Linux
 - add a way to specify global compiler switches (-g, -ftrace,...)
 - improve detection of external terminal on GNU/Linux
 - make use of pyqode-console to prompt for a key press at the end of the
   program when run in an external terminal (Windows + GNU/Linux)
 - style improvement: the internal terminal will use the same colors as the
-  cobol editor.
+  COBOL editor.
 - performance improvement: avoid useless re-highlight on open
 - update to pyqode 2.3 (add occurrences highlighting, global checker,
   better selections, smart backspace, auto complete of quotes and
@@ -221,7 +230,7 @@ New features:
 
 The entire application has been rewritten.
 
-The cobol code editor widget has been moved to the pyqode.cobol package.
+The COBOL code editor widget has been moved to the pyqode.cobol package.
 
 New features:
 
@@ -301,9 +310,9 @@ Fixed bugs:
 
 - fix compilation for file if path contains spaces (Linux and Windows)
 - fix parser crash that prevents from compiling
-- improve cobol parser to support malformed syntax
+- improve COBOL parser to support malformed syntax
 - fix ambiguous shortcut overload: F2
-- fix outline not informative for cobol files that have data in column 1-6
+- fix outline not informative for COBOL files that have data in column 1-6
 
 2.1.0
 +++++
@@ -379,7 +388,7 @@ Enhancements and fixed bugs in PCEF 0.2.0:
 
 - improve performances in general
 - support for custom word separator, allow OpenCobolIDE to remove the '-' character from word separators which brings a better
-  code completion for cobol
+  code completion for COBOL
 - dirty flag is correctly updated
 - scrollbars are now correctly update when folding/unfolding code blocks
 
@@ -420,7 +429,7 @@ Bug fixes:
 +++++
 
 - better encoding detection using chardet
-- cobol specific code completion model
+- COBOL specific code completion model
 - status bar infos (filename, encoding, cursor position)
 - windows port (a windows installer is available in the download section)
 

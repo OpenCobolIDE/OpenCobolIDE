@@ -2,6 +2,7 @@
 Controls the home page.
 
 """
+from open_cobol_ide.view.widgets import FileIconProvider
 from pyqode.cobol.api import icons
 from pyqode.cobol.widgets import CobolCodeEdit
 from pyqode.qt import QtCore, QtGui, QtWidgets
@@ -97,13 +98,9 @@ class HomeController(Controller):
         self.ui.listWidgetRecents.clear()
         for file in self.app.file.recent_files_manager.get_recent_files():
             item = QtWidgets.QListWidgetItem()
-            if ('.' + QtCore.QFileInfo(file).suffix().lower() in
-                    Settings().all_extensions):
-                icon = QtGui.QIcon(icons.ICON_MIMETYPE)
-            else:
-                icon = QtWidgets.QFileIconProvider().icon(
-                    QtCore.QFileInfo(file))
-            item.setText(QtCore.QFileInfo(file).fileName())
+            fi = QtCore.QFileInfo(file)
+            icon = FileIconProvider().icon(fi)
+            item.setText(fi.fileName())
             item.setToolTip(file)
             item.setIcon(icon)
             item.setData(QtCore.Qt.UserRole, file)
