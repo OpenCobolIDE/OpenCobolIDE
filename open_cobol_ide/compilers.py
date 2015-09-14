@@ -105,10 +105,8 @@ class VisualStudioWrapperBatch:
     environment before running the cobc command, this is needed to use the
     kiska builds on Windows.
     """
-    CODE_TEMPLATE = r"""@echo off
-call "{0}\vcvars32.bat"
-@echo on
-call {1} %*
+    CODE_TEMPLATE = r"""call "{0}\vcvars32.bat" 1>NUL
+call "{1}" %*
 """
     FILENAME = 'cobc_wrapper.bat'
 
@@ -814,4 +812,4 @@ class EsqlOCCompiler(QtCore.QObject):
 
 
 if __name__ == '__main__':
-    GnuCobolCompiler.get_dependencies('/home/colin/COBDUMP.cbl')
+    VisualStudioWrapperBatch().generate()
