@@ -29,6 +29,10 @@ class CompilationThread(QtCore.QThread):
     #: signal emitted when a file has compile. Parameters are the file path,
     #: the compiler exit code and the list of possible errors messages.
     file_compiled = QtCore.Signal(str, int, list)
+
+    #: signal emitted when an exception was raise by the compiler.
+    errored = QtCore.Signal(str, Exception)
+
     #: signal emitted when the thread finished.
     finished = QtCore.Signal()
 
@@ -73,13 +77,17 @@ class CompilationThread(QtCore.QThread):
         _logger().info('running compilation thread: %r', files)
 
         for f in files:
-            if is_dbpre_cobol(f):
-                status, messages = dbpre.compile(f)
-            elif is_esqloc_cobol(f):
-                status, messages = esqloc.compile(f)
+            try:
+                if is_dbpre_cobol(f):
+                    status, messages = dbpre.compile(f)
+                elif is_esqloc_cobol(f):
+                    status, messages = esqloc.compile(f)
+                else:
+                    status, messages = cobc.compile(f, get_file_type(f))
+            except Exception as e:
+                self.errored.emit(f, e)
             else:
-                status, messages = cobc.compile(f, get_file_type(f))
-            self.file_compiled.emit(f, status, messages)
+                self.file_compiled.emit(f, status, messages)
         self.finished.emit()
 
 
@@ -209,6 +217,7 @@ class CobolController(Controller):
         self._compilation_thread.file_path = \
             self.app.edit.current_editor.file.path
         self._compilation_thread.file_compiled.connect(self._on_file_compiled)
+        self._compilation_thread.errored.connect(self._on_build_exception)
         self._compilation_thread.command_started.connect(
             self._on_command_started)
         self._compilation_thread.output_available.connect(
@@ -244,6 +253,12 @@ class CobolController(Controller):
                 self.enable_compile(False)
                 self.enable_run(False)
                 self._run()
+
+    def _on_build_exception(self, path, exception):
+        QtWidgets.QMessageBox.critical(
+            self.main_window, 'Exception while compiling a file',
+            'An exception occured when compiling %r.\n\nError=%s' %
+            (path, exception))
 
     def _on_file_compiled(self, filename, status, messages):
         """
