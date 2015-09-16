@@ -49,7 +49,7 @@ class FileController(Controller):
         self.ui.actionOpen.triggered.connect(self.request_open)
         self.ui.actionNew.triggered.connect(self.request_new)
         self.ui.actionSave.triggered.connect(
-            self.ui.tabWidgetEditors.save_current)
+            self.save_current)
         self.ui.actionSaveAs.triggered.connect(self.save_as)
         self.ui.actionQuit.triggered.connect(self.quit)
         self.ui.tabWidgetEditors.register_code_edit(CobolCodeEdit)
@@ -92,13 +92,27 @@ class FileController(Controller):
         self.app.file.recent_files_manager.open_file(path)
         Settings().last_path = path
 
+    def save_current(self):
+        try:
+            self.ui.tabWidgetEditors.save_current()
+        except PermissionError as e:
+            QtWidgets.QMessageBox.warning(
+                self.main_window, 'Failed to save file',
+                str(e))
+
     def save_as(self):
         """
         Saves the currend editor content as.
         """
-        fn = self.ui.tabWidgetEditors.save_current_as()
-        self.recent_files_manager.open_file(fn)
-        Settings().last_path = fn
+        try:
+            fn = self.ui.tabWidgetEditors.save_current_as()
+        except PermissionError:
+            QtWidgets.QMessageBox.warning(
+                self.main_window, 'Failed to save file',
+                'Failed to save file, permission error...')
+        else:
+            self.recent_files_manager.open_file(fn)
+            Settings().last_path = fn
 
     def quit(self):
         """
