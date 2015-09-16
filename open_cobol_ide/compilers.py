@@ -334,7 +334,7 @@ class GnuCobolCompiler(QtCore.QObject):
         _logger().info('compiler process output: %s', output)
         _logger().info('binary file (%s) created:  %r',
                        output_full_path, binary_created)
-        if status != 0 or not binary_created:
+        if not len(messages) and (status != 0 or not binary_created):
             # compilation failed but the parser failed to extract COBOL related
             # messages, there might be an issue at the C level or at the
             # linker level
@@ -414,11 +414,9 @@ class GnuCobolCompiler(QtCore.QObject):
             copybooks.
         :type working_directory: str
         """
-        print('parse output')
         issues = []
         for line in output.splitlines():
             match = GnuCobolCompiler.OUTPUT_PATTERN.match(line)
-            print(line, match)
             if match is not None:
                 tokens = [
                     t.strip() for t in line.split(':')]
@@ -430,31 +428,7 @@ class GnuCobolCompiler(QtCore.QObject):
                 msg = (message, CheckerMessages.ERROR, int(line), 0, None,
                        None, path)
                 issues.append(msg)
-                logging.info('msg=%r', msg)
         return issues
-        # _logger().debug('parsing cobc output: %s' % compiler_output)
-        # retval = []
-        # exp = r'%s: *\d*:.*:.*$' % os.path.split(file_path)[1]
-        # prog = re.compile(exp)
-        # # parse compilation results
-        # for l in compiler_output.splitlines():
-        #     if prog.match(l):
-        #         _logger().debug('MATCHED')
-        #         status = CheckerMessages.WARNING
-        #         tokens = l.split(':')
-        #         line = tokens[1]
-        #         error_type = tokens[2]
-        #         desc = ''.join(tokens[3:])
-        #         if 'error' in error_type.lower():
-        #             status = CheckerMessages.ERROR
-        #         # there does not seems to be any 'warning' messages output
-        #         # if 'warning' in error_type.lower():
-        #         #     status = CheckerMessages.WARNING
-        #         msg = (desc.strip(), status, int(line) - 1, 0,
-        #                None, None, file_path)
-        #         _logger().debug('message: %r', msg)
-        #         retval.append(msg)
-        # return retval
 
     @classmethod
     def get_dependencies(cls, filename, recursive=True):
