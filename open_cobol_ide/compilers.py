@@ -136,7 +136,7 @@ class GnuCobolCompiler(QtCore.QObject):
     output_available = QtCore.Signal(str)
 
     OUTPUT_PATTERN = re.compile(
-        r'^[\w\.-_\s]*:\s*\d*:[\w\s]*:[\w\s,-:\'"]*$')
+        r'^[\w\.-_\s]*:\s*\d*:[\w\s]*:[\w\s,-:\'"\$]*$')
 
     def __init__(self):
         super().__init__()
