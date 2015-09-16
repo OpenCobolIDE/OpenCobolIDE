@@ -136,7 +136,7 @@ class GnuCobolCompiler(QtCore.QObject):
     output_available = QtCore.Signal(str)
 
     OUTPUT_PATTERN = re.compile(
-        r'^[\w\.-_\s]*:\d*:[\w\s]*:[\w\s,-:\'"]*$')
+        r'^[\w\.-_\s]*:\s*\d*:[\w\s]*:[\w\s,-:\'"]*$')
 
     def __init__(self):
         super().__init__()
@@ -414,9 +414,12 @@ class GnuCobolCompiler(QtCore.QObject):
             copybooks.
         :type working_directory: str
         """
+        print('parse output')
         issues = []
         for line in output.splitlines():
-            if GnuCobolCompiler.OUTPUT_PATTERN.match(line) is not None:
+            match = GnuCobolCompiler.OUTPUT_PATTERN.match(line)
+            print(line, match)
+            if match is not None:
                 tokens = [
                     t.strip() for t in line.split(':')]
                 filename = tokens[0]
@@ -427,6 +430,7 @@ class GnuCobolCompiler(QtCore.QObject):
                 msg = (message, CheckerMessages.ERROR, int(line), 0, None,
                        None, path)
                 issues.append(msg)
+                logging.info('msg=%r', msg)
         return issues
         # _logger().debug('parsing cobc output: %s' % compiler_output)
         # retval = []
