@@ -212,14 +212,22 @@ class EditController(Controller):
             self._update_status_bar_labels()
             _logger().info('current editor changed: %s', editor.file.path)
 
+    def _get_cursor_pos_in_bytes(self, original, encoding):
+        text = TextHelper(self.current_editor).current_line_text()
+        text = text[:original]
+        return len(bytes(text, encoding))
+
     def _update_status_bar_labels(self):
         """
         Updates the status bar labels (format, encoding, cursor position).
         """
         if self.current_editor:
             l, c = TextHelper(self.current_editor).cursor_position()
+            encoding = self.current_editor.file.encoding
+            if Settings().show_cursor_pos_in_bytes:
+                c = self._get_cursor_pos_in_bytes(c, encoding)
             self._lbl_cursor.setText('%d:%d' % (l + 1, c + 1))
-            self._lbl_encoding.setText(self.current_editor.file.encoding)
+            self._lbl_encoding.setText(encoding)
             self._lbl_format.setText(
                 'Free format' if Settings().free_format else 'Fixed format')
             self._lbl_path.setText(self.current_editor.file.path)
@@ -248,6 +256,7 @@ class EditController(Controller):
                 self.ui.consoleOutput.apply_color_scheme(
                     ColorScheme(Settings().color_scheme))
                 editor.rehighlight()
+            self._update_status_bar_labels()
 
     def _on_file_deleted(self, editor):
         if QtWidgets.QMessageBox.question(

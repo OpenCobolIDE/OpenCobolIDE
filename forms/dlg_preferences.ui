@@ -24,7 +24,16 @@
     <normaloff>:/ide-icons/rc/silex-192x192.png</normaloff>:/ide-icons/rc/silex-192x192.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
     <number>6</number>
    </property>
    <item row="6" column="0">
@@ -46,7 +55,16 @@
       <string notr="true"/>
      </property>
      <layout class="QGridLayout" name="widget_2">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <property name="spacing">
@@ -64,7 +82,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <property name="usesScrollButtons">
          <bool>true</bool>
@@ -91,8 +109,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>634</width>
-               <height>851</height>
+               <width>636</width>
+               <height>840</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -182,6 +200,23 @@
                   <widget class="QCheckBox" name="checkBoxShowErrors">
                    <property name="toolTip">
                     <string>Compile your code on the fly and show errors while you're typing</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label_38">
+                   <property name="text">
+                    <string>Show cursor position in bytes:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QCheckBox" name="cb_cursor_pos_in_bytes">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check this if you want to see the cursor position expressed in bytes instead of characters (encoding is then taken into account).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                    </property>
                    <property name="text">
                     <string/>
@@ -486,8 +521,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>634</width>
-               <height>851</height>
+               <width>636</width>
+               <height>840</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -604,7 +639,7 @@ as possible to get back to the previous indentation level.</string>
                      </property>
                      <property name="currentFont">
                       <font>
-                       <family>BatangChe</family>
+                       <family>Clean</family>
                       </font>
                      </property>
                     </widget>
@@ -692,8 +727,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>634</width>
-               <height>851</height>
+               <width>636</width>
+               <height>840</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_6">
@@ -1195,8 +1230,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>634</width>
-               <height>851</height>
+               <width>636</width>
+               <height>840</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_5">
@@ -1255,8 +1290,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>634</width>
-               <height>832</height>
+               <width>636</width>
+               <height>819</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -1423,7 +1458,16 @@ as possible to get back to the previous indentation level.</string>
                      </item>
                      <item row="2" column="1">
                       <layout class="QVBoxLayout" name="verticalLayout_6">
-                       <property name="margin">
+                       <property name="leftMargin">
+                        <number>3</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>3</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>3</number>
+                       </property>
+                       <property name="bottomMargin">
                         <number>3</number>
                        </property>
                        <item>

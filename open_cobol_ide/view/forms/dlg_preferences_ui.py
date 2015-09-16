@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Dev\OpenCobolIDE\forms\dlg_preferences.ui'
+# Form implementation generated from reading ui file '/home/colin/Documents/OpenCobolIDE/forms/dlg_preferences.ui'
 #
-# Created by: PyQt5 UI code generator 5.4.1
+# Created by: PyQt5 UI code generator 5.5
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -46,7 +46,7 @@ class Ui_Dialog(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 634, 851))
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 636, 840))
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
@@ -85,6 +85,13 @@ class Ui_Dialog(object):
         self.checkBoxShowErrors.setText("")
         self.checkBoxShowErrors.setObjectName("checkBoxShowErrors")
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.checkBoxShowErrors)
+        self.label_38 = QtWidgets.QLabel(self.groupBox_3)
+        self.label_38.setObjectName("label_38")
+        self.formLayout.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.label_38)
+        self.cb_cursor_pos_in_bytes = QtWidgets.QCheckBox(self.groupBox_3)
+        self.cb_cursor_pos_in_bytes.setText("")
+        self.cb_cursor_pos_in_bytes.setObjectName("cb_cursor_pos_in_bytes")
+        self.formLayout.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.cb_cursor_pos_in_bytes)
         self.verticalLayout_7.addWidget(self.groupBox_3)
         self.groupBox_2 = QtWidgets.QGroupBox(self.scrollAreaWidgetContents_2)
         self.groupBox_2.setObjectName("groupBox_2")
@@ -204,7 +211,7 @@ class Ui_Dialog(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollArea_2.setObjectName("scrollArea_2")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 634, 851))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 636, 840))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_8 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
@@ -249,7 +256,7 @@ class Ui_Dialog(object):
         self.fontComboBox = QtWidgets.QFontComboBox(self.groupBox_6)
         self.fontComboBox.setFontFilters(QtWidgets.QFontComboBox.MonospacedFonts)
         font = QtGui.QFont()
-        font.setFamily("BatangChe")
+        font.setFamily("Clean")
         self.fontComboBox.setCurrentFont(font)
         self.fontComboBox.setObjectName("fontComboBox")
         self.horizontalLayout_4.addWidget(self.fontComboBox)
@@ -293,7 +300,7 @@ class Ui_Dialog(object):
         self.scrollArea_5.setWidgetResizable(True)
         self.scrollArea_5.setObjectName("scrollArea_5")
         self.scrollAreaWidgetContents_7 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_7.setGeometry(QtCore.QRect(0, 0, 634, 851))
+        self.scrollAreaWidgetContents_7.setGeometry(QtCore.QRect(0, 0, 636, 840))
         self.scrollAreaWidgetContents_7.setObjectName("scrollAreaWidgetContents_7")
         self.formLayout_6 = QtWidgets.QFormLayout(self.scrollAreaWidgetContents_7)
         self.formLayout_6.setFieldGrowthPolicy(QtWidgets.QFormLayout.ExpandingFieldsGrow)
@@ -509,7 +516,7 @@ class Ui_Dialog(object):
         self.scrollArea_4.setWidgetResizable(True)
         self.scrollArea_4.setObjectName("scrollArea_4")
         self.scrollAreaWidgetContents_6 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_6.setGeometry(QtCore.QRect(0, 0, 634, 851))
+        self.scrollAreaWidgetContents_6.setGeometry(QtCore.QRect(0, 0, 636, 840))
         self.scrollAreaWidgetContents_6.setObjectName("scrollAreaWidgetContents_6")
         self.formLayout_5 = QtWidgets.QFormLayout(self.scrollAreaWidgetContents_6)
         self.formLayout_5.setObjectName("formLayout_5")
@@ -535,7 +542,7 @@ class Ui_Dialog(object):
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollArea_3.setObjectName("scrollArea_3")
         self.scrollAreaWidgetContents_5 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_5.setGeometry(QtCore.QRect(0, 0, 634, 832))
+        self.scrollAreaWidgetContents_5.setGeometry(QtCore.QRect(0, 0, 636, 819))
         self.scrollAreaWidgetContents_5.setObjectName("scrollAreaWidgetContents_5")
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_5)
         self.verticalLayout_9.setObjectName("verticalLayout_9")
@@ -698,7 +705,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.addWidget(self.widget, 0, 0, 1, 1)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
         self.stackedWidgetSQL.setCurrentIndex(0)
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
@@ -720,6 +727,8 @@ class Ui_Dialog(object):
         self.checkBoxHighlightWhitespaces.setStatusTip(_translate("Dialog", "Show visual whitespaces"))
         self.label_13.setText(_translate("Dialog", "Show errors:"))
         self.checkBoxShowErrors.setToolTip(_translate("Dialog", "Compile your code on the fly and show errors while you\'re typing"))
+        self.label_38.setText(_translate("Dialog", "Show cursor position in bytes:"))
+        self.cb_cursor_pos_in_bytes.setToolTip(_translate("Dialog", "<html><head/><body><p>Check this if you want to see the cursor position expressed in bytes instead of characters (encoding is then taken into account).</p></body></html>"))
         self.groupBox_2.setTitle(_translate("Dialog", "Indentation"))
         self.label.setText(_translate("Dialog", "Width:"))
         self.spinBoxEditorTabLen.setToolTip(_translate("Dialog", "Tab length (number of spaces)"))
@@ -784,7 +793,7 @@ class Ui_Dialog(object):
         self.cbCOB_INCLUDE_PATH.setText(_translate("Dialog", "COB_INCLUDE_PATH:"))
         self.cbCOB_LIB_PATH.setText(_translate("Dialog", "COB_LIB_PATH:"))
         self.labelVCVARS.setText(_translate("Dialog", "VCVARS32 path:"))
-        self.lineEditVCVARS.setToolTip(_translate("Dialog", "<html><head/><body><p>Path to VCVARS32.bat. VCVARS32.bat is needed if you\'re using a GnuCOBOL compiler built with Visual Studio.</p><p><br/></p><p>The VCVARS32.bat file is located under the bin directory of you Visual C++ installation. Make sure to use the same version as the one used to build the compiler!</p></body></html>"))
+        self.lineEditVCVARS.setToolTip(_translate("Dialog", "<html><head/><body><p>Path to VCVARS32.bat. VCVARS32.bat is needed if you\'re using a GnuCobol compiler built with Visual Studio.</p><p><br/></p><p>The VCVARS32.bat file is located under the bin directory of you Visual C++ installation. Make sure to use the same version as the one used to build the compiler!</p></body></html>"))
         self.toolButtonVCVARS.setText(_translate("Dialog", "..."))
         self.label_36.setText(_translate("Dialog", "Output directory:"))
         self.label_32.setText(_translate("Dialog", "Associated extensions:"))

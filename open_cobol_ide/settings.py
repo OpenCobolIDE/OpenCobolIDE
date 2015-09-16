@@ -139,6 +139,15 @@ class Settings(object):
     # Editor settings settings
     #
     @property
+    def show_cursor_pos_in_bytes(self):
+        return bool(int(self._settings.value(
+            'show_cursor_pos_in_bytes', '0')))
+
+    @show_cursor_pos_in_bytes.setter
+    def show_cursor_pos_in_bytes(self, value):
+        self._settings.setValue('show_cursor_pos_in_bytes', int(value))
+
+    @property
     def preferred_eol(self):
         return int(self._settings.value('preferredEOL', 0))
 

@@ -291,6 +291,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings = Settings()
         # Editor
         if self.tabWidget.currentIndex() == 0 or all_tabs:
+            self.cb_cursor_pos_in_bytes.setChecked(
+                settings.show_cursor_pos_in_bytes)
             self.checkBoxShowErrors.setChecked(settings.show_errors)
             self.checkBoxViewLineNumber.setChecked(settings.display_lines)
             self.checkBoxHighlightCurrentLine.setChecked(
@@ -403,6 +405,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         index = self.tabWidget.currentIndex()
         # Editor
         if index == 0:
+            settings.show_cursor_pos_in_bytes = False
             settings.show_error = True
             settings.display_lines = True
             settings.highlight_caret = True
@@ -470,6 +473,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         # force next check (otherwise the cached result will be used)
         compilers.GnuCobolCompiler.check_compiler.reset()
         settings = Settings()
+        settings.show_cursor_pos_in_bytes = \
+            self.cb_cursor_pos_in_bytes.isChecked()
         settings.display_lines = self.checkBoxViewLineNumber.isChecked()
         settings.highlight_caret = self.checkBoxHighlightCurrentLine.isChecked()
         settings.show_whitespaces = \
