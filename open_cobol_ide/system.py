@@ -59,7 +59,7 @@ def which(program):
             if is_exe(exe_file):
                 return os.path.normpath(exe_file)
 
-    return None
+    return ''
 
 
 @_mkdir
