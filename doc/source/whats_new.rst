@@ -15,6 +15,29 @@ on...
 Changelog
 ---------
 
+4.6.5
+-----
+
+New features:
+
+    - Ability to show cursor position in bytes, taking the file encoding into
+      account.
+    - Excepthook that automatically triggers the bug report tool in case of
+      unhandled exception.
+    - Simplification of the visual studio wrapper batch
+
+Fixed bugs:
+
+    - Fixed confusing message about compiler not found. The message now
+      indicates that a "working compiler" could not be found.
+    - Fixed a few typos in the documentation and the readme.
+    - Fixed issues with permission errors on compile/save. Now a message box will
+      appear to indicate to you that you don't have the permission to
+      save/compiler a particular file.
+    - Fixed an issue with the issues pane: opening a file with double click
+      does not work for relative paths
+
+
 4.6.4
 -----
 
