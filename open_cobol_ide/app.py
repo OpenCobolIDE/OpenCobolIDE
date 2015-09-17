@@ -3,6 +3,7 @@ This module contains the ide application. This is where we glue the
 various managers and gui parts together.
 
 """
+import traceback
 import argparse
 import logging
 import mimetypes
@@ -13,9 +14,11 @@ from open_cobol_ide import __version__, logger, system
 from open_cobol_ide.controllers import (
     CobolController, EditController, FileController, HelpController,
     HomeController, ViewController)
-from open_cobol_ide.compilers import check_compiler, CompilerNotFound, GnuCobolCompiler
+from open_cobol_ide.compilers import check_compiler, CompilerNotFound, \
+    GnuCobolCompiler
 from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.main_window import MainWindow
+from open_cobol_ide.view.dialogs.report_bug import DlgReportBug
 
 
 def _logger():
@@ -25,13 +28,14 @@ def _logger():
 _original_env = os.environ.copy()
 
 
-class Application:
+class Application(QtCore.QObject):
     """
     Sets up the Qt Application, the main window and the various controllers.
 
     The application class contains references to the main window user interface
     and to the various controllers so that they can collaborate each others.
     """
+    _report_exception_requested = QtCore.pyqtSignal(object, str)
 
     def apply_mimetypes_preferences(self):
         for ext in Settings().all_extensions:
@@ -39,6 +43,10 @@ class Application:
             mimetypes.add_type('text/x-cobol', ext.upper())
 
     def __init__(self, parse_args=True):
+        super().__init__()
+        self._old_except_hook = sys.excepthook
+        sys.excepthook = self._except_hook
+        self._report_exception_requested.connect(self._report_exception)
         if hasattr(sys, 'frozen') and sys.platform == 'win32':
             sys.stdout = open(os.path.join(system.get_cache_directory(),
                                            'ocide_stdout.log'), 'w')
@@ -218,3 +226,32 @@ class Application:
                             help='Verbose mode will enable debug and info '
                                  'messages to be shown in the application log')
         return parser.parse_args()
+
+    def _except_hook(self, exc_type, exc_val, tb):
+        tb = '\n'.join([''.join(traceback.format_tb(tb)),
+                        '{0}: {1}'.format(exc_type.__name__, exc_val)])
+        # exception might come from another thread, use a signal
+        # so that we can be sure we will show the bug report dialog from
+        # the main gui thread.
+        self._report_exception_requested.emit(exc_val, tb)
+
+    def _report_exception(self, exc, tb):
+        try:
+            _logger().critical('unhandled exception:\n%s', tb)
+            title = '[Unhandled exception] %s' % exc.__class__.__name__
+            description = 'An unhandled exception has occured:\n\n'\
+                          '%s\n\nWould like to send a bug report to the ' \
+                          'development team?' % tb
+            answer = QtWidgets.QMessageBox.critical(
+                self.win, title, description,
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.Close,
+                QtWidgets.QMessageBox.Yes)
+            if answer == QtWidgets.QMessageBox.Yes:
+                description = '## Steps to reproduce\n\nPLEASE DESCRIBE '\
+                    'THE CONTEXT OF THIS BUG AND THE STEPS TO REPRODUCE!\n\n'\
+                    '## Traceback\n\n```\n%s\n```' % tb
+                DlgReportBug.report_bug(
+                    self.win, title=title, description=description)
+
+        except Exception:
+            _logger().exception('exception in excepthook')

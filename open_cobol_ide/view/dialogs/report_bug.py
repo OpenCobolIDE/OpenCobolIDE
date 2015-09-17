@@ -26,13 +26,15 @@ def _logger():
 
 
 class DlgReportBug(QtWidgets.QDialog):
-    def __init__(self, parent):
+    def __init__(self, parent, title='', description=''):
         super().__init__(parent)
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.ui.lineEditTitle.textChanged.connect(self.enable_submit)
         self.ui.plainTextEditDesc.textChanged.connect(self.enable_submit)
         self.ui.pushButtonSubmit.clicked.connect(self.submit)
+        self.ui.lineEditTitle.setText(title)
+        self.ui.plainTextEditDesc.setPlainText(description)
         self.enable_submit()
 
     def enable_submit(self, *_):
@@ -60,12 +62,16 @@ class DlgReportBug(QtWidgets.QDialog):
             'generated ticket on our issue tracker. We will open a browser to '
             'our tracker, you just need to login with your github account and '
             'press the submit button at the end of the page.')
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromEncoded(url))
+        try:
+            QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromEncoded(url))
+        except TypeError:
+            QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromEncoded(bytes(
+                url, 'utf-8')))
         self.accept()
 
     @classmethod
-    def report_bug(cls, parent):
-        dlg = cls(parent)
+    def report_bug(cls, parent, title='', description=''):
+        dlg = cls(parent, title=title, description=description)
         dlg.exec_()
 
     def get_system_infos(self):
