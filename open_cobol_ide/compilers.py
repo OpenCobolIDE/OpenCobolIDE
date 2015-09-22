@@ -135,8 +135,16 @@ class GnuCobolCompiler(QtCore.QObject):
     #: is available for parsing.
     output_available = QtCore.Signal(str)
 
-    OUTPUT_PATTERN = re.compile(
-        r'^[\w\.-_\s]*:\s*\d*:[\w\s]*:[\w\s,-:\'"\$]*$')
+    # GC output messages format depends on the underlying compiler
+    # See https://github.com/OpenCobolIDE/OpenCobolIDE/issues/206
+    OUTPUT_PATTERN_GCC = re.compile(
+        r'^(?P<filename>[\w\.-_\s]*):(?P<line>\s*\d*):(?P<type>[\w\s]*):'
+        r'(?P<error>[\w\s,-:\'"\$]*)$')
+    OUTPUT_PATTERN_MSVC = re.compile(
+        r'^(?P<filename>[\w\.-_\s]*)\((?P<line>\s*\d*)\):(?P<type>[\w\s]*):'
+        '(?P<error>[\w\s,-:\'"\$]*)$')
+
+    OUTPUT_PATTERNS = [OUTPUT_PATTERN_GCC, OUTPUT_PATTERN_MSVC]
 
     def __init__(self):
         super().__init__()
@@ -415,19 +423,21 @@ class GnuCobolCompiler(QtCore.QObject):
         :type working_directory: str
         """
         issues = []
-        for line in output.splitlines():
-            match = GnuCobolCompiler.OUTPUT_PATTERN.match(line)
-            if match is not None:
-                tokens = [
-                    t.strip() for t in line.split(':')]
-                filename = tokens[0]
-                line = int(tokens[1]) - 1
-                message = ': '.join(tokens[3:])
-                path = os.path.abspath(
-                    os.path.join(working_directory, filename))
-                msg = (message, CheckerMessages.ERROR, int(line), 0, None,
-                       None, path)
-                issues.append(msg)
+        for l in output.splitlines():
+            if not l:
+                continue
+            for ptrn in GnuCobolCompiler.OUTPUT_PATTERNS:
+                m = ptrn.match(l)
+                if m is not None:
+                    filename = m.group('filename')
+                    line = int(m.group('line')) - 1
+                    message = m.group('error')
+                    # make relative path absolute
+                    path = os.path.abspath(os.path.join(
+                        working_directory, filename))
+                    msg = (message, CheckerMessages.ERROR, int(line), 0, None,
+                           None, path)
+                    issues.append(msg)
         return issues
 
     @classmethod
