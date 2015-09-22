@@ -44,6 +44,7 @@ class Application(QtCore.QObject):
 
     def __init__(self, parse_args=True):
         super().__init__()
+        self._reported_tracebacks = []
         self._old_except_hook = sys.excepthook
         sys.excepthook = self._except_hook
         self._report_exception_requested.connect(self._report_exception)
@@ -238,13 +239,21 @@ class Application(QtCore.QObject):
     def _report_exception(self, exc, tb):
         try:
             _logger().critical('unhandled exception:\n%s', tb)
+            _tb = tb
+            if isinstance(exc, UnicodeDecodeError):
+                # This might be the same exception in the same file but at another position
+                # in the stream
+                _tb = tb.splitlines()[-4]
+            if _tb in self._reported_tracebacks:
+                return
+            self._reported_tracebacks.append(_tb)
             title = '[Unhandled exception] %s' % exc.__class__.__name__
             description = 'An unhandled exception has occured:\n\n'\
                           '%s\n\nWould like to send a bug report to the ' \
                           'development team?' % tb
             answer = QtWidgets.QMessageBox.critical(
                 self.win, title, description,
-                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.Close,
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                 QtWidgets.QMessageBox.Yes)
             if answer == QtWidgets.QMessageBox.Yes:
                 description = '## Steps to reproduce\n\nPLEASE DESCRIBE '\
