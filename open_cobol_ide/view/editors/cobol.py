@@ -38,9 +38,14 @@ class CobolCodeEdit(CodeEditBase):
 
     def close(self, clear=True):
         super().close(clear=clear)
-        self.app().cobol.compile_buttons.remove(self._buttons[0])
-        self.app().cobol.run_buttons.remove(self._buttons[1])
-        self.app = None
+        try:
+            self.app().cobol.compile_buttons.remove(self._buttons[0])
+            self.app().cobol.run_buttons.remove(self._buttons[1])
+        except TypeError:
+            # close called twice
+            pass
+        else:
+            self.app = None
 
     def _setup_panels(self):
         self.control_panel = ControlPanel(*self._buttons)
