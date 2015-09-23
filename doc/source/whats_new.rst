@@ -15,6 +15,26 @@ on...
 Changelog
 ---------
 
+4.6.6
+-----
+
+Improvements:
+
+    - Cancel all compilations if the build errored
+    - Prevent the same exception message to be shown more than once during the
+      same session
+
+Fixed bugs:
+
+    - Fix a UnicodeDecodeError with the linter on Windows
+    - Fix error messages not appearing when using a MSVC based GnuCOBOL.
+    - Fix content menu entries not working at mouse position
+    - Fix lost of cursor selection after case conversion
+    - Fix offset calculator: it now handles lvl 78/88 and redefines
+    - Fix a gui bug with offset calculator, disable sorting of items and allow
+      user to resize columns.
+    - Fix unhandled exception when closing an unsaved editor
+
 4.6.5
 -----
 
