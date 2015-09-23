@@ -86,6 +86,7 @@ class CompilationThread(QtCore.QThread):
                     status, messages = cobc.compile(f, get_file_type(f))
             except Exception as e:
                 self.errored.emit(f, e)
+                break
             else:
                 self.file_compiled.emit(f, status, messages)
         self.finished.emit()
