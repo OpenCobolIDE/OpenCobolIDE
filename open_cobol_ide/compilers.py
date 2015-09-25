@@ -278,6 +278,16 @@ class GnuCobolCompiler(QtCore.QObject):
                 _logger().exception(
                     'Failed to previous binary file: %s' % output_full_path)
 
+        # check for possible permission error
+        try:
+            test_path = os.path.join(path, 'test')
+            with open(test_path, 'w'):
+                pass
+        except PermissionError:
+            raise PermissionError('Build directory not writeable (%s)' % path)
+        else:
+            os.remove(test_path)
+
     def compile(self, file_path, file_type, object_files=None,
                 additional_options=None, output_dir=None):
         """

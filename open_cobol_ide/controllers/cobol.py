@@ -86,7 +86,6 @@ class CompilationThread(QtCore.QThread):
                     status, messages = cobc.compile(f, get_file_type(f))
             except Exception as e:
                 self.errored.emit(f, e)
-                break
             else:
                 self.file_compiled.emit(f, status, messages)
         self.finished.emit()
@@ -119,6 +118,7 @@ class CobolController(Controller):
         self._run_requested = False
         self.ui.consoleOutput.process_finished.connect(self._on_run_finished)
         self.ui.actionCancel.triggered.connect(self.cancel)
+        self._exception_flags = []
 
     def create_bt_compile(self):
         bt_compile = QtWidgets.QToolButton()
@@ -226,6 +226,7 @@ class CobolController(Controller):
         self._compilation_thread.finished.connect(
             self._on_compilation_finished)
         self._compilation_thread.start()
+        self._exception_flags[:] = []
 
     def _on_command_started(self, cmd):
         old_color = self.ui.textEditCompilerOutput.textColor()
@@ -256,10 +257,18 @@ class CobolController(Controller):
                 self._run()
 
     def _on_build_exception(self, path, exception):
-        QtWidgets.QMessageBox.critical(
-            self.main_window, 'Exception while compiling a file',
-            'An exception occured when compiling %r.\n\nError=%s' %
-            (path, exception))
+        self.ui.errorsTable.add_message(
+            CheckerMessage(
+                    str(exception), CheckerMessages.ERROR, -1, path=path))
+        self._errors += 1
+        self.ui.dockWidgetLogs.show()
+        self.ui.tabWidgetLogs.setCurrentIndex(LOG_PAGE_ISSUES)
+        if type(exception) not in self._exception_flags:
+            self._exception_flags.append(type(exception))
+            QtWidgets.QMessageBox.critical(
+                self.main_window, 'Exception while compiling a file',
+                'An exception occured when compiling %r.\n\nError=%s' %
+                (path, exception))
 
     def _on_file_compiled(self, filename, status, messages):
         """
