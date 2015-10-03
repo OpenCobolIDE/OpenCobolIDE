@@ -17,8 +17,9 @@ PATH. If yes, remove it.
 
 If the problem persists, do not hesitate to open an issue.
 
-OpenCobolIDE is known to work on Windows (from Xp, to 8.1). Chances are that
-the issue come from your configuration.
+OpenCobolIDE is known to work on Windows (from Windows Xp, to Windows 10).
+
+Chances are that the issue come from your configuration.
 
 3) Cannot detect OpenCOBOL compiler on Mac OSX. What can I do?
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
