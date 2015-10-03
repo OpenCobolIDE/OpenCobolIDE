@@ -38,7 +38,7 @@ Parts of the documentation:
    * .. glossary::
 
       :doc:`download`
-         Instructions on where and how to install pyQode.
+         Instructions on where and how to install OpenCobolIDE.
 
    * .. glossary::
 
