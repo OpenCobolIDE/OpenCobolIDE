@@ -1,11 +1,12 @@
 What's New?
-===========
+************
+
 This page lists the most prominent milestones achieved by the OpenCobolIDE
 developers. For more specific details about what is planned and what has been
 accomplished, please visit the `issues page on github`_.
 
 Next Version
-------------
+=============
 
 We plan to improve the code template mechanism to let you define your own code
 template that will be used for new file creation. We might also add a small
@@ -13,7 +14,10 @@ macro system to automatically fill up details such as author, date, and so
 on...
 
 Changelog
----------
+=========
+
+4.6
+===
 
 4.6.6
 -----
@@ -89,14 +93,14 @@ Fixed bugs:
 4.6.2
 -----
 
-Bug fix release + major improvements to the installer on Windows.
+Bug fix release - major improvements to the installer on Windows.
 
 New features:
-    - [Windows] Installer + own binaries are now digitally signed
+    - [Windows] Installer - own binaries are now digitally signed
     - [Windows] The bundled compiler has been update from OpenCOBOL 1.1 to GnuCOBOL 1.1,
       see the list of differences here: http://opencobol.add1tocobol.com/gnucobol/#what-are-the-differences-between-opencobol-1-1-and-gnucobol-1-1
     - You can now set the full compiler path instead of just the directory (e.g. /usr/bin/cobc instead of /usr/bin)
-    - Improve cobc --version parser to include the project name (GnuCOBOL, GnuCOBOL C++,...)
+    - Improve cobc --version parser to include the project name (GnuCOBOL, GnuCOBOL C--,...)
     - Due to a bug with pip and the new wheel package, the executable name on linux is now lowercase (opencobolide instead
       of OpenCobolIDE).
     - Add missing extensions to save as dialog and fix filters of open file dialog.
@@ -124,7 +128,7 @@ Fixed bugs:
 Fix a potential failure on startup (probably just on Windows)
 
 4.6.0
-+++++
+-----
 
 New features/Improvements:
     - Add ability to control where the binaries will be placed
@@ -143,7 +147,7 @@ New features/Improvements:
 Fixed bugs:
     - Fix a crash with corrupted recent files list
     - Fix fullscreen mode not setup on startup but recognized in the options
-    - Fix Ctrl+Home not working as expected (go to first line)
+    - Fix Ctrl-Home not working as expected (go to first line)
     - Fix bug with linter that does not take compiler options into account
       (file not found error for copybooks)
     - Fix misleading compiler settings label
@@ -157,8 +161,11 @@ Fixed bugs:
       when there are some newlines between CALL, USING and the PAREMTER of the
       call
 
+4.5
+====
+
 4.5.1
-++++++
+------
 
 New features:
     - add ability to set custom file extension association with the different
@@ -169,7 +176,7 @@ Fixed bugs:
     - All bugs fixed in pyqode.core 2.6.1
 
 4.5.0
-+++++
+-----
 
 New features:
     - EOL management (see issue #110)
@@ -179,8 +186,11 @@ New features:
 Fixed bugs:
     - fix a bug with comment (see issue #109)
 
+4.4
+===
+
 4.4.0
-+++++
+-----
 
 New features:
 
@@ -190,8 +200,11 @@ Fixed bugs:
   - fix a bug with the new reporter tool on windows (and get rid of the github3.py dependency)
   - improve comment/uncomment when workin in fixed format and column 1-6 is not empty.
 
+4.3
+===
+
 4.3.1
-+++++
+-----
 
 New features:
 
@@ -206,7 +219,7 @@ Fixed bugs:
   of quotes and parentheses).
 
 4.3.0
-+++++
+-----
 
 New features:
 
@@ -225,9 +238,11 @@ Fixed bugs:
 - fixed a bug that prevent the IDE to remember the last open/save path
 - fixed a bug where compilation/run actions were wrongly disabled
 
+4.2
+===
 
 4.2.0
-+++++
+-----
 
 New features:
 
@@ -251,8 +266,12 @@ Fixed bugs:
 - fix a bug with navigation panel (#76)
 - improve usage of rrt theme (#79)
 
+
+4.1
+===
+
 4.1.0
-+++++
+-----
 
 New features:
 
@@ -260,7 +279,7 @@ New features:
 - add a way to specify global compiler switches (-g, -ftrace,...)
 - improve detection of external terminal on GNU/Linux
 - make use of pyqode-console to prompt for a key press at the end of the
-  program when run in an external terminal (Windows + GNU/Linux)
+  program when run in an external terminal (Windows - GNU/Linux)
 - style improvement: the internal terminal will use the same colors as the
   COBOL editor.
 - performance improvement: avoid useless re-highlight on open
@@ -268,8 +287,11 @@ New features:
   better selections, smart backspace, auto complete of quotes and
   parentheses, ...)
 
+4.0
+===
+
 4.0.0
-+++++
+-----
 
 The entire application has been rewritten.
 
@@ -290,8 +312,11 @@ New features:
 - more keywords in code completion
 - ability to disable the linter (see issue #46)
 
+3.0
+===
+
 3.0.0
-+++++
+-----
 
 New features:
 
@@ -309,14 +334,17 @@ New features:
 - compiler process management has been improved:
   We are now using QProcess instead of subprocess, this allow some neat
   improvements such as auto compile before run.
-- better log message + log window: include information from the log window
+- better log message - log window: include information from the log window
   when you report bugs!
 
 Please, read the :doc:`/getting_started` section of this manual to get started
 with the new user interface!
 
+2.3
+===
+
 2.3.1
-+++++
+-----
 
 - drop python 2 support (the main script must now be run by a python3
   interpreter)
@@ -324,7 +352,7 @@ with the new user interface!
 - fix bug with encoding error, see bug #31 on github
 
 2.3.0
-+++++
+-----
 
 New features:
 
@@ -337,8 +365,11 @@ Fixed bugs:
 - fix bug with detection of submodules call if they are enclosed with single quotes
   instead of double quotes
 
+2.2
+===
+
 2.2.0
-+++++
+-----
 New features:
 
 - pic fields offsets calculator
@@ -357,12 +388,15 @@ Fixed bugs:
 - fix ambiguous shortcut overload: F2
 - fix outline not informative for COBOL files that have data in column 1-6
 
+2.1
+===
+
 2.1.0
-+++++
+-----
 
 New features:
 
-- Go to definition for variables and procedures (ctrl + click on symbol)
+- Go to definition for variables and procedures (ctrl - click on symbol)
 - New debian package on ppa:open-cobol-ide/stable and ppa:open-cobol-ide/unstable
 
 Fixed Bugs:
@@ -370,9 +404,11 @@ Fixed Bugs:
 - code completion should not occur in comments and strings
 - fix column number for navigation panel
 
+2.0
+===
 
 2.0.1
-+++++
+-----
 
 Fixed Bugs:
 
@@ -380,7 +416,7 @@ Fixed Bugs:
   system which does not have pexepect.
 
 2.0.0
-+++++
+-----
 
 This new release is a major update which makes the transition from PCEF to
 pyqode. Most of the application has been rewritten from scratch.
@@ -399,21 +435,23 @@ Here are the major changes:
   Cinnamon.
 - allow user to type in lower case (https://github.com/OpenCobolIDE/OpenCobolIDE/issues/1)
 
+1.4
+===
 
 1.4.2
-+++++
+-----
 
 - Update code so support pcef 0.2.2
 
 1.4.1
-+++++
+-----
 
 Fixed Bugs:
 
-- slow in large files: https://bugs.launchpad.net/cobcide/+bug/1179228
+- slow in large files: https://bugs.launchpad.net/cobcide/-bug/1179228
 
 1.4.0
-+++++
+-----
 
 New features:
 
@@ -435,10 +473,11 @@ Enhancements and fixed bugs in PCEF 0.2.0:
 - dirty flag is correctly updated
 - scrollbars are now correctly update when folding/unfolding code blocks
 
-
+1.3
+===
 
 1.3.0
-+++++
+-----
 This release improves usability with a focus on the run and compile actions:
 
 - detect source dependencies and compile them (if a program P requires a subprogram A who requires a subprogram B than the IDE will compile A, B and P)
@@ -446,20 +485,23 @@ This release improves usability with a focus on the run and compile actions:
 - Run the last program if the current tab is a subprogram
 - Avoid compiling a file that is already compiled and up to date
 
-1.2.1
-+++++
+1.2
+===
 
-- Fix bug: https://launchpad.net/cobcide/+milestone/1.2.1
+1.2.1
+-----
+
+- Fix bug: https://launchpad.net/cobcide/-milestone/1.2.1
 
 1.2.0
-+++++
+-----
 
 Added:
 
 - Home page with list of recent files
 - A settings page to change a few options (mainly related to the editor style)
 - A navigation panel to quickly browse large files (tree with div, sections, variables and paragraphs)
-- A shortcut to comment/uncomment selected or active lines (ctrl+/)
+- A shortcut to comment/uncomment selected or active lines (ctrl-/)
 - On GNU/Linux, at first start the program will ask the user if he wants to create a desktop files
 
 Bug fixes:
@@ -468,21 +510,27 @@ Bug fixes:
 - fix bug with mingw when path contains spaces on windows
 - fix bug where no extension was proposed when creating a new file
 
+1.1
+===
+
 1.1.0
-+++++
+-----
 
 - better encoding detection using chardet
 - COBOL specific code completion model
 - status bar infos (filename, encoding, cursor position)
 - windows port (a windows installer is available in the download section)
 
+1.0
+===
+
 1.0.1
-+++++
+-----
 
 - fix packaging issues
 
 1.0.0
-+++++
+-----
 
 - Initial development
 
