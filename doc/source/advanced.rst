@@ -38,7 +38,7 @@ Here is the setup I use for working with `GnuCOBOL 2.0 MSVC`_:
 
 .. _sql-guide:
 
-SQL Cobol Guide
+SQL COBOL Guide
 ---------------
 
 GnuCOBOL does not support SQL statements (such as EXEC SQL) natively but you may use a pre-compiler that
@@ -51,7 +51,6 @@ OpenCobolIDE supports the following pre-compilers:
 
 .. _dbpre: http://sourceforge.net/projects/dbpre/
 .. _esqlOC: http://sourceforge.net/p/open-cobol/discussion/contrib/thread/4057115f/
-
 
 Read the below section to know how to setup OpenCobolIDE to work with one of these pre-compilers.
 

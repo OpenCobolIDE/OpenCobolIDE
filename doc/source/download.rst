@@ -10,7 +10,7 @@ OpenCobolIDE depends on the following packages:
 
     - Python 3
     - PyQt5 or PyQt4
-    - OpenCobol
+    - OpenCOBOL/GnuCOBOL
     - pyqode.core
     - pyqode.cobol
     - pygments
@@ -46,9 +46,9 @@ There is a dmg image available here: https://launchpad.net/cobcide/+download
 
 The only thing you have to do is:
 
-- to install OpenCobol compiler, e.g. using homebrew::
+- to install GnuCOBOL compiler, e.g. using homebrew::
 
-    brew install open-cobol
+    brew install gnu-cobol
 
 - run the OpenCobolIDE app
 
