@@ -173,6 +173,7 @@ class ViewController(Controller):
         Shows the home page.
         """
         self.show_page(Page.HOME)
+        self.ui.tableWidgetOffsets.set_editor(None)
 
     def show_edit_page(self):
         """
