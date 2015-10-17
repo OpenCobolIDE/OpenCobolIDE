@@ -37,6 +37,8 @@ class CobolCodeEdit(CodeEditBase):
         _logger().debug('linter enabled: %r', self.linter_mode.enabled)
 
     def close(self, clear=True):
+        self.linter_mode = None
+        self.control_panel = None
         super().close(clear=clear)
         try:
             self.app().cobol.compile_buttons.remove(self._buttons[0])
