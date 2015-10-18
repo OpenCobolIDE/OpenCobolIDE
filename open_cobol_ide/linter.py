@@ -7,8 +7,8 @@ import tempfile
 import time
 from pyqode.qt import QtCore
 from pyqode.core.modes import CheckerMode
-from open_cobol_ide import settings
-from open_cobol_ide.compilers import VisualStudioWrapperBatch, GnuCobolCompiler
+from open_cobol_ide import settings, msvc
+from open_cobol_ide.compilers import GnuCobolCompiler
 
 
 def make_linter_command(cobol_file_name, original_file_path):
@@ -40,11 +40,7 @@ def make_linter_command(cobol_file_name, original_file_path):
             if lib:
                 args.append('-l%s' % lib)
     args.append(cobol_file_name)
-    if Settings().compiler_path and Settings().vcvars32:
-        VisualStudioWrapperBatch.generate()
-        pgm = VisualStudioWrapperBatch.path()
-    else:
-        pgm = Settings().compiler_path
+    pgm = Settings().compiler_path
     return pgm, args
 
 
@@ -66,6 +62,9 @@ def lint(request_data):
         # code might not have been saved yet, run cobc on a tmp file
         # we use a time stamp to avoid overwriting the file another cobc
         # instance might be compiling.
+        vcvarsall = settings.Settings().vcvarsall
+        if vcvarsall:
+            msvc.initialize(vcvarsall, settings.Settings().vcvarsall_arch)
         file_name = os.path.split(path)[1]
         file_name, ext = os.path.splitext(file_name)
         tmp_name = '%s.%s%s' % (file_name, str(int(time.time())), ext)

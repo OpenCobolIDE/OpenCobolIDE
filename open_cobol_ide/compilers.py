@@ -17,7 +17,7 @@ from pyqode.core.cache import Cache
 from pyqode.core.modes import CheckerMessage, CheckerMessages
 from pyqode.qt import QtCore
 
-from open_cobol_ide import system
+from open_cobol_ide import system, msvc
 from open_cobol_ide.enums import FileType
 from open_cobol_ide.memoize import memoized
 from open_cobol_ide.settings import Settings
@@ -99,30 +99,6 @@ class CompilerNotFound(Exception):
     pass
 
 
-class VisualStudioWrapperBatch:
-    """
-    Helps creating a wrapper batch that setup visual studio command line
-    environment before running the cobc command, this is needed to use the
-    kiska builds on Windows.
-    """
-    CODE_TEMPLATE = r"""call "{0}\vcvars32.bat" 1>NUL
-call "{1}" %*
-"""
-    FILENAME = 'cobc_wrapper.bat'
-
-    @classmethod
-    def path(cls):
-        return os.path.join(tempfile.gettempdir(), cls.FILENAME)
-
-    @classmethod
-    def generate(cls):
-        print(cls.path())
-        with open(cls.path(), 'w') as f:
-            f.write(cls.CODE_TEMPLATE.format(
-                os.path.dirname(Settings().vcvars32),
-                Settings().compiler_path))
-
-
 class GnuCobolCompiler(QtCore.QObject):
     """
     Provides an interface to the GnuCOBOL compiler (cobc)
@@ -194,21 +170,18 @@ class GnuCobolCompiler(QtCore.QObject):
     @classmethod
     @memoized
     def check_compiler(cls, compiler):
-        if Settings().vcvars32:
-            try:
-                VisualStudioWrapperBatch.generate()
-            except OSError as e:
-                _logger().exception('failed to generate visual studio wrapper '
-                                    'batch')
-                return str(e), 1
-            compiler = VisualStudioWrapperBatch.path()
-
         from open_cobol_ide.view.dialogs.preferences import DEFAULT_TEMPLATE
         cbl_path = os.path.join(tempfile.gettempdir(), 'test.cbl')
         with open(cbl_path, 'w') as f:
             f.write(DEFAULT_TEMPLATE)
         dest = os.path.join(tempfile.gettempdir(),
                             'test' + ('.exe' if system.windows else ''))
+
+        original_env = os.environ.copy()
+
+        vcvarsall = Settings().vcvarsall
+        if vcvarsall:
+            msvc.initialize(vcvarsall, arch=Settings().vcvarsall_arch)
         p = QtCore.QProcess()
         args = ['-x', '-o', dest, cbl_path]
         p.start(compiler, args)
@@ -240,6 +213,9 @@ class GnuCobolCompiler(QtCore.QObject):
             os.remove(cbl_path)
         except OSError:
             pass
+
+        os.environ = original_env
+
         return output, p.exitCode()
 
     def is_working(self):
@@ -323,6 +299,13 @@ class GnuCobolCompiler(QtCore.QObject):
             return 0, [msg]
 
         self.prepare_bin_dir(output_dir, output_full_path)
+
+        original_env = os.environ.copy()
+
+        vcvarsall = Settings().vcvarsall
+        if vcvarsall:
+            msvc.initialize(vcvarsall, Settings().vcvarsall_arch)
+
         pgm, options = self.make_command(inputs, file_type, output_dir,
                                          additional_options)
         process = QtCore.QProcess()
@@ -359,6 +342,9 @@ class GnuCobolCompiler(QtCore.QObject):
             messages.append((output, CheckerMessages.ERROR, - 1, 0,
                              None, None, file_path))
         _logger().debug('compile results: %r - %r', status, messages)
+
+        os.environ = original_env
+
         return status, messages
 
     def _get_output_filename(self, inputs, file_type):
@@ -412,11 +398,7 @@ class GnuCobolCompiler(QtCore.QObject):
             if system.windows and ' ' in ifn:
                 ifn = '"%s"' % ifn
             options.append(ifn)
-        if Settings().compiler_path and Settings().vcvars32:
-            VisualStudioWrapperBatch.generate()
-            pgm = VisualStudioWrapperBatch.path()
-        else:
-            pgm = Settings().compiler_path
+        pgm = Settings().compiler_path
         return pgm, options
 
     @staticmethod

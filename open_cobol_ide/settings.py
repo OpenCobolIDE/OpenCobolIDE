@@ -372,12 +372,20 @@ class Settings(object):
         self._settings.setValue('compilerPath', value)
 
     @property
-    def vcvars32(self):
-        return self._settings.value('vcvars32', '')
+    def vcvarsall(self):
+        return self._settings.value('vcvarsall', '')
 
-    @vcvars32.setter
-    def vcvars32(self, value):
-        self._settings.setValue('vcvars32', value)
+    @vcvarsall.setter
+    def vcvarsall(self, value):
+        self._settings.setValue('vcvarsall', value)
+
+    @property
+    def vcvarsall_arch(self):
+        return self._settings.value('vcvarsall_arch', 'x86')
+
+    @vcvarsall_arch.setter
+    def vcvarsall_arch(self, value):
+        return self._settings.setValue('vcvarsall_arch', value)
 
     @property
     def compiler_flags(self):

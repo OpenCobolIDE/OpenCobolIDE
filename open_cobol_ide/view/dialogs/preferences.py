@@ -85,7 +85,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self._select_cobmysqlapi)
         self.checkBoxShowDbPass.stateChanged.connect(
             self._on_show_pass_state_changed)
-        self.toolButtonVCVARS.clicked.connect(self._select_vcvars32)
+        self.toolButtonVCVARS.clicked.connect(self._select_vcvarsall)
         self.toolButtonCustomCompilerPath.clicked.connect(
             self._select_custom_compiler_path)
         self.toolButtonAddLibPath.clicked.connect(self._add_lib_path)
@@ -170,17 +170,17 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.listWidgetCopyPaths.takeItem(
                 self.listWidgetCopyPaths.row(item))
 
-    def _select_vcvars32(self):
+    def _select_vcvarsall(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Select VCVARS32.bat', self.lineEditVCVARS.text())
+            self, 'Select vcvarsall.bat', self.lineEditVCVARS.text())
         if path:
             path = os.path.normpath(path)
-            if os.path.isfile(path) and path.lower().endswith('vcvars32.bat'):
+            if os.path.isfile(path) and path.lower().endswith('vcvarsall.bat'):
                 self.lineEditVCVARS.setText(path)
             else:
                 QtWidgets.QMessageBox.warning(
-                    self, "Invalid VCVARS32 path",
-                    "%r is not a valid VCVARS32 batch file" % path)
+                    self, "Invalid vcvarsall batch path",
+                    "%r is not a valid vcvarsall batch file" % path)
 
     def _select_custom_compiler_path(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
@@ -370,7 +370,9 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                  if pth])
             self.le_compiler_flags.setText(' '.join(flags))
             if system.windows:
-                self.lineEditVCVARS.setText(settings.vcvars32)
+                self.lineEditVCVARS.setText(settings.vcvarsall)
+                self.combo_arch.setCurrentIndex(
+                    1 if settings.vcvarsall_arch == 'x64' else 0)
             self.PATH.setText(settings.path)
             self.cbPATH.setChecked(settings.path_enabled)
             self.COB_CONFIG_DIR.setText(settings.cob_config_dir)
@@ -443,7 +445,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.libraries = ''
             settings.cobc_extensions = ['.cob', '.cbl', '.pco', '.cpy', '.lst']
             if system.windows:
-                settings.vcvars32 = ''
+                settings.vcvarsall = ''
+                settings.vcvarsall_arch = 'x86'
             settings.path = settings.default_path()
             settings.path_enabled = True
             settings.cob_config_dir = settings.default_config_dir()
@@ -493,7 +496,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.external_terminal_command = self.lineEditRunTerm.text()
         settings.lower_case_keywords = self.rbLowerCaseKwds.isChecked()
         settings.compiler_path = self.lineEditCompilerPath.text()
-        settings.vcvars32 = self.lineEditVCVARS.text()
+        settings.vcvarsall = self.lineEditVCVARS.text()
+        settings.vcvarsall_arch = self.combo_arch.currentText()
         settings.path = self.PATH.text()
         settings.path_enabled = self.cbPATH.isChecked()
         settings.cob_config_dir = self.COB_CONFIG_DIR.text()
