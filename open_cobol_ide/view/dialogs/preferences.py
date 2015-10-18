@@ -119,9 +119,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.COB_LIB_PATH.setEnabled(self.cbCOB_LIB_PATH.isChecked())
 
     def _check_compiler(self, *_):
-        from open_cobol_ide.app import Application
         self.apply()
-        Application.init_env()
         pth = self.lineEditCompilerPath.text()
         if os.path.exists(pth):
             p = QtCore.QProcess()
@@ -554,6 +552,9 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditDbpreExts.text().split(';') if ext]
         settings.esqloc_extensions = [
             ext for ext in self.lineEditesqlOcExts.text().split(';') if ext]
+
+        from open_cobol_ide.app import Application
+        Application.update_environment_vars()
 
     @classmethod
     def edit_preferences(cls, parent):

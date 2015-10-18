@@ -53,7 +53,7 @@ class Application(QtCore.QObject):
                                            'ocide_stdout.log'), 'w')
             sys.stderr = open(os.path.join(system.get_cache_directory(),
                                            'ocide_stderr.log'), 'w')
-        self.init_env()
+        self.update_environment_vars()
         self.app = QtWidgets.QApplication(sys.argv)
         if parse_args and not system.darwin:
             args = self.parse_args()
@@ -147,7 +147,7 @@ class Application(QtCore.QObject):
         return self.app.exec_()
 
     @classmethod
-    def init_env(cls):
+    def update_environment_vars(cls):
         """
         Inits the environment
         :return:

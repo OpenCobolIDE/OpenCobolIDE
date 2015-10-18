@@ -54,7 +54,7 @@ def lint(request_data):
     :return: status, messages
     """
     from open_cobol_ide.app import Application
-    Application.init_env()
+    Application.update_environment_vars()
     code = request_data['code']
     path = request_data['path']
     extension = os.path.splitext(path)[1]
