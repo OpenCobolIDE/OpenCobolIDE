@@ -218,6 +218,67 @@ class GnuCobolCompiler(QtCore.QObject):
 
         return output, p.exitCode()
 
+    @staticmethod
+    def _run_command(pgm, args):
+        original_env = os.environ.copy()
+        vcvarsall = Settings().vcvarsall
+        if vcvarsall:
+            msvc.initialize(vcvarsall, arch=Settings().vcvarsall_arch)
+
+        if ' ' in pgm:
+            pgm = '"%s"' % pgm
+
+        p = QtCore.QProcess()
+        p.setProcessChannelMode(QtCore.QProcess.MergedChannels)
+        p.start(pgm, args)
+        p.waitForFinished()
+
+        # determine exit code (handle crashed processes)
+        if p.exitStatus() != p.Crashed:
+            status = p.exitCode()
+        else:
+            status = 139
+
+        # get compiler output
+        try:
+            output = p.readAllStandardOutput().data().decode(
+                locale.getpreferredencoding())
+        except UnicodeDecodeError:
+            output = 'Failed to decode compiler output with encoding %s' % \
+                     locale.getpreferredencoding()
+        os.environ = original_env
+
+        return status, output
+
+    @staticmethod
+    def get_cobc_infos():
+        compiler = Settings().compiler_path
+        args = ['--info']
+
+        status, output = GnuCobolCompiler._run_command(compiler, args)
+
+        if status != 0:
+            output = 'command "cobc --info" failed with exit ' \
+                     'code %d.\nNote that this command is supported only by ' \
+                     'recent builds of GnuCOBOL\nProcess output: %s' % \
+                     (status, output)
+
+        return output
+
+    @staticmethod
+    def get_cobcrun_infos():
+        pgm = shutil.which('cobcrun')
+        args = ['--runtime-env']
+        status, output = GnuCobolCompiler._run_command(pgm, args)
+
+        if status != 0:
+            output = 'command "cobcrun --runtime-env" failed with exit ' \
+                     'code %d.\nNote that this command is supported only by ' \
+                     'recent builds of GnuCOBOL\nProcess output: %s' % \
+                     (status, output)
+
+        return output
+
     def is_working(self):
         """
         Checks if the GNUCobol compiler is working.

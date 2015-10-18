@@ -1,6 +1,7 @@
 import pyqode.core
 import pyqode.cobol
 import pygments
+from pyqode.core._forms import pyqode_core_rc
 from pyqode.qt import QtGui, QtCore, QtWidgets
 from open_cobol_ide import __version__, logger
 from open_cobol_ide.compilers import GnuCobolCompiler
@@ -60,6 +61,32 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
         with open(logger.get_path(), 'r') as f:
             self.textEditLog.setText(f.read())
         self.checkBoxVerbose.toggled.connect(self._on_verbose_toggled)
+
+        self.edit_compiler_infos.setFont(
+            QtGui.QFont(Settings().font, 9))
+
+        # from pyqode.core._forms.pyqode_core_rc
+        QtGui.QFontDatabase.addApplicationFont(
+            ':/fonts/rc/SourceCodePro-Regular.ttf')
+        QtGui.QFontDatabase.addApplicationFont(
+            ':/fonts/rc/SourceCodePro-Bold.ttf')
+
+        template = '''cobc --infos
+============
+
+%(cobc_infos)s
+
+cobcrun --runtime-env
+=====================
+
+%(cobcrun_infos)s
+'''
+
+        gnucobol_infos = template % {
+            'cobc_infos': GnuCobolCompiler.get_cobc_infos(),
+            'cobcrun_infos': GnuCobolCompiler.get_cobcrun_infos()
+        }
+        self.edit_compiler_infos.setPlainText(gnucobol_infos)
 
     def _on_verbose_toggled(self, state):
         Settings().verbose = state

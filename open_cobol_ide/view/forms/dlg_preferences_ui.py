@@ -370,6 +370,7 @@ class Ui_Dialog(object):
         self.toolButtonVCVARS.setObjectName("toolButtonVCVARS")
         self.horizontalLayout_8.addWidget(self.toolButtonVCVARS)
         self.combo_arch = QtWidgets.QComboBox(self.scrollAreaWidgetContents_7)
+        self.combo_arch.setEditable(False)
         self.combo_arch.setObjectName("combo_arch")
         self.combo_arch.addItem("")
         self.combo_arch.addItem("")
