@@ -32,9 +32,9 @@ def setup_logging(version, debug):
         logging.StreamHandler(),
         logging.FileHandler(get_path(), mode='w')
     ]
-    logger.setLevel(level)
     for handler in handlers:
         handler.setFormatter(formatter)
     for handler in handlers:
         logger.addHandler(handler)
     logging.getLogger('open_cobol_ide').info('version: %s' % version)
+    logging.getLogger('open_cobol_ide').setLevel(level)

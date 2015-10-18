@@ -33,7 +33,7 @@ def initialize(vcvarsall, arch='x86'):
             except KeyError:
                 _logger().warn('key error: %s', key)
             else:
-                _logger().info('%s=%s', dst_key, os.environ[dst_key])
+                _logger().debug('%s=%s', dst_key, os.environ[dst_key])
 
 
 def query_vcvarsall(path, arch):
@@ -44,7 +44,7 @@ def query_vcvarsall(path, arch):
     This function has been taken from distutils2 (and adapted for own needs).
     """
     result = {}
-    _logger().info('querying vcvarsall: "%s" %s set', path, arch)
+    _logger().debug('querying vcvarsall: "%s" %s set', path, arch)
     popen = subprocess.Popen('"%s" %s & set' % (path, arch),
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
