@@ -167,6 +167,13 @@ class GnuCobolCompiler(QtCore.QObject):
                 _logger().debug('parsing version line: %s' % lversion)
             return lversion
 
+    @staticmethod
+    def setup_process_environment():
+        env = QtCore.QProcessEnvironment()
+        for k, v in os.environ.items():
+            env.insert(k, v)
+        return env
+
     @classmethod
     @memoized
     def check_compiler(cls, compiler):
@@ -184,6 +191,7 @@ class GnuCobolCompiler(QtCore.QObject):
             msvc.initialize(vcvarsall, arch=Settings().vcvarsall_arch)
         p = QtCore.QProcess()
         args = ['-x', '-o', dest, cbl_path]
+        p.setProcessEnvironment(GnuCobolCompiler.setup_process_environment())
         p.start(compiler, args)
         _logger().debug('check compiler')
         _logger().debug('process environment: %r',
