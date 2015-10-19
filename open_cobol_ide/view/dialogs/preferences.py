@@ -121,7 +121,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
     def _check_compiler(self, *_):
         self.apply()
         pth = self.lineEditCompilerPath.text()
-        if os.path.exists(pth):
+        if os.path.exists(pth) or system.which(pth) is not None:
             p = QtCore.QProcess()
             p.start(pth, ['--version'])
             p.waitForFinished()

@@ -137,35 +137,16 @@ class GnuCobolCompiler(QtCore.QObject):
         """
         Returns the GnuCOBOL compiler version as a string
         """
-        cmd = [Settings().compiler_path, '--version']
-        try:
-            _logger().debug('getting cobc version: %s' % ' '.join(cmd))
-            if sys.platform == 'win32':
-                startupinfo = subprocess.STARTUPINFO()
-                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-                p = subprocess.Popen(
-                    cmd, shell=False, startupinfo=startupinfo,
-                    stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                    stdin=subprocess.PIPE)
-            else:
-                p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
-                                     stderr=subprocess.PIPE)
-        except (OSError, TypeError):
-            _logger().exception('GnuCOBOL compiler not found (command: %s)' %
-                                cmd)
-            return 'Not installed'
-        else:
-            stdout, stderr = p.communicate()
-            try:
-                stdout = str(stdout.decode(locale.getpreferredencoding()))
-            except UnicodeDecodeError:
-                stdout = None
-                lversion = 'Failed to parse cobc output'
-            else:
-                lversion = stdout.splitlines()[0]
-                lversion = lversion.replace('cobc (', '').replace(')', '')
-                _logger().debug('parsing version line: %s' % lversion)
+        cmd = Settings().compiler_path, '--version'
+        _logger().debug('getting cobc version: %s' % ' '.join(cmd))
+        status, output = GnuCobolCompiler._run_command(cmd[0], [cmd[1]])
+        if status == 0:
+            _logger().debug('parsing version line: %s' % output)
+            lversion = output.splitlines()[0]
+            lversion = lversion.replace('cobc (', '').replace(')', '')
             return lversion
+        else:
+            return output
 
     @staticmethod
     def setup_process_environment():
@@ -175,26 +156,32 @@ class GnuCobolCompiler(QtCore.QObject):
 
         s = Settings()
 
+        PATH = ''
         if s.path_enabled:
-            PATH = s.path + os.path.sep + os.environ['PATH']
+            PATH = s.path
+        elif not s.vcvarsall:
+            PATH += os.path.sep + os.environ['PATH']
 
         if s.vcvarsall:
             for k, v in msvc.get_vc_vars(
                     s.vcvarsall, s.vcvarsall_arch).items():
                 if k == 'PATH':
-                    PATH = v + PATH + os.path.sep
+                    PATH = v + os.pathsep + PATH
+                else:
+                    env.insert(k, v)
+
         env.insert('PATH', PATH)
 
-        if s.cob_config_dir_enabled:
+        if s.cob_config_dir_enabled and s.cob_config_dir:
             env.insert('COB_CONFIG_DIR', s.cob_config_dir)
 
-        if s.cob_copy_dir_enabled:
+        if s.cob_copy_dir_enabled and s.cob_copy_dir:
             env.insert('COB_COPY_DIR', s.cob_copy_dir)
 
-        if s.cob_include_path_enabled:
+        if s.cob_include_path_enabled and s.cob_copy_dir:
             env.insert('COB_INCLUDE_PATH', s.cob_include_path)
 
-        if s.cob_lib_path:
+        if s.cob_lib_path and s.cob_copy_dir:
             env.insert('COB_LIB_PATH', s.cob_lib_path)
 
         return env
@@ -208,8 +195,6 @@ class GnuCobolCompiler(QtCore.QObject):
             f.write(DEFAULT_TEMPLATE)
         dest = os.path.join(tempfile.gettempdir(),
                             'test' + ('.exe' if system.windows else ''))
-
-        original_env = os.environ.copy()
 
         p = QtCore.QProcess()
         args = ['-x', '-o', dest, cbl_path]
@@ -243,8 +228,6 @@ class GnuCobolCompiler(QtCore.QObject):
             os.remove(cbl_path)
         except OSError:
             pass
-
-        os.environ = original_env
 
         return output, p.exitCode()
 
@@ -338,7 +321,7 @@ class GnuCobolCompiler(QtCore.QObject):
         if sys.platform == "win32":
             # copy the dll
             files = glob.glob(os.path.join(
-                os.path.dirname(Settings().compiler_path), "*.dll"))
+                os.path.dirname(Settings().full_compiler_path), "*.dll"))
             for f in files:
                 shutil.copy(f, path)
         if os.path.exists(output_full_path):
@@ -394,8 +377,6 @@ class GnuCobolCompiler(QtCore.QObject):
 
         self.prepare_bin_dir(output_dir, output_full_path)
 
-        original_env = os.environ.copy()
-
         pgm, options = self.make_command(inputs, file_type, output_dir,
                                          additional_options)
         process = QtCore.QProcess()
@@ -433,8 +414,6 @@ class GnuCobolCompiler(QtCore.QObject):
             messages.append((output, CheckerMessages.ERROR, - 1, 0,
                              None, None, file_path))
         _logger().debug('compile results: %r - %r', status, messages)
-
-        os.environ = original_env
 
         return status, messages
 
