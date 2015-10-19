@@ -280,7 +280,9 @@ class GnuCobolCompiler(QtCore.QObject):
 
     @staticmethod
     def get_cobcrun_infos():
-        pgm = shutil.which('cobcrun')
+        path = os.environ['PATH'] + os.pathsep + os.path.dirname(
+            Settings().compiler_path)
+        pgm = shutil.which('cobcrun', path=path)
         args = ['--runtime-env']
         if not pgm:
             return 'cannot run command, cobcrun could not be found using PATH.'
