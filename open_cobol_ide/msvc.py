@@ -45,9 +45,12 @@ def query_vcvarsall(path, arch):
     """
     result = {}
     _logger().debug('querying vcvarsall: "%s" %s set', path, arch)
+    si = subprocess.STARTUPINFO()
+    si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
     popen = subprocess.Popen('"%s" %s & set' % (path, arch),
                              stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE)
+                             stderr=subprocess.PIPE,
+                             startupinfo=si)
     stdout, stderr = popen.communicate()
     if popen.wait() != 0:
         raise RuntimeError(stderr.decode("mbcs"))
