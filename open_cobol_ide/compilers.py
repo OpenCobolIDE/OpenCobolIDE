@@ -172,6 +172,31 @@ class GnuCobolCompiler(QtCore.QObject):
         env = QtCore.QProcessEnvironment()
         for k, v in os.environ.items():
             env.insert(k, v)
+
+        s = Settings()
+
+        if s.path_enabled:
+            PATH = s.path + os.path.sep + os.environ['PATH']
+
+        if s.vcvarsall:
+            for k, v in msvc.get_vc_vars(
+                    s.vcvarsall, s.vcvarsall_arch).items():
+                if k == 'PATH':
+                    PATH = v + PATH + os.path.sep
+        env.insert('PATH', PATH)
+
+        if s.cob_config_dir_enabled:
+            env.insert('COB_CONFIG_DIR', s.cob_config_dir)
+
+        if s.cob_copy_dir_enabled:
+            env.insert('COB_COPY_DIR', s.cob_copy_dir)
+
+        if s.cob_include_path_enabled:
+            env.insert('COB_INCLUDE_PATH', s.cob_include_path)
+
+        if s.cob_lib_path:
+            env.insert('COB_LIB_PATH', s.cob_lib_path)
+
         return env
 
     @classmethod
@@ -186,9 +211,6 @@ class GnuCobolCompiler(QtCore.QObject):
 
         original_env = os.environ.copy()
 
-        vcvarsall = Settings().vcvarsall
-        if vcvarsall:
-            msvc.initialize(vcvarsall, arch=Settings().vcvarsall_arch)
         p = QtCore.QProcess()
         args = ['-x', '-o', dest, cbl_path]
         p.setProcessEnvironment(GnuCobolCompiler.setup_process_environment())
@@ -228,16 +250,12 @@ class GnuCobolCompiler(QtCore.QObject):
 
     @staticmethod
     def _run_command(pgm, args):
-        original_env = os.environ.copy()
-        vcvarsall = Settings().vcvarsall
-        if vcvarsall:
-            msvc.initialize(vcvarsall, arch=Settings().vcvarsall_arch)
-
         if ' ' in pgm:
             pgm = '"%s"' % pgm
 
         p = QtCore.QProcess()
         p.setProcessChannelMode(QtCore.QProcess.MergedChannels)
+        p.setProcessEnvironment(GnuCobolCompiler.setup_process_environment())
         p.start(pgm, args)
         p.waitForFinished()
 
@@ -254,7 +272,6 @@ class GnuCobolCompiler(QtCore.QObject):
         except UnicodeDecodeError:
             output = 'Failed to decode compiler output with encoding %s' % \
                      locale.getpreferredencoding()
-        os.environ = original_env
 
         return status, output
 
@@ -262,8 +279,6 @@ class GnuCobolCompiler(QtCore.QObject):
     def get_cobc_infos():
         compiler = Settings().compiler_path
         args = ['--info']
-
-        print(compiler)
 
         if not compiler:
             return 'cannot run command, no compiler path defined'
@@ -381,15 +396,12 @@ class GnuCobolCompiler(QtCore.QObject):
 
         original_env = os.environ.copy()
 
-        vcvarsall = Settings().vcvarsall
-        if vcvarsall:
-            msvc.initialize(vcvarsall, Settings().vcvarsall_arch)
-
         pgm, options = self.make_command(inputs, file_type, output_dir,
                                          additional_options)
         process = QtCore.QProcess()
         process.setWorkingDirectory(path)
         process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
+        process.setProcessEnvironment(self.setup_process_environment())
         cmd = '%s %s' % (pgm, ' '.join(options))
         _logger().info('command: %s', cmd)
         _logger().debug('working directory: %s', path)

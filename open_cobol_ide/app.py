@@ -44,6 +44,8 @@ class Application(QtCore.QObject):
 
     def __init__(self, parse_args=True):
         super().__init__()
+        if system.darwin:
+            Application._osx_init()
         self._reported_tracebacks = []
         self._old_except_hook = sys.excepthook
         sys.excepthook = self._except_hook
@@ -53,7 +55,6 @@ class Application(QtCore.QObject):
                                            'ocide_stdout.log'), 'w')
             sys.stderr = open(os.path.join(system.get_cache_directory(),
                                            'ocide_stderr.log'), 'w')
-        self.update_environment_vars()
         self.app = QtWidgets.QApplication(sys.argv)
         if parse_args and not system.darwin:
             args = self.parse_args()
@@ -145,56 +146,6 @@ class Application(QtCore.QObject):
         else:
             self.win.showMaximized()
         return self.app.exec_()
-
-    @classmethod
-    def update_environment_vars(cls):
-        """
-        Inits the environment
-        :return:
-        """
-        s = Settings()
-        if s.path_enabled:
-            os.environ['PATH'] = s.path + os.pathsep + os.environ['PATH']
-        else:
-            try:
-                os.environ['PATH'] = _original_env['PATH']
-            except KeyError:
-                pass
-        if s.cob_config_dir_enabled:
-            os.environ['COB_CONFIG_DIR'] = s.cob_config_dir
-        else:
-            try:
-                os.environ['COB_CONFIG_DIR'] = _original_env['COB_CONFIG_DIR']
-            except KeyError:
-                if 'COB_CONFIG_DIR' in os.environ:
-                    os.environ['COB_CONFIG_DIR'] = ''
-        if s.cob_copy_dir_enabled:
-            os.environ['COB_COPY_DIR'] = s.cob_copy_dir
-        else:
-            try:
-                os.environ['COB_COPY_DIR'] = _original_env['COB_COPY_DIR']
-            except KeyError:
-                if 'COB_COPY_DIR' in os.environ:
-                    os.environ['COB_COPY_DIR'] = ''
-        if s.cob_include_path_enabled:
-            os.environ['COB_INCLUDE_PATH'] = s.cob_include_path
-        else:
-            try:
-                os.environ['COB_INCLUDE_PATH'] = _original_env[
-                    'COB_INCLUDE_PATH']
-            except KeyError:
-                if 'COB_INCLUDE_PATH' in os.environ:
-                    os.environ['COB_INCLUDE_PATH'] = ''
-        if s.cob_lib_path_enabled:
-            os.environ['COB_LIB_PATH'] = s.cob_lib_path
-        else:
-            try:
-                os.environ['COB_LIB_PATH'] = _original_env['COB_LIB_PATH']
-            except KeyError:
-                if 'COB_LIB_PATH' in os.environ:
-                    os.environ['COB_LIB_PATH'] = ''
-        if system.darwin:
-            Application._osx_init()
 
     @staticmethod
     def _osx_init():

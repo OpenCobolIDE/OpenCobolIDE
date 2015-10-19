@@ -245,7 +245,6 @@ class EditController(Controller):
             _logger().info('settings dialog canceled')
         else:
             _logger().info('applying settings')
-            self.app.update_environment_vars()
             self.app.apply_mimetypes_preferences()
             self.app.update_app_style()
             self.app.home.update_style()

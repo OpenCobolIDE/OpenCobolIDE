@@ -6,18 +6,22 @@ import logging
 import subprocess
 import os
 
+from pyqode.core.api.utils import memoized
+
 
 #: environment variables we are intetrested in
 INTERESTING = set(("include", "lib", "libpath", "path"))
 
 
-def initialize(vcvarsall, arch='x86'):
+@memoized
+def get_vc_vars(vcvarsall, arch):
     """
-    Modifies os.environ with the VC vars.
+    Gets the VC environment variables
 
     :param vcvarsall: path to the vcvarsall batch to run.
     :param arch: architecture to setup (x86 or x64).
     """
+    env = {}
     try:
         vc_env = query_vcvarsall(vcvarsall, arch)
     except RuntimeError:
@@ -28,12 +32,8 @@ def initialize(vcvarsall, arch='x86'):
             dst_key = key
             if key == 'path':
                 dst_key = key.upper()
-            try:
-                os.environ[dst_key] = vc_env[key]
-            except KeyError:
-                _logger().warn('key error: %s', key)
-            else:
-                _logger().debug('%s=%s', dst_key, os.environ[dst_key])
+            env[dst_key] = vc_env[key]
+    return env
 
 
 def query_vcvarsall(path, arch):

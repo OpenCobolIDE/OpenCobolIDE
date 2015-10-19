@@ -53,8 +53,6 @@ def lint(request_data):
     :param request_data: work request data (dict)
     :return: status, messages
     """
-    from open_cobol_ide.app import Application
-    Application.update_environment_vars()
     code = request_data['code']
     path = request_data['path']
     extension = os.path.splitext(path)[1]
@@ -62,9 +60,6 @@ def lint(request_data):
         # code might not have been saved yet, run cobc on a tmp file
         # we use a time stamp to avoid overwriting the file another cobc
         # instance might be compiling.
-        vcvarsall = settings.Settings().vcvarsall
-        if vcvarsall:
-            msvc.initialize(vcvarsall, settings.Settings().vcvarsall_arch)
         file_name = os.path.split(path)[1]
         file_name, ext = os.path.splitext(file_name)
         tmp_name = '%s.%s%s' % (file_name, str(int(time.time())), ext)
@@ -74,6 +69,8 @@ def lint(request_data):
         compiler = GnuCobolCompiler()
         pgm, args = make_linter_command(tmp_name, path)
         process = QtCore.QProcess()
+        process.setProcessEnvironment(
+            GnuCobolCompiler.setup_process_environment())
         process.setWorkingDirectory(os.path.dirname(tmp_pth))
         process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
         print('linter command: %s %s' % (pgm, ' '.join(args)))

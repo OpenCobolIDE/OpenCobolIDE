@@ -553,9 +553,6 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.esqloc_extensions = [
             ext for ext in self.lineEditesqlOcExts.text().split(';') if ext]
 
-        from open_cobol_ide.app import Application
-        Application.update_environment_vars()
-
     @classmethod
     def edit_preferences(cls, parent):
         def restore_state(dlg):
