@@ -37,4 +37,4 @@ def setup_logging(version, debug):
     for handler in handlers:
         logger.addHandler(handler)
     logging.getLogger('open_cobol_ide').info('version: %s' % version)
-    logging.getLogger('open_cobol_ide').setLevel(level)
+    logger.setLevel(level)
