@@ -263,6 +263,11 @@ class GnuCobolCompiler(QtCore.QObject):
         compiler = Settings().compiler_path
         args = ['--info']
 
+        print(compiler)
+
+        if not compiler:
+            return 'cannot run command, no compiler path defined'
+
         status, output = GnuCobolCompiler._run_command(compiler, args)
 
         if status != 0:
@@ -277,6 +282,9 @@ class GnuCobolCompiler(QtCore.QObject):
     def get_cobcrun_infos():
         pgm = shutil.which('cobcrun')
         args = ['--runtime-env']
+        if not pgm:
+            return 'cannot run command, cobcrun could not be found using PATH.'
+
         status, output = GnuCobolCompiler._run_command(pgm, args)
 
         if status != 0:
