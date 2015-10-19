@@ -137,13 +137,13 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         path = QtWidgets.QFileDialog.getExistingDirectory(
             self, 'Select a library directory')
         if path:
-            self.listWidgetLibPaths.addItem(path)
+            self.listWidgetLibPaths.addItem(os.path.normpath(path))
 
     def _add_rel_lib_path(self):
         path, status = QtWidgets.QInputDialog.getText(
             self, 'Add relative library path', 'Path:')
         if status:
-            self.listWidgetLibPaths.addItem(path)
+            self.listWidgetLibPaths.addItem(os.path.normpath(path))
 
     def _rm_lib_path(self):
         items = self.listWidgetLibPaths.selectedItems()
@@ -154,13 +154,13 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         path = QtWidgets.QFileDialog.getExistingDirectory(
             self, 'Select a copybook path')
         if path:
-            self.listWidgetCopyPaths.addItem(path)
+            self.listWidgetCopyPaths.addItem(os.path.normpath(path))
 
     def _add_rel_copy_path(self):
         path, status = QtWidgets.QInputDialog.getText(
             self, 'Add relative copybook path', 'Path:')
         if status:
-            self.listWidgetCopyPaths.addItem(path)
+            self.listWidgetCopyPaths.addItem(os.path.normpath(path))
 
     def _rm_copy_path(self):
         items = self.listWidgetCopyPaths.selectedItems()
@@ -185,14 +185,14 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self, 'Select path to a GnuCOBOL compiler executable',
             self.lineEditCompilerPath.text())
         if path:
-            self.lineEditCompilerPath.setText(path)
+            self.lineEditCompilerPath.setText(os.path.normpath(path))
             self._check_compiler()
 
     def _select_esqloc(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(
             self, 'Select esqlOC folder', self.lineEditESQLOC.text())
         if path:
-            self.lineEditESQLOC.setText(path)
+            self.lineEditESQLOC.setText(os.path.normpath(path))
 
     def _select_dbpre(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
