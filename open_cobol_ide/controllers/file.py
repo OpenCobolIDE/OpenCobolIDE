@@ -113,6 +113,10 @@ class FileController(Controller):
         else:
             self.recent_files_manager.open_file(fn)
             Settings().last_path = fn
+        editor = self.ui.tabWidgetEditors.current_widget()
+        self.main_window.setWindowTitle(
+            '%s [%s] - %s' % (
+                editor.file.name, editor.file.path, self.app.title))
 
     def quit(self):
         """
