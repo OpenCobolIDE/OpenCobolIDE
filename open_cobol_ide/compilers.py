@@ -140,7 +140,7 @@ class GnuCobolCompiler(QtCore.QObject):
         cmd = Settings().compiler_path, '--version'
         _logger().debug('getting cobc version: %s' % ' '.join(cmd))
         status, output = GnuCobolCompiler._run_command(cmd[0], [cmd[1]])
-        if status == 0:
+        if status == 0 and output:
             _logger().debug('parsing version line: %s' % output)
             lversion = output.splitlines()[0]
             lversion = lversion.replace('cobc (', '').replace(')', '')
@@ -279,7 +279,7 @@ class GnuCobolCompiler(QtCore.QObject):
     @staticmethod
     def get_cobcrun_infos():
         path = os.environ['PATH'] + os.pathsep + os.path.dirname(
-            Settings().compiler_path)
+            Settings().full_compiler_path)
         pgm = shutil.which('cobcrun', path=path)
         args = ['--runtime-env']
         if not pgm:
