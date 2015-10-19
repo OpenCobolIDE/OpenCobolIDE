@@ -71,7 +71,7 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
         QtGui.QFontDatabase.addApplicationFont(
             ':/fonts/rc/SourceCodePro-Bold.ttf')
 
-        template = '''cobc --infos
+        template = '''cobc --info
 ============
 
 %(cobc_infos)s
