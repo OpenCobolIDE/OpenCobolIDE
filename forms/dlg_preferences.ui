@@ -82,7 +82,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <property name="usesScrollButtons">
          <bool>true</bool>
@@ -253,6 +253,9 @@
                    </property>
                    <property name="statusTip">
                     <string>Tab length (number of spaces)</string>
+                   </property>
+                   <property name="minimum">
+                    <number>2</number>
                    </property>
                    <property name="maximum">
                     <number>99</number>
@@ -521,8 +524,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>634</width>
-               <height>851</height>
+               <width>371</width>
+               <height>302</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1247,8 +1250,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>634</width>
-               <height>851</height>
+               <width>196</width>
+               <height>57</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_5">
@@ -1307,8 +1310,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>634</width>
-               <height>832</height>
+               <width>308</width>
+               <height>419</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
