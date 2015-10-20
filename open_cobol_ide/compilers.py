@@ -396,12 +396,15 @@ class GnuCobolCompiler(QtCore.QObject):
             status = process.exitCode()
         else:
             status = 139
+        raw_output = process.readAllStandardOutput().data()
         try:
-            output = process.readAllStandardOutput().data().decode(
+            output = raw_output.decode(
                 locale.getpreferredencoding()).replace('\r', '\n')
         except UnicodeDecodeError:
             output = 'Failed to decode compiler output with encoding %s' % \
                      locale.getpreferredencoding()
+            _logger().exception('failed to decode compiler output: %r' %
+                                raw_output)
         self.output_available.emit(output)
         messages = self.parse_output(output, process.workingDirectory())
         binary_created = os.path.exists(output_full_path)
