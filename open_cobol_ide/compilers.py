@@ -207,14 +207,14 @@ class GnuCobolCompiler(QtCore.QObject):
         p.waitForFinished()
         try:
             stdout = bytes(p.readAllStandardOutput()).decode(
-                locale.getpreferredencoding())
+                locale.getpreferredencoding()).replace('\r\n', '\n')
             stderr = bytes(p.readAllStandardError()).decode(
-                locale.getpreferredencoding())
+                locale.getpreferredencoding()).replace('\r\n', '\n')
         except UnicodeDecodeError:
             # something is wrong in the output, the compiler might be broker
             output = None
         else:
-            output = stderr + stdout
+            output = stderr + '\n' + stdout
         if p.exitStatus() == p.Crashed or output is None:
             exit_code = 139
         else:
@@ -251,7 +251,7 @@ class GnuCobolCompiler(QtCore.QObject):
         # get compiler output
         try:
             output = p.readAllStandardOutput().data().decode(
-                locale.getpreferredencoding())
+                locale.getpreferredencoding()).replace('\r\n', '\n')
         except UnicodeDecodeError:
             output = 'Failed to decode compiler output with encoding %s' % \
                      locale.getpreferredencoding()
