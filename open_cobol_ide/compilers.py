@@ -398,7 +398,7 @@ class GnuCobolCompiler(QtCore.QObject):
             status = 139
         try:
             output = process.readAllStandardOutput().data().decode(
-                locale.getpreferredencoding())
+                locale.getpreferredencoding()).replace('\r', '\n')
         except UnicodeDecodeError:
             output = 'Failed to decode compiler output with encoding %s' % \
                      locale.getpreferredencoding()
@@ -471,6 +471,8 @@ class GnuCobolCompiler(QtCore.QObject):
                 ifn = '"%s"' % ifn
             options.append(ifn)
         pgm = Settings().compiler_path
+
+        print(options)
         return pgm, options
 
     @staticmethod
