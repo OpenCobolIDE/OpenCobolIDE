@@ -69,3 +69,9 @@ def icon_themes():
                 if os.path.isdir(pth) and 'cursors' not in os.listdir(pth):
                     themes.append(d)
     return themes
+
+
+def normpath(path):
+    if path:
+        return os.path.normpath(path)
+    return path

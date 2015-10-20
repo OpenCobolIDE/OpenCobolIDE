@@ -137,13 +137,13 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         path = QtWidgets.QFileDialog.getExistingDirectory(
             self, 'Select a library directory')
         if path:
-            self.listWidgetLibPaths.addItem(os.path.normpath(path))
+            self.listWidgetLibPaths.addItem(system.normpath(path))
 
     def _add_rel_lib_path(self):
         path, status = QtWidgets.QInputDialog.getText(
             self, 'Add relative library path', 'Path:')
         if status:
-            self.listWidgetLibPaths.addItem(os.path.normpath(path))
+            self.listWidgetLibPaths.addItem(system.normpath(path))
 
     def _rm_lib_path(self):
         items = self.listWidgetLibPaths.selectedItems()
@@ -154,13 +154,13 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         path = QtWidgets.QFileDialog.getExistingDirectory(
             self, 'Select a copybook path')
         if path:
-            self.listWidgetCopyPaths.addItem(os.path.normpath(path))
+            self.listWidgetCopyPaths.addItem(system.normpath(path))
 
     def _add_rel_copy_path(self):
         path, status = QtWidgets.QInputDialog.getText(
             self, 'Add relative copybook path', 'Path:')
         if status:
-            self.listWidgetCopyPaths.addItem(os.path.normpath(path))
+            self.listWidgetCopyPaths.addItem(system.normpath(path))
 
     def _rm_copy_path(self):
         items = self.listWidgetCopyPaths.selectedItems()
@@ -172,7 +172,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
             self, 'Select vcvarsall.bat', self.lineEditVCVARS.text())
         if path:
-            path = os.path.normpath(path)
+            path = system.normpath(path)
             if os.path.isfile(path) and path.lower().endswith('vcvarsall.bat'):
                 self.lineEditVCVARS.setText(path)
             else:
@@ -185,20 +185,20 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self, 'Select path to a GnuCOBOL compiler executable',
             self.lineEditCompilerPath.text())
         if path:
-            self.lineEditCompilerPath.setText(os.path.normpath(path))
+            self.lineEditCompilerPath.setText(system.normpath(path))
             self._check_compiler()
 
     def _select_esqloc(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(
             self, 'Select esqlOC folder', self.lineEditESQLOC.text())
         if path:
-            self.lineEditESQLOC.setText(os.path.normpath(path))
+            self.lineEditESQLOC.setText(system.normpath(path))
 
     def _select_dbpre(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
             self, 'Select dbpre executable', self.lineEditDbpre.text())
         if path:
-            self.lineEditDbpre.setText(os.path.normpath(path))
+            self.lineEditDbpre.setText(system.normpath(path))
             self.labelDbpreVersion.setText(
                 compilers.DbpreCompiler(path).get_version()
                 if Settings().dbpre != '' else ''
@@ -209,7 +209,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self, 'Select cobmysqlapi object file',
             self.lineEditCobmysqlapi.text())
         if path:
-            self.lineEditCobmysqlapi.setText(os.path.normpath(path))
+            self.lineEditCobmysqlapi.setText(system.normpath(path))
 
     def _select_dbpre_framework(self):
         def bool_to_string(value):
@@ -222,7 +222,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self, 'Select dbpre framework directory',
             self.lineEditDbpreFramework.text())
         if path:
-            path = os.path.normpath(path)
+            path = system.normpath(path)
             pgctbbat = os.path.exists(os.path.join(path, 'PGCTBBAT'))
             pgctbbatws = os.path.exists(os.path.join(path, 'PGCTBBATWS'))
             sqlca = os.path.exists(os.path.join(path, 'SQLCA'))
