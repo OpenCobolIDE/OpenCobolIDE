@@ -529,7 +529,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         cb_flags = [self.cb_g, self.cb_ftrace, self.cb_ftraceall,
                     self.cb_debugging_line, self.cb_static, self.cb_debug]
         flags = [cb.text() for cb in cb_flags if cb.isChecked()]
-        flags += self.le_compiler_flags.text().split(' ')
+        flags += system.shell_split(self.le_compiler_flags.text())
         settings.compiler_flags = flags
         # sql
         settings.dbpre = self.lineEditDbpre.text()

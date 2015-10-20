@@ -5,9 +5,11 @@ import locale
 import os
 import tempfile
 import time
+
 from pyqode.qt import QtCore
 from pyqode.core.modes import CheckerMode
-from open_cobol_ide import settings, msvc
+
+from open_cobol_ide import settings, system
 from open_cobol_ide.compilers import GnuCobolCompiler
 
 
@@ -36,7 +38,7 @@ def make_linter_command(cobol_file_name, original_file_path):
             if pth:
                 args.append('-L%s' % pth)
     if settings.libraries:
-        for lib in settings.libraries.split(' '):
+        for lib in system.shell_split(settings.libraries):
             if lib:
                 args.append('-l%s' % lib)
     args.append(cobol_file_name)

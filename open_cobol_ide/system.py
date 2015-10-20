@@ -4,7 +4,9 @@ System utility module (get system info, platform specific path,...).
 import functools
 import os
 import platform
+import shlex
 import sys
+
 from pyqode.qt import QtGui
 
 
@@ -129,3 +131,7 @@ def normpath(path):
     if path:
         return os.path.normpath(path)
     return path
+
+
+def shell_split(string):
+    return shlex.split(string, posix=not windows)

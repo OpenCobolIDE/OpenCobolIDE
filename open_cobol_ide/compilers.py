@@ -461,7 +461,7 @@ class GnuCobolCompiler(QtCore.QObject):
                 if pth:
                     options.append('-L%s' % pth)
         if settings.libraries:
-            for lib in settings.libraries.split(' '):
+            for lib in system.shell_split(settings.libraries):
                 if lib:
                     options.append('-l%s' % lib)
         if additional_options:

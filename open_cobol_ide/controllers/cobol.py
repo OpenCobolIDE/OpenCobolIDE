@@ -343,8 +343,8 @@ class CobolController(Controller):
             else:
                 cmd = ['"%s %s %s"' % (pyqode_console, system.which('cobcrun'),
                                        program)]
-            cmd = (Settings().external_terminal_command.strip().split(' ') +
-                   cmd)
+            cmd = system.shell_split(
+                Settings().external_terminal_command.strip()) + cmd
             subprocess.Popen(' '.join(cmd), cwd=wd, shell=True)
         _logger().info('running program in external terminal: %s',
                        ' '.join(cmd))
