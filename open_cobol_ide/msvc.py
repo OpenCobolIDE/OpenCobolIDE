@@ -24,7 +24,7 @@ def get_vc_vars(vcvarsall, arch):
     env = {}
     try:
         vc_env = query_vcvarsall(vcvarsall, arch)
-    except RuntimeError:
+    except (RuntimeError, PermissionError):
         _logger().exception('failed to initialize VC vars, compilation will '
                             'likely not work...')
     else:
