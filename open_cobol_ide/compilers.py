@@ -472,7 +472,6 @@ class GnuCobolCompiler(QtCore.QObject):
             options.append(ifn)
         pgm = Settings().compiler_path
 
-        print(options)
         return pgm, options
 
     @staticmethod
