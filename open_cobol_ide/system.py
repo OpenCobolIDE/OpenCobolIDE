@@ -134,4 +134,4 @@ def normpath(path):
 
 
 def shell_split(string):
-    return shlex.split(string, posix=not windows)
+    return shlex.split(string, posix=False)
