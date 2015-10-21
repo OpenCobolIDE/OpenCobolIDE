@@ -198,8 +198,9 @@ class EditController(Controller):
             try:
                 is_executable = (self.app.edit.current_editor.file_type ==
                                  FileType.EXECUTABLE)
-            except AttributeError:
-                # not a cobol editor
+            except (AttributeError, UnicodeDecodeError):
+                # not a cobol editor, or not file not loaded due to an
+                # encoding error
                 self.ui.menuCobol.setEnabled(False)
                 self.app.cobol.enable_compile(False)
                 self.app.cobol.enable_run(False)
