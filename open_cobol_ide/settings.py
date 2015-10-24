@@ -631,7 +631,7 @@ class Settings(object):
     def default_path(self):
         path = self.default_compiler_path()
         if path:
-            path = os.pathsep.join([os.path.dirname()])
+            path = os.pathsep.join([os.path.dirname(path)])
         else:
             path = ''
         return path
