@@ -142,7 +142,7 @@ class EditController(Controller):
                     bt_run=self.app.cobol.create_bt_run(),)
             except TypeError:
                 editor = self.ui.tabWidgetEditors.open_document(path)
-        except OSError as e:
+        except Exception as e:
             QtWidgets.QMessageBox.warning(
                 self.main_window, 'Failed to open path',
                 'Failed to open path: %s' % e)
