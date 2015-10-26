@@ -143,24 +143,26 @@ class EditController(Controller):
             except TypeError:
                 editor = self.ui.tabWidgetEditors.open_document(path)
         except OSError as e:
-            QtWidgets.QMessageBox.warning(self.main_window, 'Failed to open path',
-                                          'Failed to open path: %s' % e)
-        try:
-            fw = editor.modes.get('FileWatcherMode')
-        except KeyError:
-            pass
+            QtWidgets.QMessageBox.warning(
+                self.main_window, 'Failed to open path',
+                'Failed to open path: %s' % e)
         else:
-            fw.file_deleted.connect(self._on_file_deleted)
-        editor.app = weakref.ref(self.app)
-        update_editor_settings(editor)
-        try:
-            editor.set_buttons()
-        except AttributeError:
-            pass
-        self.app.cobol.display_file_type(editor)
-        editor.cursorPositionChanged.connect(self._update_status_bar_labels)
-        self._update_status_bar_labels()
-        return editor
+            try:
+                fw = editor.modes.get('FileWatcherMode')
+            except KeyError:
+                pass
+            else:
+                fw.file_deleted.connect(self._on_file_deleted)
+            editor.app = weakref.ref(self.app)
+            update_editor_settings(editor)
+            try:
+                editor.set_buttons()
+            except AttributeError:
+                pass
+            self.app.cobol.display_file_type(editor)
+            editor.cursorPositionChanged.connect(self._update_status_bar_labels)
+            self._update_status_bar_labels()
+            return editor
 
     def _on_last_tab_closed(self):
         self.main_window.setWindowTitle(self.app.title)
