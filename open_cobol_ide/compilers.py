@@ -212,7 +212,7 @@ class GnuCobolCompiler(QtCore.QObject):
             for k, v in msvc.get_vc_vars(
                     s.vcvarsall, s.vcvarsall_arch).items():
                 if k == 'PATH':
-                    PATH = PATH + v + os.pathsep
+                    PATH = PATH + os.pathsep + v
                 else:
                     env.insert(k, v)
 
