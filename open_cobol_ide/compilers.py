@@ -205,14 +205,14 @@ class GnuCobolCompiler(QtCore.QObject):
         PATH = ''
         if s.path_enabled:
             PATH = s.path
-        elif not s.vcvarsall:
-            PATH += os.path.sep + os.environ['PATH']
 
-        if s.vcvarsall:
+        if not s.vcvarsall:
+            PATH = PATH + os.pathsep + os.environ['PATH']
+        else:
             for k, v in msvc.get_vc_vars(
                     s.vcvarsall, s.vcvarsall_arch).items():
                 if k == 'PATH':
-                    PATH = v + os.pathsep + PATH
+                    PATH = PATH + v + os.pathsep
                 else:
                     env.insert(k, v)
 
@@ -279,9 +279,8 @@ class GnuCobolCompiler(QtCore.QObject):
 
     @staticmethod
     def get_cobcrun_infos():
-        path = os.environ['PATH'] + os.pathsep + os.path.dirname(
-            Settings().full_compiler_path)
-        pgm = shutil.which('cobcrun', path=path)
+        env = GnuCobolCompiler.setup_process_environment()
+        pgm = shutil.which('cobcrun', path=env.value('PATH'))
         args = ['--runtime-env']
         if not pgm:
             return 'cannot run command, cobcrun could not be found using PATH.'
