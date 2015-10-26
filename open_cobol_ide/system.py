@@ -42,6 +42,8 @@ def which(cmd, mode=os.F_OK | os.X_OK, path=None):
 
     TAKEN from the shutil module (cause it is not available on python <= 3.3)
     """
+    from open_cobol_ide.settings import Settings
+
     # Check that a given file can be accessed with the correct mode.
     # Additionally check that `file` is not a directory, as on Windows
     # directories pass the os.access check.
@@ -61,7 +63,10 @@ def which(cmd, mode=os.F_OK | os.X_OK, path=None):
         path = os.environ.get("PATH", os.defpath)
     if not path:
         return None
+
     path = path.split(os.pathsep)
+    if Settings().path:
+        path.append(Settings().path)
 
     if sys.platform == "win32":
         # The current directory takes precedence on Windows.
