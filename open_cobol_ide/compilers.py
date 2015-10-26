@@ -62,10 +62,56 @@ def get_file_type(path):
         ftype = FileType.EXECUTABLE
         with open(path, 'r', encoding=encoding) as f:
             content = f.read().upper()
-        if re.match(r'.*PROCEDURE[\s\n]+DIVISION[\s\n]+USING', content, re.DOTALL):
+        if re.match(r'.*PROCEDURE[\s\n]+DIVISION[\s\n]+USING', content,
+                    re.DOTALL):
             ftype = FileType.MODULE
     _logger().debug('file type: %r', ftype)
     return ftype
+
+
+def run_command(pgm, args, working_dir=''):
+    if ' ' in pgm:
+        pgm = '"%s"' % pgm
+
+    path_cpy = os.environ['PATH']
+
+    p_env = GnuCobolCompiler.setup_process_environment()
+    os.environ['PATH'] = p_env.value('PATH')
+    p = QtCore.QProcess()
+    p.setProcessChannelMode(QtCore.QProcess.MergedChannels)
+    if working_dir:
+        p.setWorkingDirectory(working_dir)
+    p.setProcessEnvironment(p_env)
+    _logger().debug('command: %s', ' '.join([pgm] + args))
+    _logger().debug('working directory: %s', working_dir)
+    _logger().debug('environment: %s',
+                    p.processEnvironment().toStringList())
+    p.start(pgm, args)
+    p.waitForFinished()
+
+    # determine exit code (handle crashed processes)
+    if p.exitStatus() != p.Crashed:
+        status = p.exitCode()
+    else:
+        status = 139
+
+    # get compiler output
+    raw_output = p.readAllStandardOutput().data()
+    try:
+        output = raw_output.decode(
+            locale.getpreferredencoding()).replace('\r\n', '\n')
+    except UnicodeDecodeError:
+        output = 'Failed to decode compiler output with encoding %s' % \
+                     locale.getpreferredencoding()
+        _logger().exception('failed to decode compiler output: %r' %
+                            raw_output)
+
+    _logger().debug('output: %r', output)
+    _logger().debug('exit code: %r', status)
+
+    os.environ['PATH'] = path_cpy
+
+    return status, output
 
 
 def check_compiler():
@@ -139,7 +185,7 @@ class GnuCobolCompiler(QtCore.QObject):
         """
         cmd = Settings().compiler_path, '--version'
         _logger().debug('getting cobc version: %s' % ' '.join(cmd))
-        status, output = GnuCobolCompiler._run_command(cmd[0], [cmd[1]])
+        status, output = run_command(cmd[0], [cmd[1]])
         if status == 0 and output:
             _logger().debug('parsing version line: %s' % output)
             lversion = output.splitlines()[0]
@@ -172,6 +218,8 @@ class GnuCobolCompiler(QtCore.QObject):
 
         env.insert('PATH', PATH)
 
+        _logger().debug('PATH=%s', PATH)
+
         if s.cob_config_dir_enabled and s.cob_config_dir:
             env.insert('COB_CONFIG_DIR', s.cob_config_dir)
 
@@ -196,67 +244,20 @@ class GnuCobolCompiler(QtCore.QObject):
         dest = os.path.join(tempfile.gettempdir(),
                             'test' + ('.exe' if system.windows else ''))
 
-        p = QtCore.QProcess()
-        args = ['-x', '-o', dest, cbl_path]
-        p.setProcessEnvironment(GnuCobolCompiler.setup_process_environment())
-        p.start(compiler, args)
         _logger().debug('check compiler')
-        _logger().debug('process environment: %r',
-                        p.processEnvironment().toStringList())
-        _logger().debug('command: %s %s', compiler, ' '.join(args))
-        p.waitForFinished()
-        try:
-            stdout = bytes(p.readAllStandardOutput()).decode(
-                locale.getpreferredencoding()).replace('\r\n', '\n')
-            stderr = bytes(p.readAllStandardError()).decode(
-                locale.getpreferredencoding()).replace('\r\n', '\n')
-        except UnicodeDecodeError:
-            # something is wrong in the output, the compiler might be broker
-            output = None
-        else:
-            output = stderr + '\n' + stdout
-        if p.exitStatus() == p.Crashed or output is None:
-            exit_code = 139
-        else:
-            exit_code = p.exitCode()
-        _logger().debug('process output: %r', output)
-        _logger().debug('process exit code: %r', exit_code)
+
+        status, output = run_command(compiler, ['-x', '-o', dest, cbl_path])
+
         _logger().info('GnuCOBOL compiler check: %s',
-                       'success' if exit_code == 0 else 'fail')
+                       'success' if status == 0 else 'fail')
+
         try:
             os.remove(dest)
             os.remove(cbl_path)
         except OSError:
             pass
 
-        return output, p.exitCode()
-
-    @staticmethod
-    def _run_command(pgm, args):
-        if ' ' in pgm:
-            pgm = '"%s"' % pgm
-
-        p = QtCore.QProcess()
-        p.setProcessChannelMode(QtCore.QProcess.MergedChannels)
-        p.setProcessEnvironment(GnuCobolCompiler.setup_process_environment())
-        p.start(pgm, args)
-        p.waitForFinished()
-
-        # determine exit code (handle crashed processes)
-        if p.exitStatus() != p.Crashed:
-            status = p.exitCode()
-        else:
-            status = 139
-
-        # get compiler output
-        try:
-            output = p.readAllStandardOutput().data().decode(
-                locale.getpreferredencoding()).replace('\r\n', '\n')
-        except UnicodeDecodeError:
-            output = 'Failed to decode compiler output with encoding %s' % \
-                     locale.getpreferredencoding()
-
-        return status, output
+        return output, status
 
     @staticmethod
     def get_cobc_infos():
@@ -266,7 +267,7 @@ class GnuCobolCompiler(QtCore.QObject):
         if not compiler:
             return 'cannot run command, no compiler path defined'
 
-        status, output = GnuCobolCompiler._run_command(compiler, args)
+        status, output = run_command(compiler, args)
 
         if status != 0:
             output = 'command "cobc --info" failed with exit ' \
@@ -285,7 +286,7 @@ class GnuCobolCompiler(QtCore.QObject):
         if not pgm:
             return 'cannot run command, cobcrun could not be found using PATH.'
 
-        status, output = GnuCobolCompiler._run_command(pgm, args)
+        status, output = run_command(pgm, args)
 
         if status != 0:
             output = 'command "cobcrun --runtime-env" failed with exit ' \
@@ -359,6 +360,7 @@ class GnuCobolCompiler(QtCore.QObject):
         path, filename = os.path.split(file_path)
         if output_dir is None:
             output_dir = Settings().output_directory
+            original_output_dir = output_dir
         if not os.path.isabs(output_dir):
             output_dir = os.path.abspath(os.path.join(path, output_dir))
         # run command using qt process api, this is blocking.
@@ -379,39 +381,17 @@ class GnuCobolCompiler(QtCore.QObject):
 
         self.prepare_bin_dir(output_dir, output_full_path)
 
-        pgm, options = self.make_command(inputs, file_type, output_dir,
-                                         additional_options)
-        process = QtCore.QProcess()
-        process.setWorkingDirectory(path)
-        process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
-        process.setProcessEnvironment(self.setup_process_environment())
-        cmd = '%s %s' % (pgm, ' '.join(options))
-        _logger().info('command: %s', cmd)
-        _logger().debug('working directory: %s', path)
-        _logger().debug('system environment: %s', process.systemEnvironment())
-        process.start(pgm, options)
-        self.started.emit(cmd)
-        process.waitForFinished()
-        if process.exitStatus() != process.Crashed:
-            status = process.exitCode()
-        else:
-            status = 139
-        raw_output = process.readAllStandardOutput().data()
-        try:
-            output = raw_output.decode(
-                locale.getpreferredencoding()).replace('\r', '\n')
-        except UnicodeDecodeError:
-            output = 'Failed to decode compiler output with encoding %s' % \
-                     locale.getpreferredencoding()
-            _logger().exception('failed to decode compiler output: %r' %
-                                raw_output)
+        pgm, options = self.make_command(
+            inputs, file_type, original_output_dir, additional_options)
+        self.started.emit(' '.join([pgm] + options))
+        print(path)
+        status, output = run_command(pgm, options, working_dir=path)
         self.output_available.emit(output)
-        messages = self.parse_output(output, process.workingDirectory())
+        messages = self.parse_output(output, path)
         binary_created = os.path.exists(output_full_path)
-        _logger().info('compiler process exit code: %d', status)
-        _logger().info('compiler process output: %s', output)
         _logger().info('binary file (%s) created:  %r',
                        output_full_path, binary_created)
+
         if not len(messages) and (status != 0 or not binary_created):
             # compilation failed but the parser failed to extract COBOL related
             # messages, there might be an issue at the C level or at the
