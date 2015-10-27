@@ -31,7 +31,8 @@ def _mkdir(func):
     return wrapper
 
 
-def which(cmd, mode=os.F_OK | os.X_OK, path=None):
+def which(cmd, mode=os.F_OK | os.X_OK, path=None,
+          include_settings_path=True):
     """Given a command, mode, and a PATH string, return the path which
     conforms to the given mode on the PATH, or None if there is no such
     file.
@@ -65,7 +66,7 @@ def which(cmd, mode=os.F_OK | os.X_OK, path=None):
         return None
 
     path = path.split(os.pathsep)
-    if Settings().path:
+    if include_settings_path and Settings().path:
         path.append(Settings().path)
 
     if sys.platform == "win32":

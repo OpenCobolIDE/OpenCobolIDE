@@ -351,7 +351,7 @@ class Settings(object):
                 default = os.path.join(cwd, 'GnuCOBOL-Win32-MinGW', 'bin',
                                        'cobc.exe')
         else:
-            default = system.which('cobc')
+            default = system.which('cobc', include_settings_path=False)
         return system.normpath(default)
 
     @property
