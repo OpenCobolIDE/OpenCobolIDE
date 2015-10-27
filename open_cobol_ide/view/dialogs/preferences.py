@@ -102,6 +102,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.labelVCVARS.hide()
             self.lineEditVCVARS.hide()
             self.toolButtonVCVARS.hide()
+            self.combo_arch.hide()
             self.stackedWidgetSQL.setCurrentIndex(0)
         else:
             self.stackedWidgetSQL.setCurrentIndex(1)
