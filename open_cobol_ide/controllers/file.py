@@ -6,6 +6,7 @@ import logging
 import os
 from pyqode.core import widgets
 from pyqode.qt import QtWidgets
+from open_cobol_ide import system
 from open_cobol_ide.view.editors import CobolCodeEdit
 from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.dialogs.new_file import DlgNewFile
@@ -15,6 +16,15 @@ from open_cobol_ide.view.widgets import FileIconProvider
 
 def _logger():
     return logging.getLogger(__name__)
+
+
+UNC_WARNING = '''You are about to open a file using a UNC pathname.
+
+UNC pathnames are not fully supported by the IDE, some features such as the file explorer tree view will not work. Depending on the compiler you're using, this might also lead to some compilation errors.
+
+You will have better results if you map your share as a network drive...
+
+Do you still want to continue opening this file?'''  # noqa
 
 
 class FileController(Controller):
@@ -55,6 +65,7 @@ class FileController(Controller):
         self.ui.tabWidgetEditors.register_code_edit(CobolCodeEdit)
         self.ui.tabWidgetEditors.icon_provider_klass = FileIconProvider
         self.ui.tvFileSystem.set_icon_provider(FileIconProvider())
+        self._warning_unc = False
 
     def request_new(self, path=None):
         """
@@ -87,6 +98,15 @@ class FileController(Controller):
 
         :param path: path of the file to open.
         """
+        if system.windows:
+            if not self._warning_unc and os.path.splitunc(path)[0]:
+                answer = QtWidgets.QMessageBox.warning(
+                    self.main_window, 'UNC pathnames not fully supported',
+                    UNC_WARNING,
+                    QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                    QtWidgets.QMessageBox.No)
+                if answer == QtWidgets.QMessageBox.No:
+                    return
         self.app.edit.add_editor(path)
         self.app.view.show_edit_page()
         self.app.file.recent_files_manager.open_file(path)
