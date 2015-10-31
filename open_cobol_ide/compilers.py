@@ -183,7 +183,10 @@ class GnuCobolCompiler(QtCore.QObject):
         """
         Returns the GnuCOBOL compiler version as a string
         """
-        cmd = Settings().compiler_path, '--version'
+        compiler = Settings().compiler_path
+        cmd = compiler, '--version'
+        if not compiler:
+            return 'compiler not found'
         _logger().debug('getting cobc version: %s' % ' '.join(cmd))
         status, output = run_command(cmd[0], [cmd[1]])
         if status == 0 and output:
