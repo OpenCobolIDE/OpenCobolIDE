@@ -170,15 +170,15 @@ class GnuCobolCompiler(QtCore.QObject):
 
     OUTPUT_PATTERNS = [OUTPUT_PATTERN_GCC, OUTPUT_PATTERN_MSVC]
 
+    extensions = [
+        # no extension for exe on linux and mac
+        '.exe' if system.windows else '',
+        # .dll on windows, so everywhere else
+        '.dll' if system.windows else '.so' if system.linux else '.dylib'
+    ]
+
     def __init__(self):
         super().__init__()
-        #: platform specifc extensions, sorted per file type
-        self.extensions = [
-            # no extension for exe on linux and mac
-            '.exe' if system.windows else '',
-            # .dll on windows, so everywhere else
-            '.dll' if system.windows else '.so' if system.linux else '.dylib'
-        ]
 
     @staticmethod
     def get_version():
@@ -242,8 +242,19 @@ class GnuCobolCompiler(QtCore.QObject):
     @classmethod
     @memoized
     def check_compiler(cls, compiler):
+        def get_output_path(input_path):
+            dirname, filename = os.path.split(input_path)
+            basename = os.path.splitext(filename)[0]
+            possible_extensions = ['.exe', '.dll', '.so', '.dylib']
+            for ext in possible_extensions:
+                candidate = os.path.join(dirname, basename + ext)
+                if os.path.exists(candidate):
+                    return candidate
+            return None
+
         from open_cobol_ide.view.dialogs.preferences import DEFAULT_TEMPLATE
-        cbl_path = os.path.join(tempfile.gettempdir(), 'test.cbl')
+        working_dir = tempfile.gettempdir()
+        cbl_path = os.path.join(working_dir, 'test.cbl')
         with open(cbl_path, 'w') as f:
             f.write(DEFAULT_TEMPLATE)
         dest = os.path.join(tempfile.gettempdir(),
@@ -251,10 +262,32 @@ class GnuCobolCompiler(QtCore.QObject):
 
         _logger().debug('check compiler')
 
-        status, output = run_command(compiler, ['-x', '-o', dest, cbl_path])
+        status, output = run_command(compiler, ['-x', cbl_path],
+                                     working_dir=working_dir)
+        dest = get_output_path(cbl_path)
+        if dest:
+            GnuCobolCompiler.extensions[0] = os.path.splitext(dest)[1]
+            try:
+                os.remove(dest)
+            except OSError:
+                pass
+
+        status, output = run_command(compiler, [cbl_path],
+                                     working_dir=working_dir)
+        dest = get_output_path(cbl_path)
+        if dest:
+            GnuCobolCompiler.extensions[1] = os.path.splitext(dest)[1]
+            try:
+                os.remove(dest)
+            except OSError:
+                pass
 
         _logger().info('GnuCOBOL compiler check: %s',
                        'success' if status == 0 else 'fail')
+        _logger().info('Executable extension: %s' %
+                       GnuCobolCompiler.extensions[0])
+        _logger().info('Module extension: %s' %
+                       GnuCobolCompiler.extensions[1])
 
         try:
             os.remove(dest)
@@ -367,7 +400,6 @@ class GnuCobolCompiler(QtCore.QObject):
             original_output_dir = output_dir
         if not os.path.isabs(output_dir):
             output_dir = os.path.abspath(os.path.join(path, output_dir))
-        # run command using qt process api, this is blocking.
         if object_files:
             inputs = [filename] + object_files
         else:
