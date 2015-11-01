@@ -482,10 +482,13 @@ class GnuCobolCompiler(QtCore.QObject):
                     filename = m.group('filename')
                     line = int(m.group('line')) - 1
                     message = m.group('error')
+                    error_lvl = m.group('type').lower()
+                    lvl = CheckerMessages.WARNING if 'warning' in error_lvl \
+                        else CheckerMessages.ERROR
                     # make relative path absolute
                     path = os.path.abspath(os.path.join(
                         working_directory, filename))
-                    msg = (message, CheckerMessages.ERROR, int(line), 0, None,
+                    msg = (message, lvl, int(line), 0, None,
                            None, path)
                     issues.append(msg)
         return issues
