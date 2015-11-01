@@ -36,5 +36,22 @@ def setup_logging(version, debug):
         handler.setFormatter(formatter)
     for handler in handlers:
         logger.addHandler(handler)
-    logging.getLogger('open_cobol_ide').info('version: %s' % version)
     logger.setLevel(level)
+    ocide_logger = logging.getLogger('open_cobol_ide')
+    ocide_logger.info('version: %s' % version)
+
+    # todo: remove this code once we know what encoding to use to decode
+    # compiler process output on windows
+    import sys
+    if sys.platform == 'win32':
+        import locale
+        from ctypes import cdll
+
+        ocide_logger.info('sys.stdout.encoding: %s',
+                          sys.stdout.encoding)
+        ocide_logger.info('sys.getfilesystemencoding: %s',
+                          sys.getfilesystemencoding())
+        ocide_logger.info('locale.getpreferredencoding: %s',
+                          locale.getpreferredencoding())
+        os_encoding = 'cp' + str(cdll.kernel32.GetACP())
+        ocide_logger.info('kernel32.GetACP: %s', os_encoding)
