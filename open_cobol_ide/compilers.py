@@ -176,8 +176,8 @@ class GnuCobolCompiler(QtCore.QObject):
         self.extensions = [
             # no extension for exe on linux and mac
             '.exe' if system.windows else '',
-            # dll on windows, so everywhere else
-            '.dll' if system.windows else '.so'
+            # .dll on windows, so everywhere else
+            '.dll' if system.windows else '.so' if system.linux else '.dylib'
         ]
 
     @staticmethod
