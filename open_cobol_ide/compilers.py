@@ -113,7 +113,7 @@ def run_command(pgm, args, working_dir=''):
 
     os.environ['PATH'] = path_cpy
 
-    return status, output
+    return status, output.replace('\r\n', '\n')
 
 
 def check_compiler():
@@ -163,10 +163,10 @@ class GnuCobolCompiler(QtCore.QObject):
     # See https://github.com/OpenCobolIDE/OpenCobolIDE/issues/206
     OUTPUT_PATTERN_GCC = re.compile(
         r'^(?P<filename>[\w\.\-_\s]*):(?P<line>\s*\d*):(?P<type>[\w\s]*):'
-        r'(?P<error>[\w\s,\-:\'"\$]*)$')
+        r'(?P<error>[\w\s,\-\.:\'"\$]*)$')
     OUTPUT_PATTERN_MSVC = re.compile(
         r'^(?P<filename>[\w\.\-_\s]*)\((?P<line>\s*\d*)\):(?P<type>[\w\s]*):'
-        '(?P<error>[\w\s,\-:\'"\$]*)$')
+        '(?P<error>[\w\s,\-\.:\'"\$]*)$')
 
     OUTPUT_PATTERNS = [OUTPUT_PATTERN_GCC, OUTPUT_PATTERN_MSVC]
 
@@ -512,6 +512,7 @@ class GnuCobolCompiler(QtCore.QObject):
                 continue
             for ptrn in GnuCobolCompiler.OUTPUT_PATTERNS:
                 m = ptrn.match(l)
+                print(l, m, ptrn)
                 if m is not None:
                     filename = m.group('filename')
                     line = int(m.group('line')) - 1
