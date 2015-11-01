@@ -97,14 +97,16 @@ def run_command(pgm, args, working_dir=''):
 
     # get compiler output
     raw_output = p.readAllStandardOutput().data()
+    if system.windows:
+        encoding = 'mbcs'  # whatever the currently configured encoding is
+    else:
+        encoding = locale.getpreferredencoding()
+
     try:
-        output = raw_output.decode(
-            locale.getpreferredencoding()).replace('\r\n', '\n')
+        output = raw_output.decode(encoding)
     except UnicodeDecodeError:
-        output = 'Failed to decode compiler output with encoding %s' % \
-                     locale.getpreferredencoding()
-        _logger().exception('failed to decode compiler output: %r' %
-                            raw_output)
+        _logger().exception(
+            'Failed to decode compiler output with encoding %s' % encoding)
 
     _logger().debug('output: %r', output)
     _logger().debug('exit code: %r', status)
