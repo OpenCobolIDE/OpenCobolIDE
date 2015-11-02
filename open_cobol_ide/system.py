@@ -67,7 +67,7 @@ def which(cmd, mode=os.F_OK | os.X_OK, path=None,
 
     path = path.split(os.pathsep)
     if include_settings_path and Settings().path:
-        path.append(Settings().path)
+        path += Settings().path.split(os.pathsep)
 
     if sys.platform == "win32":
         # The current directory takes precedence on Windows.
