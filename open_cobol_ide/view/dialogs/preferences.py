@@ -123,12 +123,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.apply()
         pth = self.lineEditCompilerPath.text()
         if os.path.exists(pth) or system.which(pth) is not None:
-            p = QtCore.QProcess()
-            p.start(pth, ['--version'])
-            p.waitForFinished()
-            output = bytes(p.readAllStandardOutput()).decode(
-                locale.getpreferredencoding())
-            DlgCheckCompiler.check(self, pth, output)
+            DlgCheckCompiler.check(self, pth)
         else:
             QtWidgets.QMessageBox.warning(
                 self, 'Invalid compiler path',

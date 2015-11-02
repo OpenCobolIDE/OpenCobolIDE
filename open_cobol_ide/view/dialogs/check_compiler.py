@@ -6,13 +6,14 @@ from open_cobol_ide import system
 
 
 class DlgCheckCompiler(QtWidgets.QDialog):
-    def __init__(self, compiler, version, parent):
+    def __init__(self, compiler, parent):
         super().__init__(
             parent, QtCore.Qt.WindowSystemMenuHint |
             QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowCloseButtonHint)
         self._compiler = compiler
         self.ui = dlg_check_compiler_ui.Ui_Dialog()
         self.ui.setupUi(self)
+        version = GnuCobolCompiler.get_version()
         self.ui.plainTextEdit.setPlainText(version)
         self.ui.buttonBox.button(self.ui.buttonBox.Apply).setText(
             'Check compilation')
@@ -32,7 +33,6 @@ class DlgCheckCompiler(QtWidgets.QDialog):
 
         self.ui.label.setText('Output:')
         self.ui.plainTextEdit.setPlainText(output)
-
         if exit_code != 0:
             self.ui.plainTextEdit.appendPlainText(
                 'Tips:\n- You might need to adapt the environment variables '
@@ -44,6 +44,6 @@ class DlgCheckCompiler(QtWidgets.QDialog):
                     '%s:\MinGW' % sys.executable[0])
 
     @classmethod
-    def check(cls, parent, compiler_path, version):
-        dlg = cls(compiler_path, version, parent)
+    def check(cls, parent, compiler_path):
+        dlg = cls(compiler_path, parent)
         return dlg.exec_() == dlg.Accepted
