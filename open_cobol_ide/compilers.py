@@ -290,7 +290,6 @@ class GnuCobolCompiler(QtCore.QObject):
                        GnuCobolCompiler.extensions[1])
 
         try:
-            os.remove(dest)
             os.remove(cbl_path)
         except OSError:
             pass
