@@ -324,6 +324,9 @@ class CobolController(Controller):
         self.ui.consoleOutput.append(
             "Launched in external terminal")
         pyqode_console = system.which('pyqode-console')
+        env = os.environ.copy()
+        env['PATH'] = GnuCobolCompiler.setup_process_environment().value(
+            'PATH')
         if file_type == FileType.MODULE:
             program = QtCore.QFileInfo(program).baseName()
         if system.windows:
@@ -331,12 +334,13 @@ class CobolController(Controller):
             if file_type == FileType.MODULE:
                 cmd.insert(1, system.which('cobcrun'))
             subprocess.Popen(cmd, cwd=wd,
-                             creationflags=subprocess.CREATE_NEW_CONSOLE)
+                             creationflags=subprocess.CREATE_NEW_CONSOLE,
+                             env=env)
         elif system.darwin:
             cmd = ['open', program]
             if file_type == FileType.MODULE:
                 cmd.insert(1, system.which('cobcrun'))
-            subprocess.Popen(cmd, cwd=wd)
+            subprocess.Popen(cmd, cwd=wd, env=env)
         else:
             if file_type == FileType.EXECUTABLE:
                 cmd = ['"%s %s"' % (pyqode_console, program)]
@@ -345,7 +349,8 @@ class CobolController(Controller):
                                        program)]
             cmd = system.shell_split(
                 Settings().external_terminal_command.strip()) + cmd
-            subprocess.Popen(' '.join(cmd), cwd=wd, shell=True)
+            subprocess.Popen(' '.join(cmd), cwd=wd, shell=True,
+                             env=env)
         _logger().info('running program in external terminal: %s',
                        ' '.join(cmd))
 
@@ -382,12 +387,16 @@ class CobolController(Controller):
             self.ui.consoleOutput.setFocus(True)
             for item in self.run_buttons + [self.ui.actionRun]:
                 item.setEnabled(False)
+            path = GnuCobolCompiler.setup_process_environment().value('PATH')
+            env = {'PATH': path}
             if file_type == FileType.MODULE:
                 cobcrun = system.which('cobcrun')
                 self.ui.consoleOutput.start_process(
-                    cobcrun, [os.path.splitext(editor.file.name)[0]], cwd=wd)
+                    cobcrun, [os.path.splitext(editor.file.name)[0]], cwd=wd,
+                    env=env)
             else:
-                self.ui.consoleOutput.start_process(program, cwd=wd)
+                self.ui.consoleOutput.start_process(program, cwd=wd,
+                                                    env=env)
 
     def _on_run_finished(self):
         self.enable_compile(True)
