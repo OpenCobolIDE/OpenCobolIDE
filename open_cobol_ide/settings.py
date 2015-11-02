@@ -640,8 +640,9 @@ class Settings(object):
         pth = self._settings.value('environment/PATH', self.default_path())
         paths = []
         for p in pth.split(os.pathsep):
-            paths.append(system.normpath(p))
-        paths = list(set(paths))
+            p = system.normpath(p)
+            if p not in paths:
+                paths.append(p)
         retval = os.pathsep.join(paths)
         return retval
 
