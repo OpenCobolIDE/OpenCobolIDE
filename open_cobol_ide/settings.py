@@ -358,11 +358,15 @@ class Settings(object):
     def compiler_path(self):
         default = self.default_compiler_path()
         path = self._settings.value('compilerPath', default)
-        if not path or \
-                (not os.path.exists(path) and system.which(path) is None):
-            path = default
-            self.compiler_path = path
         return system.normpath(path)
+
+    @compiler_path.setter
+    def compiler_path(self, value):
+        # add to PATH
+        if value:
+            sep = ';' if sys.platform == 'win32' else ':'
+            os.environ['PATH'] += sep + os.path.dirname(value)
+        self._settings.setValue('compilerPath', value)
 
     @property
     def full_compiler_path(self):
@@ -372,14 +376,6 @@ class Settings(object):
             if result is not None:
                 compiler = result
         return system.normpath(compiler)
-
-    @compiler_path.setter
-    def compiler_path(self, value):
-        # add to PATH
-        if value:
-            sep = ';' if sys.platform == 'win32' else ':'
-            os.environ['PATH'] += sep + os.path.dirname(value)
-        self._settings.setValue('compilerPath', value)
 
     @property
     def vcvarsall(self):
@@ -644,8 +640,7 @@ class Settings(object):
         pth = self._settings.value('environment/PATH', self.default_path())
         paths = []
         for p in pth.split(os.pathsep):
-            if os.path.exists(p):
-                paths.append(system.normpath(p))
+            paths.append(system.normpath(p))
         paths = list(set(paths))
         retval = os.pathsep.join(paths)
         return retval
@@ -679,8 +674,6 @@ class Settings(object):
     def cob_config_dir(self):
         default = self.default_config_dir()
         value = self._settings.value('environment/COB_CONFIG_DIR', default)
-        if value and not os.path.exists(value):
-            value = default
         return system.normpath(value)
 
     @cob_config_dir.setter
@@ -714,8 +707,6 @@ class Settings(object):
     def cob_copy_dir(self):
         default = self.default_copy_dir()
         value = self._settings.value('environment/COB_COPY_DIR', default)
-        if value and not os.path.exists(value):
-            value = default
         return system.normpath(value)
 
     @cob_copy_dir.setter
@@ -748,8 +739,6 @@ class Settings(object):
     def cob_include_path(self):
         default = self.default_include_dir()
         value = self._settings.value('environment/COB_INCLUDE_PATH', default)
-        if value and not os.path.exists(value):
-            value = default
         return system.normpath(value)
 
     @cob_include_path.setter
@@ -783,8 +772,6 @@ class Settings(object):
     def cob_lib_path(self):
         default = self.default_lib_path()
         value = self._settings.value('environment/COB_LIB_PATH', default)
-        if value and not os.path.exists(value):
-            value = default
         return system.normpath(value)
 
     @cob_lib_path.setter
