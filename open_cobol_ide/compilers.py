@@ -417,7 +417,6 @@ class GnuCobolCompiler(QtCore.QObject):
         pgm, options = self.make_command(
             inputs, file_type, original_output_dir, additional_options)
         self.started.emit(' '.join([pgm] + options))
-        print(path)
         status, output = run_command(pgm, options, working_dir=path)
         self.output_available.emit(output)
         messages = self.parse_output(output, path)
@@ -509,7 +508,6 @@ class GnuCobolCompiler(QtCore.QObject):
                 continue
             for ptrn in GnuCobolCompiler.OUTPUT_PATTERNS:
                 m = ptrn.match(l)
-                print(l, m, ptrn)
                 if m is not None:
                     filename = m.group('filename')
                     line = int(m.group('line')) - 1
@@ -544,7 +542,8 @@ class GnuCobolCompiler(QtCore.QObject):
         with open(filename, 'r', encoding=encoding) as f:
             content = f.read()
             if not Settings().free_format:
-                content = '\n'.join([' ' * 6 + l[6:] for l in content.splitlines()])
+                content = '\n'.join([' ' * 6 + l[6:] for l in
+                                     content.splitlines()])
             for m in prog.findall(content):
                 for m in m:
                     try:
@@ -882,7 +881,3 @@ class EsqlOCCompiler(QtCore.QObject):
         status, messages = self._compile_with_cobc(os.path.join(
             os.path.dirname(path), cob_file))
         return status, messages
-
-
-if __name__ == '__main__':
-    VisualStudioWrapperBatch().generate()
