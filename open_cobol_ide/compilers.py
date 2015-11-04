@@ -97,23 +97,21 @@ def run_command(pgm, args, working_dir=''):
 
     # get compiler output
     raw_output = p.readAllStandardOutput().data()
-    if system.windows:
-        encoding = 'mbcs'  # whatever the currently configured encoding is
-    else:
-        encoding = locale.getpreferredencoding()
-
     try:
-        output = raw_output.decode(encoding)
+        output = raw_output.decode(locale.getpreferredencoding())
     except UnicodeDecodeError:
-        _logger().exception(
-            'Failed to decode compiler output with encoding %s' % encoding)
+        # This is a hack to get a meaningful output when compiling a file
+        # from UNC path using a batch file on some systems, see
+        # https://github.com/OpenCobolIDE/OpenCobolIDE/issues/188
+        output = str(raw_output).replace("b'", '')[:-1].replace(
+            '\\r\\n', '\n').replace('\\\\', '\\')
 
     _logger().debug('output: %r', output)
     _logger().debug('exit code: %r', status)
 
     os.environ['PATH'] = path_cpy
 
-    return status, output.replace('\r\n', '\n')
+    return status, output
 
 
 def check_compiler():
