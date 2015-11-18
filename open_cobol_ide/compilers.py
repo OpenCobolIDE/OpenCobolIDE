@@ -537,29 +537,25 @@ class GnuCobolCompiler(QtCore.QObject):
         encoding = _get_encoding(filename)
         directory = os.path.dirname(filename)
         dependencies = []
-        prog = re.compile(r'(^(\s|\d|\w)*CALL[\s\n]*.*".*")',
+        prog = re.compile(r'^[\s\d\w]*CALL[\s\n]*".*".*$',
                           re.MULTILINE | re.IGNORECASE)
         with open(filename, 'r', encoding=encoding) as f:
             content = f.read()
-            if not Settings().free_format:
-                content = '\n'.join([' ' * 6 + l[6:] for l in
-                                     content.splitlines()])
-            for m in prog.findall(content):
-                for m in m:
-                    try:
-                        module_base_name = re.findall('"(.*)"', m)[0]
-                    except IndexError:
-                        continue
-                    # try to see if the module can be found in the current
-                    # directory
-                    for ext in Settings().all_extensions:
-                        pth = os.path.join(directory, module_base_name + ext)
-                        if os.path.exists(pth) and \
-                                pth.lower() not in dependencies:
-                            if filename != pth:
-                                dependencies.append(system.normpath(pth))
-                                if recursive:
-                                    dependencies += cls.get_dependencies(pth)
+        for m in prog.findall(content):
+            try:
+                module_base_name = re.findall('"(.*)"', m)[0]
+            except IndexError:
+                continue
+            # try to see if the module can be found in the current
+            # directory
+            for ext in Settings().all_extensions:
+                pth = os.path.join(directory, module_base_name + ext)
+                if os.path.exists(pth) and \
+                        pth.lower() not in dependencies:
+                    if filename != pth:
+                        dependencies.append(system.normpath(pth))
+                        if recursive:
+                            dependencies += cls.get_dependencies(pth)
 
         dependencies = list(set(dependencies))
         _logger().debug('dependencies of %s: %r', filename, dependencies)
