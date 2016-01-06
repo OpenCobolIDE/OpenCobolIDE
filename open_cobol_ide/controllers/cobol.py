@@ -302,10 +302,11 @@ class CobolController(Controller):
         """
         Opens an editor and goes to the error line.
         """
-        self.app.file.open_file(msg.path)
-        if msg.status:
-            TextHelper(self.app.edit.current_editor).goto_line(msg.line)
-            self.app.edit.current_editor.setFocus(True)
+        if os.path.exists(msg.path):
+            self.app.file.open_file(msg.path)
+            if msg.status:
+                TextHelper(self.app.edit.current_editor).goto_line(msg.line)
+                self.app.edit.current_editor.setFocus(True)
 
     def run(self):
         """
