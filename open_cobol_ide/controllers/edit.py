@@ -218,7 +218,10 @@ class EditController(Controller):
     def _get_cursor_pos_in_bytes(self, original, encoding):
         text = TextHelper(self.current_editor).current_line_text()
         text = text[:original]
-        return len(bytes(text, encoding))
+        try:
+            return len(bytes(text, encoding))
+        except UnicodeDecodeError:
+            return original
 
     def _update_status_bar_labels(self):
         """
