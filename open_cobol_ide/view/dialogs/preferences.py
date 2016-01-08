@@ -119,6 +119,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.COB_INCLUDE_PATH.setEnabled(self.cbCOB_INCLUDE_PATH.isChecked())
         self.COB_LIB_PATH.setEnabled(self.cbCOB_LIB_PATH.isChecked())
 
+        self.initial_settings = Settings().export_to_dict()
+
     def _check_compiler(self, *_):
         self.apply()
         pth = self.lineEditCompilerPath.text()
@@ -565,6 +567,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         ret_val = dlg.exec_()
         dlg.stop_backend()
         if ret_val != dlg.Accepted:
+            Settings().import_from_dict(dlg.initial_settings)
             raise ValueError()
         save_state(dlg)
         dlg.apply()

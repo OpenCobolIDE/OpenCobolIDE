@@ -24,6 +24,17 @@ class Settings(object):
         """
         self._settings.clear()
 
+    def export_to_dict(self):
+        keys = self._settings.allKeys()
+        settings = {}
+        for k in keys:
+            settings[k] = self._settings.value(k, '')
+        return settings
+
+    def import_from_dict(self, dic):
+        for k, v in dic.items():
+            self._settings.setValue(k, v)
+
     # Geometry and state (visible windows, ...) + working settings (last path)
     # ------------------------------------------------------------------------
     @property
