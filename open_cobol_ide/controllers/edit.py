@@ -213,7 +213,7 @@ class EditController(Controller):
                 self.app.cobol.enable_run(
                     not self.ui.consoleOutput.is_running)
             self._update_status_bar_labels()
-            _logger().info('current editor changed: %s', editor.file.path)
+            _logger().debug('current editor changed: %s', editor.file.path)
 
     def _get_cursor_pos_in_bytes(self, original, encoding):
         text = TextHelper(self.current_editor).current_line_text()
