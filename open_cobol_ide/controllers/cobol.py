@@ -296,6 +296,8 @@ class CobolController(Controller):
                 msg = CheckerMessage(*msg)
                 if msg.status == CheckerMessages.ERROR:
                     self._errors += 1
+                if len(msg.description.splitlines()) > 1:
+                    msg.description = 'For full output see compiler tab...'
                 self.ui.errorsTable.add_message(msg)
 
     def _goto_error_msg(self, msg):
