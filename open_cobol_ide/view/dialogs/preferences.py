@@ -222,18 +222,23 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         if path:
             path = system.normpath(path)
             pgctbbat = os.path.exists(os.path.join(path, 'PGCTBBAT'))
-            pgctbbatws = os.path.exists(os.path.join(path, 'PGCTBBATWS'))
+            pgctbparam = os.path.exists(os.path.join(path, 'PGCTBPARAM'))
+            pgctbsub = os.path.exists(os.path.join(path, 'PGCTBSUB'))
+            pgctbsubws = os.path.exists(os.path.join(path, 'PGCTBSUBWS'))
             sqlca = os.path.exists(os.path.join(path, 'SQLCA'))
-            if pgctbbat and pgctbbatws and sqlca:
+            if pgctbparam and pgctbsub and sqlca and pgctbsubws and pgctbbat:
                 self.lineEditDbpreFramework.setText(path)
             else:
                 QtWidgets.QMessageBox.warning(
                     self, 'Invalid dpre framework directory',
                     'Missing one of the following files: \n'
                     'PGCTBBAT: %s\n'
-                    'PGCTBBATWS: %s\n'
+                    'PGCTBPARAM: %s\n'
+                    'PGCTBSUB: %s\n'
+                    'PGCTBSUBWS: %s\n'
                     'SQLCA: %s\n' % (
-                        bool_to_string(pgctbbat), bool_to_string(pgctbbatws),
+                        bool_to_string(pgctbbat), bool_to_string(pgctbparam),
+                        bool_to_string(pgctbsub), bool_to_string(pgctbsubws),
                         bool_to_string(sqlca)))
 
     def stop_backend(self):
