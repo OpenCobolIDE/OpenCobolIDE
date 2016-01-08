@@ -27,7 +27,8 @@ def test_is_working():
 
 def test_get_version():
     prog = re.compile(r'^.*\d.\d.\d$')
-    assert prog.match(GnuCobolCompiler().get_version()) is not None
+    assert prog.match(GnuCobolCompiler().get_version(include_all=False)) \
+        is not None
 
 
 @pytest.mark.parametrize('path, ftype', [
