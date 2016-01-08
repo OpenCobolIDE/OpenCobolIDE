@@ -25,6 +25,9 @@ class Settings(object):
         self._settings.clear()
 
     def export_to_dict(self):
+        """
+        Exports all settings to a dict of strings
+        """
         keys = self._settings.allKeys()
         settings = {}
         for k in keys:
@@ -32,6 +35,9 @@ class Settings(object):
         return settings
 
     def import_from_dict(self, dic):
+        """
+        Imports all settings from a dict of strings
+        """
         for k, v in dic.items():
             self._settings.setValue(k, v)
 
