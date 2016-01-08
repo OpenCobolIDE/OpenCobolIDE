@@ -48,7 +48,7 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
             qdarkstyle_version = 'Not installed'
         else:
             qdarkstyle_version = qdarkstyle.__version__
-        versions = [GnuCobolCompiler().get_version(),
+        versions = [GnuCobolCompiler().get_version(include_all=False),
                     QtCore.QT_VERSION_STR,
                     QtCore.PYQT_VERSION_STR,
                     pyqode.core.__version__,

@@ -180,7 +180,7 @@ class GnuCobolCompiler(QtCore.QObject):
         super().__init__()
 
     @staticmethod
-    def get_version():
+    def get_version(include_all=True):
         """
         Returns the GnuCOBOL compiler version as a string
         """
@@ -191,10 +191,15 @@ class GnuCobolCompiler(QtCore.QObject):
         _logger().debug('getting cobc version: %s' % ' '.join(cmd))
         status, output = run_command(cmd[0], [cmd[1]])
         if status == 0 and output:
-            _logger().debug('parsing version line: %s' % output)
-            lversion = output.splitlines()[0]
-            lversion = lversion.replace('cobc (', '').replace(')', '')
-            return lversion
+            if include_all:
+                return output
+            else:
+                _logger().debug('parsing version line: %s' % output)
+                m = re.match(r'cobc\s\([\w\s]*\).*$', output, re.MULTILINE)
+                if m:
+                    return m.group(0)
+                else:
+                    return "failed to extract version from output"
         else:
             return output
 

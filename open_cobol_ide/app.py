@@ -97,7 +97,7 @@ class Application(QtCore.QObject):
                 self.win, 'COBOL compiler not found or not working', msg)
         else:
             _logger().info('GnuCOBOL version: %s',
-                           GnuCobolCompiler.get_version())
+                           GnuCobolCompiler.get_version(include_all=False))
         # open specified files
         for f in files:
             self.file.open_file(f)
