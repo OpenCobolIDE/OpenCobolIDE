@@ -45,6 +45,7 @@ def _get_encoding(filename):
     return encoding
 
 
+@memoized
 def get_file_type(path):
     """
     Detects file type. If the file contains 'PROCEDURE DIVISION USING', then it
