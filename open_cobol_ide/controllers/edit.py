@@ -194,7 +194,17 @@ class EditController(Controller):
             self.ui.tableWidgetOffsets.set_editor(editor)
             # update current editor menu
             self.ui.mnuActiveEditor.clear()
-            self.ui.mnuActiveEditor.addActions(editor.actions())
+            self.ui.mnuActiveEditor.addActions(
+                [a for a in editor.actions() if not hasattr(
+                    a, 'dont_show_in_edit_menu')])
+            self.ui.mnuActiveEditor.addSeparator()
+            try:
+                for m in editor._menus:
+                    self.ui.mnuActiveEditor.addMenu(m)
+            except AttributeError:
+                # not a code edit
+                pass
+
             # update file type menu
             self.app.cobol.display_file_type(editor)
             # update cobol related actions (run/compile
