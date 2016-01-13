@@ -47,6 +47,7 @@ class EditController(Controller):
         self.ui.tableWidgetOffsets.show_requested.connect(
             self.ui.dockWidgetOffsets.show)
         self.ui.actionPreferences.triggered.connect(self.edit_preferences)
+        self.ui.btPreferences.clicked.connect(self.edit_preferences)
         self.ui.actionPreferences.setShortcut(QtGui.QKeySequence.Preferences)
         if self.ui.actionPreferences.shortcut().toString().strip() == '':
             self.ui.actionPreferences.setShortcut('F2')

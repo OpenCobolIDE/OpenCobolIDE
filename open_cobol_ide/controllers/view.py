@@ -134,6 +134,7 @@ class ViewController(Controller):
 
         self.ui.btFSLock.setIcon(icon_lock)
         self.ui.actionPreferences.setIcon(ipreferences)
+        self.ui.btPreferences.setIcon(ipreferences)
         self.ui.actionHelp.setIcon(ihelp)
         self.ui.actionClear.setIcon(iclear)
         self.ui.actionQuit.setIcon(iquit)
@@ -148,6 +149,7 @@ class ViewController(Controller):
         self.ui.actionCancel.setIcon(icancel)
         self.ui.actionCompile.setIcon(icompile)
         self.ui.actionAbout.setIcon(iabout)
+        self.ui.btAbout.setIcon(iabout)
         self.ui.tabWidgetLogs.setTabIcon(0, icompile)
         self.ui.tabWidgetLogs.setTabIcon(1, issue)
         self.ui.tabWidgetLogs.setTabIcon(2, irun)
@@ -206,6 +208,7 @@ class ViewController(Controller):
             if self.ui.consoleOutput.is_running:
                 self.ui.consoleOutput.stop_process()
             self.ui.widgetHome.show()
+            self.ui.btOpenFile.setFocus()
         else:
             self._apply_perspective()
             self.ui.dockWidgetNavPanel.setVisible(Settings().outline_visible)

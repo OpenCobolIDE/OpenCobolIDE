@@ -16,6 +16,7 @@ class HelpController(Controller):
         super().__init__(app)
         self.ui.actionHelp.triggered.connect(self.show_help_contents)
         self.ui.actionAbout.triggered.connect(self.show_about_dlg)
+        self.ui.btAbout.clicked.connect(self.show_about_dlg)
         self.ui.actionReport_a_bug.triggered.connect(self.report_bug)
         self.ui.actionRestore_factory_defaults.triggered.connect(
             self.restore_factory_defaults)
