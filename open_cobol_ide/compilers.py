@@ -18,7 +18,7 @@ from pyqode.core.modes import CheckerMessage, CheckerMessages
 from pyqode.qt import QtCore
 
 from open_cobol_ide import system, msvc
-from open_cobol_ide.enums import FileType
+from open_cobol_ide.enums import FileType, GnuCobolStandard
 from open_cobol_ide.memoize import memoized
 from open_cobol_ide.settings import Settings
 
@@ -467,8 +467,9 @@ class GnuCobolCompiler(QtCore.QObject):
             options.append('-x')
         options.append('-o')
         options.append(os.path.join(output_dir, output_file_name))
-        options.append('-std=%s' % str(settings.cobol_standard).replace(
-            'GnuCobolStandard.', ''))
+        if GnuCobolStandard(settings.cobol_standard) != GnuCobolStandard.none:
+            options.append('-std=%s' % str(settings.cobol_standard).replace(
+                'GnuCobolStandard.', ''))
         options += settings.compiler_flags
         if settings.free_format:
             options.append('-free')

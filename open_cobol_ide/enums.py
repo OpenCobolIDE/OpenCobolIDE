@@ -25,3 +25,6 @@ class GnuCobolStandard(IntEnum):
     mvs = 4
     bs2000 = 5
     mf = 6
+    cobol2014 = 7
+    acu = 8
+    none = 9

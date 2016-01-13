@@ -82,7 +82,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <property name="usesScrollButtons">
          <bool>true</bool>
@@ -109,8 +109,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>634</width>
-               <height>851</height>
+               <width>364</width>
+               <height>665</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -507,8 +507,7 @@ as possible to get back to the previous indentation level.</string>
         <widget class="QWidget" name="tabStyle">
          <attribute name="icon">
           <iconset theme="applications-graphics">
-           <normaloff/>
-          </iconset>
+           <normaloff>.</normaloff>.</iconset>
          </attribute>
          <attribute name="title">
           <string>Style</string>
@@ -524,8 +523,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>371</width>
-               <height>302</height>
+               <width>364</width>
+               <height>362</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -642,7 +641,7 @@ as possible to get back to the previous indentation level.</string>
                      </property>
                      <property name="currentFont">
                       <font>
-                       <family>Consolas</family>
+                       <family>Clean</family>
                       </font>
                      </property>
                     </widget>
@@ -713,8 +712,7 @@ as possible to get back to the previous indentation level.</string>
         <widget class="QWidget" name="tabCompiler">
          <attribute name="icon">
           <iconset theme="exec">
-           <normaloff/>
-          </iconset>
+           <normaloff>.</normaloff>.</iconset>
          </attribute>
          <attribute name="title">
           <string>Compiler</string>
@@ -730,8 +728,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>634</width>
-               <height>851</height>
+               <width>616</width>
+               <height>890</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_6">
@@ -945,6 +943,21 @@ as possible to get back to the previous indentation level.</string>
                 <item>
                  <property name="text">
                   <string>mf</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>cobol2014</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>acu</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>none</string>
                  </property>
                 </item>
                </widget>
@@ -1233,8 +1246,7 @@ as possible to get back to the previous indentation level.</string>
         <widget class="QWidget" name="tabRun">
          <attribute name="icon">
           <iconset theme="media-playback-start">
-           <normaloff/>
-          </iconset>
+           <normaloff>.</normaloff>.</iconset>
          </attribute>
          <attribute name="title">
           <string>Run</string>
@@ -1250,8 +1262,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>196</width>
-               <height>57</height>
+               <width>198</width>
+               <height>70</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_5">
@@ -1310,8 +1322,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>308</width>
-               <height>419</height>
+               <width>336</width>
+               <height>556</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">

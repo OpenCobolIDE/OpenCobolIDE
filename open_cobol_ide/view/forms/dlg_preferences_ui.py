@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'D:\Documents\OpenCobolIDE\forms\dlg_preferences.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/OpenCobolIDE/forms/dlg_preferences.ui'
 #
-# Created by: PyQt5 UI code generator 5.5
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -46,7 +46,7 @@ class Ui_Dialog(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 634, 851))
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 364, 665))
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
@@ -212,7 +212,7 @@ class Ui_Dialog(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollArea_2.setObjectName("scrollArea_2")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 371, 302))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 364, 362))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_8 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
@@ -257,7 +257,7 @@ class Ui_Dialog(object):
         self.fontComboBox = QtWidgets.QFontComboBox(self.groupBox_6)
         self.fontComboBox.setFontFilters(QtWidgets.QFontComboBox.MonospacedFonts)
         font = QtGui.QFont()
-        font.setFamily("Consolas")
+        font.setFamily("Clean")
         self.fontComboBox.setCurrentFont(font)
         self.fontComboBox.setObjectName("fontComboBox")
         self.horizontalLayout_4.addWidget(self.fontComboBox)
@@ -301,7 +301,7 @@ class Ui_Dialog(object):
         self.scrollArea_5.setWidgetResizable(True)
         self.scrollArea_5.setObjectName("scrollArea_5")
         self.scrollAreaWidgetContents_7 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_7.setGeometry(QtCore.QRect(0, 0, 634, 851))
+        self.scrollAreaWidgetContents_7.setGeometry(QtCore.QRect(0, 0, 616, 890))
         self.scrollAreaWidgetContents_7.setObjectName("scrollAreaWidgetContents_7")
         self.formLayout_6 = QtWidgets.QFormLayout(self.scrollAreaWidgetContents_7)
         self.formLayout_6.setFieldGrowthPolicy(QtWidgets.QFormLayout.ExpandingFieldsGrow)
@@ -394,6 +394,9 @@ class Ui_Dialog(object):
         self.formLayout_6.setWidget(7, QtWidgets.QFormLayout.LabelRole, self.label_8)
         self.comboBoxStandard = QtWidgets.QComboBox(self.scrollAreaWidgetContents_7)
         self.comboBoxStandard.setObjectName("comboBoxStandard")
+        self.comboBoxStandard.addItem("")
+        self.comboBoxStandard.addItem("")
+        self.comboBoxStandard.addItem("")
         self.comboBoxStandard.addItem("")
         self.comboBoxStandard.addItem("")
         self.comboBoxStandard.addItem("")
@@ -523,7 +526,7 @@ class Ui_Dialog(object):
         self.scrollArea_4.setWidgetResizable(True)
         self.scrollArea_4.setObjectName("scrollArea_4")
         self.scrollAreaWidgetContents_6 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_6.setGeometry(QtCore.QRect(0, 0, 196, 57))
+        self.scrollAreaWidgetContents_6.setGeometry(QtCore.QRect(0, 0, 198, 70))
         self.scrollAreaWidgetContents_6.setObjectName("scrollAreaWidgetContents_6")
         self.formLayout_5 = QtWidgets.QFormLayout(self.scrollAreaWidgetContents_6)
         self.formLayout_5.setObjectName("formLayout_5")
@@ -549,7 +552,7 @@ class Ui_Dialog(object):
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollArea_3.setObjectName("scrollArea_3")
         self.scrollAreaWidgetContents_5 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_5.setGeometry(QtCore.QRect(0, 0, 308, 419))
+        self.scrollAreaWidgetContents_5.setGeometry(QtCore.QRect(0, 0, 336, 556))
         self.scrollAreaWidgetContents_5.setObjectName("scrollAreaWidgetContents_5")
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_5)
         self.verticalLayout_9.setObjectName("verticalLayout_9")
@@ -712,7 +715,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.addWidget(self.widget, 0, 0, 1, 1)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
         self.stackedWidgetSQL.setCurrentIndex(0)
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
@@ -814,6 +817,9 @@ class Ui_Dialog(object):
         self.comboBoxStandard.setItemText(4, _translate("Dialog", "mvs"))
         self.comboBoxStandard.setItemText(5, _translate("Dialog", "bs2000"))
         self.comboBoxStandard.setItemText(6, _translate("Dialog", "mf"))
+        self.comboBoxStandard.setItemText(7, _translate("Dialog", "cobol2014"))
+        self.comboBoxStandard.setItemText(8, _translate("Dialog", "acu"))
+        self.comboBoxStandard.setItemText(9, _translate("Dialog", "none"))
         self.label_9.setText(_translate("Dialog", "Free format:"))
         self.checkBoxFreeFormat.setToolTip(_translate("Dialog", "Code and compile with free format support"))
         self.label_15.setText(_translate("Dialog", "Compiler flags"))
