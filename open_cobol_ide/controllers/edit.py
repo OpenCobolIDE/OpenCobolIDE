@@ -73,6 +73,10 @@ class EditController(Controller):
             Settings().lock_fs_path = ''
         self.ui.btFSLock.setChecked(lock_fs_path != '')
         self.ui.btFSLock.toggled.connect(self._on_fs_path_lock_toggled)
+        self.ui.btNavLock.toggled.connect(self._on_navlock_toggled)
+        self.ui.btNavLock.setChecked(not self.ui.twNavigation.sync_with_editor)
+        self.ui.twNavigation.sync_with_editor_changed.connect(
+            self._on_nav_sync_changed)
 
     def _on_fs_path_lock_toggled(self, checked):
         if checked:
@@ -80,6 +84,14 @@ class EditController(Controller):
                 self.ui.tabWidgetEditors.current_widget().file.path
         else:
             Settings().lock_fs_path = ''
+
+    def _on_nav_sync_changed(self, sync):
+        self.ui.btNavLock.setChecked(not sync)
+
+    def _on_navlock_toggled(self, checked):
+        self.ui.btNavLock.blockSignals(True)
+        self.ui.twNavigation.sync_with_editor = not checked
+        self.ui.btNavLock.blockSignals(False)
 
     def _on_tvFileSystem_activated(self, index):
         path = self.ui.tvFileSystem.filePath(index)
