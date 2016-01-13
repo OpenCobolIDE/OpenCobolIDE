@@ -2,6 +2,7 @@
 This module contains the FileController.
 
 """
+import pickle
 import logging
 import os
 from pyqode.core import widgets
@@ -49,6 +50,9 @@ class FileController(Controller):
         self.ui.menuFile.addSeparator()
         self.ui.menuFile.addMenu(self.menu_recents)
         self.ui.menuFile.addSeparator()
+        self.ui.menuFile.addAction(self.ui.actionImport_preferences)
+        self.ui.menuFile.addAction(self.ui.actionExport_preferences)
+        self.ui.menuFile.addSeparator()
         self.ui.menuFile.addAction(self.ui.actionSave)
         self.ui.menuFile.addAction(self.ui.actionSaveAs)
         self.ui.menuFile.addSeparator()
@@ -60,6 +64,10 @@ class FileController(Controller):
         self.ui.actionNew.triggered.connect(self.request_new)
         self.ui.actionSave.triggered.connect(
             self.save_current)
+        self.ui.actionImport_preferences.triggered.connect(
+            self.import_preferences)
+        self.ui.actionExport_preferences.triggered.connect(
+            self.export_preferences)
         self.ui.actionSaveAs.triggered.connect(self.save_as)
         self.ui.actionQuit.triggered.connect(self.quit)
         self.ui.tabWidgetEditors.register_code_edit(CobolCodeEdit)
@@ -149,3 +157,47 @@ class FileController(Controller):
                 QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.Yes:
             _logger().debug('quit action triggered')
             self.app.exit()
+
+    def import_preferences(self):
+        """
+        Import preferences from a json file.
+        """
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self.main_window, 'Import preferences',
+            os.path.join(os.path.expanduser('~'), 'ocide_preferences.dat'))
+        if path:
+            try:
+                with open(path, 'rb') as f:
+                    Settings().import_from_dict(pickle.load(f))
+            except (ValueError, IOError, OSError):
+                _logger().exception('failed to import preferences')
+                QtWidgets.QMessageBox.information(
+                    self.main_window, 'Import preferences failure',
+                    'Failed to restore preferences. See the log for more '
+                    'information...')
+            else:
+                QtWidgets.QMessageBox.information(
+                    self.main_window, 'Preferences imported',
+                    'Preferences successfully imported!')
+
+    def export_preferences(self):
+        """
+        Export preferences to a json file
+        """
+        path, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self.main_window, "Export preferences",
+            os.path.join(os.path.expanduser('~'), 'ocide_preferences.dat'))
+        if path:
+            try:
+                with open(path, 'wb') as f:
+                    pickle.dump(Settings().export_to_dict(), f)
+            except (ValueError, IOError, OSError):
+                _logger().exception('failed to export preferences')
+                QtWidgets.QMessageBox.information(
+                    self.main_window, 'Export preferences failure',
+                    'Failed to export preferences. See the log for more '
+                    'information...')
+            else:
+                QtWidgets.QMessageBox.information(
+                    self.main_window, 'Preferences exported',
+                    'Preferences successfully exported!')

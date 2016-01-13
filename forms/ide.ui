@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>940</width>
-    <height>781</height>
+    <width>978</width>
+    <height>816</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -607,7 +607,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>940</width>
+     <width>978</width>
      <height>30</height>
     </rect>
    </property>
@@ -620,6 +620,9 @@
     <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
+    <addaction name="separator"/>
+    <addaction name="actionImport_preferences"/>
+    <addaction name="actionExport_preferences"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -1186,6 +1189,16 @@
   <action name="actionRestore_factory_defaults">
    <property name="text">
     <string>Restore &amp;factory defaults</string>
+   </property>
+  </action>
+  <action name="actionExport_preferences">
+   <property name="text">
+    <string>&amp;Export preferences</string>
+   </property>
+  </action>
+  <action name="actionImport_preferences">
+   <property name="text">
+    <string>&amp;Import preferences</string>
    </property>
   </action>
   <zorder>dockWidgetNavPanel</zorder>

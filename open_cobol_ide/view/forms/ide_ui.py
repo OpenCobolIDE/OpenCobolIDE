@@ -11,7 +11,7 @@ from pyqode.qt import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1124, 1055)
+        MainWindow.resize(978, 816)
         MainWindow.setMinimumSize(QtCore.QSize(0, 0))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/ide-icons/rc/silex-192x192.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -211,7 +211,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1124, 30))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 978, 30))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -370,6 +370,10 @@ class Ui_MainWindow(object):
         self.actionReport_a_bug.setObjectName("actionReport_a_bug")
         self.actionRestore_factory_defaults = QtWidgets.QAction(MainWindow)
         self.actionRestore_factory_defaults.setObjectName("actionRestore_factory_defaults")
+        self.actionExport_preferences = QtWidgets.QAction(MainWindow)
+        self.actionExport_preferences.setObjectName("actionExport_preferences")
+        self.actionImport_preferences = QtWidgets.QAction(MainWindow)
+        self.actionImport_preferences.setObjectName("actionImport_preferences")
         self.dockWidgetNavPanel.raise_()
         self.toolBarFile.addAction(self.actionNew)
         self.toolBarFile.addAction(self.actionOpen)
@@ -382,6 +386,9 @@ class Ui_MainWindow(object):
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionSave)
         self.menuFile.addAction(self.actionSaveAs)
+        self.menuFile.addSeparator()
+        self.menuFile.addAction(self.actionImport_preferences)
+        self.menuFile.addAction(self.actionExport_preferences)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionQuit)
         self.mnuActiveEditor.addSeparator()
@@ -521,6 +528,8 @@ class Ui_MainWindow(object):
         self.actionCancel.setStatusTip(_translate("MainWindow", "Cancel the current operation (compile or run)"))
         self.actionReport_a_bug.setText(_translate("MainWindow", "&Report a bug"))
         self.actionRestore_factory_defaults.setText(_translate("MainWindow", "Restore &factory defaults"))
+        self.actionExport_preferences.setText(_translate("MainWindow", "&Export preferences"))
+        self.actionImport_preferences.setText(_translate("MainWindow", "&Import preferences"))
 
 from open_cobol_ide.view.widgets import RecentFilesListWidget, TabWidget
 from pyqode.cobol.widgets import OutlineTreeWidget, PicOffsetsTable
