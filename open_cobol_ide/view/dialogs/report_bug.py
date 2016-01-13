@@ -22,6 +22,8 @@ BUG_DESCRIPTION = '''%s
 
 EMAIL_ADDRESS = 'colin.duquesnoy@gmail.com'
 
+MAX_BODY_LENGTH = 1200  # see issue #253
+
 
 def _logger():
     return logging.getLogger(__name__)
@@ -60,7 +62,11 @@ class DlgReportBug(QtWidgets.QDialog):
         return {'title': title, 'body': description}
 
     def submit(self):
-        url_data = urllib.parse.urlencode(self._get_data())
+        data = self._get_data()
+        # limit body to MAX_BODY_LENGTH in order to avoid a error 414
+        # (Request-URI Too Large)
+        data['body'] = data['body'][:MAX_BODY_LENGTH]
+        url_data = urllib.parse.urlencode()
         url = 'https://github.com/OpenCobolIDE/OpenCobolIDE/issues/new?' + \
             url_data
         QtWidgets.QMessageBox.information(
