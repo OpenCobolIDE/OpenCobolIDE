@@ -106,7 +106,14 @@
      <item>
       <widget class="QPushButton" name="pushButtonSubmit">
        <property name="text">
-        <string>Submit</string>
+        <string>Submit on github</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonSendEmail">
+       <property name="text">
+        <string>Send email</string>
        </property>
       </widget>
      </item>

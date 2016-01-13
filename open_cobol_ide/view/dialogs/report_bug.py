@@ -20,6 +20,8 @@ BUG_DESCRIPTION = '''%s
 
 '''
 
+EMAIL_ADDRESS = 'colin.duquesnoy@gmail.com'
+
 
 def _logger():
     return logging.getLogger(__name__)
@@ -33,6 +35,7 @@ class DlgReportBug(QtWidgets.QDialog):
         self.ui.lineEditTitle.textChanged.connect(self.enable_submit)
         self.ui.plainTextEditDesc.textChanged.connect(self.enable_submit)
         self.ui.pushButtonSubmit.clicked.connect(self.submit)
+        self.ui.pushButtonSendEmail.clicked.connect(self.send_email)
         self.ui.lineEditTitle.setText(title)
         self.ui.plainTextEditDesc.setPlainText(description)
         self.enable_submit()
@@ -41,8 +44,10 @@ class DlgReportBug(QtWidgets.QDialog):
         self.ui.pushButtonSubmit.setEnabled(
             self.ui.lineEditTitle.text().strip() != '' and
             self.ui.plainTextEditDesc.toPlainText().strip() != '')
+        self.ui.pushButtonSendEmail.setEnabled(
+            self.ui.pushButtonSubmit.isEnabled())
 
-    def submit(self):
+    def _get_data(self):
         title = self.ui.lineEditTitle.text().strip()
         description = self.ui.plainTextEditDesc.toPlainText().strip()
         bug = self.ui.radioButtonBug.isChecked()
@@ -52,8 +57,10 @@ class DlgReportBug(QtWidgets.QDialog):
                 description, self.get_system_infos())
         else:
             title = '[Enhancement] %s' % title
-        url_data = urllib.parse.urlencode(
-            {'title': title, 'body': description})
+        return {'title': title, 'body': description}
+
+    def submit(self):
+        url_data = urllib.parse.urlencode(self._get_data())
         url = 'https://github.com/OpenCobolIDE/OpenCobolIDE/issues/new?' + \
             url_data
         QtWidgets.QMessageBox.information(
@@ -67,6 +74,13 @@ class DlgReportBug(QtWidgets.QDialog):
         except TypeError:
             QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromEncoded(bytes(
                 url, 'utf-8')))
+        self.accept()
+
+    def send_email(self):
+        data = self._get_data()
+        url = QtCore.QUrl("mailto:%s?subject=%s&body=%s" %
+                          (EMAIL_ADDRESS, data['title'], data['body']))
+        QtGui.QDesktopServices.openUrl(url)
         self.accept()
 
     @classmethod

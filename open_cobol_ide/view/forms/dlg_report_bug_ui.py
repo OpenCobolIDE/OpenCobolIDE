@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Dev\OpenCobolIDE\forms\dlg_report_bug.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/OpenCobolIDE/forms/dlg_report_bug.ui'
 #
-# Created by: PyQt5 UI code generator 5.4.1
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -54,6 +54,9 @@ class Ui_Dialog(object):
         self.pushButtonSubmit = QtWidgets.QPushButton(Dialog)
         self.pushButtonSubmit.setObjectName("pushButtonSubmit")
         self.horizontalLayout.addWidget(self.pushButtonSubmit)
+        self.pushButtonSendEmail = QtWidgets.QPushButton(Dialog)
+        self.pushButtonSendEmail.setObjectName("pushButtonSendEmail")
+        self.horizontalLayout.addWidget(self.pushButtonSendEmail)
         self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.retranslateUi(Dialog)
@@ -67,4 +70,5 @@ class Ui_Dialog(object):
         self.label_3.setText(_translate("Dialog", "Report type:"))
         self.radioButtonBug.setText(_translate("Dialog", "Bu&g"))
         self.radioButtonWish.setText(_translate("Dialog", "E&nhancement"))
-        self.pushButtonSubmit.setText(_translate("Dialog", "Submit"))
+        self.pushButtonSubmit.setText(_translate("Dialog", "Submit on github"))
+        self.pushButtonSendEmail.setText(_translate("Dialog", "Send email"))
