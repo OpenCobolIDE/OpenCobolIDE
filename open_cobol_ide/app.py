@@ -170,7 +170,7 @@ class Application(QtCore.QObject):
         self.close()
 
     def handle_command_line_args(self):
-        args = self.configure_args_parser()
+        args = self.parse_args()
         files = args.files
 
         # setup logger
@@ -215,7 +215,7 @@ class Application(QtCore.QObject):
 
         return files
 
-    def configure_args_parser(self):
+    def parse_args(self):
         parser = argparse.ArgumentParser(
             description='Simple and lightweight COBOL IDE.')
         parser.add_argument('files', type=str, nargs='*',
