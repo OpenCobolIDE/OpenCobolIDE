@@ -806,7 +806,19 @@ class Settings(object):
     def cob_lib_path_enabled(self, value):
         self._settings.setValue('environment/COB_LIB_PATH_Enabled', int(value))
 
+    @property
+    def remember_github_credentials(self):
+        return bool(int(self._settings.value(
+            'remember_github_credentials', 0)))
 
-if __name__ == '__main__':
-    # Settings()._settings.setValue('resetCompilerPath', 1)
-    Settings().clear()
+    @remember_github_credentials.setter
+    def remember_github_credentials(self, value):
+        self._settings.setValue('remember_github_credentials', int(value))
+
+    @property
+    def github_username(self):
+        return self._settings.value('github_username', '')
+
+    @github_username.setter
+    def github_username(self, value):
+        self._settings.setValue('github_username', value)

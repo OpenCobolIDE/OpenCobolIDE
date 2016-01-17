@@ -1,14 +1,18 @@
+import github
+import keyring
 import logging
 import pygments
 import pyqode.core
 import pyqode.cobol
 import pyqode.qt
 import platform
-import urllib.parse
 import sys
+import webbrowser
 from pyqode.qt import QtWidgets, QtCore, QtGui
 from open_cobol_ide import __version__, logger
+from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.forms.dlg_report_bug_ui import Ui_Dialog
+from open_cobol_ide.view.forms import dlg_github_login_ui
 from open_cobol_ide.compilers import GnuCobolCompiler
 
 
@@ -18,11 +22,15 @@ BUG_DESCRIPTION = '''%s
 
 %s
 
+## Application log
+
+```
+%s
+```
+
 '''
 
 EMAIL_ADDRESS = 'colin.duquesnoy@gmail.com'
-
-MAX_BODY_LENGTH = 1200  # see issue #253
 
 
 def _logger():
@@ -56,31 +64,39 @@ class DlgReportBug(QtWidgets.QDialog):
         if bug:
             title = '[Bug] %s' % title
             description = BUG_DESCRIPTION % (
-                description, self.get_system_infos())
+                description, self.get_system_infos(),
+                self.get_application_log())
         else:
             title = '[Enhancement] %s' % title
         return {'title': title, 'body': description}
 
     def submit(self):
         data = self._get_data()
-        # limit body to MAX_BODY_LENGTH in order to avoid a error 414
-        # (Request-URI Too Large)
-        data['body'] = data['body'][:MAX_BODY_LENGTH]
-        url_data = urllib.parse.urlencode()
-        url = 'https://github.com/OpenCobolIDE/OpenCobolIDE/issues/new?' + \
-            url_data
-        QtWidgets.QMessageBox.information(
-            self, 'Complete bug report on www.github.com',
-            'To complete the report process, we need you to submit the '
-            'generated ticket on our issue tracker. We will open a browser to '
-            'our tracker, you just need to login with your github account and '
-            'press the submit button at the end of the page.')
+        username, password, remember = self.get_user_credentials()
         try:
-            QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromEncoded(url))
-        except TypeError:
-            QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromEncoded(bytes(
-                url, 'utf-8')))
-        self.accept()
+            gh = github.GitHub(username=username, password=password)
+            repo = gh.repos('OpenCobolIDE')('OpenCobolIDE')
+            ret = repo.issues.post(title=data['title'], body=data['body'])
+        except github.ApiError:
+            QtWidgets.QMessageBox.warning(
+                self, 'Login to github failed',
+                'Failed to create github issue, invalid credentials ('
+                'error 401)')
+            Settings().remember_github_credentials = False
+            Settings().github_username = ''
+        else:
+            issue_nbr = ret['number']
+            ret = QtWidgets.QMessageBox.question(
+                self, 'Issue created on github',
+                'Issue successfully created. Would you like to open the ticket'
+                'in your web browser?')
+            if ret == QtWidgets.QMessageBox.Yes:
+                webbrowser.open(
+                    'https://github.com/OpenCobolIDE/OpenCobolIDE/issues/%d' %
+                    issue_nbr)
+            Settings().remember_github_credentials = remember
+            Settings().github_username = username
+            self.accept()
 
     def send_email(self):
         data = self._get_data()
@@ -88,6 +104,14 @@ class DlgReportBug(QtWidgets.QDialog):
                           (EMAIL_ADDRESS, data['title'], data['body']))
         QtGui.QDesktopServices.openUrl(url)
         self.accept()
+
+    def get_user_credentials(self):
+        remember = Settings().remember_github_credentials
+        username = Settings().github_username
+        if remember and username:
+            return username, keyring.get_password('github', username), remember
+        else:
+            return DlgGitHubLogin.login(self)
 
     @classmethod
     def report_bug(cls, parent, title='', description=''):
@@ -125,3 +149,36 @@ class DlgReportBug(QtWidgets.QDialog):
     def get_application_log(self):
         with open(logger.get_path(), 'r') as f:
             return f.read()
+
+
+class DlgGitHubLogin(QtWidgets.QDialog):
+    HTML = '<html><head/><body><p align="center"><img src="%s"/></p>' \
+        '<p align="center">Sign in to GitHub</p></body></html>'
+    GH_MARK_NORMAL = ':/ide-icons/rc/GitHub-Mark.png'
+    GH_MARK_LIGHT = ':/ide-icons/rc/GitHub-Mark-Light.png'
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.ui = dlg_github_login_ui.Ui_Dialog()
+        self.ui.setupUi(self)
+
+        mark = self.GH_MARK_NORMAL
+        if self.palette().base().color().lightness() < 128:
+            mark = self.GH_MARK_LIGHT
+        html = self.HTML % mark
+        self.ui.lbl_html.setText(html)
+        self.ui.bt_sign_in.clicked.connect(self.accept)
+        self.ui.le_username.textChanged.connect(self.update_btn_state)
+        self.ui.le_password.textChanged.connect(self.update_btn_state)
+
+    def update_btn_state(self):
+        enable = self.ui.le_username.text().strip() != ''
+        enable &= self.ui.le_password.text().strip() != ''
+        self.ui.bt_sign_in.setEnabled(enable)
+
+    @classmethod
+    def login(cls, parent):
+        dlg = DlgGitHubLogin(parent)
+        dlg.exec_()
+        return dlg.ui.le_username.text(), dlg.ui.le_password.text(), \
+            dlg.ui.cb_remember.isChecked()

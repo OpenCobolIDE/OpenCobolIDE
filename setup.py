@@ -33,7 +33,9 @@ requirements = [
     'pyqode.core>=2.5.0',
     'pyqode.cobol>=2.5.0',
     'pyqode.qt>=2.5.0',
-    'qdarkstyle>=1.11'
+    'qdarkstyle>=1.11',
+    'githubpy',
+    'keyring'
 ]
 
 
