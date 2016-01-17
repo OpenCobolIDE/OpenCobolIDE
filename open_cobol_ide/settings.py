@@ -84,6 +84,14 @@ class Settings(object):
         self._settings.setValue('preferences_height', int(height))
 
     @property
+    def preferences_index(self):
+        return int(self._settings.value('preferences_index', 0))
+
+    @preferences_index.setter
+    def preferences_index(self, value):
+        self._settings.setValue('preferences_index', value)
+
+    @property
     def maximised(self):
         return bool(int(self._settings.value('maximised', '0')))
 
@@ -822,3 +830,11 @@ class Settings(object):
     @github_username.setter
     def github_username(self, value):
         self._settings.setValue('github_username', value)
+
+    @property
+    def run_environemnt(self):
+        return json.loads(self._settings.value('run_env', '{}'))
+
+    @run_environemnt.setter
+    def run_environemnt(self, dic):
+        self._settings.setValue('run_env', json.dumps(dic))

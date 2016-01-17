@@ -99,7 +99,6 @@ def _logger():
 class CobolController(Controller):
     """
     Controls the COBOL menu (compile, run, file type).
-
     """
     def __init__(self, app):
         super().__init__(app)
@@ -352,6 +351,8 @@ class CobolController(Controller):
             "Launched in external terminal")
         pyqode_console = system.which('pyqode-console')
         env = os.environ.copy()
+        for k, v in Settings().run_environemnt.items():
+            env[k] = v
         env['PATH'] = GnuCobolCompiler.setup_process_environment().value(
             'PATH')
         if file_type == FileType.MODULE:
@@ -415,7 +416,9 @@ class CobolController(Controller):
             for item in self.run_buttons + [self.ui.actionRun]:
                 item.setEnabled(False)
             path = GnuCobolCompiler.setup_process_environment().value('PATH')
-            env = {'PATH': path}
+            env = Settings().run_environemnt
+            if 'PATH' not in env.keys():
+                env['PATH'] = path
             if file_type == FileType.MODULE:
                 cobcrun = system.which('cobcrun')
                 self.ui.consoleOutput.start_process(

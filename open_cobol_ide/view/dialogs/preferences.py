@@ -1,4 +1,3 @@
-import locale
 import os
 import sys
 from pyqode.core.api.syntax_highlighter import PYGMENTS_STYLES, ColorScheme
@@ -70,7 +69,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.buttonBox.button(self.buttonBox.Reset).clicked.connect(self.reset)
         self.buttonBox.button(self.buttonBox.RestoreDefaults).clicked.connect(
             self.restore_defaults)
-        self.checkBoxRunExtTerm.stateChanged.connect(
+        self.checkBoxRunExtTerm.toggled.connect(
             self.lineEditRunTerm.setEnabled)
         self.listWidgetColorSchemes.currentItemChanged.connect(
             self.update_color_scheme_preview)
@@ -97,7 +96,6 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self._add_rel_copy_path)
         self.btRemoveCopyPath.clicked.connect(self._rm_copy_path)
         self.toolButtonESQLOC.clicked.connect(self._select_esqloc)
-        self.reset(all_tabs=True)
         if not system.windows:
             self.labelVCVARS.hide()
             self.lineEditVCVARS.hide()
@@ -108,9 +106,11 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.stackedWidgetSQL.setCurrentIndex(1)
         self.toolButtonCheckCompiler.clicked.connect(self._check_compiler)
         self.cbPATH.stateChanged.connect(self.PATH.setEnabled)
-        self.cbCOB_CONFIG_DIR.stateChanged.connect(self.COB_CONFIG_DIR.setEnabled)
+        self.cbCOB_CONFIG_DIR.stateChanged.connect(
+            self.COB_CONFIG_DIR.setEnabled)
         self.cbCOB_COPY_DIR.stateChanged.connect(self.COB_COPY_DIR.setEnabled)
-        self.cbCOB_INCLUDE_PATH.stateChanged.connect(self.COB_INCLUDE_PATH.setEnabled)
+        self.cbCOB_INCLUDE_PATH.stateChanged.connect(
+            self.COB_INCLUDE_PATH.setEnabled)
         self.cbCOB_LIB_PATH.stateChanged.connect(self.COB_LIB_PATH.setEnabled)
 
         self.PATH.setEnabled(self.cbPATH.isChecked())
@@ -119,7 +119,12 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.COB_INCLUDE_PATH.setEnabled(self.cbCOB_INCLUDE_PATH.isChecked())
         self.COB_LIB_PATH.setEnabled(self.cbCOB_LIB_PATH.isChecked())
 
+        self.bt_add_run_env.clicked.connect(self._add_run_env_variable)
+        self.bt_rm_run_env.clicked.connect(self._rm_run_env_variable)
+        self.bt_clear_run_env.clicked.connect(self._clear_run_env)
+
         self.initial_settings = Settings().export_to_dict()
+        self.reset(all_tabs=True)
 
     def _check_compiler(self, *_):
         self.apply()
@@ -288,6 +293,22 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.setMinimumWidth(450)
         self.tabWidget.setCurrentIndex(0)
 
+    def _add_run_env_variable(self):
+        index = self.tw_run_env.rowCount()
+        self.tw_run_env.insertRow(index)
+        focus_item = QtWidgets.QTableWidgetItem()
+        self.tw_run_env.setItem(index, 0, focus_item)
+        self.tw_run_env.setItem(index, 1, QtWidgets.QTableWidgetItem())
+        self.tw_run_env.scrollToItem(focus_item)
+        self.tw_run_env.editItem(focus_item)
+
+    def _rm_run_env_variable(self):
+        self.tw_run_env.removeRow(self.tw_run_env.currentRow())
+
+    def _clear_run_env(self):
+        self.tw_run_env.clearContents()
+        self.tw_run_env.setRowCount(0)
+
     def reset(self, all_tabs=False):
         settings = Settings()
         # Editor
@@ -339,6 +360,15 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditRunTerm.setVisible(sys.platform != 'win32')
             self.lineEditRunTerm.setEnabled(settings.external_terminal)
             self.lineEditRunTerm.setText(settings.external_terminal_command)
+            self.tw_run_env.clearContents()
+            self.tw_run_env.setRowCount(0)
+            for key, value in Settings().run_environemnt.items():
+                index = self.tw_run_env.rowCount()
+                self.tw_run_env.insertRow(index)
+                self.tw_run_env.setItem(
+                    index, 0, QtWidgets.QTableWidgetItem(key))
+                self.tw_run_env.setItem(
+                    index, 1, QtWidgets.QTableWidgetItem(value))
         # compiler
         if self.tabWidget.currentIndex() == 2 or all_tabs:
             self.cbAutoDetectSublmodules.setChecked(
@@ -433,6 +463,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         elif index == 3:
             settings.external_terminal = False
             settings.external_terminal_command = None
+            settings.run_environemnt = {}
         # compiler
         elif index == 2:
             settings.autodetect_submodules = True
@@ -556,16 +587,24 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.esqloc_extensions = [
             ext for ext in self.lineEditesqlOcExts.text().split(';') if ext]
 
+        env = {}
+        for i in range(self.tw_run_env.rowCount()):
+            env[self.tw_run_env.item(i, 0).text()] = self.tw_run_env.item(
+                i, 1).text()
+        settings.run_environemnt = env
+
     @classmethod
     def edit_preferences(cls, parent):
         def restore_state(dlg):
             s = Settings()
             dlg.resize(s.preferences_width, s.preferences_height)
+            dlg.tabWidget.setCurrentIndex(s.preferences_index)
 
         def save_state(dlg):
             s = Settings()
             s.preferences_width = dlg.width()
             s.preferences_height = dlg.height()
+            s.preferences_index = dlg.tabWidget.currentIndex()
 
         dlg = cls(parent)
         restore_state(dlg)
