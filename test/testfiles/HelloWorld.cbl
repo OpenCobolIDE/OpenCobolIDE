@@ -7,7 +7,7 @@
       ******************************************************************
        IDENTIFICATION DIVISION.
       *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       PROGRAM-ID. YOUR-PROGRAM-NAME.
+       PROGRAM-ID. HelloWorld.
        ENVIRONMENT DIVISION.
       *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
        CONFIGURATION SECTION.
@@ -29,4 +29,4 @@
             DISPLAY "Hello world"
             STOP RUN.
       ** add other procedures here
-       END PROGRAM YOUR-PROGRAM-NAME.
+       END PROGRAM HelloWorld.
