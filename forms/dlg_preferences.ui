@@ -109,8 +109,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>938</width>
-               <height>665</height>
+               <width>956</width>
+               <height>636</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -523,8 +523,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>958</width>
-               <height>623</height>
+               <width>956</width>
+               <height>636</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -641,7 +641,7 @@ as possible to get back to the previous indentation level.</string>
                      </property>
                      <property name="currentFont">
                       <font>
-                       <family>Clean</family>
+                       <family>Consolas</family>
                       </font>
                      </property>
                     </widget>
@@ -728,8 +728,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>938</width>
-               <height>890</height>
+               <width>939</width>
+               <height>657</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_6">
@@ -1262,39 +1262,41 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>958</width>
-               <height>623</height>
+               <width>956</width>
+               <height>636</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_13" stretch="0,1">
               <item>
-               <widget class="QGroupBox" name="checkBoxRunExtTerm">
-                <property name="title">
-                 <string>Run in e&amp;xternal terminal:</string>
+               <layout class="QFormLayout" name="formLayout_13">
+                <property name="topMargin">
+                 <number>0</number>
                 </property>
-                <property name="checkable">
-                 <bool>true</bool>
-                </property>
-                <layout class="QFormLayout" name="formLayout_5">
-                 <item row="0" column="1">
-                  <widget class="QLineEdit" name="lineEditRunTerm">
-                   <property name="toolTip">
-                    <string>External terminal command (filename is appended at the end of the command)</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>External terminal command</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_39">
-                   <property name="text">
-                    <string>Command:</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
+                <item row="0" column="0">
+                 <widget class="QCheckBox" name="checkBoxRunExtTerm">
+                  <property name="text">
+                   <string>Run in e&amp;xternal terminal:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="lbl_external_terminal_command">
+                  <property name="text">
+                   <string>Command:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLineEdit" name="lineEditRunTerm">
+                  <property name="toolTip">
+                   <string>External terminal command (filename is appended at the end of the command)</string>
+                  </property>
+                  <property name="statusTip">
+                   <string>External terminal command</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
                <widget class="QGroupBox" name="groupBox_12">
@@ -1342,7 +1344,8 @@ as possible to get back to the previous indentation level.</string>
                       <string>Add </string>
                      </property>
                      <property name="icon">
-                      <iconset theme="list-add"/>
+                      <iconset theme="list-add">
+                       <normaloff>.</normaloff>.</iconset>
                      </property>
                     </widget>
                    </item>
@@ -1352,7 +1355,8 @@ as possible to get back to the previous indentation level.</string>
                       <string>Remove</string>
                      </property>
                      <property name="icon">
-                      <iconset theme="list-remove"/>
+                      <iconset theme="list-remove">
+                       <normaloff>.</normaloff>.</iconset>
                      </property>
                     </widget>
                    </item>
@@ -1362,7 +1366,8 @@ as possible to get back to the previous indentation level.</string>
                       <string>Clear</string>
                      </property>
                      <property name="icon">
-                      <iconset theme="edit-clear"/>
+                      <iconset theme="edit-clear">
+                       <normaloff>.</normaloff>.</iconset>
                      </property>
                     </widget>
                    </item>
@@ -1409,8 +1414,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>958</width>
-               <height>599</height>
+               <width>956</width>
+               <height>617</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">

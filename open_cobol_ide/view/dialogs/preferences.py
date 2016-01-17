@@ -358,6 +358,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         if self.tabWidget.currentIndex() == 3 or all_tabs:
             self.checkBoxRunExtTerm.setChecked(settings.external_terminal)
             self.lineEditRunTerm.setVisible(sys.platform != 'win32')
+            self.lbl_external_terminal_command.setVisible(
+                sys.platform != 'win32')
             self.lineEditRunTerm.setEnabled(settings.external_terminal)
             self.lineEditRunTerm.setText(settings.external_terminal_command)
             self.tw_run_env.clearContents()
