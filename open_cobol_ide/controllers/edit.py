@@ -56,6 +56,8 @@ class EditController(Controller):
             ColorScheme(Settings().color_scheme))
         self.ui.tvFileSystem.activated.connect(self._on_tvFileSystem_activated)
         self.ui.tvFileSystem.setHeaderHidden(True)
+        self.ui.bt_fs_up.setIcon(QtGui.QIcon.fromTheme(
+            'go-up', QtGui.QIcon(':/pyqode-icons/rc/go-up.png')))
         self.ui.bt_fs_up.clicked.connect(self._fs_go_up)
         for i in range(1, 4):
             self.ui.tvFileSystem.hideColumn(i)
