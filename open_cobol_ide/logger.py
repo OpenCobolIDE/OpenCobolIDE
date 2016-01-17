@@ -3,6 +3,7 @@ This module contains the functions needed to setup the logging module for the
 application.
 """
 import logging
+import logging.handlers
 import os
 from open_cobol_ide.system import get_cache_directory
 
@@ -23,35 +24,18 @@ def setup_logging(version, debug):
     :param debug: True to enable debug log level, otherwise the info log
         level is used.
     """
-    level = logging.DEBUG if debug else logging.INFO
-    logger = logging.getLogger()
-    formatter = logging.Formatter(
-        '%(levelname)s::%(name)s::%(message)s',
-        '%Y-%m-%d %H:%M:%S')
+    handler = logging.handlers.RotatingFileHandler(
+            get_path(), maxBytes=2*1024*1024, backupCount=5)
     handlers = [
-        logging.StreamHandler(),
-        logging.FileHandler(get_path(), mode='w')
+        # a new log will be created on each new day with 5 days backup
+        handler,
+        logging.StreamHandler()
     ]
-    for handler in handlers:
-        handler.setFormatter(formatter)
-    for handler in handlers:
-        logger.addHandler(handler)
-    logger.setLevel(level)
+    logging.basicConfig(
+        level=logging.WARNING, handlers=handlers,
+        format='%(asctime)s:%(msecs)03d::%(levelname)s::%(process)d::%(name)s'
+        '::%(message)s', datefmt='%H:%M:%S')
+    logging.getLogger().setLevel(logging.INFO if not debug else logging.DEBUG)
     ocide_logger = logging.getLogger('open_cobol_ide')
-    ocide_logger.info('version: %s' % version)
-
-    # todo: remove this code once we know what encoding to use to decode
-    # compiler process output on windows
-    import sys
-    if sys.platform == 'win32':
-        import locale
-        from ctypes import cdll
-
-        ocide_logger.info('sys.stdout.encoding: %s',
-                          sys.stdout.encoding)
-        ocide_logger.info('sys.getfilesystemencoding: %s',
-                          sys.getfilesystemencoding())
-        ocide_logger.info('locale.getpreferredencoding: %s',
-                          locale.getpreferredencoding())
-        os_encoding = 'cp' + str(cdll.kernel32.GetACP())
-        ocide_logger.info('kernel32.GetACP: %s', os_encoding)
+    ocide_logger.info('-' * 80)
+    ocide_logger.info('version' * 80)

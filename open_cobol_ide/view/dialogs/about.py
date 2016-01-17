@@ -1,9 +1,12 @@
-import pyqode.core
-import pyqode.cobol
+import logging
+import os
+
 import pygments
-from pyqode.core._forms import pyqode_core_rc
+import pyqode.cobol
+import pyqode.core
 from pyqode.qt import QtGui, QtCore, QtWidgets
-from open_cobol_ide import __version__, logger
+
+from open_cobol_ide import __version__, logger, system
 from open_cobol_ide.compilers import GnuCobolCompiler
 from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.forms import dlg_about_ui
@@ -88,6 +91,8 @@ cobcrun --runtime-env
         }
         self.edit_compiler_infos.setPlainText(gnucobol_infos)
 
+        self.bt_clear_logs.clicked.connect(self._clear_logs)
+
     def _on_verbose_toggled(self, state):
         Settings().verbose = state
         if not DlgAbout._flg_verbose:
@@ -95,3 +100,20 @@ cobcrun --runtime-env
                 self, 'Restart required',
                 'You need to restart the IDE for the change to be applied.')
             DlgAbout._flg_verbose = True
+
+    def _clear_logs(self):
+        for i in range(6):
+            filename = 'OpenCobolIDE.log%s' % ('' if not i else '.%d' % i)
+            pth = os.path.join(system.get_cache_directory(), filename)
+            try:
+                os.remove(pth)
+            except OSError:
+                if os.path.exists(pth):
+                    _logger().exception('failed to remove log file %r', pth)
+        QtWidgets.QMessageBox.information(self, 'Logs cleared',
+                                          'Log files have been cleared.')
+        self.textEditLog.clear()
+
+
+def _logger():
+    return logging.getLogger(__name__)
