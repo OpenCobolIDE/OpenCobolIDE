@@ -232,6 +232,10 @@ class CobolController(Controller):
 
     def clean(self):
         path = self.app.edit.current_editor.file.path
+        CobolController.clean_file(path)
+
+    @staticmethod
+    def clean_file(path):
         output_path = GnuCobolCompiler().get_output_filename(
             [os.path.split(path)[1]], get_file_type(path))
         output_dir = Settings().output_directory
@@ -242,10 +246,9 @@ class CobolController(Controller):
         try:
             os.remove(output_path)
         except OSError:
-            _logger().exception('failed to remove output file %r',
-                                output_path)
+            _logger().debug('failed to remove output file %r', output_path)
         else:
-            _logger().info('File removed: %s', output_path)
+            _logger().debug('file removed: %s', output_path)
 
     def rebuild(self):
         self.clean()

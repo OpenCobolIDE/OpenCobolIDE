@@ -3,6 +3,7 @@ This module contains the ide application. This is where we glue the
 various managers and gui parts together.
 
 """
+import pickle
 import traceback
 import argparse
 import logging
@@ -14,10 +15,12 @@ from open_cobol_ide import __version__, logger, system
 from open_cobol_ide.controllers import (
     CobolController, EditController, FileController, HelpController,
     HomeController, ViewController)
+from open_cobol_ide.controllers.cobol import CompilationThread
 from open_cobol_ide.compilers import check_compiler, CompilerNotFound, \
     GnuCobolCompiler
 from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.main_window import MainWindow
+from open_cobol_ide.view.dialogs.about import DlgAbout
 from open_cobol_ide.view.dialogs.report_bug import DlgReportBug
 
 
@@ -57,13 +60,9 @@ class Application(QtCore.QObject):
                                            'ocide_stderr.log'), 'w')
         self.app = QtWidgets.QApplication(sys.argv)
         if parse_args and not system.darwin:
-            args = self.parse_args()
-            verbose = args.verbose
-            files = args.files
+            files = self.handle_command_line_args()
         else:
-            verbose = False
             files = []
-        logger.setup_logging(__version__, debug=verbose or Settings().verbose)
         self.name = 'OpenCobolIDE'
         self.version = __version__
         self.title = '%s %s' % (self.name, self.version)
@@ -170,7 +169,53 @@ class Application(QtCore.QObject):
         self.app.closeAllWindows()
         self.close()
 
-    def parse_args(self):
+    def handle_command_line_args(self):
+        args = self.configure_args_parser()
+        files = args.files
+
+        # setup logger
+        debug = args.verbose or Settings().verbose
+        logger.setup_logging(__version__, debug)
+
+        # show runtime env
+        if args.runtime_env:
+            print('OpenCobolIDE %s' % __version__)
+            for k, v in sorted(DlgAbout.get_runtime_env().items(),
+                               key=lambda x: x[0]):
+                print('%s %s' % (k, v))
+            sys.exit(0)
+
+        # show cobc runtime env
+        if args.cobc_runtime_env:
+            print(DlgAbout.get_cobc_runtime_env())
+            sys.exit(0)
+
+        # import preferences
+        if args.conf:
+            try:
+                with open(args.conf, 'rb') as f:
+                    Settings().import_from_dict(pickle.load(f))
+            except (ValueError, IOError, OSError):
+                _logger().exception('failed to restore preferences from %r',
+                                    args.conf)
+            else:
+                _logger().info('preferences imported from %r', args.conf)
+
+        # compile specified files
+        if args.compile:
+            thread = CompilationThread()
+            for path in files:
+                if os.path.exists(path):
+                    CobolController.clean_file(path)
+                    thread.file_path = path
+                    thread.run()
+                else:
+                    print('cannot compile %r, file not found')
+            sys.exit(0)
+
+        return files
+
+    def configure_args_parser(self):
         parser = argparse.ArgumentParser(
             description='Simple and lightweight COBOL IDE.')
         parser.add_argument('files', type=str, nargs='*',
@@ -178,6 +223,25 @@ class Application(QtCore.QObject):
         parser.add_argument('--verbose', dest='verbose', action='store_true',
                             help='Verbose mode will enable debug and info '
                                  'messages to be shown in the application log')
+        parser.add_argument(
+            '--runtime-env', dest='runtime_env', action='store_true',
+            help='Display the application runtime environment.')
+
+        parser.add_argument(
+            '--cobc-runtime-env', dest='cobc_runtime_env',
+            action='store_true',
+            help='Display the compiler runtime environment.')
+
+        parser.add_argument(
+            '--compile', dest='compile',
+            action='store_true',
+            help='Compile the specified files and exits.')
+
+        parser.add_argument(
+            '--conf', dest='conf',
+            help='Specify a configuration file (previously exported from '
+            'within the IDE (File->Export preferences))')
+
         return parser.parse_args()
 
     def _except_hook(self, exc_type, exc_val, tb):

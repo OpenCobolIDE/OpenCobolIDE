@@ -37,5 +37,4 @@ def setup_logging(version, debug):
         '::%(message)s', datefmt='%H:%M:%S')
     logging.getLogger().setLevel(logging.INFO if not debug else logging.DEBUG)
     ocide_logger = logging.getLogger('open_cobol_ide')
-    ocide_logger.info('-' * 80)
-    ocide_logger.info('version' * 80)
+    ocide_logger.info('version: %s', version)

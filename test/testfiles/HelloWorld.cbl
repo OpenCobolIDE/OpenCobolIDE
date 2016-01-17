@@ -10,7 +10,7 @@
        PROGRAM-ID. HelloWorld.
        ENVIRONMENT DIVISION.
       *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       CONFIGURATION SECTION.
+       CONFIGURATION SECTION
       *-----------------------
        INPUT-OUTPUT SECTION.
       *-----------------------

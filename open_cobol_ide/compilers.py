@@ -87,6 +87,9 @@ def run_command(pgm, args, working_dir=''):
     _logger().debug('environment: %s',
                     p.processEnvironment().toStringList())
     p.start(pgm, args)
+
+    print(' '.join([pgm] + args))
+
     p.waitForFinished()
 
     # determine exit code (handle crashed processes)
@@ -110,6 +113,8 @@ def run_command(pgm, args, working_dir=''):
     _logger().debug('exit code: %r', status)
 
     os.environ['PATH'] = path_cpy
+
+    print(output)
 
     return status, output
 
@@ -415,6 +420,8 @@ class GnuCobolCompiler(QtCore.QObject):
             desc = 'compilation skipped, up to date...'
             self.output_available.emit('%s: %s' % (file_path, desc))
             msg = (desc, CheckerMessages.INFO, -1, 0, None, None, file_path)
+            _logger().info(desc)
+
             return 0, [msg]
 
         self.prepare_bin_dir(output_dir, output_full_path)
@@ -426,7 +433,7 @@ class GnuCobolCompiler(QtCore.QObject):
         self.output_available.emit(output)
         messages = self.parse_output(output, path)
         binary_created = os.path.exists(output_full_path)
-        _logger().info('binary file (%s) created:  %r',
+        _logger().info('binary file %r created:  %r',
                        output_full_path, binary_created)
 
         if not len(messages) and (status != 0 or not binary_created):
@@ -435,7 +442,7 @@ class GnuCobolCompiler(QtCore.QObject):
             # linker level
             messages.append((output, CheckerMessages.ERROR, - 1, 0,
                              None, None, file_path))
-        _logger().debug('compile results: %r - %r', status, messages)
+        _logger().info('compile results: %r - %r', status, messages)
 
         return status, messages
 

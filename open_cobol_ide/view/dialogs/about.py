@@ -45,20 +45,8 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
         self.setWindowIcon(QtGui.QIcon.fromTheme(
             'help-about', QtGui.QIcon(
                 ':/ide-icons/rc/dialog-information.png')))
-        try:
-            import qdarkstyle
-        except ImportError:
-            qdarkstyle_version = 'Not installed'
-        else:
-            qdarkstyle_version = qdarkstyle.__version__
-        versions = [GnuCobolCompiler().get_version(include_all=False),
-                    QtCore.QT_VERSION_STR,
-                    QtCore.PYQT_VERSION_STR,
-                    pyqode.core.__version__,
-                    pyqode.cobol.__version__,
-                    pygments.__version__,
-                    qdarkstyle_version]
-        for i, version in enumerate(versions):
+
+        for i, version in enumerate(DlgAbout.get_runtime_env().values()):
             item = QtWidgets.QTableWidgetItem(version)
             self.tbwVersions.setItem(i, 0, item)
         with open(logger.get_path(), 'r') as f:
@@ -74,6 +62,30 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
         QtGui.QFontDatabase.addApplicationFont(
             ':/fonts/rc/SourceCodePro-Bold.ttf')
 
+        self.edit_compiler_infos.setPlainText(DlgAbout.get_cobc_runtime_env())
+
+        self.bt_clear_logs.clicked.connect(self._clear_logs)
+
+    @staticmethod
+    def get_runtime_env():
+        try:
+            import qdarkstyle
+        except ImportError:
+            qdarkstyle_version = 'Not installed'
+        else:
+            qdarkstyle_version = qdarkstyle.__version__
+        versions = {
+            'GnuCOBOL': GnuCobolCompiler().get_version(include_all=False),
+            'Qt': QtCore.QT_VERSION_STR,
+            'PyQt': QtCore.PYQT_VERSION_STR,
+            'pyqode.core': pyqode.core.__version__,
+            'pyqode.cobol': pyqode.cobol.__version__,
+            'pygments': pygments.__version__,
+            'qdarkstyle': qdarkstyle_version}
+        return versions
+
+    @staticmethod
+    def get_cobc_runtime_env():
         template = '''cobc --info
 ============
 
@@ -89,9 +101,7 @@ cobcrun --runtime-env
             'cobc_infos': GnuCobolCompiler.get_cobc_infos(),
             'cobcrun_infos': GnuCobolCompiler.get_cobcrun_infos()
         }
-        self.edit_compiler_infos.setPlainText(gnucobol_infos)
-
-        self.bt_clear_logs.clicked.connect(self._clear_logs)
+        return gnucobol_infos
 
     def _on_verbose_toggled(self, state):
         Settings().verbose = state
