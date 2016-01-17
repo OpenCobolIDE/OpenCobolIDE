@@ -897,7 +897,7 @@
    <property name="minimumSize">
     <size>
      <width>96</width>
-     <height>145</height>
+     <height>147</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -943,6 +943,19 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <widget class="QToolButton" name="bt_fs_up">
+         <property name="toolTip">
+          <string>Go up</string>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset theme="go-up"/>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="btFSLock">

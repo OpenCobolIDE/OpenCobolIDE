@@ -56,6 +56,7 @@ class EditController(Controller):
             ColorScheme(Settings().color_scheme))
         self.ui.tvFileSystem.activated.connect(self._on_tvFileSystem_activated)
         self.ui.tvFileSystem.setHeaderHidden(True)
+        self.ui.bt_fs_up.clicked.connect(self._fs_go_up)
         for i in range(1, 4):
             self.ui.tvFileSystem.hideColumn(i)
         self.ui.tvFileSystem.add_ignore_patterns('bin', '.oci*.cbl')
@@ -294,3 +295,11 @@ class EditController(Controller):
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                 QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.Yes:
             self.ui.tabWidgetEditors.close_document(editor.file.path)
+
+    def _fs_go_up(self):
+        """
+        Go up in the FileSystem view
+        """
+        parent_path = os.path.abspath(
+            os.path.join(self.ui.tvFileSystem.root_path, os.path.pardir))
+        self.ui.tvFileSystem.set_root_path(parent_path)
