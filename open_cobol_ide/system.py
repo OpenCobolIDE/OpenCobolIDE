@@ -91,7 +91,6 @@ def which(cmd, mode=os.F_OK | os.X_OK, path=None,
 
     seen = set()
 
-    print(path)
     for dir in path:
         normdir = os.path.normcase(dir)
         if not normdir in seen:
