@@ -109,8 +109,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>364</width>
-               <height>665</height>
+               <width>636</width>
+               <height>838</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -523,8 +523,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>364</width>
-               <height>362</height>
+               <width>636</width>
+               <height>838</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -727,7 +727,7 @@ as possible to get back to the previous indentation level.</string>
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>0</y>
+               <y>-52</y>
                <width>616</width>
                <height>890</height>
               </rect>
@@ -749,7 +749,7 @@ as possible to get back to the previous indentation level.</string>
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="QLineEdit" name="lineEditCompilerPath">
+                 <widget class="PathLineEdit" name="lineEditCompilerPath">
                   <property name="toolTip">
                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Full path to the GnuCOBOL compiler.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
@@ -784,19 +784,19 @@ as possible to get back to the previous indentation level.</string>
                   <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
                  </property>
                  <item row="0" column="1">
-                  <widget class="QLineEdit" name="PATH"/>
+                  <widget class="PathLineEdit" name="PATH"/>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QLineEdit" name="COB_CONFIG_DIR"/>
+                  <widget class="PathLineEdit" name="COB_CONFIG_DIR"/>
                  </item>
                  <item row="2" column="1">
-                  <widget class="QLineEdit" name="COB_COPY_DIR"/>
+                  <widget class="PathLineEdit" name="COB_COPY_DIR"/>
                  </item>
                  <item row="4" column="1">
-                  <widget class="QLineEdit" name="COB_INCLUDE_PATH"/>
+                  <widget class="PathLineEdit" name="COB_INCLUDE_PATH"/>
                  </item>
                  <item row="5" column="1">
-                  <widget class="QLineEdit" name="COB_LIB_PATH"/>
+                  <widget class="PathLineEdit" name="COB_LIB_PATH"/>
                  </item>
                  <item row="0" column="0">
                   <widget class="QCheckBox" name="cbPATH">
@@ -849,7 +849,7 @@ as possible to get back to the previous indentation level.</string>
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="QLineEdit" name="lineEditVCVARS">
+                 <widget class="PathLineEdit" name="lineEditVCVARS">
                   <property name="toolTip">
                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to VCVARSALL.bat. It is needed if you're using a GnuCobol compiler built with Visual Studio.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;The VCVARSALL.bat file is located under the VC directory of you Visual Studio installation. Make sure to use the same version as the one used to build the compiler!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
@@ -889,7 +889,7 @@ as possible to get back to the previous indentation level.</string>
                </widget>
               </item>
               <item row="5" column="1">
-               <widget class="QLineEdit" name="lineEditOutputDirectory"/>
+               <widget class="PathLineEdit" name="lineEditOutputDirectory"/>
               </item>
               <item row="6" column="0">
                <widget class="QLabel" name="label_32">
@@ -1262,8 +1262,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>198</width>
-               <height>70</height>
+               <width>636</width>
+               <height>838</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_5">
@@ -1322,8 +1322,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>336</width>
-               <height>556</height>
+               <width>636</width>
+               <height>814</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -1643,6 +1643,11 @@ as possible to get back to the previous indentation level.</string>
    <class>CobolCodeEdit</class>
    <extends>QPlainTextEdit</extends>
    <header>pyqode.cobol.widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>PathLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>open_cobol_ide.view.widgets</header>
   </customwidget>
  </customwidgets>
  <resources>

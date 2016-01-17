@@ -1,6 +1,7 @@
 """
 Widgets in this module are used as promoted widgets in Qt Designer
 """
+import os
 from pyqode.cobol.api import icons
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from pyqode.core.widgets import SplittableCodeEditTabWidget
@@ -104,3 +105,47 @@ class FileIconProvider(PyQodeIconProvider):
                 elif type_or_info == self.File:
                     return QtGui.QIcon('')
         return super().icon(type_or_info)
+
+
+class PathLineEdit(QtWidgets.QLineEdit):
+    """
+    Line edit specialised for choosing a path.
+
+    Features:
+        - use QCompleter with a QDirModel to automatically complete paths.
+        - allow user to drop files and folders to set url text
+    """
+    class Completer(QtWidgets.QCompleter):
+        def splitPath(self, path):
+            path = os.path.split(os.pathsep)[-1]
+            return super().splitPath(path)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        completer = self.Completer()
+        model = QtWidgets.QDirModel(completer)
+        model.setIconProvider(FileIconProvider())
+        completer.setModel(model)
+        self.setCompleter(completer)
+        self.setDragEnabled(True)
+
+    def dragEnterEvent(self, event):
+        data = event.mimeData()
+        urls = data.urls()
+        if urls and urls[0].scheme() == 'file':
+            event.acceptProposedAction()
+
+    def dragMoveEvent(self, event):
+        data = event.mimeData()
+        urls = data.urls()
+        if urls and urls[0].scheme() == 'file':
+            event.acceptProposedAction()
+
+    def dropEvent(self, event):
+        data = event.mimeData()
+        urls = data.urls()
+        if urls and urls[0].scheme() == 'file':
+            # for some reason, this doubles up the intro slash
+            filepath = urls[0].path()
+            self.setText(filepath)
+            self.setFocus()
