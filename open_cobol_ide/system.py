@@ -67,7 +67,7 @@ def which(cmd, mode=os.F_OK | os.X_OK, path=None,
 
     path = path.split(os.pathsep)
     if include_settings_path and Settings().path:
-        path += Settings().path.split(os.pathsep)
+        path = Settings().path.split(os.pathsep) + path
 
     if sys.platform == "win32":
         # The current directory takes precedence on Windows.
@@ -90,6 +90,8 @@ def which(cmd, mode=os.F_OK | os.X_OK, path=None,
         files = [cmd]
 
     seen = set()
+
+    print(path)
     for dir in path:
         normdir = os.path.normcase(dir)
         if not normdir in seen:
