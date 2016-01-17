@@ -56,7 +56,7 @@ class ViewController(Controller):
         window_mnu = self.main_window.createPopupMenu()
         self.ui.menuWindows.addActions(window_mnu.actions())
         if system.darwin:
-            self.ui.toolBarCode.setIconSize(QtCore.QSize(20, 20))
+            self.ui.toolBarCOBOL.setIconSize(QtCore.QSize(20, 20))
             self.ui.toolBarFile.setIconSize(QtCore.QSize(20, 20))
             self.ui.toolBarFile.setStyleSheet(
                 '''QToolButton
@@ -64,7 +64,7 @@ class ViewController(Controller):
                      background-color: rgba(255, 255,255,0);
                 }
                 ''')
-            self.ui.toolBarCode.setStyleSheet(
+            self.ui.toolBarCOBOL.setStyleSheet(
                 '''QToolButton
                 {
                      background-color: rgba(255, 255,255,0);

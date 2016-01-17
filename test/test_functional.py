@@ -90,17 +90,17 @@ def test_functional_external_terminal(app):
 def test_toggle_perspective(app):
     app.win.show()
     assert Settings().perspective == 'default'
-    assert app.win.ui.toolBarCode.isVisible()
+    assert app.win.ui.toolBarCOBOL.isVisible()
     assert app.win.ui.toolBarFile.isVisible()
     app.view.toggle_perspective()
     QTest.qWait(1000)
     assert Settings().perspective == 'minimal'
-    assert not app.win.ui.toolBarCode.isVisible()
-    assert not app.win.ui.toolBarFile.isVisible()
+    assert not app.win.ui.toolBarCOBOL.isVisible()
+    assert not app.win.ui.toolBarCOBOL.isVisible()
     app.view.toggle_perspective()
     QTest.qWait(1000)
     assert Settings().perspective == 'default'
-    assert app.win.ui.toolBarCode.isVisible()
+    assert app.win.ui.toolBarCOBOL.isVisible()
     assert app.win.ui.toolBarFile.isVisible()
 
 

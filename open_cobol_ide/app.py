@@ -145,7 +145,7 @@ class Application(QtCore.QObject):
         if Settings().fullscreen:
             self.win.showFullScreen()
         else:
-            self.win.showMaximized()
+            self.win.show()
         return self.app.exec_()
 
     @staticmethod
