@@ -109,7 +109,7 @@ class CobolController(Controller):
         self.compile_buttons = []
         self.run_buttons = []
         self.create_bt_compile()
-        self.ui.toolBarCode.insertWidget(
+        self.ui.toolBarCOBOL.insertWidget(
             self.ui.actionClean, self.compile_buttons[0])
         group.triggered.connect(self._on_program_type_changed)
         self.ui.actionCompile.triggered.connect(self.compile)

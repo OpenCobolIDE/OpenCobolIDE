@@ -80,6 +80,8 @@ class EditController(Controller):
         self.ui.btNavLock.setChecked(not self.ui.twNavigation.sync_with_editor)
         self.ui.twNavigation.sync_with_editor_changed.connect(
             self._on_nav_sync_changed)
+        self.ui.actionEnableLinter.toggled.connect(
+            self._on_enable_linter_toggled)
 
     def _on_fs_path_lock_toggled(self, checked):
         if checked:
@@ -133,7 +135,13 @@ class EditController(Controller):
         self._lbl_path.setFrameShape(QtWidgets.QFrame.NoFrame)
         self._lbl_path.setText('n/a')
 
+        # linter control button
+        linter_btn = QtWidgets.QToolButton(self.ui.statusbar)
+        linter_btn.setDefaultAction(self.ui.actionEnableLinter)
+
         self.ui.statusbar.addWidget(self._lbl_path, True)
+        self.ui.statusbar.addAction(self.ui.actionEnableLinter)
+        self.ui.statusbar.addPermanentWidget(linter_btn)
         self.ui.statusbar.addPermanentWidget(self._lbl_format)
         self.ui.statusbar.addPermanentWidget(self._lbl_cursor)
         self.ui.statusbar.addPermanentWidget(self._lbl_encoding)
@@ -172,6 +180,9 @@ class EditController(Controller):
             editor.app = weakref.ref(self.app)
             update_editor_settings(editor)
             try:
+                self.ui.actionEnableLinter.blockSignals(True)
+                self.ui.actionEnableLinter.setChecked(Settings().show_errors)
+                self.ui.actionEnableLinter.blockSignals(False)
                 editor.set_buttons()
             except AttributeError:
                 pass
@@ -207,6 +218,17 @@ class EditController(Controller):
                 if new_root != self.ui.tvFileSystem.root_path:
                     self.ui.tvFileSystem.set_root_path(new_root)
             self.ui.tableWidgetOffsets.set_editor(editor)
+            # update linter action
+            try:
+                self.ui.actionEnableLinter.blockSignals(True)
+                self.ui.actionEnableLinter.setChecked(
+                    editor.linter_mode.enabled)
+                self.ui.actionEnableLinter.blockSignals(False)
+            except AttributeError:
+                # not a cobol code edit
+                self.ui.actionEnableLinter.setEnabled(False)
+            else:
+                self.ui.actionEnableLinter.setEnabled(True)
             # update current editor menu
             self.ui.mnuActiveEditor.clear()
             self.ui.mnuActiveEditor.addActions(
@@ -240,6 +262,8 @@ class EditController(Controller):
                     not self.ui.consoleOutput.is_running)
             self._update_status_bar_labels()
             _logger().debug('current editor changed: %s', editor.file.path)
+        else:
+            self.ui.actionEnableLinter.setEnabled(False)
 
     def _get_cursor_pos_in_bytes(self, original, encoding):
         text = TextHelper(self.current_editor).current_line_text()
@@ -288,6 +312,16 @@ class EditController(Controller):
                     ColorScheme(Settings().color_scheme))
                 editor.rehighlight()
             self._update_status_bar_labels()
+            try:
+                self.ui.actionEnableLinter.blockSignals(True)
+                self.ui.actionEnableLinter.setChecked(
+                    editor.linter_mode.enabled)
+                self.ui.actionEnableLinter.blockSignals(False)
+            except AttributeError:
+                # not a cobol code edit
+                self.ui.actionEnableLinter.setEnabled(False)
+            else:
+                self.ui.actionEnableLinter.setEnabled(True)
 
     def _on_file_deleted(self, editor):
         if QtWidgets.QMessageBox.question(
@@ -305,3 +339,6 @@ class EditController(Controller):
         parent_path = os.path.abspath(
             os.path.join(self.ui.tvFileSystem.root_path, os.path.pardir))
         self.ui.tvFileSystem.set_root_path(parent_path)
+
+    def _on_enable_linter_toggled(self, is_checked):
+        self.current_editor.linter_mode.enabled = is_checked
