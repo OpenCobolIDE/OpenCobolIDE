@@ -7,6 +7,7 @@ from pyqode.qt import QtCore, QtGui, QtWidgets
 from pyqode.core.widgets import SplittableCodeEditTabWidget
 from pyqode.core.widgets import FileSystemContextMenu, FileIconProvider as PyQodeIconProvider
 import sys
+from open_cobol_ide import system
 from open_cobol_ide.settings import Settings
 
 
@@ -147,5 +148,9 @@ class PathLineEdit(QtWidgets.QLineEdit):
         if urls and urls[0].scheme() == 'file':
             # for some reason, this doubles up the intro slash
             filepath = urls[0].path()
+            if system.windows and filepath.startswith('/'):
+                filepath = filepath[1:]
+                filepath = os.path.normpath(filepath)
+            print(filepath, urls)
             self.setText(filepath)
             self.setFocus()
