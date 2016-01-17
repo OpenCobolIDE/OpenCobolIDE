@@ -409,7 +409,7 @@ class GnuCobolCompiler(QtCore.QObject):
             inputs = [filename]
         # ensure bin dir exists
         output_full_path = os.path.join(
-            output_dir, self._get_output_filename(inputs, file_type))
+            output_dir, self.get_output_filename(inputs, file_type))
         if os.path.exists(output_full_path) and \
             os.path.getmtime(file_path) <= \
                 os.path.getmtime(output_full_path):
@@ -440,7 +440,7 @@ class GnuCobolCompiler(QtCore.QObject):
 
         return status, messages
 
-    def _get_output_filename(self, inputs, file_type):
+    def get_output_filename(self, inputs, file_type):
         return os.path.splitext(inputs[0])[0] + self.extension_for_type(
             file_type)
 
@@ -460,7 +460,7 @@ class GnuCobolCompiler(QtCore.QObject):
         """
         from .settings import Settings
         settings = Settings()
-        output_file_name = self._get_output_filename(
+        output_file_name = self.get_output_filename(
             input_file_names, file_type)
         options = []
         if file_type == FileType.EXECUTABLE:

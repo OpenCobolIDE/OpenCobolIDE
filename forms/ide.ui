@@ -468,6 +468,8 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionClean"/>
+   <addaction name="actionRebuild"/>
    <addaction name="actionRun"/>
   </widget>
   <widget class="QDockWidget" name="dockWidgetLogs">
@@ -613,7 +615,7 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>&amp;File</string>
+     <string>F&amp;ile</string>
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
@@ -681,6 +683,8 @@
     <addaction name="menuProgramType"/>
     <addaction name="separator"/>
     <addaction name="actionCompile"/>
+    <addaction name="actionClean"/>
+    <addaction name="actionRebuild"/>
     <addaction name="actionRun"/>
     <addaction name="separator"/>
     <addaction name="actionCancel"/>
@@ -807,7 +811,7 @@
     </size>
    </property>
    <property name="windowTitle">
-    <string>&amp;Offset calculator</string>
+    <string>Offset calc&amp;ulator</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -1242,6 +1246,22 @@
   <action name="actionImport_preferences">
    <property name="text">
     <string>&amp;Import preferences</string>
+   </property>
+  </action>
+  <action name="actionClean">
+   <property name="text">
+    <string>C&amp;lean</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+C</string>
+   </property>
+  </action>
+  <action name="actionRebuild">
+   <property name="text">
+    <string>R&amp;ebuild</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F8</string>
    </property>
   </action>
   <zorder>dockWidgetNavPanel</zorder>

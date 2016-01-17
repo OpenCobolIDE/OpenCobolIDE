@@ -131,6 +131,10 @@ class ViewController(Controller):
         icon_report_bug = QtGui.QIcon.fromTheme('tools-report-bug')
         icon_lock = QtGui.QIcon.fromTheme('system-lock-screen', QtGui.QIcon(
             ':/ide-icons/rc/lock.png'))
+        icon_clean = QtGui.QIcon.fromTheme('edit-clear', QtGui.QIcon(
+            ':/ide-icons/rc/edit-clear.png'))
+        icon_rebuild = QtGui.QIcon.fromTheme('view-refresh', QtGui.QIcon(
+            ':/ide-icons/rc/view-refresh.png'))
 
         self.ui.btFSLock.setIcon(icon_lock)
         self.ui.actionPreferences.setIcon(ipreferences)
@@ -158,6 +162,8 @@ class ViewController(Controller):
             QtWidgets.QAction.PreferencesRole)
         self.ui.actionQuit.setMenuRole(QtWidgets.QAction.QuitRole)
         self.ui.actionReport_a_bug.setIcon(icon_report_bug)
+        self.ui.actionClean.setIcon(icon_clean)
+        self.ui.actionRebuild.setIcon(icon_rebuild)
 
         if system.darwin:
             self.ui.menu.setTitle('Help')
