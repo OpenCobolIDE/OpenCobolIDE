@@ -838,3 +838,11 @@ class Settings(object):
     @run_environemnt.setter
     def run_environemnt(self, dic):
         self._settings.setValue('run_env', json.dumps(dic))
+
+    @property
+    def copy_runtime_dlls(self):
+        return bool(int(self._settings.value('copy_runtime_dlls', 0)))
+
+    @copy_runtime_dlls.setter
+    def copy_runtime_dlls(self, value):
+        self._settings.setValue('copy_runtime_dlls', int(value))

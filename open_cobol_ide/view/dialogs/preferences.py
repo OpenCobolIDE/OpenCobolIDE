@@ -375,6 +375,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         if self.tabWidget.currentIndex() == 2 or all_tabs:
             self.cbAutoDetectSublmodules.setChecked(
                 Settings().autodetect_submodules)
+            self.cb_copy_runtime_dlls.setVisible(sys.platform == 'win32')
+            self.cb_copy_runtime_dlls.setChecked(Settings().copy_runtime_dlls)
             self.lineEditOutputDirectory.setText(Settings().output_directory)
             self.lineEditCobcExts.setText(';'.join(Settings().cobc_extensions))
             self.checkBoxFreeFormat.setChecked(settings.free_format)
@@ -470,6 +472,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         elif index == 2:
             settings.autodetect_submodules = True
             settings.output_directory = 'bin'
+            settings.copy_runtime_dlls = False
             settings.free_format = False
             settings.cobol_standard = GnuCobolStandard.default
             settings.compiler_path = Settings.default_compiler_path()
@@ -562,6 +565,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.copybook_paths = ';'.join(paths)
         settings.libraries = self.lineEditLibs.text()
         settings.output_directory = self.lineEditOutputDirectory.text()
+        settings.copy_runtime_dlls = self.cb_copy_runtime_dlls.isChecked()
         cb_flags = [self.cb_g, self.cb_ftrace, self.cb_ftraceall,
                     self.cb_debugging_line, self.cb_static, self.cb_debug]
         flags = [cb.text() for cb in cb_flags if cb.isChecked()]

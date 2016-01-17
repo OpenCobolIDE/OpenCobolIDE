@@ -358,12 +358,12 @@ class GnuCobolCompiler(QtCore.QObject):
         assert not os.path.isfile(path)  # must be a directory
         if not os.path.exists(path):
             os.makedirs(path)
-        # if sys.platform == "win32":
-            # # copy the dll
-            # files = glob.glob(os.path.join(
-            #     os.path.dirname(Settings().full_compiler_path), "*.dll"))
-            # for f in files:
-            #     shutil.copy(f, path)
+        if Settings().copy_runtime_dlls:
+            # copy runtime dlls to output directory
+            files = glob.glob(os.path.join(
+                os.path.dirname(Settings().full_compiler_path), "*.dll"))
+            for f in files:
+                shutil.copy(f, path)
         if os.path.exists(output_full_path):
             try:
                 os.remove(output_full_path)
