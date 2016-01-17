@@ -7,8 +7,10 @@ state logic as well as the close event handling (give user a chance to save its
 work or not).
 
 """
+import os
 import logging
 from pyqode.qt import QtWidgets
+from open_cobol_ide import system
 from open_cobol_ide.view.forms.ide_ui import Ui_MainWindow
 from open_cobol_ide.settings import Settings
 
@@ -22,6 +24,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.setAcceptDrops(True)
         self.restore_state()
 
     def restore_state(self):
@@ -59,3 +62,21 @@ class MainWindow(QtWidgets.QMainWindow):
         if event.isAccepted():
             self.save_state()
             _logger().debug('CLOSED')
+
+    def dragEnterEvent(self, event):
+        mime = event.mimeData()
+        if mime is None or not mime.hasUrls():
+            return
+        event.accept()
+
+    def dropEvent(self, event):
+        mime = event.mimeData()
+        if mime is None or not mime.hasUrls():
+            return
+        for url in mime.urls():
+            path = url.path()
+            if system.windows and path.startswith('/'):
+                path = path[1:]
+            if os.path.isfile(path):
+                # open a new editor
+                self.app.file.open_file(path)

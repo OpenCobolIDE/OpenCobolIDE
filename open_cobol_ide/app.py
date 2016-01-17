@@ -78,6 +78,7 @@ class Application(QtCore.QObject):
         self.edit = EditController(self)
         self.cobol = CobolController(self)
         self.help = HelpController(self)
+        self.win.app = self
 
         self.view.show_perspective(Settings().perspective)
         self.view.show_home_page()
