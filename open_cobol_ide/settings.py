@@ -332,7 +332,8 @@ class Settings(object):
                 - kdesu
 
             """
-            for program in ['gnome-terminal', 'xfce4-terminal', 'konsole']:
+            for program in ['gnome-terminal', 'xfce4-terminal', 'konsole',
+                            'pantheon-terminal']:
                 if system.which(program) is not None:
                     return program
             return 'gnome-terminal'
