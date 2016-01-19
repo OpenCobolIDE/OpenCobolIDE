@@ -123,6 +123,20 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         self.bt_rm_run_env.clicked.connect(self._rm_run_env_variable)
         self.bt_clear_run_env.clicked.connect(self._clear_run_env)
 
+        self._margin_spin_boxes = [
+            self.spin_box_margin_1,
+            self.spin_box_margin_2,
+            self.spin_box_margin_3,
+            self.spin_box_margin_4
+        ]
+
+        self._margin_color_pickers = [
+            self.color_picker_1,
+            self.color_picker_2,
+            self.color_picker_3,
+            self.color_picker_4
+        ]
+
         self.initial_settings = Settings().export_to_dict()
         self.reset(all_tabs=True)
 
@@ -335,6 +349,11 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.comboBoxPreferredEOL.setCurrentIndex(settings.preferred_eol)
             self.comboCcFilterMode.setCurrentIndex(
                 settings.completion_filter_mode)
+            for pos, spin_box, color, picker in zip(
+                    settings.margin_positions, self._margin_spin_boxes,
+                    settings.margin_colors, self._margin_color_pickers):
+                spin_box.setValue(pos + 1)
+                picker.color = QtGui.QColor(color)
         # Style
         if self.tabWidget.currentIndex() == 1 or all_tabs:
             rb = (self.radioButtonColorDark if settings.dark_style else
@@ -456,6 +475,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.autodetect_eol = True
             settings.preferred_eol = 0
             settings.code_completion_trigger_len = 1
+            settings.margin_positions = [7, 11, 72, 79]
+            settings.margin_colors = ['red'] * 4
         # Style
         elif index == 1:
             settings.dark_style = False
@@ -592,6 +613,15 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.lineEditDbpreExts.text().split(';') if ext]
         settings.esqloc_extensions = [
             ext for ext in self.lineEditesqlOcExts.text().split(';') if ext]
+
+        colors = []
+        positions = []
+        for spin_box, picker in zip(self._margin_spin_boxes,
+                                    self._margin_color_pickers):
+            positions.append(spin_box.value() - 1)
+            colors.append(picker.color.name())
+        settings.margin_positions = positions
+        settings.margin_colors = colors
 
         env = {}
         for i in range(self.tw_run_env.rowCount()):

@@ -1,3 +1,4 @@
+from pyqode.qt import QtGui
 from pyqode.core.api import ColorScheme
 from .cobol import CobolCodeEdit
 from .generic import GenericCodeEdit
@@ -31,6 +32,9 @@ def update_editor_settings(editor):
         editor.file.preferred_eol = settings.preferred_eol
         editor.modes.get('CodeCompletionMode').smart_completion = \
             bool(settings.completion_filter_mode)
-        editor.enable_linter()
-    except AttributeError:
+        editor.margins.positions = settings.margin_positions
+        editor.margins.colors = [QtGui.QColor(c)
+                                 for c in settings.margin_colors]
+    except AttributeError as e:
+        print(e)
         editor.syntax_highlighter.pygments_style = settings.color_scheme

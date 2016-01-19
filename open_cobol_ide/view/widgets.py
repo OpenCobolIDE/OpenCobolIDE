@@ -5,7 +5,8 @@ import os
 from pyqode.cobol.api import icons
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from pyqode.core.widgets import SplittableCodeEditTabWidget
-from pyqode.core.widgets import FileSystemContextMenu, FileIconProvider as PyQodeIconProvider
+from pyqode.core.widgets import FileSystemContextMenu, FileIconProvider as \
+    PyQodeIconProvider
 import sys
 from open_cobol_ide import system
 from open_cobol_ide.settings import Settings
@@ -154,3 +155,36 @@ class PathLineEdit(QtWidgets.QLineEdit):
             print(filepath, urls)
             self.setText(filepath)
             self.setFocus()
+
+
+class ColorPicker(QtWidgets.QPushButton):
+    """
+    Custom widget to pick a color.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._color = None
+        self.color = QtGui.QColor('red')
+        self.setMaximumWidth(32)
+        self.pressed.connect(self.pick_color)
+
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, color):
+        self._color = color
+        self.setStyleSheet("ColorPicker { background-color: %s;}" %
+                           self._color.name())
+
+    def pick_color(self):
+        """
+        Show color-picker dialog to select color.
+
+        Qt will use the native dialog by default.
+        """
+        dlg = QtWidgets.QColorDialog(self)
+        dlg.setCurrentColor(QtGui.QColor(self._color))
+        dlg.exec_()
+        self.color = dlg.currentColor()

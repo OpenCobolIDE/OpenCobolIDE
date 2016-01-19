@@ -261,8 +261,27 @@ class Settings(object):
     def enable_smart_backspace(self, value):
         self._settings.setValue('enable_smart_backspace', int(value))
 
+    @property
+    def margin_positions(self):
+        return json.loads(
+            self._settings.value('margin_positions', '[7, 11, 72, 79]'))
+
+    @margin_positions.setter
+    def margin_positions(self, positions):
+        self._settings.setValue('margin_positions', json.dumps(positions))
+
+    @property
+    def margin_colors(self):
+        return json.loads(
+            self._settings.value('margin_colors',
+                                 '["red", "red", "red", "red"]'))
+
+    @margin_colors.setter
+    def margin_colors(self, colors):
+        self._settings.setValue('margin_colors', json.dumps(colors))
+
     #
-    # Editor style settings
+    # Style settings
     #
     @property
     def dark_style(self):

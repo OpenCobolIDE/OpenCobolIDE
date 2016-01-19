@@ -311,17 +311,17 @@ class EditController(Controller):
                 self.ui.consoleOutput.apply_color_scheme(
                     ColorScheme(Settings().color_scheme))
                 editor.rehighlight()
+                try:
+                    self.ui.actionEnableLinter.blockSignals(True)
+                    self.ui.actionEnableLinter.setChecked(
+                        editor.linter_mode.enabled)
+                    self.ui.actionEnableLinter.blockSignals(False)
+                except AttributeError:
+                    # not a cobol code edit
+                    self.ui.actionEnableLinter.setEnabled(False)
+                else:
+                    self.ui.actionEnableLinter.setEnabled(True)
             self._update_status_bar_labels()
-            try:
-                self.ui.actionEnableLinter.blockSignals(True)
-                self.ui.actionEnableLinter.setChecked(
-                    editor.linter_mode.enabled)
-                self.ui.actionEnableLinter.blockSignals(False)
-            except AttributeError:
-                # not a cobol code edit
-                self.ui.actionEnableLinter.setEnabled(False)
-            else:
-                self.ui.actionEnableLinter.setEnabled(True)
 
     def _on_file_deleted(self, editor):
         if QtWidgets.QMessageBox.question(

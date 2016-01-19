@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>994</width>
-    <height>726</height>
+    <width>790</width>
+    <height>853</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -82,7 +82,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <property name="usesScrollButtons">
          <bool>true</bool>
@@ -109,8 +109,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>310</width>
-               <height>514</height>
+               <width>754</width>
+               <height>750</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -227,6 +227,152 @@
                </widget>
               </item>
               <item>
+               <widget class="QGroupBox" name="groupBox_11">
+                <property name="title">
+                 <string>Margins</string>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_18">
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_14">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="label_5">
+                     <property name="text">
+                      <string>Margin 1:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="spin_box_margin_1"/>
+                   </item>
+                   <item>
+                    <widget class="ColorPicker" name="color_picker_1">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_15">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="label_39">
+                     <property name="text">
+                      <string>Margin 2:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="spin_box_margin_2"/>
+                   </item>
+                   <item>
+                    <widget class="ColorPicker" name="color_picker_2">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_16">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="label_40">
+                     <property name="text">
+                      <string>Margin 3:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="spin_box_margin_3"/>
+                   </item>
+                   <item>
+                    <widget class="ColorPicker" name="color_picker_3">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_17">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="label_41">
+                     <property name="text">
+                      <string>Margin 4:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="spin_box_margin_4"/>
+                   </item>
+                   <item>
+                    <widget class="ColorPicker" name="color_picker_4">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox">
+                <property name="title">
+                 <string>Comments</string>
+                </property>
+                <layout class="QFormLayout" name="formLayout_7">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_7">
+                   <property name="text">
+                    <string>Symbol</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="lineEditCommentIndicator">
+                   <property name="font">
+                    <font>
+                     <family>Monospace</family>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>*&gt;</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
                <widget class="QGroupBox" name="groupBox_2">
                 <property name="title">
                  <string>Indentation</string>
@@ -236,13 +382,6 @@
                   <widget class="QLabel" name="label">
                    <property name="text">
                     <string>Width:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_14">
-                   <property name="text">
-                    <string/>
                    </property>
                   </widget>
                  </item>
@@ -262,6 +401,13 @@
                    </property>
                    <property name="value">
                     <number>4</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_14">
+                   <property name="text">
+                    <string/>
                    </property>
                   </widget>
                  </item>
@@ -458,34 +604,6 @@ as possible to get back to the previous indentation level.</string>
                </widget>
               </item>
               <item>
-               <widget class="QGroupBox" name="groupBox">
-                <property name="title">
-                 <string>Comments</string>
-                </property>
-                <layout class="QFormLayout" name="formLayout_7">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_7">
-                   <property name="text">
-                    <string>Symbol</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QLineEdit" name="lineEditCommentIndicator">
-                   <property name="font">
-                    <font>
-                     <family>Monospace</family>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>*&gt;</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
                <spacer name="verticalSpacer">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -523,8 +641,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>371</width>
-               <height>302</height>
+               <width>754</width>
+               <height>750</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -558,7 +676,7 @@ as possible to get back to the previous indentation level.</string>
                       <string>Use native style</string>
                      </property>
                      <property name="text">
-                      <string>Nati&amp;ve</string>
+                      <string>N&amp;ative</string>
                      </property>
                      <property name="checked">
                       <bool>true</bool>
@@ -641,7 +759,7 @@ as possible to get back to the previous indentation level.</string>
                      </property>
                      <property name="currentFont">
                       <font>
-                       <family>Consolas</family>
+                       <family>Clean</family>
                       </font>
                      </property>
                     </widget>
@@ -728,8 +846,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>939</width>
-               <height>680</height>
+               <width>734</width>
+               <height>918</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_6">
@@ -1269,8 +1387,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>221</width>
-               <height>194</height>
+               <width>754</width>
+               <height>750</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_13" stretch="0,1">
@@ -1421,8 +1539,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>308</width>
-               <height>419</height>
+               <width>754</width>
+               <height>726</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -1746,6 +1864,11 @@ as possible to get back to the previous indentation level.</string>
   <customwidget>
    <class>PathLineEdit</class>
    <extends>QLineEdit</extends>
+   <header>open_cobol_ide.view.widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>ColorPicker</class>
+   <extends>QPushButton</extends>
    <header>open_cobol_ide.view.widgets</header>
   </customwidget>
  </customwidgets>
