@@ -24,6 +24,10 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.ui.dockWidgetFileSystem.setWindowTitle('File system')
+        self.ui.dockWidgetLogs.setWindowTitle('Logs')
+        self.ui.dockWidgetNavPanel.setWindowTitle('Navigation')
+        self.ui.dockWidgetOffsets.setWindowTitle('Offset calculator')
         self.setAcceptDrops(True)
         self.restore_state()
 
