@@ -5,3 +5,7 @@ pyqode.qt
 qdarkstyle
 githubpy
 keyring
+
+
+pyqode-uic
+pyqt-distutils
