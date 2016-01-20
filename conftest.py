@@ -5,10 +5,11 @@ in functional tests.
 """
 import pytest
 import shutil
-from open_cobol_ide import __version__
-from open_cobol_ide.app import Application
-from open_cobol_ide.logger import setup_logging
-from open_cobol_ide.settings import Settings
+from open_cobol_ide import __version__, main
+main.override_sys_path()
+from open_cobol_ide.app import Application  # noqa
+from open_cobol_ide.logger import setup_logging  # noqa
+from open_cobol_ide.settings import Settings  # noqa
 
 setup_logging(__version__, debug=True)
 
