@@ -67,6 +67,16 @@ options = {
     # freeze the pygments default style along with our executable
     'includes': [
         'pkg_resources',
+        'keyring.backends.file',
+        'keyring.backends.Gnome',
+        'keyring.backends.Google',
+        'keyring.backends.keyczar',
+        'keyring.backends.kwallet',
+        'keyring.backends.multi',
+        'keyring.backends.OS_X',
+        'keyring.backends.pyfs',
+        'keyring.backends.SecretService',
+        'keyring.backends.Windows',
     ] + pygments_styles
 }
 
@@ -111,7 +121,7 @@ if windows:
         '\n')
     try:
         build_dir = glob.glob('build/*')[0]
-        with open('tools/setup.iss.in', 'r') as src, \
+        with open('scripts/setup.iss.in', 'r') as src, \
                 open('setup.iss', 'w') as dst:
             lines = src.readlines()
             data = []
