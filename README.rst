@@ -11,9 +11,9 @@ OpenCobolIDE
 
 .. image:: https://img.shields.io/pypi/l/OpenCobolIDE.svg
 
-.. image:: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE.svg?branch=master
-   :target: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE
-   :alt: Travis-CI build status
+.. image:: https://semaphoreci.com/api/v1/projects/6b27dea2-94da-4549-874e-1e36be0694b9/667429/shields_badge.svg
+   :target: https://semaphoreci.com/colinduquesnoy/opencobolide
+   :alt: Build status
 
 .. image:: https://coveralls.io/repos/OpenCobolIDE/OpenCobolIDE/badge.svg?branch=master
    :target: https://coveralls.io/r/OpenCobolIDE/OpenCobolIDE?branch=master

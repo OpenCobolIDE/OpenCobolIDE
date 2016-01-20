@@ -6,6 +6,7 @@ omit =
     *_rc.py
     *open_cobol_ide/view/*
     *main.py
+    *open_cobol_ide/extlibs/*
 
 [report]
 # Regexes for lines to exclude from consideration
@@ -56,4 +57,3 @@ exclude_lines =
 
     # PySide not tested
     PYSIDE_API
-
