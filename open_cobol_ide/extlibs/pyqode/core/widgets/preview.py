@@ -3,11 +3,16 @@ This module contains a widget that can show the html preview of an
 editor.
 """
 from weakref import proxy
-from pyqode.qt import QtCore, QtWebWidgets
+from pyqode.qt import QtCore, QtWebWidgets, QtWidgets
 from pyqode.core.api import DelayJobRunner
 
+if QtWebWidgets.QWebView is None:
+    WebView = QtWidgets.QWidget
+else:
+    WebView = QtWebWidgets.QWebView
 
-class HtmlPreviewWidget(QtWebWidgets.QWebView):
+
+class HtmlPreviewWidget(WebView):
     hide_requested = QtCore.Signal()
     show_requested = QtCore.Signal()
 
