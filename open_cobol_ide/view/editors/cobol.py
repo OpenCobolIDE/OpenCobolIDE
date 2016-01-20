@@ -6,8 +6,7 @@ import logging
 import os
 import sys
 
-from pyqode.qt import QtGui, QtWidgets
-from pyqode.core.api import Panel, ColorScheme
+from pyqode.core.api import ColorScheme
 from pyqode.cobol.widgets import CobolCodeEdit as CodeEditBase
 
 from open_cobol_ide import backend
