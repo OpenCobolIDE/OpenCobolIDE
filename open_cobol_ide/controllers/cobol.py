@@ -133,16 +133,6 @@ class CobolController(Controller):
         bt_compile.setEnabled(self.ui.actionCompile.isEnabled())
         return bt_compile
 
-    def create_bt_run(self):
-        icon = self.ui.actionRun.icon()
-        bt = QtWidgets.QToolButton()
-        bt.setIcon(icon)
-        bt.setToolTip(self.ui.actionRun.toolTip())
-        bt.clicked.connect(self.run)
-        self.run_buttons.append(bt)
-        bt.setEnabled(self.ui.actionRun.isEnabled())
-        return bt
-
     def display_file_type(self, editor):
         """
         Displays the current editor file type (changes the checked action in

@@ -15,6 +15,7 @@ def override_sys_path():
         os.path.dirname(open_cobol_ide.__file__),
         'extlibs')
     sys.path.insert(0, extlibs_pth)
+    os.environ['OCIDE_EXTLIBS_PATH'] = extlibs_pth
     import pyqode.core
     assert 'open_cobol_ide' in pyqode.core.__file__
 

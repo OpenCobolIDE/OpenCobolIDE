@@ -10,9 +10,8 @@ import shutil
 import sys
 from cx_Freeze import setup, Executable
 from pyqode.core.tools import console
-from open_cobol_ide import __version__
+from open_cobol_ide import __version__, backend
 from pyqode.core.backend import server as core_server
-from pyqode.cobol.backend import server
 from pyqode.core.api.syntax_highlighter import get_all_styles
 
 version = __version__
@@ -28,7 +27,7 @@ app_name = 'OpenCobolIDE'
 app_exe = 'OpenCobolIDE.exe' if windows else 'OpenCobolIDE'
 
 # cobol backend
-srv_script = server.__file__
+srv_script = backend.__file__
 srv_exe = 'cobol-backend.exe' if windows else 'cobol-backend'
 
 # core backend (for non cobol files completion).

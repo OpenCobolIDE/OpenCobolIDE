@@ -234,22 +234,12 @@ class ViewController(Controller):
             self.ui.statusbar.show()
             self.ui.toolBarFile.show()
             self.ui.toolBarCOBOL.show()
-            for w in self.ui.tabWidgetEditors.widgets():
-                try:
-                    w.control_panel.setVisible(False)
-                except AttributeError:
-                    pass
         else:
             if not system.ubuntu:
                 self.ui.menuBar.hide()
             self.ui.statusbar.hide()
             self.ui.toolBarCOBOL.hide()
             self.ui.toolBarFile.hide()
-            for w in self.ui.tabWidgetEditors.widgets(include_clones=True):
-                try:
-                    w.control_panel.setVisible(True)
-                except AttributeError:
-                    pass
 
     def toggle_fullscreen(self):
         if self.ui.actionFullscreen.isChecked():
