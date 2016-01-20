@@ -38,7 +38,6 @@ class ViewController(Controller):
 
     def __init__(self, app):
         super().__init__(app)
-        QtGui.QIcon.setThemeName(Settings().icon_theme)
         self._page = -1
         self._perspective = 'default'
         self._nav_was_visible = True
