@@ -17,7 +17,8 @@ if os.environ[QT_API] in PYQT5_API:
             from PyQt5.QtWebEngineWidgets import QWebEnginePage as QWebPage
         except ImportError:
             # neither QtWebKit nor QtWebEngine installed
-            pass
+            QWebPage = None
+            QWebView = None
 elif os.environ[QT_API] in PYQT4_API:
     from PyQt4.QtWebKit import QWebView, QWebPage
 elif os.environ[QT_API] in PYSIDE_API:
@@ -25,6 +26,3 @@ elif os.environ[QT_API] in PYSIDE_API:
 else:
     QWebPage = None
     QWebView = None
-
-
-assert QWebView is not None and QWebPage is not None
