@@ -1117,8 +1117,7 @@ class SplittableCodeEditTabWidget(SplittableTabWidget):
             self.closed_tabs_history_btn = QtWidgets.QToolButton()
             self.closed_tabs_history_btn.setAutoRaise(True)
             self.closed_tabs_history_btn.setIcon(QtGui.QIcon.fromTheme(
-                'user-trash', QtGui.QIcon.fromTheme(
-                    ':/pyqode-icons/rc/edit-trash.png')))
+                'user-trash', QtGui.QIcon(':/pyqode-icons/rc/edit-trash.png')))
             self.closed_tabs_history_btn.setPopupMode(
                 QtWidgets.QToolButton.InstantPopup)
             self.closed_tabs_menu = QtWidgets.QMenu()
