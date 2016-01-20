@@ -4,7 +4,7 @@ This module contains a class for accessing the application settings.
 import json
 import os
 import sys
-from pyqode.qt import QtCore
+from pyqode.qt import QtCore, QtWidgets
 from pyqode.qt.QtCore import QSettings
 from open_cobol_ide import system
 from open_cobol_ide.enums import FileType, GnuCobolStandard
@@ -320,7 +320,9 @@ class Settings(object):
 
     @property
     def color_scheme(self):
-        return self._settings.value('colorScheme', 'qt')
+        dark = QtWidgets.qApp.palette().base().color().lightness() < 128
+        default_scheme = 'darcula' if dark else 'qt'
+        return self._settings.value('colorScheme', default_scheme)
 
     @color_scheme.setter
     def color_scheme(self, value):
