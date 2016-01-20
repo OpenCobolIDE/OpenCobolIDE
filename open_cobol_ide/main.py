@@ -2,15 +2,32 @@
 This is the application entry. This is where we create and run the
 Application.
 """
-from pyqode.qt import QtGui
-from open_cobol_ide.app import Application
-from open_cobol_ide.settings import Settings
+import os
+import sys
+
+
+def override_sys_path():
+    """
+    Prepend extlibs folder to sys.path.
+    """
+    import open_cobol_ide
+    extlibs_pth = os.path.join(
+        os.path.dirname(open_cobol_ide.__file__),
+        'extlibs')
+    sys.path.insert(0, extlibs_pth)
+    import pyqode.core
+    assert 'open_cobol_ide' in pyqode.core.__file__
 
 
 def main():
     """
     Application entry point.
     """
+    if not hasattr(sys, 'frozen'):
+        override_sys_path()
+    from pyqode.qt import QtGui
+    from open_cobol_ide.app import Application
+    from open_cobol_ide.settings import Settings
     app = Application()
     QtGui.QIcon.setThemeName(Settings().icon_theme)
     ret_code = app.run()

@@ -32,16 +32,17 @@ Features:
 - COBOL syntax highlighter
 - COBOL code completion
 - COBOL code folding
+- configurable margins
 - navigable tree view of division, sections, paragraphs etc (fully synchronised
   with the code folding panel)
-- smart auto indentation
+- auto-indentation
 - tool for computing PIC fields offsets
 - compile as a program (.exe) or as a subprogram (.so/.dll)
 - run the program from the editor or from a configurable external terminal (
   necessary if you are using the SCREEN section).
 - dark color schemes and theme
 - cross platform: works on **GNU/Linux**, **Windows** and **Mac OSX**
-- dbpre integration on Linux
+- dbpre integration on Linux, esqlOC on Windows
 
 
 License
@@ -50,18 +51,23 @@ License
 OpenCobolIDE is released under the **GPL** version 3
 
 
-Requirements
+Dependencies
 ------------
 
 - `GnuCOBOL`_
 - `Python3`_
-- `PyQt4`_ or `PyQt5`_
+- `PyQt5`_ (preferred) or `PyQt4`_
 - `setuptools`_
+
+*Starting from v4.7, the following pure python dependencies are bundled with OCIDE (this makes packaging easier):*
+
 - `pyqode.qt`_
 - `pyqode.core`_
 - `pyqode.cobol`_
 - `Pygments`_
 - `qdarkstyle`_
+- `keyring`_
+- `githubpy`_
 
 
 Installation
@@ -72,26 +78,7 @@ GNU/Linux
 
 *Note: starting from v4.6.2, the installed executable name is lowercase: opencobolide*
 
-Ubuntu
-++++++
-
-OpenCobolIDE is available from a ppa (for Ubuntu >= 14.04)::
-
-    sudo apt-add-repository ppa:colin-duquesnoy/stable
-    sudo apt-get update
-    sudo apt-get install python3-opencobolide
-
-ArchLinux
-+++++++++
-
-OpenCobolIDE is available from the AUR::
-
-    yaourt -S open-cobol-ide
-
-Other distributions:
-++++++++++++++++++++
-
-Install pyqt5, open-cobol and pip3 using your package manager, then run the following commands::
+Install Python3, PyQt5, GnuCOBOL and pip for Python3 using your package manager, then run the following commands::
 
     sudo pip3 install OpenCobolIDE --upgrade
 
@@ -114,13 +101,12 @@ There is a dmg image available here: https://launchpad.net/cobcide/+download
 Before running the app, you first have to install the GnuCOBOL compiler, e.g.
 using homebrew::
 
-    brew install open-cobol
+    brew install gnu-cobol
 
 
 If you installed the compiler in a non-standard path and it is not recognized
 by the IDE, you can specify the path to the compiler in the preferences
-dialog under the ``Build & Run`` section (make sure to only specify the
-directory where the compiler can be found, not the full path).
+dialog (``Compiler`` tab)
 
 
 Resources
@@ -169,7 +155,6 @@ Screenshots
 
 
 
-.. _chardet: https://pypi.python.org/pypi/chardet
 .. _PyQt4: http://www.riverbankcomputing.co.uk/software/pyqt/download
 .. _Downloads: https://launchpad.net/cobcide/+download
 .. _Source repository: https://github.com/OpenCobolIDE/OpenCobolIDE/
@@ -185,4 +170,5 @@ Screenshots
 .. _PyQt5: http://www.riverbankcomputing.co.uk/software/pyqt/download
 .. _qdarkstyle: https://github.com/ColinDuquesnoy/QDarkStyleSheet
 .. _pyQode: https://github.com/pyQode/
-.. _github3.py: https://github.com/sigmavirus24/github3.py
+.. _githubpy: https://pypi.python.org/pypi/githubpy
+.. _keyring: https://pypi.python.org/pypi/keyring

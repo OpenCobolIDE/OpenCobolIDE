@@ -27,23 +27,6 @@ with open('README.rst', 'r') as readme:
         LONG_DESC = readme.read()
 
 
-# install requirements
-requirements = [
-    'pygments>=1.6',
-    'pyqode.core>=2.5.0',
-    'pyqode.cobol>=2.5.0',
-    'pyqode.qt>=2.5.0',
-    'qdarkstyle>=1.11',
-    'githubpy',
-    'keyring'
-]
-
-
-if int('%s%s' % sys.version_info[:2]) < 34:
-    # python < 3.4 needs enum backport package
-    requirements.append('enum34')
-
-
 data_files = []
 if sys.platform == 'linux':
     data_files.append(('/usr/share/applications',
@@ -58,21 +41,22 @@ if 'bdist_wheel' in sys.argv:
 setup(
     name='OpenCobolIDE',
     version=__version__,
-    packages=[p for p in find_packages() if 'test' not in p],
     keywords=['Cobol; OpenCobol; IDE'],
-    data_files=data_files,
     url='https://github.com/OpenCobolIDE/OpenCobolIDE',
     license='GPL v3',
     author='Colin Duquesnoy',
     author_email='colin.duquesnoy@gmail.com',
     description=DESCRIPTION,
     long_description=LONG_DESC,
-    install_requires=requirements,
+    packages=[p for p in find_packages() if 'test' not in p],
+    data_files=data_files,
+    include_package_data=True,
     entry_points={'gui_scripts': ['opencobolide = open_cobol_ide.main:main'],
                   'console_scripts':
                   ['opencobolide-console = open_cobol_ide.main:main']
                   if sys.platform == 'win32' else []},
     cmdclass=cmdclass,
+    zip_safe=False,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: X11 Applications :: Qt',

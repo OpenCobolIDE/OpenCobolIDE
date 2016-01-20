@@ -1,0 +1,7 @@
+pygments
+pyqode.core
+pyqode.cobol
+pyqode.qt
+qdarkstyle
+githubpy
+keyring
