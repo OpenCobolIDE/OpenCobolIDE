@@ -55,7 +55,7 @@ Dependencies
 ------------
 
 - `GnuCOBOL`_
-- `Python3`_
+- `Python3`_ >= 3.3
 - `PyQt5`_ (preferred) or `PyQt4`_
 - `setuptools`_
 
