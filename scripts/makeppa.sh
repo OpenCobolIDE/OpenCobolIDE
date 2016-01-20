@@ -1,5 +1,7 @@
 #! /bin/bash
 
+cd ..
+
 # package info
 ppa="ppa:colin-duquesnoy/stable"
 name="opencobolide"
@@ -22,7 +24,7 @@ do
     # sign our package and prepare it for ppa upload
     pushd deb_dist
     pushd ${name}-${version}
-    
+
     # update changelog to include ubuntu release
     changelog="${name} (${version}-1ppa1~${suite}1) ${suite}; urgency=low
   * Initial release
@@ -35,7 +37,7 @@ do
     popd
 
     # upload to ppa
-    dput ${ppa} *.changes      
+    dput ${ppa} *.changes
     rm -rf *.dsc *.changes
 
     popd

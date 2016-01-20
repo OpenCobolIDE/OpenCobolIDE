@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Launcher script for linux, uses python3 explicitly.
+Launcher script when running from source checkout.
 """
 from open_cobol_ide.main import main
 

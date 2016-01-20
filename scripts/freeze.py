@@ -5,6 +5,7 @@ to create an setup executable.
 """
 import glob
 import os
+os.chdir('..')
 import shutil
 import sys
 from cx_Freeze import setup, Executable
@@ -22,7 +23,7 @@ if '.dev' in version or '.a' in version or '.b' in version or '.rc' in version:
 windows = sys.platform == 'win32'
 osx = sys.platform == 'darwin'
 
-app_script = 'OpenCobolIDE'
+app_script = 'OpenCobolIDE.pyw'
 app_name = 'OpenCobolIDE'
 app_exe = 'OpenCobolIDE.exe' if windows else 'OpenCobolIDE'
 
@@ -111,7 +112,8 @@ if windows:
         '\n')
     try:
         build_dir = glob.glob('build/*')[0]
-        with open('setup.iss.in', 'r') as src, open('setup.iss', 'w') as dst:
+        with open('tools/setup.iss.in', 'r') as src, \
+                open('setup.iss', 'w') as dst:
             lines = src.readlines()
             data = []
             for l in lines:
