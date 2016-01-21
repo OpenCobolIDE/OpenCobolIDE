@@ -26,11 +26,7 @@ def setup_logging(version, debug):
     """
     handler = logging.handlers.RotatingFileHandler(
             get_path(), maxBytes=2*1024*1024, backupCount=5)
-    handlers = [
-        # a new log will be created on each new day with 5 days backup
-        handler,
-        logging.StreamHandler()
-    ]
+    handlers = [handler, logging.StreamHandler()]
     logging.basicConfig(
         level=logging.WARNING, handlers=handlers,
         format='%(asctime)s:%(msecs)03d::%(levelname)s::%(process)d::%(name)s'
