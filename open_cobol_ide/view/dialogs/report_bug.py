@@ -147,8 +147,11 @@ class DlgReportBug(QtWidgets.QDialog):
         ])
 
     def get_application_log(self):
-        with open(logger.get_path(), 'r') as f:
-            return f.read()
+        try:
+            with open(logger.get_path(), 'r') as f:
+                return f.read()
+        except FileNotFoundError:
+            return ''
 
 
 class DlgGitHubLogin(QtWidgets.QDialog):

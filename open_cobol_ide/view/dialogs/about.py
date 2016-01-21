@@ -49,8 +49,11 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
         for i, version in enumerate(DlgAbout.get_runtime_env().values()):
             item = QtWidgets.QTableWidgetItem(version)
             self.tbwVersions.setItem(i, 0, item)
-        with open(logger.get_path(), 'r') as f:
-            self.textEditLog.setText(f.read())
+        try:
+            with open(logger.get_path(), 'r') as f:
+                self.textEditLog.setText(f.read())
+        except FileNotFoundError:
+            self.textEditLog.setText('')
         self.checkBoxVerbose.toggled.connect(self._on_verbose_toggled)
 
         self.edit_compiler_infos.setFont(
