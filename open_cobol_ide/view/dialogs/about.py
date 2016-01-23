@@ -46,7 +46,11 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
             'help-about', QtGui.QIcon(
                 ':/ide-icons/rc/dialog-information.png')))
 
-        for i, version in enumerate(DlgAbout.get_runtime_env().values()):
+        for i, (name, version) in enumerate(
+                sorted(DlgAbout.get_runtime_env().items(),
+                       key=lambda x: x[0])):
+            item = QtWidgets.QTableWidgetItem(name)
+            self.tbwVersions.setVerticalHeaderItem(i, item)
             item = QtWidgets.QTableWidgetItem(version)
             self.tbwVersions.setItem(i, 0, item)
         try:
