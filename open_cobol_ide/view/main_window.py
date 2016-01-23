@@ -9,7 +9,7 @@ work or not).
 """
 import os
 import logging
-from pyqode.qt import QtWidgets
+from pyqode.qt import QtCore, QtWidgets
 from open_cobol_ide import system
 from open_cobol_ide.view.forms.ide_ui import Ui_MainWindow
 from open_cobol_ide.settings import Settings
@@ -30,6 +30,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.dockWidgetOffsets.setWindowTitle('Offset calculator')
         self.setAcceptDrops(True)
         self.restore_state()
+        Qt = QtCore.Qt
+        self.setCorner(Qt.TopLeftCorner, Qt.LeftDockWidgetArea)
+        self.setCorner(Qt.TopRightCorner, Qt.RightDockWidgetArea)
+        self.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
+        self.setCorner(Qt.BottomRightCorner, Qt.RightDockWidgetArea)
 
     def restore_state(self):
         """
