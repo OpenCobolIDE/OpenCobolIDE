@@ -123,33 +123,28 @@ Screenshots
 
 * Home page:
 
-.. image:: doc/source/_static/Home.png
+.. image:: https://github.com/OpenCobolIDE/OpenCobolIDE/blob/master/doc/source/_static/Home.png
     :align: center
 
 * Editor:
 
-.. image:: doc/source/_static/MainWindow.png
-    :align: center
-
-* Minimal view:
-
-.. image:: doc/source/_static/MinimalView.png
+.. image:: https://github.com/OpenCobolIDE/OpenCobolIDE/blob/master/doc/source/_static/MainWindow.png
     :align: center
 
 * Code folding:
 
-.. image:: doc/source/_static/Folding.png
+.. image:: https://github.com/OpenCobolIDE/OpenCobolIDE/blob/master/doc/source/_static/Folding.png
     :align: center
 
 * Offset calculator
 
-.. image:: doc/source/_static/PicOffsets.png
+.. image:: https://github.com/OpenCobolIDE/OpenCobolIDE/blob/master/doc/source/_static/PicOffsets.png
     :align: center
 
 
 * Dark style support
 
-.. image:: doc/source/_static/Dark.png
+.. image:: https://github.com/OpenCobolIDE/OpenCobolIDE/blob/master/doc/source/_static/Dark.png
     :align: center
 
 
