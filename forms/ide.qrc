@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="ide-icons">
+    <file>rc/emblem-checked.png</file>
     <file>rc/view-refresh.png</file>
     <file>rc/GitHub-Mark-Light.png</file>
     <file>rc/GitHub-Mark.png</file>

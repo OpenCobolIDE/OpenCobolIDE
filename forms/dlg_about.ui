@@ -61,7 +61,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>5</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -884,7 +884,7 @@ p, li { white-space: pre-wrap; }
          </attribute>
          <row>
           <property name="text">
-           <string>OpenCobol</string>
+           <string>GnuCOBOL</string>
           </property>
          </row>
          <row>
@@ -979,7 +979,8 @@ p, li { white-space: pre-wrap; }
             <string>Clear logs</string>
            </property>
            <property name="icon">
-            <iconset theme="edit-clear"/>
+            <iconset theme="edit-clear">
+             <normaloff>.</normaloff>.</iconset>
            </property>
           </widget>
          </item>

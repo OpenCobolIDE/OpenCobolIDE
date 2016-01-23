@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/Users/Colin/Documents/OpenCobolIDE/forms/ide.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/OpenCobolIDE/forms/ide.ui'
 #
 # Created by: PyQt5 UI code generator 5.5.1
 #
@@ -11,7 +11,7 @@ from pyqode.qt import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(978, 816)
+        MainWindow.resize(1366, 768)
         MainWindow.setMinimumSize(QtCore.QSize(0, 0))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/ide-icons/rc/silex-192x192.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -212,7 +212,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 978, 22))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1366, 30))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -305,7 +305,7 @@ class Ui_MainWindow(object):
         self.dockWidgetOffsets.setWidget(self.dockWidgetContents_3)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidgetOffsets)
         self.dockWidgetFileSystem = QtWidgets.QDockWidget(MainWindow)
-        self.dockWidgetFileSystem.setMinimumSize(QtCore.QSize(96, 147))
+        self.dockWidgetFileSystem.setMinimumSize(QtCore.QSize(96, 151))
         self.dockWidgetFileSystem.setObjectName("dockWidgetFileSystem")
         self.dockWidgetContents_4 = QtWidgets.QWidget()
         self.dockWidgetContents_4.setObjectName("dockWidgetContents_4")
@@ -397,8 +397,12 @@ class Ui_MainWindow(object):
         self.actionRestore_factory_defaults = QtWidgets.QAction(MainWindow)
         self.actionRestore_factory_defaults.setObjectName("actionRestore_factory_defaults")
         self.actionExport_preferences = QtWidgets.QAction(MainWindow)
+        icon = QtGui.QIcon.fromTheme("document-export")
+        self.actionExport_preferences.setIcon(icon)
         self.actionExport_preferences.setObjectName("actionExport_preferences")
         self.actionImport_preferences = QtWidgets.QAction(MainWindow)
+        icon = QtGui.QIcon.fromTheme("document-import")
+        self.actionImport_preferences.setIcon(icon)
         self.actionImport_preferences.setObjectName("actionImport_preferences")
         self.actionClean = QtWidgets.QAction(MainWindow)
         self.actionClean.setObjectName("actionClean")

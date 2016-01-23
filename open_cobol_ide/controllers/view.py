@@ -94,45 +94,53 @@ class ViewController(Controller):
         Setup actions/buttons icons, loads them from the system icon theme on
         linux.
         """
-        iopen = QtGui.QIcon.fromTheme(
+        QIcon = QtGui.QIcon
+        iopen = QIcon.fromTheme(
             'document-open', QtGui.QIcon(':/ide-icons/rc/document-open.png'))
-        isave = QtGui.QIcon.fromTheme(
+        isave = QIcon.fromTheme(
             'document-save', QtGui.QIcon(':/ide-icons/rc/document-save.png'))
-        isave_as = QtGui.QIcon.fromTheme(
+        isave_as = QIcon.fromTheme(
             'document-save-as', QtGui.QIcon(
                 ':/ide-icons/rc/document-save-as.png'))
-        inew = QtGui.QIcon.fromTheme(
+        inew = QIcon.fromTheme(
             'document-new',
             QtGui.QIcon(':/ide-icons/rc/document-new.png'))
-        issue = QtGui.QIcon.fromTheme('important', QtGui.QIcon(
+        issue = QIcon.fromTheme('important', QtGui.QIcon(
             ':/ide-icons/rc/emblem-important.png'))
-        icompile = QtGui.QIcon.fromTheme(
-            'application-x-executable', QtGui.QIcon(
-                ':/ide-icons/rc/application-x-executable.png'))
-        irun = QtGui.QIcon.fromTheme(
+
+        if QIcon.hasThemeIcon('run-build'):
+            icompile = QIcon.fromTheme('run-build')
+        else:
+            icompile = QIcon.fromTheme(
+                'application-x-executable', QtGui.QIcon(
+                    ':/ide-icons/rc/application-x-executable.png'))
+        irun = QIcon.fromTheme(
             'media-playback-start', QtGui.QIcon(
                 ':/ide-icons/rc/media-playback-start.png'))
-        icancel = QtGui.QIcon.fromTheme('process-stop')
-        ifullscreen = QtGui.QIcon.fromTheme(
+        icancel = QIcon.fromTheme('process-stop')
+        ifullscreen = QIcon.fromTheme(
             'view-fullscreen', QtGui.QIcon(
                 ':/ide-icons/rc/view-fullscreen.png'))
-        iquit = QtGui.QIcon.fromTheme(
+        iquit = QIcon.fromTheme(
             'window-close', QtGui.QIcon(':/ide-icons/rc/system-log-out.png'))
-        iclear = QtGui.QIcon.fromTheme(
+        iclear = QIcon.fromTheme(
             'edit-clear', QtGui.QIcon(':/ide-icons/rc/edit-clear.png'))
-        ihelp = QtGui.QIcon.fromTheme(
+        ihelp = QIcon.fromTheme(
             'help-contents', QtGui.QIcon(':/ide-icons/rc/help.png'))
-        ipreferences = QtGui.QIcon.fromTheme(
+        ipreferences = QIcon.fromTheme(
             'preferences-system',
             QtGui.QIcon(':/ide-icons/rc/Preferences-system.png'))
-        iabout = QtGui.QIcon.fromTheme(
+        iabout = QIcon.fromTheme(
             'help-about', QtGui.QIcon(':/ide-icons/rc/dialog-information.png'))
-        icon_report_bug = QtGui.QIcon.fromTheme('tools-report-bug')
-        icon_lock = QtGui.QIcon.fromTheme('system-lock-screen', QtGui.QIcon(
+        icon_report_bug = QIcon.fromTheme('tools-report-bug')
+        icon_lock = QIcon.fromTheme('system-lock-screen', QtGui.QIcon(
             ':/ide-icons/rc/lock.png'))
-        icon_clean = QtGui.QIcon.fromTheme('edit-clear', QtGui.QIcon(
-            ':/ide-icons/rc/edit-clear.png'))
-        icon_rebuild = QtGui.QIcon.fromTheme('view-refresh', QtGui.QIcon(
+        if QIcon.hasThemeIcon('run-build-clean'):
+            icon_clean = QIcon.fromTheme('run-build-clean')
+        else:
+            icon_clean = QIcon.fromTheme('edit-clear', QtGui.QIcon(
+                ':/ide-icons/rc/edit-clear.png'))
+        icon_rebuild = QIcon.fromTheme('view-refresh', QtGui.QIcon(
             ':/ide-icons/rc/view-refresh.png'))
 
         self.ui.btFSLock.setIcon(icon_lock)
@@ -168,7 +176,7 @@ class ViewController(Controller):
         if system.darwin:
             self.ui.menu.setTitle('Help')
 
-        self.ui.actionEnableLinter.setIcon(QtGui.QIcon.fromTheme(
+        self.ui.actionEnableLinter.setIcon(QIcon.fromTheme(
             'dialog-error',
             QtGui.QIcon(':/ide-icons/rc/emblem-important.png')))
 

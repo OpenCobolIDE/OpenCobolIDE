@@ -145,7 +145,7 @@ class Ui_Dialog(object):
         self.verticalLayout.addWidget(self.tabWidget)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(5)
+        self.tabWidget.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
@@ -854,7 +854,7 @@ class Ui_Dialog(object):
 "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Cantarell\';\"><br /></p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("Dialog", "License"))
         item = self.tbwVersions.verticalHeaderItem(0)
-        item.setText(_translate("Dialog", "OpenCobol"))
+        item.setText(_translate("Dialog", "GnuCOBOL"))
         item = self.tbwVersions.verticalHeaderItem(1)
         item.setText(_translate("Dialog", "Qt"))
         item = self.tbwVersions.verticalHeaderItem(2)

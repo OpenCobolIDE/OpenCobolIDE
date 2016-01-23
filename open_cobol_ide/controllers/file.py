@@ -6,7 +6,7 @@ import pickle
 import logging
 import os
 from pyqode.core import widgets
-from pyqode.qt import QtWidgets
+from pyqode.qt import QtGui, QtWidgets
 from open_cobol_ide import system
 from open_cobol_ide.view.editors import CobolCodeEdit
 from open_cobol_ide.settings import Settings
@@ -41,6 +41,10 @@ class FileController(Controller):
             self.ui.menuFile, title='Recents',
             recent_files_manager=self.recent_files_manager,
             icon_provider=FileIconProvider())
+        self.menu_recents.setIcon(QtGui.QIcon.fromTheme(
+            'document-open-recent'))
+        self.menu_recents.clear_icon = QtGui.QIcon.fromTheme(
+            'edit-clear', QtGui.QIcon(':/ide-icons/rc/edit-clear.png'))
         self.menu_recents.open_requested.connect(self.open_file)
         self.menu_recents.clear_requested.connect(
             self.recent_files_manager.clear)

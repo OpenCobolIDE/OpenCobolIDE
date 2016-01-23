@@ -129,9 +129,12 @@ def icon_themes():
         else:
             for d in dirs:
                 pth = os.path.join(path, d)
-                if os.path.isdir(pth) and 'cursors' not in os.listdir(pth):
+                if os.path.isfile(pth):
+                    continue
+                files = os.listdir(pth)
+                if 'cursors' not in files and 'index.theme' in files:
                     themes.append(d)
-    return themes
+    return list(set(themes))
 
 
 def normpath(path):

@@ -293,7 +293,7 @@ class Settings(object):
 
     @property
     def icon_theme(self):
-        return self._settings.value('icon_theme', 'default')
+        return self._settings.value('icon_theme', '')
 
     @icon_theme.setter
     def icon_theme(self, value):

@@ -57,15 +57,41 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         else:
             self.comboBoxIconTheme.hide()
             self.lblIconTheme.hide()
+        self.tabWidget.setTabIcon(0, QtGui.QIcon.fromTheme(
+            'accessories-text-editor',
+            QtGui.QIcon(':/ide-icons/rc/cobol-mimetype.png')))
+        theme = 'application-x-executable'
+        if QtGui.QIcon.hasThemeIcon('run-build'):
+            theme = 'run-build'
         self.tabWidget.setTabIcon(2, QtGui.QIcon.fromTheme(
-            'application-x-executable',
-            QtGui.QIcon(':/ide-icons/rc/application-x-executable.png')))
+            theme, QtGui.QIcon(':/ide-icons/rc/application-x-executable.png')))
         self.tabWidget.setTabIcon(1, QtGui.QIcon.fromTheme(
             'applications-graphics',
             QtGui.QIcon(':/ide-icons/rc/applications-graphics.png')))
         self.tabWidget.setTabIcon(3, QtGui.QIcon.fromTheme(
             'media-playback-start', QtGui.QIcon(
                 ':/ide-icons/rc/media-playback-start.png')))
+        icon_add = QtGui.QIcon.fromTheme(
+            'list-add', QtGui.QIcon(':/ide-icons/rc/list-add.png'))
+        icon_remove = QtGui.QIcon.fromTheme(
+            'list-remove', QtGui.QIcon(':/ide-icons/rc/list-remove.png'))
+        icon_open_folder = QtGui.QIcon.fromTheme(
+            'folder-open', QtGui.QIcon(':/ide-icons/rc/document-open.png'))
+        icon_clear = QtGui.QIcon.fromTheme(
+            'edit-clear', QtGui.QIcon(':/ide-icons/rc/edit-clear.png'))
+        self.bt_add_run_env.setIcon(icon_add)
+        self.bt_rm_run_env.setIcon(icon_remove)
+        self.bt_clear_run_env.setIcon(icon_clear)
+        self.btAddAbsoluteCopyPath.setIcon(icon_open_folder)
+        self.btAddRelativeCopyPath.setIcon(icon_add)
+        self.btRemoveCopyPath.setIcon(icon_remove)
+        self.toolButtonAddLibPath.setIcon(icon_open_folder)
+        self.toolButtonAddRelativeLibPath.setIcon(icon_add)
+        self.toolButtonRemoveLibPath.setIcon(icon_remove)
+        self.toolButtonCheckCompiler.setIcon(QtGui.QIcon.fromTheme(
+            'emblem-checked',
+            QtGui.QIcon(':/ide-icons/rc/emblem-checked.png')))
+
         self.buttonBox.button(self.buttonBox.Reset).clicked.connect(self.reset)
         self.buttonBox.button(self.buttonBox.RestoreDefaults).clicked.connect(
             self.restore_defaults)
@@ -359,7 +385,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             rb = (self.radioButtonColorDark if settings.dark_style else
                   self.radioButtonColorWhite)
             rb.setChecked(True)
-            index = self.comboBoxIconTheme.findText(settings.icon_theme)
+            index = self.comboBoxIconTheme.findText(QtGui.QIcon.themeName())
             if index != -1:
                 self.comboBoxIconTheme.setCurrentIndex(index)
             self.fontComboBox.setCurrentFont(QtGui.QFont(settings.font))
@@ -480,7 +506,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         # Style
         elif index == 1:
             settings.dark_style = False
-            settings.icon_theme = 'default'
+            settings.icon_theme = ''
             settings.font = 'Source Code Pro'
             settings.font_size = 11
             settings.colorScheme = 'qt'

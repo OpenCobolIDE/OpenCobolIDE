@@ -29,8 +29,8 @@ def main():
     from pyqode.qt import QtGui
     from open_cobol_ide.app import Application
     from open_cobol_ide.settings import Settings
-    app = Application()
     QtGui.QIcon.setThemeName(Settings().icon_theme)
+    app = Application()
     ret_code = app.run()
     app.close()
     return ret_code
