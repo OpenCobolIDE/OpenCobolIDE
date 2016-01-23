@@ -136,6 +136,7 @@ class ViewController(Controller):
             ':/ide-icons/rc/view-refresh.png'))
 
         self.ui.btFSLock.setIcon(icon_lock)
+        self.ui.btNavLock.setIcon(icon_lock)
         self.ui.actionPreferences.setIcon(ipreferences)
         self.ui.btPreferences.setIcon(ipreferences)
         self.ui.actionHelp.setIcon(ihelp)

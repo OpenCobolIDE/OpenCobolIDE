@@ -43,7 +43,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="pageHome">
        <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -414,18 +414,21 @@
       <widget class="QWidget" name="page_2">
        <layout class="QGridLayout" name="gridLayout_2">
         <property name="leftMargin">
-         <number>0</number>
+         <number>3</number>
         </property>
         <property name="topMargin">
-         <number>0</number>
+         <number>3</number>
         </property>
         <property name="rightMargin">
-         <number>0</number>
+         <number>3</number>
         </property>
         <property name="bottomMargin">
-         <number>0</number>
+         <number>3</number>
         </property>
-        <property name="spacing">
+        <property name="horizontalSpacing">
+         <number>3</number>
+        </property>
+        <property name="verticalSpacing">
          <number>0</number>
         </property>
         <item row="0" column="0">
@@ -610,7 +613,7 @@
      <x>0</x>
      <y>0</y>
      <width>978</width>
-     <height>30</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -709,8 +712,8 @@
   <widget class="QDockWidget" name="dockWidgetNavPanel">
    <property name="minimumSize">
     <size>
-     <width>96</width>
-     <height>160</height>
+     <width>102</width>
+     <height>168</height>
     </size>
    </property>
    <property name="features">
@@ -724,6 +727,21 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QVBoxLayout" name="verticalLayout_6">
+     <property name="spacing">
+      <number>3</number>
+     </property>
+     <property name="leftMargin">
+      <number>3</number>
+     </property>
+     <property name="topMargin">
+      <number>3</number>
+     </property>
+     <property name="rightMargin">
+      <number>3</number>
+     </property>
+     <property name="bottomMargin">
+      <number>3</number>
+     </property>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <property name="spacing">
@@ -746,7 +764,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="btNavLock">
+        <widget class="QToolButton" name="btNavLock">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -774,9 +792,6 @@
          </property>
          <property name="checked">
           <bool>false</bool>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -904,18 +919,18 @@
     <string>File s&amp;ystem</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>2</number>
+    <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_4">
     <layout class="QVBoxLayout" name="verticalLayout">
      <property name="spacing">
-      <number>0</number>
+      <number>3</number>
      </property>
      <property name="leftMargin">
       <number>3</number>
      </property>
      <property name="topMargin">
-      <number>0</number>
+      <number>3</number>
      </property>
      <property name="rightMargin">
       <number>3</number>
@@ -926,7 +941,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <property name="spacing">
-        <number>0</number>
+        <number>6</number>
        </property>
        <property name="topMargin">
         <number>0</number>
@@ -959,7 +974,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="btFSLock">
+        <widget class="QToolButton" name="btFSLock">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -987,9 +1002,6 @@
          </property>
          <property name="checked">
           <bool>false</bool>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -1286,7 +1298,8 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset theme="dialog-error"/>
+    <iconset theme="dialog-error">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Enable linter</string>
