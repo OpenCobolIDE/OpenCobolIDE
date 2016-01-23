@@ -16,6 +16,68 @@ on...
 Changelog
 =========
 
+4.7
+===
+
+Starting from this version, **OCIDE has entered in maintainance mode**: no new
+features will be accepted, only bug fixes.
+
+*We are working a new IDE* `HackEdit`_. *This new IDE will have a lot more features
+than OCIDE (project support, search/replace in files, configurable preparsers,
+ability to write your own plugins, and so on...).
+HackEdit is in alpha stage for the now. We will continue to maintain and fix
+bugs in OCIDE until the final 1.0 version of HackEdit is ready.*
+
+.. _HackEdit: https://github.com/HackEdit/hackedit
+
+
+4.7.0
+-----
+
+New features:
+
+- New margins mode: you can now configure up to 4 different margins.
+- New way to handle MSVC based compilers, including 64 bit support
+- Add more command line options to ocide: --compile, --conf, --runtime-env, --cobc-runtime-env
+- Add option to save/load preferences.
+- Allow to drag & drop paths to the preferences line edits.
+- Allow to drag & drop files in the main window to open them in a new editor.
+- Add ability to copy runtime dlls to the output directory [Windows].
+- Add ability to run a program that requires to set some environment variables.
+- Add option to show compiler and runtime configuration.
+- Add buttons preferences and about to the home page.
+- Add "clean" and "rebuild" actions to the toolbar/menu.
+- Add std=nonen, std=cobol2014 and std=acu
+- Add a status bar button to forcibly enable/disable the linter (background
+  checks), overriding the Show errors setting from the Editor preferences.
+- Add option to synchronise navigation pane with the editor
+- Add option to go up in the filesystem treeview
+- Add ability jump to previous/next cursor position (Ctrl+Alt+Z and Ctrl+Alt+Y)
+- Add option to send bug report via email
+- Improve github bug report, login to github is now done from OCIDE itself
+- Update dbpre integration to work with dbpre 0.4
+- Allow to use Shift+Enter from the search/replace panel to search backwards
+
+
+Fixed bugs:
+
+- Fix broken icon theme selection on GNU/Linux and use more icons from theme
+- Use KDE specific build icons
+- Fix "failed to decode compiler output with encoding cp1252 with external compilation"
+- Fix "log pane (Issues tab): Line breaks from cobc & gcc are not translated correctly"
+- Fix various bugs with environment variables and compiler settings
+- Fix a few issues related to save as (title not updated after save as,...)
+- Fix using extra quotes in compiler flags not working
+- Fix using windows paths style in preferences (backslash instead of slash)
+- Fix various unhandled exceptions reported by users
+- Fix a few issues with file system view (warn user if using a UNC path,
+  fix bugs when opening a file that is located at the root of a drive)
+- Fix read only property of some fields in the about dialog or the main window (log, compiler output,...)
+- Fix cobc warnings treated as errors
+- Fix compiler settings not restore if user press Cancel
+- Fix a few issues with the offset calculator and some specific types
+
+
 4.6
 ===
 
