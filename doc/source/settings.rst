@@ -220,6 +220,18 @@ Here you can define some additional environment variables that you'd need to
 run your program.
 
 
+Quoting Simon Sobisch (the lead of the GnuCOBOL project)::
+
+    Users with (recent) GnuCOBOL 2.x can set COB_RUNTIME_CONFIG (
+    see the documentation or conf/runtime.cfg) to have all settings
+    they need in one place - both for use with and without OCIDE.
+
+    Use multiple configuration files (one "master" and the others only
+    setting necessary "special" flags and include master.cfg) and you
+    have a different set of runtime configurations by just one change in
+    OCIDE :-)
+
+
 SQL Cobol settings
 ------------------
 
