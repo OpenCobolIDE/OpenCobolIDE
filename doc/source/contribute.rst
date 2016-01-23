@@ -11,7 +11,7 @@ You can contribute in many different ways:
 
 If you have any question, just open an issue on the issue tracker.
 
-It might also be worth checking the OpenCobolIDE's `wiki` (for developers and contributors).
+It might also be worth checking the OpenCobolIDE's `wiki`_ (for developers and contributors).
 
 Since v4.3.1, you can report a bug from within the IDE (? -> Report a bug). The first time
 you use it, it will prompt you for your github credentials in order to generate a personal
@@ -54,6 +54,3 @@ the --pep8 option*::
 
     ($ pip3 install pytest-pep8)
     $ python3 runtests.py --pep8 -m pep8
-
-
-.. _bug tracker: https://github.com/OpenCobolIDE/OpenCobolIDE/issues?state=open
