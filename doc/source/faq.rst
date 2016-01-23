@@ -70,3 +70,27 @@ asking you to select another encoding and retry:
 
 If you selected the correct encoding, the file should now load properly in the editor. If not, try
 another encoding...
+
+
+6) Where can I find OCIDE's log file?
++++++++++++++++++++++++++++++++++++++
+
+You can find the OCIDE log file here:
+
+- ``%USERPROFILE%/OpenCobolIDE/cache/OpenCobolIDE.log`` on Windows
+- ``~/.cache/.OpenCobolIDE/OpenCobolIDE.log`` on GNU/Linux
+- ``~/Library/Caches/OpenCobolIDE/OpenCobolIDE.log`` on OSX
+
+
+
+
+7) Using paths with spaces in extra compiler flags
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Paths with spaces should now be working as long as you wrap the with quotes::
+
+    -I "D:\my test"
+
+Note that if you're using a mingw based compiler, you will need to escape whitespaces::
+
+    -I "/d/A\ path\ with\ some\
