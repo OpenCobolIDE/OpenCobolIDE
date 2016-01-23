@@ -23,6 +23,22 @@ View options:
 - **Highlight whitespaces**: show/hide visual whitespaces
 - **Show errors**: enable/disable cobol linter (errors appears as red lines in the editor and as icons on the left of
                    the editor).
+- **Show cursor position in bytes**: show cursor in position in bytes (take encoding into account) if enabled, otherwise show the column number.
+
+Margins
++++++++
+
+You can configure up to 4 different margins. You can choose the column where the
+margin should appear and its color. Use 0 to hide a margin.
+
+Comments symbol
++++++++++++++++
+
+Choose the comment symbol you want to use for the comment/uncomment action (Ctrl+/).
+
+Default is ``*> `` which should work with both fixed format and free format.
+
+If you're using fixed format, you can set it to ``*``.
 
 Indentation otions:
 +++++++++++++++++++
@@ -36,9 +52,10 @@ Indentation otions:
 Code completion options:
 ++++++++++++++++++++++++
 
+- **Filter mode**: choose how code completions should be filtered. You can choose between Prefix or subsequence. Subsequence might lead to better results but is much slower.
 - **Trigger length**: specify the amount of characters needed to automatically trigger a code completion request.
   A value of 1 make the code completion trigger automatically as soon as you type.
-- **Prosed keywords**: let you choose a convention for the cobol keywords: lower-case or UPPER-CASE keywords
+- **Proposed keywords**: let you choose a convention for the cobol keywords: lower-case or UPPER-CASE keywords
 
 EOL  options:
 +++++++++++++
@@ -48,11 +65,6 @@ This group let you change how line endings are handled by the editor.
 - Preferred EOL: Specify you preferred EOL, this EOL will be used for creating/saving files
 - Auto-detect EOL: If checked, the editor will try to auto detect and keep the original line ending. If false, the
   preferred EOL will be used instead of the original line ending when you save a file.
-
-Comments
-++++++++
-
-Choose the comment symbol to use for the Comment/Uncomment action. Default is '*> ' but you could also set '* '.
 
 Style settings
 --------------
@@ -93,8 +105,29 @@ Compiler settings
 This tab let you change the GnuCobol compiler settings.
 
 .. warning:: Those settings are applied globally to every file you compile with the IDE. At the moment there is no way
-             to set custom compiler settings per file. Open a issue on the bug tracker if you feel like this feature
-             is needed!
+             to set custom compiler settings per file.
+
+Compiler path
++++++++++++++
+
+This option let you specify the full path to a working GnuCOBOL compiler. When you change this path you can
+check whether your compiler is working by clicking on the "Check compiler" button. The following dialog will then
+show up.
+
+Press "Check compilation" to check if the compiler is able to compile a simple hello world executable. If you don't
+get "Compiler works", read the compiler output carefully. If it is not working, you might need to adjust the
+environment variables.
+
+- PATH: prefix paths to the PATH environment variable
+- COB_CONFIG_DIR: Hmm, news says this was dropped, but it’ll effect where .conf dialect support files are found.
+- COB_COPY_DIR: Path to COPY books.
+- COB_INCLUDE_PATH
+- COB_LIB_PATH
+
+**Auto-detect and compile submodules** checkbox let you choose whether you'd like the IDE to
+compile submodules automatically (that way you just have to compile your main modules).
+
+.. note:: Each environment variables has an associated checkbox, it won't be used unless the check box is checked.
 
 Output directory
 ++++++++++++++++
@@ -126,6 +159,11 @@ used for.
 
 There is a line edit widget where you can add additional missing compiler flags (separate them with a blank space).
 
+Copybook paths
+++++++++++++++
+
+This option let you add custom copybook paths, e.g. to locate a COBOL copybook you're including in your program.
+
 Library paths
 +++++++++++++
 
@@ -137,34 +175,14 @@ Libraries
 
 This option let you specify the libraries you want to link with. Separate them with a blank space. *-l flag*
 
-Compiler path
-+++++++++++++
 
-This option let you specify the full path to a working GnuCOBOL compiler. When you change this path you can
-check whether your compiler is working by clicking on the "Check compiler" button. The following dialog will then
-show up.
-
-Press "Check compilation" to check if the compiler is able to compile a simple hello world executable. If you don't
-get "Compiler works", read the compiler output carefully. If it is not working, you might need to adjust the
-environment variables.
-
-- PATH: prefix paths to the PATH environment variable
-- COB_CONFIG_DIR: Hmm, news says this was dropped, but it’ll effect where .conf dialect support files are found.
-- COB_COPY_DIR: Path to COPY books.
-- COB_INCLUDE_PATH
-- COB_LIB_PATH
-
-.. note:: Each environment variables has an associated checkbox, it won't be used unless the check box is checked.
-
-
-VCVARS32 path:
-++++++++++++++
+VCVARSALL path:
++++++++++++++++
 
 *This option is not visible on the above screenshot because it is available only on windows.*
 
-This option let you specify the path to VCVARS32.bat which is needed if you are using a custom GnuCompiler built with
-Visual Studio. VCVARS32.bat can be found in the ``Bin`` folder of your Visual C++ installation. Just make sure to use
-the same visual studio version as the one used to build the compiler.
+This option let you specify the path to vcvarsall.bat which is needed if you are using a custom GnuCompiler built with
+Visual Studio. ``vcvarsall.bat`` can be found in the ``VC`` folder of your Visual C++ installation.
 
 Run settings
 ------------
@@ -172,10 +190,16 @@ Run settings
 .. image:: _static/run-settings.png
     :align: center
 
-This tab let you change the way the IDE run executable programs. By default the program will run inside the IDE, in the
-program output window. This work nice for basic program but will fail as soon as you start using the ``SCREEN-SECTION``,
-an error message about being unable to redirect output will appear in the program output. To run such a program you need
-to run it in an external console window.
+External terminal
++++++++++++++++++
+
+This tab let you change the way the IDE run executable programs.
+
+By default the program will run inside the IDE, in the program output window.
+This work nice for basic program but will fail as soon as you start using the ``SCREEN-SECTION``,
+an error message about being unable to redirect output will appear in the program output.
+
+To run such a program you need to run it in an external console window.
 
 To enable running a program in an external terminal:
 
@@ -187,6 +211,13 @@ To enable running a program in an external terminal:
     * **On linux**, it depends on the distribution and the desktop environment you are using.
       The IDE will try to pick up one of those if available: ``gnome-terminal``, ``konsole`` and ``xfce-terminal``.
       If you are using another terminal, please indicate the command to use.
+
+
+Environment
++++++++++++
+
+Here you can define some additional environment variables that you'd need to
+run your program.
 
 
 SQL Cobol settings
