@@ -18,11 +18,7 @@ def _logger():
 
 
 #: A sorted list of available pygments styles, for convenience
-PYGMENTS_STYLES = sorted(list(get_all_styles()))
-
-if hasattr(sys, 'frozen'):
-    # frozen executables won't see the builtin pyqode pygments style.
-    PYGMENTS_STYLES += ['darcula', 'qt']
+PYGMENTS_STYLES = sorted(set(list(get_all_styles()) + ['darcula', 'qt']))
 
 
 #: The list of color schemes keys (and their associated pygments token)
