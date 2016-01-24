@@ -5,4 +5,4 @@
 pushd ..
 
 export DEB_BUILD_OPTIONS=nocheck debuild
-python3 setup.py --command-packages=stdeb.command bdist_deb
+python3.4 setup.py --command-packages=stdeb.command bdist_deb
