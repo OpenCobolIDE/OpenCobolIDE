@@ -510,9 +510,9 @@ class FileSystemHelper:
         if status:
             fatal_names = ['.', '..', os.sep]
             for i in fatal_names:
-                if i in os.path.splitext(name)[0]:
-                    QtWidgets.QMessageBox.error(
-                        self.tree_view, "Error", "Wrong file name")
+                if i == name:
+                    QtWidgets.QMessageBox.critical(
+                        self.tree_view, "Error", "Wrong directory name")
                     return
 
             if os.path.isfile(src):

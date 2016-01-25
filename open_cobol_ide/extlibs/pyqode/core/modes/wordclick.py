@@ -88,8 +88,8 @@ class WordClickMode(Mode, QtCore.QObject):
             self._cursor = None
             self._clear_selection()
 
-    def _check_word_under_mouse_cursor(self, cursor):
-        raise NotImplementedError()
+    def _check_word_cursor(self, cursor):
+        pass
 
     def _on_mouse_pressed(self, event):
         """ mouse pressed callback """

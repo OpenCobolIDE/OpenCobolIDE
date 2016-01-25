@@ -12,6 +12,7 @@ from pyqode.core._forms.search_panel_ui import Ui_SearchPanel
 from pyqode.core.api.decoration import TextDecoration
 from pyqode.core.api.panel import Panel
 from pyqode.core.api.utils import DelayJobRunner, TextHelper
+from pyqode.core.backend import NotRunning
 from pyqode.core.backend.workers import findall
 
 
@@ -554,6 +555,8 @@ class SearchAndReplacePanel(Panel, Ui_SearchPanel):
                                              self._on_results_available)
         except AttributeError:
             self._on_results_available(findall(request_data))
+        except NotRunning:
+            QtCore.QTimer.singleShot(100, self.request_search)
 
     def _on_results_available(self, results):
         self._occurrences = [(start + self._offset, end + self._offset)
