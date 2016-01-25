@@ -20,6 +20,19 @@ GNU/Linux
 
 *Note: starting from v4.6.2, the installed executable name is lowercase: opencobolide*
 
+Ubuntu
+++++++
+
+A debian package is available here: https://launchpad.net/cobcide/+download
+
+This package should work on any Ubuntu version >= 14.04 and on any version
+derived from Ubuntu.
+
+Fedora
+++++++
+
+A RPM package for Fedora 23 is available here: https://launchpad.net/cobcide/+download
+
 KaOS
 ++++
 
