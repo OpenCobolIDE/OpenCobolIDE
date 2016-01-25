@@ -160,7 +160,7 @@ class Ui_Dialog(object):
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">OpenCobolIDE </span>is a simple and lightweight COBOL IDE based on <span style=\" font-weight:600;\">GnuCobol</span> (formely called OpenCobol) and <span style=\" font-weight:600;\">pyQode</span>.</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">OpenCobolIDE is licensed under the <span style=\" font-weight:600;\">GPL v3</span> and is powered by open source softwares.</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
-        self.label_2.setText(_translate("Dialog", "Copyright (C) 2013-2015 Colin Duquesnoy"))
+        self.label_2.setText(_translate("Dialog", "Copyright (C) 2013-2016 Colin Duquesnoy"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Dialog", "About"))
         self.textBrowser.setHtml(_translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
