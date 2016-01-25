@@ -18,18 +18,29 @@ OpenCobolIDE depends on the following packages:
 GNU/Linux
 ---------
 
-Install pyqt5, open-cobol and pip for python3 using your package manager, then run the
-following commands::
+*Note: starting from v4.6.2, the installed executable name is lowercase: opencobolide*
+
+KaOS
+++++
+
+OpenCobolIDE is up in the KaOs Community Package (KCP)::
+
+    kcp -i opencobolide
+
+
+Other distributions
++++++++++++++++++++
+
+
+
+Install Python3, PyQt5, GnuCOBOL and pip for Python3 using your package manager, then run the following commands::
 
     sudo pip3 install OpenCobolIDE --upgrade
 
 
-.. note:: if you have both PyQt5 and PyQt4 on your system, the IDE will use
-          PyQt5 by default. To force the use of PyQt4, you should set the
-          ``QT_API`` environment variable to ``pyqt4``.
-
-.. note:: starting from v4.6.2, the name of the executable is lowercase:
-          opencobolide instead of OpenCobolIDE.
+Note that if you have both PyQt5 and PyQt4 on your system, the IDE will use
+PyQt5 by default. To force the use of PyQt4, you should set the
+``QT_API`` environment variable to ``pyqt4``.
 
 Windows
 -------

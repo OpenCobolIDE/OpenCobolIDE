@@ -83,6 +83,17 @@ GNU/Linux
 
 *Note: starting from v4.6.2, the installed executable name is lowercase: opencobolide*
 
+KaOS
+++++
+
+OpenCobolIDE is up in the KaOs Community Package (KCP)::
+
+    kcp -i opencobolide
+
+
+Other distributions
++++++++++++++++++++
+
 Install Python3, PyQt5, GnuCOBOL and pip for Python3 using your package manager, then run the following commands::
 
     sudo pip3 install OpenCobolIDE --upgrade
