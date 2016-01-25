@@ -248,6 +248,8 @@ class JsonTcpClient(QtNetwork.QTcpSocket):
 
     def _connect(self):
         """ Connects our client socket to the backend socket """
+        if self is None:
+            return
         comm('connecting to 127.0.0.1:%d', self._port)
         address = QtNetwork.QHostAddress('127.0.0.1')
         self.connectToHost(address, self._port)
