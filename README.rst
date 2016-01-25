@@ -97,6 +97,15 @@ Fedora
 A RPM package for Fedora 23 is available here: https://launchpad.net/cobcide/+download
 
 
+ArchLinux
++++++++++
+
+OpenCobolIDE is available from the `AUR`_.
+
+You can install using one of the many available AUR helper; e.g. using yaourt::
+
+    yaourt -S opencobolide
+
 KaOS
 ++++
 
@@ -196,3 +205,4 @@ Screenshots
 .. _githubpy: https://pypi.python.org/pypi/githubpy
 .. _keyring: https://pypi.python.org/pypi/keyring
 .. _HackEdit: https://github.com/HackEdit/hackedit
+.. _AUR: https://aur.archlinux.org/packages/opencobolide/

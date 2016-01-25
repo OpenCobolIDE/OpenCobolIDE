@@ -33,6 +33,15 @@ Fedora
 
 A RPM package for Fedora 23 is available here: https://launchpad.net/cobcide/+download
 
+ArchLinux
++++++++++
+
+OpenCobolIDE is available from the `AUR`_.
+
+You can install using one of the many available AUR helper; e.g. using yaourt::
+
+    yaourt -S opencobolide
+
 KaOS
 ++++
 
@@ -79,7 +88,6 @@ The only thing you have to do is:
 
 
 .. _`release section on github`: https://github.com/OpenCobolIDE/OpenCobolIDE/releases
-
 .. _homebrew: http://brew.sh/
-
 .. _PPA: https://launchpad.net/~open-cobol-ide/+archive/stable
+.. _AUR: https://aur.archlinux.org/packages/opencobolide/
