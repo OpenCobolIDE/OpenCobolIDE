@@ -23,7 +23,7 @@ install:
  - python scripts/install-qt.py
 
  # OpenCOBOL
- - sudo apt-get install -y --qq open-cobol --fix-missing
+ - sudo apt-get install -y -qq open-cobol --fix-missing
 
  # pytest
  - pip install --quiet pytest pytest-cov
