@@ -3,16 +3,10 @@ sudo: required
 dist: trusty
 
 python:
-  - "2.7"
   - "3.4"
 
 virtualenv:
   system_site_packages: true
-
-matrix:
-  exclude:
-    - env: QT_API=pyqt5
-      python: "2.7"
 
 env:
  - QT_API=pyqt4
