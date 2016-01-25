@@ -7,6 +7,7 @@ You will need to install PyQt4 (or PyQt5) and GnuCOBOL on your own.
 """
 import sys
 from setuptools import setup, find_packages
+from setuptools.command.test import test as TestCommand
 from open_cobol_ide import __version__
 
 try:
@@ -15,6 +16,28 @@ try:
 except ImportError:
     build_ui = None
     cmdclass = {}
+
+
+class PyTest(TestCommand):
+    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.pytest_args = []
+
+    def run_tests(self):
+        # import here, cause outside the eggs aren't loaded
+        import pytest
+        if self.pytest_args:
+            self.pytest_args = self.pytest_args.replace('"', '').split(' ')
+        else:
+            self.pytest_args = []
+        print('running test command: py.test "%s"' % ' '.join(
+            self.pytest_args))
+        errno = pytest.main(self.pytest_args)
+        sys.exit(errno)
+
+cmdclass['test'] = PyTest
 
 
 DESCRIPTION = 'A simple COBOL IDE'
@@ -57,6 +80,7 @@ setup(
                   if sys.platform == 'win32' else []},
     cmdclass=cmdclass,
     zip_safe=False,
+    tests_require=['pytest-cov', 'pytest-pep8', 'pytest'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: X11 Applications :: Qt',
