@@ -123,31 +123,29 @@ Screenshots
 
 * Home page:
 
-.. image:: https://github.com/OpenCobolIDE/OpenCobolIDE/blob/master/doc/source/_static/Home.png
+.. image:: https://raw.githubusercontent.com/OpenCobolIDE/OpenCobolIDE/master/doc/source/_static/Home.png
     :align: center
 
 * Editor:
 
-.. image:: https://github.com/OpenCobolIDE/OpenCobolIDE/blob/master/doc/source/_static/MainWindow.png
+.. image:: https://raw.githubusercontent.com/OpenCobolIDE/OpenCobolIDE/master/doc/source/_static/MainWindow.png
     :align: center
 
 * Code folding:
 
-.. image:: https://github.com/OpenCobolIDE/OpenCobolIDE/blob/master/doc/source/_static/Folding.png
+.. image:: https://raw.githubusercontent.com/OpenCobolIDE/OpenCobolIDE/master/doc/source/_static/Folding.png
     :align: center
 
 * Offset calculator
 
-.. image:: https://github.com/OpenCobolIDE/OpenCobolIDE/blob/master/doc/source/_static/PicOffsets.png
+.. image:: https://raw.githubusercontent.com/OpenCobolIDE/OpenCobolIDE/master/doc/source/_static/PicOffsets.png
     :align: center
 
 
 * Dark style support
 
-.. image:: https://github.com/OpenCobolIDE/OpenCobolIDE/blob/master/doc/source/_static/Dark.png
+.. image:: https://raw.githubusercontent.com/OpenCobolIDE/OpenCobolIDE/master/doc/source/_static/Dark.png
     :align: center
-
-
 
 
 .. _PyQt4: http://www.riverbankcomputing.co.uk/software/pyqt/download
