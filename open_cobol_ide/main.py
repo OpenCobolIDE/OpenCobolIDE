@@ -27,9 +27,11 @@ def main():
     if not hasattr(sys, 'frozen'):
         override_sys_path()
     from pyqode.qt import QtGui
+    from open_cobol_ide import system
     from open_cobol_ide.app import Application
     from open_cobol_ide.settings import Settings
-    QtGui.QIcon.setThemeName(Settings().icon_theme)
+    if system.linux:
+        QtGui.QIcon.setThemeName(Settings().icon_theme)
     app = Application()
     ret_code = app.run()
     app.close()
