@@ -47,6 +47,7 @@ KaOS
 
 OpenCobolIDE is up in the KaOs Community Package (KCP)::
 
+    kcp -i gnu-cobol
     kcp -i opencobolide
 
 

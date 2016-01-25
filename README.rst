@@ -109,8 +109,9 @@ You can install using one of the many available AUR helper; e.g. using yaourt::
 KaOS
 ++++
 
-OpenCobolIDE is up in the KaOs Community Package (KCP)::
+OpenCobolIDE is up in the KaOs Community Packages (KCP)::
 
+    kcp -i gnu-cobol
     kcp -i opencobolide
 
 
