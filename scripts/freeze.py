@@ -100,6 +100,13 @@ setup(name=app_name,
 
 if windows:
     build_dir = os.path.join(os.getcwd(), glob.glob('build/*')[0])
+    # cx_freeze is missing libEGL.dll, copy it ourself
+    try:
+        import PyQt5
+        shutil.copy(os.path.join(
+            os.path.dirname(PyQt5.__file__), 'libEGL.dll'), build_dir)
+    except (ImportError, RuntimeError):
+        pass  # using pyqt4, there is nothing to do
     print('Signing our binaries\n'
           '#####################################################################')
     for executable in ['OpenCobolIDE.exe', 'cobol-backend.exe', 'core-backend.exe',
@@ -119,27 +126,17 @@ if windows:
         '\n### Creating windows installer using Inno Setup\n'
         '#####################################################################'
         '\n')
-    try:
-        build_dir = glob.glob('build/*')[0]
-        with open('scripts/setup.iss.in', 'r') as src, \
-                open('setup.iss', 'w') as dst:
-            lines = src.readlines()
-            data = []
-            for l in lines:
-                l = l.replace('@VERSION@', version)
-                l = l.replace('@BUILD_DIR@', build_dir)
-                data.append(l)
-            dst.writelines(data)
-        # cx_freeze is missing libEGL.dll, copy it ourself
-        try:
-            import PyQt5
-            shutil.copy(os.path.join(
-                os.path.dirname(PyQt5.__file__), 'libEGL.dll'), build_dir)
-        except (ImportError, RuntimeError):
-            pass  # using pyqt4, there is nothing to do
-        # if not in PATH, inno setup is usually located in
-        # C:\Program Files (x86)\Inno Setup 5 on Windows
-        os.environ['PATH'] += ';C:\Program Files (x86)\Inno Setup 5'
-        os.system('iscc %s' % os.path.join(os.getcwd(), 'setup.iss'))
-    except Exception as e:
-        print(e)
+    build_dir = glob.glob('build/*')[0]
+    with open('scripts/setup.iss.in', 'r') as src, \
+            open('setup.iss', 'w') as dst:
+        lines = src.readlines()
+        data = []
+        for l in lines:
+            l = l.replace('@VERSION@', version)
+            l = l.replace('@BUILD_DIR@', build_dir)
+            data.append(l)
+        dst.writelines(data)
+    # if not in PATH, inno setup is usually located in
+    # C:\Program Files (x86)\Inno Setup 5 on Windows
+    os.environ['PATH'] += ';C:\Program Files (x86)\Inno Setup 5'
+    os.system('iscc %s' % os.path.join(os.getcwd(), 'setup.iss'))
