@@ -19,6 +19,9 @@ OpenCobolIDE
    :target: https://coveralls.io/r/OpenCobolIDE/OpenCobolIDE?branch=master
    :alt: Coverage Status
 
+.. image:: https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png
+   :target: https://zenhub.io
+   :alt: Supercharged by zenhub
 
 OpenCobolIDE is a simple and lightweight COBOL IDE based on the GnuCOBOL
 compiler.
