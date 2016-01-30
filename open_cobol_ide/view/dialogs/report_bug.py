@@ -1,3 +1,5 @@
+import locale
+import subprocess
 import github
 import keyring
 import logging
@@ -49,6 +51,8 @@ class DlgReportBug(QtWidgets.QDialog):
         self.ui.lineEditTitle.setText(title)
         self.ui.plainTextEditDesc.setPlainText(description)
         self.enable_submit()
+
+        print(self.get_system_infos())
 
     def enable_submit(self, *_):
         self.ui.pushButtonSubmit.setEnabled(
@@ -129,13 +133,25 @@ class DlgReportBug(QtWidgets.QDialog):
         else:
             qdarkstyle_version = qdarkstyle.__version__
 
-        system = platform.platform()
+        def get_linux_distro():
+            try:
+                out = str(subprocess.check_output(['lsb_release', '-i']),
+                          locale.getpreferredencoding())
+            except OSError:
+                distro = platform.linux_distribution()[0]
+                if not distro:
+                    distro = 'linux distribution not found'
+            else:
+                distro = out.split(':')[1].strip()
+            return distro
+
+        system_info = platform.system()
         if 'linux' in sys.platform.lower():
-            system += ' (%s)' % system.linux_distribution()
+            system_info = get_linux_distro()
         elif 'darwin' in sys.platform.lower():
-            system += ' (%s)' % platform.mac_ver()[0]
+            system_info = 'Mac OS X %s' % platform.mac_ver()[0]
         return '\n'.join([
-            '- Operating System: %s' % system,
+            '- Operating System: %s' % system_info,
             '- OpenCobolIDE: %s' % __version__,
             '- GnuCOBOL: %s' % GnuCobolCompiler().get_version(
                 include_all=False),
