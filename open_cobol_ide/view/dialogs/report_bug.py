@@ -73,9 +73,11 @@ class DlgReportBug(QtWidgets.QDialog):
     def submit(self):
         data = self._get_data()
         username, password, remember = self.get_user_credentials()
+        if not username or not password:
+            return
         try:
             gh = github.GitHub(username=username, password=password)
-            repo = gh.repos('OpenCobolIDE')('OpenCobolIDE')
+            repo = gh.repos('ColinDuquesnoy')('TestBugReport')
             ret = repo.issues.post(title=data['title'], body=data['body'])
         except github.ApiError:
             QtWidgets.QMessageBox.warning(
@@ -83,19 +85,16 @@ class DlgReportBug(QtWidgets.QDialog):
                 'Failed to create github issue, invalid credentials ('
                 'error 401)')
             Settings().remember_github_credentials = False
-            Settings().github_username = ''
         else:
             issue_nbr = ret['number']
             ret = QtWidgets.QMessageBox.question(
                 self, 'Issue created on github',
                 'Issue successfully created. Would you like to open the ticket'
-                'in your web browser?')
+                ' in your web browser?')
             if ret == QtWidgets.QMessageBox.Yes:
                 webbrowser.open(
-                    'https://github.com/OpenCobolIDE/OpenCobolIDE/issues/%d' %
+                    'https://github.com/ColinDuquesnoy/TestBugReport/issues/%d' %
                     issue_nbr)
-            Settings().remember_github_credentials = remember
-            Settings().github_username = username
             self.accept()
 
     def send_email(self):
@@ -103,7 +102,6 @@ class DlgReportBug(QtWidgets.QDialog):
         url = QtCore.QUrl("mailto:%s?subject=%s&body=%s" %
                           (EMAIL_ADDRESS, data['title'], data['body']))
         QtGui.QDesktopServices.openUrl(url)
-        self.accept()
 
     def get_user_credentials(self):
         remember = Settings().remember_github_credentials
@@ -111,7 +109,12 @@ class DlgReportBug(QtWidgets.QDialog):
         if remember and username:
             return username, keyring.get_password('github', username), remember
         else:
-            return DlgGitHubLogin.login(self)
+            username, password, remember = DlgGitHubLogin.login(self)
+            if remember:
+                Settings().remember_github_credentials = remember
+                Settings().github_username = username
+                keyring.set_password('github', username, password)
+            return username, password, remember
 
     @classmethod
     def report_bug(cls, parent, title='', description=''):
@@ -126,12 +129,15 @@ class DlgReportBug(QtWidgets.QDialog):
         else:
             qdarkstyle_version = qdarkstyle.__version__
 
-        system = platform.system()
-        is_linux = system.lower() == 'linux'
+        system = platform.platform()
+        if system.lower() == 'linux':
+            system += ' (%s)' % system.linux_distribution()
+        try:
+            system += ' (%s)' % platform.mac_ver()[0]
+        except AttributeError:
+            pass  # not on Mac POSX
         return '\n'.join([
-            '- Operating System: %s' % system +
-            ' (' + ' '.join(platform.linux_distribution()) + ')' if is_linux
-            else '',
+            '- Operating System: %s' % system,
             '- OpenCobolIDE: %s' % __version__,
             '- GnuCOBOL: %s' % GnuCobolCompiler().get_version(
                 include_all=False),
@@ -173,6 +179,8 @@ class DlgGitHubLogin(QtWidgets.QDialog):
         self.ui.bt_sign_in.clicked.connect(self.accept)
         self.ui.le_username.textChanged.connect(self.update_btn_state)
         self.ui.le_password.textChanged.connect(self.update_btn_state)
+        self.ui.bt_sign_in.setDisabled(True)
+        self.ui.le_username.setText(Settings().github_username)
 
     def update_btn_state(self):
         enable = self.ui.le_username.text().strip() != ''
@@ -182,6 +190,7 @@ class DlgGitHubLogin(QtWidgets.QDialog):
     @classmethod
     def login(cls, parent):
         dlg = DlgGitHubLogin(parent)
-        dlg.exec_()
-        return dlg.ui.le_username.text(), dlg.ui.le_password.text(), \
-            dlg.ui.cb_remember.isChecked()
+        if dlg.exec_() == dlg.Accepted:
+            return dlg.ui.le_username.text(), dlg.ui.le_password.text(), \
+                dlg.ui.cb_remember.isChecked()
+        return None, None, None
