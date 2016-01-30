@@ -80,11 +80,11 @@ class DlgReportBug(QtWidgets.QDialog):
             repo = gh.repos('ColinDuquesnoy')('TestBugReport')
             ret = repo.issues.post(title=data['title'], body=data['body'])
         except github.ApiError:
+            _logger().exception('failed to send bug report')
             QtWidgets.QMessageBox.warning(
-                self, 'Login to github failed',
-                'Failed to create github issue, invalid credentials ('
-                'error 401)')
-            Settings().remember_github_credentials = False
+                self, 'Failed to create issue',
+                'Failed to create github issue, see the application log for '
+                'more information...')
         else:
             issue_nbr = ret['number']
             ret = QtWidgets.QMessageBox.question(
@@ -93,8 +93,8 @@ class DlgReportBug(QtWidgets.QDialog):
                 ' in your web browser?')
             if ret == QtWidgets.QMessageBox.Yes:
                 webbrowser.open(
-                    'https://github.com/ColinDuquesnoy/TestBugReport/issues/%d' %
-                    issue_nbr)
+                    'https://github.com/ColinDuquesnoy/TestBugReport/issues/'
+                    '%d' % issue_nbr)
             self.accept()
 
     def send_email(self):
@@ -130,12 +130,10 @@ class DlgReportBug(QtWidgets.QDialog):
             qdarkstyle_version = qdarkstyle.__version__
 
         system = platform.platform()
-        if system.lower() == 'linux':
+        if 'linux' in sys.platform.lower():
             system += ' (%s)' % system.linux_distribution()
-        try:
+        elif 'darwin' in sys.platform.lower():
             system += ' (%s)' % platform.mac_ver()[0]
-        except AttributeError:
-            pass  # not on Mac POSX
         return '\n'.join([
             '- Operating System: %s' % system,
             '- OpenCobolIDE: %s' % __version__,
@@ -155,7 +153,12 @@ class DlgReportBug(QtWidgets.QDialog):
     def get_application_log(self):
         try:
             with open(logger.get_path(), 'r') as f:
-                return f.read()
+                content = f.read()
+            lines = []
+            for l in content.splitlines():
+                if l.strip():
+                    lines.append(l)
+            return '\n'.join(lines[-100:])
         except FileNotFoundError:
             return ''
 
