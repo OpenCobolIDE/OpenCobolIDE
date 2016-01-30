@@ -51,8 +51,8 @@ class DlgReportBug(QtWidgets.QDialog):
         self.ui.lineEditTitle.setText(title)
         self.ui.plainTextEditDesc.setPlainText(description)
         self.enable_submit()
-
-        print(self.get_system_infos())
+        _logger().info('System informations:\n%s',
+                       self.get_system_infos())
 
     def enable_submit(self, *_):
         self.ui.pushButtonSubmit.setEnabled(
@@ -81,7 +81,7 @@ class DlgReportBug(QtWidgets.QDialog):
             return
         try:
             gh = github.GitHub(username=username, password=password)
-            repo = gh.repos('ColinDuquesnoy')('TestBugReport')
+            repo = gh.repos('OpenCobolIDE')('OpenCobolIDE')
             ret = repo.issues.post(title=data['title'], body=data['body'])
         except github.ApiError:
             _logger().exception('failed to send bug report')
@@ -97,8 +97,8 @@ class DlgReportBug(QtWidgets.QDialog):
                 ' in your web browser?')
             if ret == QtWidgets.QMessageBox.Yes:
                 webbrowser.open(
-                    'https://github.com/ColinDuquesnoy/TestBugReport/issues/'
-                    '%d' % issue_nbr)
+                    'https://github.com/OpenCobolIDE/OpenCobolIDE/issues/%d' %
+                    issue_nbr)
             self.accept()
 
     def send_email(self):
