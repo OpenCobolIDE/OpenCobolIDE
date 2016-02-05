@@ -24,7 +24,8 @@ def main():
     """
     Application entry point.
     """
-    if not hasattr(sys, 'frozen'):
+    dev_mode = os.environ.get('OCIDE_DEV_MODE')
+    if not hasattr(sys, 'frozen') and dev_mode is None:
         override_sys_path()
     from pyqode.qt import QtGui
     from open_cobol_ide import system
