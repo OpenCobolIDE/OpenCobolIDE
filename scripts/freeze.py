@@ -77,6 +77,15 @@ options = {
         'keyring.backends.pyfs',
         'keyring.backends.SecretService',
         'keyring.backends.Windows',
+        'six',
+        'packaging',
+        'packaging.markers',
+        'packaging.specifiers',
+        'packaging.version',
+        'packaging.version',
+        'packaging._compat',
+        'packaging._structures',
+        'packaging.__about__',
     ] + pygments_styles
 }
 
