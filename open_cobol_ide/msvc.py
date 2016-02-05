@@ -23,16 +23,21 @@ def get_vc_vars(vcvarsall, arch):
     """
     env = {}
     try:
+        _logger().debug('querying vcvarsall')
         vc_env = query_vcvarsall(vcvarsall, arch)
     except (RuntimeError, PermissionError):
         _logger().exception('failed to initialize VC vars, compilation will '
                             'likely not work...')
     else:
+        _logger().debug('vcenv: %r', vc_env)
         for key in INTERESTING:
             dst_key = key
             if key == 'path':
                 dst_key = key.upper()
-            env[dst_key] = vc_env[key]
+            try:
+                env[dst_key] = vc_env[key]
+            except KeyError:
+                _logger().exception('failed to read key from vcvarsall')
     return env
 
 
@@ -47,13 +52,18 @@ def query_vcvarsall(path, arch):
     _logger().debug('querying vcvarsall: "%s" %s set', path, arch)
     si = subprocess.STARTUPINFO()
     si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-    popen = subprocess.Popen('"%s" %s & set' % (path, arch),
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE,
-                             startupinfo=si)
-    stdout, stderr = popen.communicate()
-    if popen.wait() != 0:
-        raise RuntimeError(stderr.decode("mbcs"))
+    try:
+        popen = subprocess.Popen('"%s" %s & set' % (path, arch),
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE,
+                                 startupinfo=si)
+    except OSError:
+        _logger().exception('exception while querying vcvarsall')
+        stdout, stderr = b'', b''
+    else:
+        stdout, stderr = popen.communicate()
+        if popen.wait() != 0:
+            raise RuntimeError(stderr.decode("mbcs"))
 
     def convert_mbcs(s):
         dec = getattr(s, "decode", None)
