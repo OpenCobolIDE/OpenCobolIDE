@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/Documents/pyQode/core/forms/popup_open_files.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/pyQode/pyqode.core/forms/popup_open_files.ui'
 #
-# Created by: PyQt5 UI code generator 5.4.1
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -13,8 +13,8 @@ class Ui_Dialog(object):
         Dialog.setObjectName("Dialog")
         Dialog.resize(640, 320)
         self.gridLayout = QtWidgets.QGridLayout(Dialog)
-        self.gridLayout.setSpacing(0)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout.setSpacing(0)
         self.gridLayout.setObjectName("gridLayout")
         self.groupBox = QtWidgets.QGroupBox(Dialog)
         self.groupBox.setObjectName("groupBox")
@@ -49,11 +49,11 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.groupBox.setTitle(_translate("Dialog", "Open files"))
-        self.checkBox.setText(_translate("Dialog", "Sort alphabetically"))
+
+        Dialog.setWindowTitle(_("Dialog"))
+        self.groupBox.setTitle(_("Open files"))
+        self.checkBox.setText(_("Sort alphabetically"))
         item = self.tableWidget.horizontalHeaderItem(0)
-        item.setText(_translate("Dialog", "Filename"))
+        item.setText(_("Filename"))
         item = self.tableWidget.horizontalHeaderItem(1)
-        item.setText(_translate("Dialog", "Path"))
+        item.setText(_("Path"))

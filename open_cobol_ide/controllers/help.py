@@ -1,8 +1,9 @@
 from pyqode.qt import QtCore, QtGui, QtWidgets
 from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.dialogs.about import DlgAbout
-from open_cobol_ide.view.dialogs.report_bug import DlgReportBug
 from .base import Controller
+
+import qcrash.api as qcrash
 
 
 class HelpController(Controller):
@@ -35,7 +36,9 @@ class HelpController(Controller):
         dlg.exec_()
 
     def report_bug(self):
-        DlgReportBug.report_bug(self.main_window)
+        qcrash.show_report_dialog(
+            window_icon=self.main_window.windowIcon(),
+            parent=self.main_window)
 
     def restore_factory_defaults(self):
         answer = QtWidgets.QMessageBox.question(

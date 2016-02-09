@@ -34,3 +34,12 @@ def setup_logging(version, debug):
     logging.getLogger().setLevel(logging.INFO if not debug else logging.DEBUG)
     ocide_logger = logging.getLogger('open_cobol_ide')
     ocide_logger.info('version: %s', version)
+
+
+def get_application_log():
+    try:
+        with open(get_path(), 'r') as f:
+            content = f.read()
+        return content
+    except FileNotFoundError:
+        return ''

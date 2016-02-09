@@ -22,7 +22,8 @@ class CommentsMode(Mode):
         Called when the mode is activated/deactivated
         """
         if state:
-            self.action = QtWidgets.QAction("Comment/Uncomment", self.editor)
+            self.action = QtWidgets.QAction(_("Comment/Uncomment"),
+                                            self.editor)
             self.action.setShortcut("Ctrl+/")
             self.action.triggered.connect(self.comment)
             self.editor.add_action(self.action, sub_menu='COBOL')

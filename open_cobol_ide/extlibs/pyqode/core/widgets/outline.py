@@ -53,7 +53,7 @@ class OutlineTreeWidget(QtWidgets.QTreeWidget):
         self.customContextMenuRequested.connect(self._show_context_menu)
         self._sync_with_editor = True
         self._action_sync = QtWidgets.QAction(
-            QtGui.QIcon.fromTheme('view-refresh'), 'Sync with editor', None)
+            QtGui.QIcon.fromTheme('view-refresh'), _('Sync with editor'), None)
         self._action_sync.setCheckable(True)
         self._action_sync.setChecked(self._sync_with_editor)
         self._action_sync.toggled.connect(self._on_action_sync_toggled)
@@ -153,7 +153,7 @@ class OutlineTreeWidget(QtWidgets.QTreeWidget):
 
         # no data
         root = QtWidgets.QTreeWidgetItem()
-        root.setText(0, 'No data')
+        root.setText(0, _('No data'))
         root.setIcon(0, icons.icon(
             'dialog-information', ':/pyqode-icons/rc/dialog-info.png',
             'fa.info-circle'))

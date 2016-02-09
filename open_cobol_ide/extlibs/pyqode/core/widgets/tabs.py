@@ -69,9 +69,9 @@ class TabWidget(QTabWidget):
         self.setTabBar(tab_bar)
         self.tab_bar = tab_bar
         self._context_mnu = QtWidgets.QMenu()
-        for name, slot in [('Close', self.close),
-                           ('Close others', self.close_others),
-                           ('Close all', self.close_all)]:
+        for name, slot in [(_('Close'), self.close),
+                           (_('Close others'), self.close_others),
+                           (_('Close all'), self.close_all)]:
             qaction = QtWidgets.QAction(name, self)
             qaction.triggered.connect(slot)
             self._context_mnu.addAction(qaction)
@@ -141,7 +141,7 @@ class TabWidget(QTabWidget):
         try:
             if not path and not self._current.file.path:
                 path, filter = QtWidgets.QFileDialog.getSaveFileName(
-                    self, 'Choose destination path')
+                    self, _('Choose destination path'))
                 if not path:
                     return False
             old_path = self._current.file.path
@@ -304,7 +304,7 @@ class TabWidget(QTabWidget):
             path = code_edit.file.path
             if not os.path.exists(path):
                 path, status = QtWidgets.QFileDialog.getSaveFileName(
-                    self, 'Save as (%s)' % code_edit.file.path)
+                    self, _('Save as (%s)') % code_edit.file.path)
         if path:
             try:
                 code_edit.file.save(path)

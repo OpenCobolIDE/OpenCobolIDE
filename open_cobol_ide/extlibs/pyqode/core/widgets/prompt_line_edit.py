@@ -20,7 +20,7 @@ class PromptLineEdit(QtWidgets.QLineEdit):
     clear_clicked = QtCore.Signal()
 
     def __init__(self, parent=None,
-                 prompt_text=' Search', button_icon=None):
+                 prompt_text=_(' Search'), button_icon=None):
         super(PromptLineEdit, self).__init__(parent)
         self._margin = self.sizeHint().height() - 2
         self._spacing = 0
@@ -32,7 +32,7 @@ class PromptLineEdit(QtWidgets.QLineEdit):
                 'edit-clear', ':/pyqode-icons/rc/clear-left.png',
                 'fa.times-circle')
         self.button.setIcon(button_icon)
-        self.button.setToolTip("Clear")
+        self.button.setToolTip(_("Clear"))
         self.button.setStyleSheet(
             "QToolButton { border: none; padding: 5px; }")
         self.button.setCursor(QtCore.Qt.ArrowCursor)

@@ -131,7 +131,7 @@ class SearchAndReplacePanel(Panel, Ui_SearchPanel):
         self.job_runner = DelayJobRunner(delay=500)
         Ui_SearchPanel.__init__(self)
         self.setupUi(self)
-        self.lineEditReplace.prompt_text = ' Replace'
+        self.lineEditReplace.prompt_text = _(' Replace')
         #: Occurrences counter
         self.cpt_occurences = 0
         self._previous_stylesheet = ""
@@ -186,7 +186,7 @@ class SearchAndReplacePanel(Panel, Ui_SearchPanel):
         self.toolButtonClose.setIconSize(icon_size)
 
         self.menu = QtWidgets.QMenu(self.editor)
-        self.menu.setTitle('Search')
+        self.menu.setTitle(_('Search'))
         self.menu.menuAction().setIcon(self.actionSearch.icon())
         self.menu.addAction(self.actionSearch)
         self.actionSearch.setShortcutContext(QtCore.Qt.WidgetShortcut)
@@ -564,7 +564,7 @@ class SearchAndReplacePanel(Panel, Ui_SearchPanel):
         self._on_search_finished()
 
     def _update_label_matches(self):
-        self.labelMatches.setText("{0} matches".format(self.cpt_occurences))
+        self.labelMatches.setText(_("{0} matches").format(self.cpt_occurences))
         color = "#DD0000"
         if self.cpt_occurences:
             color = "#00DD00"

@@ -57,9 +57,9 @@ class ErrorsTable(QtWidgets.QTableWidget):
         self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self._show_context_menu)
         self.context_mnu = QtWidgets.QMenu()
-        self.action_details = QtWidgets.QAction('View details', self)
+        self.action_details = QtWidgets.QAction(_('View details'), self)
         self.action_details.triggered.connect(self.showDetails)
-        self.action_copy = QtWidgets.QAction('Copy error', self)
+        self.action_copy = QtWidgets.QAction(_('Copy error'), self)
         self.action_copy.triggered.connect(self._copy_cell_text)
         self.context_mnu.addAction(self.action_details)
         self.context_mnu.addAction(self.action_copy)
@@ -158,8 +158,8 @@ class ErrorsTable(QtWidgets.QTableWidget):
         desc = desc.replace('\r\n', '\n').replace('\r', '\n')
         desc = desc.replace('\n', '<br/>')
         QtWidgets.QMessageBox.information(
-            self, 'Message details',
-            """<p><b>Description:</b><br/>%s</p>
+            self, _('Message details'),
+            _("""<p><b>Description:</b><br/>%s</p>
 <p><b>File:</b><br/>%s</p>
 <p><b>Line:</b><br/>%d</p>
-            """ % (desc, msg.path, msg.line + 1, ))
+            """) % (desc, msg.path, msg.line + 1, ))

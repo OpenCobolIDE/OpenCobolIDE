@@ -36,7 +36,7 @@ class ExtendedSelectionMode(Mode):
         self.continuation_characters = ('.',)
         self.word_sel_shortcut = QtGui.QKeySequence('Ctrl+W')
         self.action_select_word = QtWidgets.QAction(self.editor)
-        self.action_select_word.setText('Select word')
+        self.action_select_word.setText(_('Select word'))
         self.action_select_word.setShortcut(self.word_sel_shortcut)
         self.action_select_word.triggered.connect(self.perform_word_selection)
         self.action_select_word.setShortcutContext(
@@ -44,7 +44,7 @@ class ExtendedSelectionMode(Mode):
 
         self.extended_sel_shortcut = QtGui.QKeySequence('Ctrl+Shift+W')
         self.action_select_extended_word = QtWidgets.QAction(self.editor)
-        self.action_select_extended_word.setText('Select extended word')
+        self.action_select_extended_word.setText(_('Select extended word'))
         self.action_select_extended_word.setShortcut(
             self.extended_sel_shortcut)
         self.action_select_extended_word.triggered.connect(
@@ -54,7 +54,7 @@ class ExtendedSelectionMode(Mode):
 
         self.matched_sel_shortcut = QtGui.QKeySequence('Ctrl+E')
         self.action_select_matched = QtWidgets.QAction(self.editor)
-        self.action_select_matched.setText('Matched select')
+        self.action_select_matched.setText(_('Matched select'))
         self.action_select_matched.setShortcut(self.matched_sel_shortcut)
         self.action_select_matched.triggered.connect(
             self.perform_matched_selection)
@@ -63,7 +63,7 @@ class ExtendedSelectionMode(Mode):
 
         self.line_sel_shortcut = QtGui.QKeySequence('Ctrl+Shift+L')
         self.action_select_line = QtWidgets.QAction(self.editor)
-        self.action_select_line.setText('Select line')
+        self.action_select_line.setText(_('Select line'))
         self.action_select_line.setShortcut(self.line_sel_shortcut)
         self.action_select_line.triggered.connect(self.perform_line_selection)
         self.action_select_line.setShortcutContext(
@@ -75,7 +75,7 @@ class ExtendedSelectionMode(Mode):
         """
         # setup menu
         menu = QtWidgets.QMenu(self.editor)
-        menu.setTitle('Select')
+        menu.setTitle(_('Select'))
         menu.menuAction().setIcon(QtGui.QIcon.fromTheme('edit-select'))
         # setup actions
         menu.addAction(self.action_select_word)

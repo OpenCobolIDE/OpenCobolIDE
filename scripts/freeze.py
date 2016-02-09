@@ -89,6 +89,9 @@ options = {
     ] + pygments_styles
 }
 
+if windows:
+    options['includes'].append('win32timezone')
+
 
 print(
     '### Freezing application\n'

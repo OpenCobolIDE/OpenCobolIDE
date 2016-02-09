@@ -122,7 +122,7 @@ class EncodingPanel(Panel):
         self.enable_caret_line(False)
         self.ui.comboBoxEncodings.current_encoding = encoding
         self.ui.lblDescription.setText(
-            self._description % ('There was a problem opening the file %r' %
+            self._description % (_('There was a problem opening the file %r') %
                                  path))
         # load text as binary and mark it as red, user might make use the
         # binary to recognize the original encoding

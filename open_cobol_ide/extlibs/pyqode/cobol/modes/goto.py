@@ -20,7 +20,7 @@ class GoToDefinitionMode(Mode, QObject):
         self._definition = None
         self._deco = None
         self._pending = False
-        self.action_goto = QAction("Go to assignments", self)
+        self.action_goto = QAction(_("Go to assignments"), self)
         self.action_goto.setShortcut('F7')
         self.action_goto.triggered.connect(self.request_goto)
         self.word_clicked.connect(self.request_goto)

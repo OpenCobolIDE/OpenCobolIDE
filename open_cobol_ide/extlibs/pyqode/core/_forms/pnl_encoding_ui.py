@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/Documents/pyqode/core/forms/pnl_encoding.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/pyQode/pyqode.core/forms/pnl_encoding.ui'
 #
-# Created: Sun Oct 12 17:19:31 2014
-#      by: PyQt5 UI code generator 5.3.2
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -56,12 +55,12 @@ class Ui_Form(object):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
-        _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.lblDescription.setText(_translate("Form", "<html><head/><body><p><span style=\" font-weight:600;\">%s</span></p><p><span style=\" font-size:9pt;\">The file you opened has some invalid characters. If you continue editing this file you could corrupt this document. You can also choose another character encoding and try again.</span></p></body></html>"))
-        self.label.setText(_translate("Form", "Character Encoding:"))
-        self.pushButtonRetry.setText(_translate("Form", "Retry"))
-        self.pushButtonEdit.setText(_translate("Form", "Edit Anyway"))
-        self.pushButtonCancel.setText(_translate("Form", "Cancel"))
+
+        Form.setWindowTitle(_("Form"))
+        self.lblDescription.setText(_("<html><head/><body><p><span style=\" font-weight:600;\">%s</span></p><p><span style=\" font-size:9pt;\">The file you opened has some invalid characters. If you continue editing this file you could corrupt this document. You can also choose another character encoding and try again.</span></p></body></html>"))
+        self.label.setText(_("Character Encoding:"))
+        self.pushButtonRetry.setText(_("Retry"))
+        self.pushButtonEdit.setText(_("Edit Anyway"))
+        self.pushButtonCancel.setText(_("Cancel"))
 
 from pyqode.core.widgets.encodings import EncodingsComboBox

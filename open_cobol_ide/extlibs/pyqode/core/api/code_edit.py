@@ -1096,14 +1096,14 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
 
     def _init_actions(self, create_standard_actions):
         """ Init context menu action """
-        menu_advanced = QtWidgets.QMenu('Advanced')
+        menu_advanced = QtWidgets.QMenu(_('Advanced'))
         self.add_menu(menu_advanced)
         self._sub_menus = {
             'Advanced': menu_advanced
         }
         if create_standard_actions:
             # Undo
-            action = QtWidgets.QAction('Undo', self)
+            action = QtWidgets.QAction(_('Undo'), self)
             action.setShortcut('Ctrl+Z')
             action.setIcon(icons.icon(
                 'edit-undo', ':/pyqode-icons/rc/edit-undo.png', 'fa.undo'))
@@ -1113,7 +1113,7 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
             self.add_action(action, sub_menu=None)
             self.action_undo = action
             # Redo
-            action = QtWidgets.QAction('Redo', self)
+            action = QtWidgets.QAction(_('Redo'), self)
             action.setShortcut('Ctrl+Y')
             action.setIcon(icons.icon(
                 'edit-redo', ':/pyqode-icons/rc/edit-redo.png', 'fa.repeat'))
@@ -1123,7 +1123,7 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
             self.add_action(action, sub_menu=None)
             self.action_redo = action
             # Copy
-            action = QtWidgets.QAction('Copy', self)
+            action = QtWidgets.QAction(_('Copy'), self)
             action.setShortcut(QtGui.QKeySequence.Copy)
             action.setIcon(icons.icon(
                 'edit-copy', ':/pyqode-icons/rc/edit-copy.png', 'fa.copy'))
@@ -1131,7 +1131,7 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
             self.add_action(action, sub_menu=None)
             self.action_copy = action
             # cut
-            action = QtWidgets.QAction('Cut', self)
+            action = QtWidgets.QAction(_('Cut'), self)
             action.setShortcut(QtGui.QKeySequence.Cut)
             action.setIcon(icons.icon(
                 'edit-cut', ':/pyqode-icons/rc/edit-cut.png', 'fa.cut'))
@@ -1139,7 +1139,7 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
             self.add_action(action, sub_menu=None)
             self.action_cut = action
             # paste
-            action = QtWidgets.QAction('Paste', self)
+            action = QtWidgets.QAction(_('Paste'), self)
             action.setShortcut(QtGui.QKeySequence.Paste)
             action.setIcon(icons.icon(
                 'edit-paste', ':/pyqode-icons/rc/edit-paste.png',
@@ -1148,13 +1148,13 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
             self.add_action(action, sub_menu=None)
             self.action_paste = action
         # duplicate line
-        action = QtWidgets.QAction('Duplicate line', self)
+        action = QtWidgets.QAction(_('Duplicate line'), self)
         action.setShortcut('Ctrl+D')
         action.triggered.connect(self.duplicate_line)
         self.add_action(action, sub_menu=None)
         self.action_duplicate_line = action
         # select all
-        action = QtWidgets.QAction('Select all', self)
+        action = QtWidgets.QAction(_('Select all'), self)
         action.setShortcut(QtGui.QKeySequence.SelectAll)
         action.triggered.connect(self.selectAll)
         self.action_select_all = action
@@ -1162,7 +1162,7 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
         self.add_separator(sub_menu=None)
         if create_standard_actions:
             # indent
-            action = QtWidgets.QAction('Indent', self)
+            action = QtWidgets.QAction(_('Indent'), self)
             action.setShortcut('Tab')
             action.setIcon(icons.icon(
                 'format-indent-more',
@@ -1171,7 +1171,7 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
             self.add_action(action)
             self.action_indent = action
             # unindent
-            action = QtWidgets.QAction('Un-indent', self)
+            action = QtWidgets.QAction(_('Un-indent'), self)
             action.setShortcut('Shift+Tab')
             action.setIcon(icons.icon(
                 'format-indent-less',
@@ -1181,7 +1181,7 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
             self.action_un_indent = action
             self.add_separator()
         # goto
-        action = QtWidgets.QAction('Go to line', self)
+        action = QtWidgets.QAction(_('Go to line'), self)
         action.setShortcut('Ctrl+G')
         action.setIcon(icons.icon(
             'go-jump', ':/pyqode-icons/rc/goto-line.png', 'fa.share'))

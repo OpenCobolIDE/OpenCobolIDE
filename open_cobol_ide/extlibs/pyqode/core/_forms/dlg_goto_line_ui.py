@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/Documents/pyqode/core/forms/dlg_goto_line.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/pyQode/pyqode.core/forms/dlg_goto_line.ui'
 #
-# Created: Sun Oct 12 17:19:30 2014
-#      by: PyQt5 UI code generator 5.3.2
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -49,10 +48,10 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Go to line"))
-        self.label.setText(_translate("Dialog", "You are here:"))
-        self.lblCurrentLine.setText(_translate("Dialog", "1"))
-        self.label_3.setText(_translate("Dialog", "You want to go:"))
-        self.label_4.setText(_translate("Dialog", "You can\'t go further than:"))
-        self.lblLineCount.setText(_translate("Dialog", "1"))
+
+        Dialog.setWindowTitle(_("Go to line"))
+        self.label.setText(_("You are here:"))
+        self.lblCurrentLine.setText(_("1"))
+        self.label_3.setText(_("You want to go:"))
+        self.label_4.setText(_("You can\'t go further than:"))
+        self.lblLineCount.setText(_("1"))

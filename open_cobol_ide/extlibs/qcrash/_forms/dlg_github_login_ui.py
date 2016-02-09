@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/dev/OpenCobolIDE/forms/dlg_github_login.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/QCrash/forms/dlg_github_login.ui'
 #
 # Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
-from pyqode.qt import QtCore, QtGui, QtWidgets
+from qcrash.qt import QtCore, QtGui, QtWidgets
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -50,10 +50,10 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Sign in to github"))
-        self.lbl_html.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><img src=\":/ide-icons/rc/GitHub-Mark.png\"/></p><p align=\"center\">Sign in to GitHub</p></body></html>"))
+        self.lbl_html.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><img src=\":/rc/GitHub-Mark.png\"/></p><p align=\"center\">Sign in to GitHub</p></body></html>"))
         self.label_2.setText(_translate("Dialog", "Username:"))
         self.label_3.setText(_translate("Dialog", "Password: "))
         self.cb_remember.setText(_translate("Dialog", "Remember me"))
         self.bt_sign_in.setText(_translate("Dialog", "Sign in"))
 
-from . import ide_rc
+from . import qcrash_rc

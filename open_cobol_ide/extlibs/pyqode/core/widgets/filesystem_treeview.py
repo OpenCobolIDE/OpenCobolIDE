@@ -363,7 +363,7 @@ class FileSystemHelper:
             ext = os.path.splitext(src)[1]
             original = os.path.splitext(os.path.split(src)[1])[0]
             filename, status = QtWidgets.QInputDialog.getText(
-                self.tree_view, 'Copy', 'New name:',
+                self.tree_view, _('Copy'), _('New name:'),
                 QtWidgets.QLineEdit.Normal, original)
             if filename == '' or not status:
                 return
@@ -371,8 +371,8 @@ class FileSystemHelper:
             final_dest = os.path.join(destination, filename)
             if os.path.exists(final_dest):
                 rep = QtWidgets.QMessageBox.question(
-                    self.tree_view, 'File exists',
-                    'File <%s> already exists. Do you want to erase it?' %
+                    self.tree_view, _('File exists'),
+                    _('File <%s> already exists. Do you want to erase it?') %
                     final_dest,
                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                     QtWidgets.QMessageBox.No)
@@ -387,7 +387,7 @@ class FileSystemHelper:
                     shutil.copytree(src, final_dest)
             except (IOError, OSError) as e:
                 QtWidgets.QMessageBox.warning(
-                    self.tree_view, 'Failed to copy file', str(e))
+                    self.tree_view, _('Failed to copy file'), str(e))
                 _logger().exception('failed to copy %s to %s', src,
                                     destination)
             else:
@@ -416,8 +416,8 @@ class FileSystemHelper:
         """
         urls = self.selected_urls()
         rep = QtWidgets.QMessageBox.question(
-            self.tree_view, 'Confirm delete',
-            'Are you sure about deleting the selected files?',
+            self.tree_view, _('Confirm delete'),
+            _('Are you sure about deleting the selected files?'),
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
             QtWidgets.QMessageBox.Yes)
         if rep == QtWidgets.QMessageBox.Yes:
@@ -433,7 +433,7 @@ class FileSystemHelper:
                         deleted_files += files
                 except OSError as e:
                     QtWidgets.QMessageBox.warning(
-                        self.tree_view, 'Failed to remove %s' % fn, str(e))
+                        self.tree_view, _('Failed to remove %s') % fn, str(e))
                     _logger().exception('failed to remove %s', fn)
             for d in deleted_files:
                 debug('%s removed', d)
@@ -465,7 +465,7 @@ class FileSystemHelper:
         src = self.get_current_path()
         pardir, name = os.path.split(src)
         new_name, status = QtWidgets.QInputDialog.getText(
-            self.tree_view, 'Rename file', 'New name:',
+            self.tree_view, _('Rename file'), _('New name:'),
             QtWidgets.QLineEdit.Normal, name)
         if status:
             dest = os.path.join(pardir, new_name)
@@ -480,14 +480,14 @@ class FileSystemHelper:
         """
         src = self.get_current_path()
         name, status = QtWidgets.QInputDialog.getText(
-            self.tree_view, 'Create directory', 'Name:',
+            self.tree_view, _('Create directory'), _('Name:'),
             QtWidgets.QLineEdit.Normal, '')
         if status:
             fatal_names = ['.', '..']
             for i in fatal_names:
                 if i == name:
                     QtWidgets.QMessageBox.critical(
-                        self.tree_view, "Error", "Wrong directory name")
+                        self.tree_view, _("Error"), _("Wrong directory name"))
                     return
 
             if os.path.isfile(src):
@@ -496,8 +496,8 @@ class FileSystemHelper:
                 os.makedirs(os.path.join(src, name), exist_ok=True)
             except OSError as e:
                 QtWidgets.QMessageBox.warning(
-                    self.tree_view, 'Failed to create directory',
-                    'Failed to create directory: %s', str(e))
+                    self.tree_view, _('Failed to create directory'),
+                    _('Failed to create directory: %s'), str(e))
 
     def create_file(self):
         """
@@ -505,14 +505,14 @@ class FileSystemHelper:
         """
         src = self.get_current_path()
         name, status = QtWidgets.QInputDialog.getText(
-            self.tree_view, 'Create new file', 'File name:',
+            self.tree_view, _('Create new file'), _('File name:'),
             QtWidgets.QLineEdit.Normal, '')
         if status:
             fatal_names = ['.', '..', os.sep]
             for i in fatal_names:
                 if i == name:
                     QtWidgets.QMessageBox.critical(
-                        self.tree_view, "Error", "Wrong directory name")
+                        self.tree_view, _("Error"), _("Wrong directory name"))
                     return
 
             if os.path.isfile(src):
@@ -523,8 +523,8 @@ class FileSystemHelper:
                     pass
             except OSError as e:
                 QtWidgets.QMessageBox.warning(
-                    self.tree_view, 'Failed to create new file',
-                    'Failed to create file: %s' % str(e))
+                    self.tree_view, _('Failed to create new file'),
+                    _('Failed to create file: %s') % str(e))
             else:
                 self.tree_view.file_created.emit(os.path.normpath(path))
 
@@ -572,7 +572,7 @@ class FileSystemContextMenu(QtWidgets.QMenu):
             for user_new_action in new_user_actions:
                 self.menu_new.addAction(user_new_action)
         # New file
-        self.action_create_file = QtWidgets.QAction('&File', self)
+        self.action_create_file = QtWidgets.QAction(_('&File'), self)
         self.action_create_file.triggered.connect(
             self._on_create_file_triggered)
         icon_provider = self.tree_view._icon_provider
@@ -580,7 +580,8 @@ class FileSystemContextMenu(QtWidgets.QMenu):
             icon_provider.File))
         self.menu_new.addAction(self.action_create_file)
         # New directory
-        self.action_create_directory = QtWidgets.QAction('&Directory', self)
+        self.action_create_directory = QtWidgets.QAction(
+            _('&Directory'), self)
         self.action_create_directory.triggered.connect(
             self._on_create_directory_triggered)
         self.action_create_directory.setIcon(icon_provider.icon(
@@ -589,26 +590,26 @@ class FileSystemContextMenu(QtWidgets.QMenu):
         self.addSeparator()
 
         # cut
-        self.action_cut = QtWidgets.QAction('&Cut', self)
+        self.action_cut = QtWidgets.QAction(_('&Cut'), self)
         self.action_cut.setShortcut(QtGui.QKeySequence.Cut)
         self.action_cut.setIcon(icons.icon(
             'edit-cut', ':/pyqode-icons/rc/edit-cut.png', 'fa.cut'))
         self.addAction(self.action_cut)
         self.action_cut.triggered.connect(self._on_cut_triggered)
         # copy
-        self.action_copy = QtWidgets.QAction('&Copy', self)
+        self.action_copy = QtWidgets.QAction(_('&Copy'), self)
         self.action_copy.setShortcut(QtGui.QKeySequence.Copy)
         self.action_copy.setIcon(icons.icon(
             'edit-copy', ':/pyqode-icons/rc/edit-copy.png', 'fa.copy'))
         self.addAction(self.action_copy)
         self.action_copy.triggered.connect(self._on_copy_triggered)
         # copy path
-        self.action_copy_path = QtWidgets.QAction('&Copy path', self)
+        self.action_copy_path = QtWidgets.QAction(_('&Copy path'), self)
         self.action_copy_path.setShortcut('Ctrl+Shift+C')
         self.addAction(self.action_copy_path)
         self.action_copy_path.triggered.connect(self._on_copy_path_triggered)
         # Paste
-        self.action_paste = QtWidgets.QAction('&Paste', self)
+        self.action_paste = QtWidgets.QAction(_('&Paste'), self)
         self.action_paste.setShortcut(QtGui.QKeySequence.Paste)
         self.action_paste.setIcon(icons.icon(
             'edit-paste', ':/pyqode-icons/rc/edit-paste.png', 'fa.paste'))
@@ -616,13 +617,13 @@ class FileSystemContextMenu(QtWidgets.QMenu):
         self.addAction(self.action_paste)
         self.addSeparator()
         # Rename
-        self.action_rename = QtWidgets.QAction('&Rename', self)
+        self.action_rename = QtWidgets.QAction(_('&Rename'), self)
         self.action_rename.setShortcut('F2')
         self.action_rename.triggered.connect(self._on_rename_triggered)
         self.action_rename.setIcon(QtGui.QIcon.fromTheme('edit-rename'))
         self.addAction(self.action_rename)
         # Delete
-        self.action_delete = QtWidgets.QAction('&Delete', self)
+        self.action_delete = QtWidgets.QAction(_('&Delete'), self)
         self.action_delete.setShortcut(QtGui.QKeySequence.Delete)
         self.action_delete.setIcon(icons.icon(
             'edit-delete', ':/pyqode-icons/rc/edit-delete.png', 'fa.remove'))
@@ -638,7 +639,7 @@ class FileSystemContextMenu(QtWidgets.QMenu):
 
     def update_show_in_explorer_action(self):
         self.action_show_in_explorer.setText(
-            'Show in %s' % self.get_file_explorer_name())
+            _('Show in %s') % self.get_file_explorer_name())
 
     def get_new_user_actions(self):
         """
@@ -750,5 +751,5 @@ class FileSystemContextMenu(QtWidgets.QMenu):
             subprocess.Popen(args)
         except Exception as e:
             QtWidgets.QMessageBox.warning(
-                parent, 'Open in explorer',
-                'Failed to open file in explorer.\n\n%s' % str(e))
+                parent, _('Open in explorer'),
+                _('Failed to open file in explorer.\n\n%s') % str(e))

@@ -11,6 +11,8 @@ import mimetypes
 import os
 import sys
 from pyqode.qt import QtCore, QtWidgets, QT_API, PYQT5_API, PYSIDE_API
+import qcrash.api as qcrash
+
 from open_cobol_ide import __version__, logger, system
 from open_cobol_ide.controllers import (
     CobolController, EditController, FileController, HelpController,
@@ -21,7 +23,6 @@ from open_cobol_ide.compilers import check_compiler, CompilerNotFound, \
 from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.main_window import MainWindow
 from open_cobol_ide.view.dialogs.about import DlgAbout
-from open_cobol_ide.view.dialogs.report_bug import DlgReportBug
 
 
 def _logger():
@@ -31,6 +32,11 @@ def _logger():
 _original_env = os.environ.copy()
 
 
+QCRASH_GH_OWNER = 'OpenCobolIDE'
+QCRASH_GH_REPO = 'OpenCobolIDE'
+QCRASH_EMAIL = 'colin.duquesnoy@gmail.com'
+
+
 class Application(QtCore.QObject):
     """
     Sets up the Qt Application, the main window and the various controllers.
@@ -38,8 +44,6 @@ class Application(QtCore.QObject):
     The application class contains references to the main window user interface
     and to the various controllers so that they can collaborate each others.
     """
-    _report_exception_requested = QtCore.pyqtSignal(object, str)
-
     def apply_mimetypes_preferences(self):
         for ext in Settings().all_extensions:
             mimetypes.add_type('text/x-cobol', ext)
@@ -49,16 +53,21 @@ class Application(QtCore.QObject):
         super().__init__()
         if system.darwin:
             Application._osx_init()
+        self.app = QtWidgets.QApplication(sys.argv)
+
         self._reported_tracebacks = []
-        self._old_except_hook = sys.excepthook
-        sys.excepthook = self._except_hook
-        self._report_exception_requested.connect(self._report_exception)
+        qcrash.get_system_information = system.get_system_infos
+        qcrash.get_application_log = logger.get_application_log
+        qcrash.install_backend(
+            qcrash.backends.GithubBackend(QCRASH_GH_OWNER, QCRASH_GH_REPO),
+            qcrash.backends.EmailBackend(QCRASH_EMAIL, 'OpenCobolIDE'))
+        qcrash.set_qsettings(Settings()._settings)
+        qcrash.install_except_hook(except_hook=self._report_exception)
         if hasattr(sys, 'frozen') and sys.platform == 'win32':
             sys.stdout = open(os.path.join(system.get_cache_directory(),
                                            'ocide_stdout.log'), 'w')
             sys.stderr = open(os.path.join(system.get_cache_directory(),
                                            'ocide_stderr.log'), 'w')
-        self.app = QtWidgets.QApplication(sys.argv)
         if parse_args and not system.darwin:
             files = self.handle_command_line_args()
         else:
@@ -257,8 +266,8 @@ class Application(QtCore.QObject):
             _logger().critical('unhandled exception:\n%s', tb)
             _tb = tb
             if isinstance(exc, UnicodeDecodeError):
-                # This might be the same exception in the same file but at another position
-                # in the stream
+                # This might be the same exception in the same file but at
+                # another position in the stream
                 _tb = tb.splitlines()[-4]
             if _tb in self._reported_tracebacks:
                 return
@@ -272,11 +281,9 @@ class Application(QtCore.QObject):
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                 QtWidgets.QMessageBox.Yes)
             if answer == QtWidgets.QMessageBox.Yes:
-                description = '## Steps to reproduce\n\nPLEASE DESCRIBE '\
-                    'THE CONTEXT OF THIS BUG AND THE STEPS TO REPRODUCE!\n\n'\
-                    '## Traceback\n\n```\n%s\n```' % tb
-                DlgReportBug.report_bug(
-                    self.win, title=title, description=description)
-
+                qcrash.show_report_dialog(
+                    parent=self.win, window_icon=self.win.windowIcon(),
+                    window_title="Report unhandled exception",
+                    issue_title=title, traceback=tb)
         except Exception:
             _logger().exception('exception in excepthook')

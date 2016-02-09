@@ -52,7 +52,7 @@ import os
 import sys
 import logging
 
-__version__ = '2.8.0'
+__version__ = '2.9.dev'
 
 
 #: Qt API environment variable name

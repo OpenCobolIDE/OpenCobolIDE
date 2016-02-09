@@ -71,11 +71,11 @@ class InteractiveConsole(QTextEdit):
         self.setFont(QFont(font, 10))
         self.setReadOnly(True)
         self._mask_user_input = False
-        action = QAction('Copy', self)
+        action = QAction(_('Copy'), self)
         action.setShortcut(QKeySequence.Copy)
         action.triggered.connect(self.copy)
         self.add_action(action)
-        action = QAction('Paste', self)
+        action = QAction(_('Paste'), self)
         action.setShortcut(QKeySequence.Paste)
         action.triggered.connect(self.paste)
         self.add_action(action)

@@ -39,7 +39,7 @@ class CursorHistoryMode(api.Mode):
     def on_state_changed(self, state):
         if state:
             menu = QtWidgets.QMenu(self.editor)
-            menu.setTitle('Cursor history')
+            menu.setTitle(_('Cursor history'))
             self.action_undo = self.undo_stack.createUndoAction(self.editor)
             self.action_undo.setShortcut('Ctrl+Alt+Z')
             self.action_undo.setEnabled(True)

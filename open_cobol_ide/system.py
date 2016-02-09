@@ -1,6 +1,8 @@
 """
 System utility module (get system info, platform specific path,...).
 """
+import locale
+import subprocess
 import functools
 import os
 import platform
@@ -102,7 +104,6 @@ def which(cmd, mode=os.F_OK | os.X_OK, path=None,
     return None
 
 
-
 @_mkdir
 def get_cache_directory():
     """
@@ -145,3 +146,52 @@ def normpath(path):
 
 def shell_split(string):
     return shlex.split(string, posix=False)
+
+
+def get_system_infos():
+    from open_cobol_ide import __version__
+    from open_cobol_ide.compilers import GnuCobolCompiler
+    from pyqode.qt import QtCore
+    import pyqode.core
+    import pyqode.cobol
+    import pygments
+
+    try:
+        import qdarkstyle
+    except ImportError:
+        qdarkstyle_version = 'Not installed'
+    else:
+        qdarkstyle_version = qdarkstyle.__version__
+
+    def get_linux_distro():
+        try:
+            out = str(subprocess.check_output(['lsb_release', '-i']),
+                      locale.getpreferredencoding())
+        except OSError:
+            distro = platform.linux_distribution()[0]
+            if not distro:
+                distro = 'linux distribution not found'
+        else:
+            distro = out.split(':')[1].strip()
+        return distro
+
+    system_info = platform.system()
+    if 'linux' in sys.platform.lower():
+        system_info = get_linux_distro()
+    elif 'darwin' in sys.platform.lower():
+        system_info = 'Mac OS X %s' % platform.mac_ver()[0]
+    return '\n'.join([
+        'Operating System: %s' % system_info,
+        'OpenCobolIDE: %s' % __version__,
+        'GnuCOBOL: %s' % GnuCobolCompiler().get_version(
+            include_all=False),
+        'Python: %s (%dbits)' % (platform.python_version(), 64
+                                 if sys.maxsize > 2**32 else 32),
+        'Qt: %s' % QtCore.QT_VERSION_STR,
+        'PyQt: %s' % QtCore.PYQT_VERSION_STR,
+        'pyqode.core: %s' % pyqode.core.__version__,
+        'pyqode.cobol: %s' % pyqode.cobol.__version__,
+        'pyqode.qt: %s' % pyqode.qt.__version__,
+        'pygments: %s' % pygments.__version__,
+        'QDarkStyle: %s' % qdarkstyle_version
+    ])

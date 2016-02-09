@@ -27,11 +27,11 @@ class OffsetCalculatorMode(QObject, Mode):
     def on_install(self, editor):
         super().on_install(editor)
         self.action = QAction(editor)
-        self.action.setText("Calculate PIC offsets")
+        self.action.setText(_("Calculate PIC offsets"))
         self.action.setIcon(QIcon.fromTheme('accessories-calculator'))
         self.action.setShortcut('Ctrl+Shift+O')
-        self.action.setToolTip('Compute the PIC offset of the fields in the '
-                               'selected text')
+        self.action.setToolTip(_('Compute the PIC offset of the fields in the '
+                                 'selected text'))
         editor.add_action(self.action, sub_menu='COBOL')
         self.action.triggered.connect(self._compute_offsets)
 

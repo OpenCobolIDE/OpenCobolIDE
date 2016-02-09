@@ -164,9 +164,9 @@ class FileWatcherMode(Mode, QtCore.QObject):
             self.editor.file.open(self.editor.file.path)
             self.file_reloaded.emit()
 
-        args = ("File changed",
-                "The file <i>%s</i> has changed externally.\nDo you want to "
-                "reload it?" % os.path.basename(self.editor.file.path))
+        args = (_("File changed"),
+                _("The file <i>%s</i> has changed externally.\nDo you want to "
+                  "reload it?") % os.path.basename(self.editor.file.path))
         kwargs = {"expected_action": inner_action}
         if self.editor.hasFocus() or self.auto_reload:
             self._notify(*args, **kwargs)

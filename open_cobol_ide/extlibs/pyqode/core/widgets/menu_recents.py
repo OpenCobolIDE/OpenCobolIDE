@@ -185,7 +185,7 @@ class MenuRecentFiles(QtWidgets.QMenu):
             self.addAction(action)
             self.recent_files_actions.append(action)
         self.addSeparator()
-        action_clear = QtWidgets.QAction('Clear list', self)
+        action_clear = QtWidgets.QAction(_('Clear list'), self)
         action_clear.triggered.connect(self.clear_recent_files)
         if isinstance(self.clear_icon, QtGui.QIcon):
             action_clear.setIcon(self.clear_icon)

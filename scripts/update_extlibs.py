@@ -28,9 +28,9 @@ import pyqode.cobol
 import pygments
 import future
 import qdarkstyle
-import github
 import keyring
 import enum
+import qcrash
 
 
 BUILD = os.path.abspath('../open_cobol_ide/extlibs')
@@ -82,4 +82,4 @@ except FileExistsError:
     os.mkdir(BUILD)
 finally:
     embed_packages([future, pygments, qdarkstyle, keyring, pyqode.qt,
-                    pyqode.core, pyqode.cobol, enum, github])
+                    pyqode.core, pyqode.cobol, enum, qcrash])

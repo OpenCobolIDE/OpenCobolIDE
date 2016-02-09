@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/work/pyqode.core/forms/pnl_read_only.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/pyQode/pyqode.core/forms/pnl_read_only.ui'
 #
-# Created by: PyQt5 UI code generator 5.5
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -28,6 +28,6 @@ class Ui_Form(object):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
-        _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.lblDescription.setText(_translate("Form", "<html><head/><body><p>The file you opened is read-only.</p><p>Use &quot;save as&quot; or change the file\'s permission to edit the document...</p></body></html>"))
+
+        Form.setWindowTitle(_("Form"))
+        self.lblDescription.setText(_("<html><head/><body><p>The file you opened is read-only.</p><p>Use &quot;save as&quot; or change the file\'s permission to edit the document...</p></body></html>"))

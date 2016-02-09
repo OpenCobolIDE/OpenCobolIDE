@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/work/pyqode.core/forms/search_panel.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/pyQode/pyqode.core/forms/search_panel.ui'
 #
-# Created by: PyQt5 UI code generator 5.5
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -160,36 +160,36 @@ class Ui_SearchPanel(object):
         SearchPanel.setTabOrder(self.toolButtonReplaceAll, self.toolButtonClose)
 
     def retranslateUi(self, SearchPanel):
-        _translate = QtCore.QCoreApplication.translate
-        SearchPanel.setWindowTitle(_translate("SearchPanel", "Form"))
-        self.lineEditSearch.setToolTip(_translate("SearchPanel", "Search term"))
-        self.toolButtonPrevious.setToolTip(_translate("SearchPanel", "Select previous occurence"))
-        self.toolButtonNext.setToolTip(_translate("SearchPanel", "Select next occurence"))
-        self.checkBoxRegex.setToolTip(_translate("SearchPanel", "Use a regular expression for search occurences"))
-        self.checkBoxRegex.setText(_translate("SearchPanel", "Regex"))
-        self.checkBoxCase.setToolTip(_translate("SearchPanel", "Enable case sensitive search"))
-        self.checkBoxCase.setText(_translate("SearchPanel", "Match case"))
-        self.checkBoxWholeWords.setToolTip(_translate("SearchPanel", "Search for whole words only"))
-        self.checkBoxWholeWords.setText(_translate("SearchPanel", "Whole words"))
-        self.checkBoxInSelection.setText(_translate("SearchPanel", "In Selection"))
-        self.labelMatches.setText(_translate("SearchPanel", "0 matches"))
-        self.lineEditReplace.setToolTip(_translate("SearchPanel", "Replacement text"))
-        self.toolButtonReplace.setToolTip(_translate("SearchPanel", "Replace current occurence"))
-        self.toolButtonReplace.setText(_translate("SearchPanel", "Replace"))
-        self.toolButtonReplaceAll.setToolTip(_translate("SearchPanel", "Replace all occurences"))
-        self.toolButtonReplaceAll.setText(_translate("SearchPanel", "Replace All"))
-        self.actionSearch.setText(_translate("SearchPanel", "Search"))
-        self.actionSearch.setToolTip(_translate("SearchPanel", "Show the search panel"))
-        self.actionSearch.setShortcut(_translate("SearchPanel", "Ctrl+F"))
-        self.actionActionSearchAndReplace.setText(_translate("SearchPanel", "Search and replace"))
-        self.actionActionSearchAndReplace.setToolTip(_translate("SearchPanel", "Show the search and replace panel"))
-        self.actionActionSearchAndReplace.setShortcut(_translate("SearchPanel", "Ctrl+R"))
-        self.actionFindNext.setText(_translate("SearchPanel", "Find next"))
-        self.actionFindNext.setToolTip(_translate("SearchPanel", "Find the next occurrence (downward)"))
-        self.actionFindNext.setShortcut(_translate("SearchPanel", "F3"))
-        self.actionFindPrevious.setText(_translate("SearchPanel", "Find previous"))
-        self.actionFindPrevious.setToolTip(_translate("SearchPanel", "Find previous occurrence (upward)"))
-        self.actionFindPrevious.setShortcut(_translate("SearchPanel", "Shift+F3"))
+
+        SearchPanel.setWindowTitle(_("Form"))
+        self.lineEditSearch.setToolTip(_("Search term"))
+        self.toolButtonPrevious.setToolTip(_("Select previous occurence"))
+        self.toolButtonNext.setToolTip(_("Select next occurence"))
+        self.checkBoxRegex.setToolTip(_("Use a regular expression for search occurences"))
+        self.checkBoxRegex.setText(_("Regex"))
+        self.checkBoxCase.setToolTip(_("Enable case sensitive search"))
+        self.checkBoxCase.setText(_("Match case"))
+        self.checkBoxWholeWords.setToolTip(_("Search for whole words only"))
+        self.checkBoxWholeWords.setText(_("Whole words"))
+        self.checkBoxInSelection.setText(_("In Selection"))
+        self.labelMatches.setText(_("0 matches"))
+        self.lineEditReplace.setToolTip(_("Replacement text"))
+        self.toolButtonReplace.setToolTip(_("Replace current occurence"))
+        self.toolButtonReplace.setText(_("Replace"))
+        self.toolButtonReplaceAll.setToolTip(_("Replace all occurences"))
+        self.toolButtonReplaceAll.setText(_("Replace All"))
+        self.actionSearch.setText(_("Search"))
+        self.actionSearch.setToolTip(_("Show the search panel"))
+        self.actionSearch.setShortcut(_("Ctrl+F"))
+        self.actionActionSearchAndReplace.setText(_("Search and replace"))
+        self.actionActionSearchAndReplace.setToolTip(_("Show the search and replace panel"))
+        self.actionActionSearchAndReplace.setShortcut(_("Ctrl+R"))
+        self.actionFindNext.setText(_("Find next"))
+        self.actionFindNext.setToolTip(_("Find the next occurrence (downward)"))
+        self.actionFindNext.setShortcut(_("F3"))
+        self.actionFindPrevious.setText(_("Find previous"))
+        self.actionFindPrevious.setToolTip(_("Find previous occurrence (upward)"))
+        self.actionFindPrevious.setShortcut(_("Shift+F3"))
 
 from pyqode.core.widgets import PromptLineEdit
 from . import pyqode_core_rc

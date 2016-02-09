@@ -48,10 +48,10 @@ class DlgUnsavedFiles(QDialog, Ui_Dialog):
     def _on_selection_changed(self):
         nb_items = len(self.listWidget.selectedItems())
         if nb_items == 0:
-            self.bt_save_all.setText("Save")
+            self.bt_save_all.setText(_("Save"))
             self.bt_save_all.setEnabled(False)
         else:
             self.bt_save_all.setEnabled(True)
-            self.bt_save_all.setText("Save selected")
+            self.bt_save_all.setText(_("Save selected"))
             if nb_items == self.listWidget.count():
-                self.bt_save_all.setText("Save all")
+                self.bt_save_all.setText(_("Save all"))

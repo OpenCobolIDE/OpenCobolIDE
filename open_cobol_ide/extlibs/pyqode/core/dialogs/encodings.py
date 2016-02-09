@@ -155,7 +155,7 @@ class DlgEncodingsChoice(QtWidgets.QDialog):
         self.ui.comboBoxEncodings.current_encoding = encoding
         self.ui.lblDescription.setText(
             self.ui.lblDescription.text() %
-            ('There was a problem opening the file %r with encoding: %s' %
+            (_('There was a problem opening the file %r with encoding: %s') %
              (path, encoding)))
 
     @classmethod

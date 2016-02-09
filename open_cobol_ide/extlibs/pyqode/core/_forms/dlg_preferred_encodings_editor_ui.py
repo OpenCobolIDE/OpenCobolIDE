@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/Documents/pyqode/core/forms/dlg_preferred_encodings_editor.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/pyQode/pyqode.core/forms/dlg_preferred_encodings_editor.ui'
 #
-# Created: Sun Oct 12 17:19:31 2014
-#      by: PyQt5 UI code generator 5.3.2
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -103,10 +102,10 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Edit preferred encodings"))
-        self.groupBox.setTitle(_translate("Dialog", "Available encodings"))
-        self.pushButtonAdd.setToolTip(_translate("Dialog", "Add selected encoding to the list of preferred encodings"))
-        self.groupBox_2.setTitle(_translate("Dialog", "Preferred encodings"))
+
+        Dialog.setWindowTitle(_("Edit preferred encodings"))
+        self.groupBox.setTitle(_("Available encodings"))
+        self.pushButtonAdd.setToolTip(_("Add selected encoding to the list of preferred encodings"))
+        self.groupBox_2.setTitle(_("Preferred encodings"))
 
 from . import pyqode_core_rc

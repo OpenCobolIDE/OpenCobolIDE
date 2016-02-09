@@ -270,11 +270,12 @@ class BaseTabWidget(QtWidgets.QTabWidget):
     def _create_tab_bar_menu(self):
         context_mnu = QtWidgets.QMenu()
         for name, slot, icon in [
-                ('Close', self.close, 'window-close'),
-                ('Close others', self.close_others, 'tab-close-other'),
-                ('Close all', self.close_all, 'project-development-close-all'),
+                (_('Close'), self.close, 'window-close'),
+                (_('Close others'), self.close_others, 'tab-close-other'),
+                (_('Close all'), self.close_all,
+                 'project-development-close-all'),
                 (None, None, None),
-                ('Detach tab', self.detach_tab, 'tab-detach')]:
+                (_('Detach tab'), self.detach_tab, 'tab-detach')]:
             if name is None and slot is None:
                 qaction = QtWidgets.QAction(self)
                 qaction.setSeparator(True)
@@ -286,12 +287,12 @@ class BaseTabWidget(QtWidgets.QTabWidget):
             context_mnu.addAction(qaction)
             self.addAction(qaction)
         context_mnu.addSeparator()
-        menu = QtWidgets.QMenu('Split', context_mnu)
+        menu = QtWidgets.QMenu(_('Split'), context_mnu)
         menu.setIcon(QtGui.QIcon.fromTheme('split'))
-        a = menu.addAction('Split horizontally')
+        a = menu.addAction(_('Split horizontally'))
         a.triggered.connect(self._on_split_requested)
         a.setIcon(QtGui.QIcon.fromTheme('view-split-left-right'))
-        a = menu.addAction('Split vertically')
+        a = menu.addAction(_('Split vertically'))
         a.setIcon(QtGui.QIcon.fromTheme('view-split-top-bottom'))
         a.triggered.connect(self._on_split_requested)
         context_mnu.addMenu(menu)
@@ -344,7 +345,7 @@ class BaseTabWidget(QtWidgets.QTabWidget):
                     filename = item.text()
                     widget = None
                     for widget in widgets:
-                        if widget.path == filename:
+                        if widget.file.path == filename:
                             break
                     if widget != exept:
                         self.save_widget(widget)
@@ -354,7 +355,7 @@ class BaseTabWidget(QtWidgets.QTabWidget):
 
     def _get_widget_path(self, widget):
         try:
-            return widget.path
+            return widget.file.path
         except AttributeError:
             return ''
 
@@ -990,9 +991,9 @@ class CodeEditTabWidget(BaseTabWidget):
         try:
             filter = cls.get_filter(editor.mimetypes[0])
         except IndexError:
-            filter = 'All files (*)'
+            filter = _('All files (*)')
         return QtWidgets.QFileDialog.getSaveFileName(
-            editor, 'Save file as', cls.default_directory, filter)
+            editor, _('Save file as'), cls.default_directory, filter)
 
     @classmethod
     def save_widget(cls, editor):
@@ -1042,7 +1043,8 @@ class DetachedEditorWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(DetachedEditorWindow, self).__init__()
         tb = QtWidgets.QToolBar('File')
-        action = tb.addAction(QtGui.QIcon.fromTheme('document-save'), 'Save')
+        action = tb.addAction(QtGui.QIcon.fromTheme('document-save'),
+                              _('Save'))
         action.triggered.connect(self._save)
         action.setShortcut('Ctrl+S')
         self.addToolBar(tb)
@@ -1159,8 +1161,8 @@ class SplittableCodeEditTabWidget(SplittableTabWidget):
             success = self.main_tab_widget.save_widget(widget)
         except Exception as e:
             QtWidgets.QMessageBox.warning(
-                self, 'Failed to save file as',
-                'Failed to save file as %s\nError=%s' % (
+                self, _('Failed to save file as'),
+                _('Failed to save file as %s\nError=%s') % (
                     widget.file.path, str(e)))
             widget.file._path = mem
         else:

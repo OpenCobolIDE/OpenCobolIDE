@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/Documents/pyqode/core/forms/dlg_encodings.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/pyQode/pyqode.core/forms/dlg_encodings.ui'
 #
-# Created: Sun Oct 12 17:19:30 2014
-#      by: PyQt5 UI code generator 5.3.2
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -51,9 +50,9 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.lblDescription.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-weight:600;\">%s</span></p><p><span style=\" font-size:9pt;\">Please, choose another character encoding and try again.</span></p></body></html>"))
-        self.label.setText(_translate("Dialog", "Character Encoding:"))
+
+        Dialog.setWindowTitle(_("Dialog"))
+        self.lblDescription.setText(_("<html><head/><body><p><span style=\" font-weight:600;\">%s</span></p><p><span style=\" font-size:9pt;\">Please, choose another character encoding and try again.</span></p></body></html>"))
+        self.label.setText(_("Character Encoding:"))
 
 from pyqode.core.widgets.encodings import EncodingsComboBox

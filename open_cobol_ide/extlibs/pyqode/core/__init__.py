@@ -10,8 +10,16 @@ widget, i.e. pyqode.core is a generic code editor widget.
 import logging
 
 
-__version__ = '2.8.0'
+__version__ = '2.9.dev'
 
 
 logging.addLevelName(1, "PYQODEDEBUGCOMM")
 logging.addLevelName(5, "PYQODEDEBUG")
+
+try:
+    # check if application code is using gettext
+    _('')
+except NameError:
+    # install a null translation
+    import gettext
+    gettext.NullTranslations().install()
