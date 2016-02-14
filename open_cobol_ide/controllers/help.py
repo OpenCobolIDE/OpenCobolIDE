@@ -38,7 +38,7 @@ class HelpController(Controller):
     def report_bug(self):
         qcrash.show_report_dialog(
             window_icon=self.main_window.windowIcon(),
-            parent=self.main_window)
+            parent=self.main_window, include_log=False, include_sys_info=False)
 
     def restore_factory_defaults(self):
         answer = QtWidgets.QMessageBox.question(
