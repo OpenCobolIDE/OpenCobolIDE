@@ -30,6 +30,27 @@ bugs in OCIDE until the final 1.0 version of HackEdit is ready.*
 
 .. _HackEdit: https://github.com/HackEdit/hackedit
 
+4.7.2
+-----
+
+Improvements:
+
+- move the crash report tool to an external package: [qcrash](https://github.com/ColinDuquesnoy/QCrash)
+- improve the crash report tool by introducing a review dialog where you can edit the final bug report and remove any sensitive data from the report
+
+Fixed bugs:
+
+- fix FileNotFoundError if wrong vcvarsall path is specified
+- fix issues where bad github crendentials would be stored by the bug report tool with no way to correct them
+
+4.7.1
+-----
+
+Fix a few issues with the new report tool:
+
+- github credentials not saved correctly
+- disable sign in button before signing in
+- improve system information to retrieve os name and version on OSX and GNU/Linux
 
 4.7.0
 -----
