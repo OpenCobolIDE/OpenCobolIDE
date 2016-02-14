@@ -14,14 +14,23 @@ class BaseBackend(object):
     associated :attr:`formatter`.
     """
     def __init__(self, formatter, button_text, button_tooltip,
-                 button_icon=None):
+                 button_icon=None, need_review=True):
         """
         :param formatter: the associated formatter (see :meth:`set_formatter`)
+        :param button_text: Text of the associated button in the report dialog
+        :param button_icon: Icon of the associated button in the report dialog
+        :param button_tooltip: Tooltip of the associated button in the report
+            dialog
+        :param need_review: True to show the review dialog before submitting.
+            Some backends (such as the email backend) do not need a review
+            dialog as the user can already review it before sending the final
+            report
         """
         self.formatter = formatter
         self.button_text = button_text
         self.button_tooltip = button_tooltip
         self.button_icon = button_icon
+        self.need_review = need_review
 
     def qsettings(self):
         """

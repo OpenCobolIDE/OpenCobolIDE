@@ -53,14 +53,21 @@ class HtmlPreviewWidget(WebView):
         self._timer.request_job(self._update_preview)
 
     def _update_preview(self):
+        try:
+            self.page()
+        except RuntimeError:
+            # c++ object deleted between last call to _on_text_changed and
+            # now
+            return
         url = QtCore.QUrl('')
         if self._editor is not None:
             url = QtCore.QUrl.fromLocalFile(self._editor.file.path)
         try:
             try:
-                pos = self.page().mainFrame().scrollBarValue(QtCore.Qt.Vertical)
+                frame = self.page().mainFrame()
+                pos = frame.scrollBarValue(QtCore.Qt.Vertical)
                 self.setHtml(self._editor.to_html(), url)
-                self.page().mainFrame().setScrollBarValue(QtCore.Qt.Vertical, pos)
+                frame.setScrollBarValue(QtCore.Qt.Vertical, pos)
             except AttributeError:
                 # Not possible with QtWebEngine???
                 # self._scroll_pos = self.page().mainFrame().scrollBarValue(

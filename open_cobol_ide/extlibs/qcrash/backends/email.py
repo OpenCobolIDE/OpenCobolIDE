@@ -26,7 +26,7 @@ class EmailBackend(BaseBackend):
         """
         super(EmailBackend, self).__init__(
             formatter, "Send email", "Send the report via email",
-            QtGui.QIcon.fromTheme('mail-send'))
+            QtGui.QIcon.fromTheme('mail-send'), need_review=False)
         self.formatter.app_name = app_name
         self.email = email
 

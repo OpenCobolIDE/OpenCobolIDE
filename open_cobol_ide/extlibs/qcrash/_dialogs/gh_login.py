@@ -39,7 +39,7 @@ class DlgGitHubLogin(QtWidgets.QDialog):
         self.ui.bt_sign_in.setEnabled(enable)
 
     @classmethod
-    def login(cls, parent, username, remember):
+    def login(cls, parent, username, remember):  # pragma: no cover
         dlg = DlgGitHubLogin(parent, username, remember)
         if dlg.exec_() == dlg.Accepted:
             return dlg.ui.le_username.text(), dlg.ui.le_password.text(), \

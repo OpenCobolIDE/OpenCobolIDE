@@ -61,8 +61,8 @@ class GithubBackend(BaseBackend):
             repo = gh.repos(self.gh_owner)(self.gh_repo)
             ret = repo.issues.post(title=title, body=body)
         except github.ApiError as e:
-            _logger().exception('failed to send bug report on github. '
-                                'response=%r' % e.response)
+            _logger().warn('failed to send bug report on github. response=%r' %
+                           e.response)
             # invalid credentials
             if e.response.code == 401:
                 self.qsettings().setValue('github/remember_credentials', 0)
@@ -92,34 +92,49 @@ class GithubBackend(BaseBackend):
                         self.gh_owner, self.gh_repo, issue_nbr))
             return True
 
-    def get_user_credentials(self):
+    def _get_credentials_from_qsettings(self):
         remember = self.qsettings().value('github/remember_credentials', "0")
         username = self.qsettings().value('github/username', "")
         try:
             # PyQt5 or PyQt4 api v2
             remember = bool(int(remember))
-        except TypeError:
+        except TypeError:  # pragma: no cover
             # pyside returns QVariants
             remember, _ok = remember.toInt()
             username = username.toString()
+        return username, bool(remember)
+
+    def _store_credentials(self, username, password, remember):
+        self.qsettings().setValue('github/username', username)
+        try:
+            keyring.set_password('github', username, password)
+        except RuntimeError:  # pragma: no cover
+            _logger().warn('failed to save password in keyring, you '
+                           'will be prompted for your credentials '
+                           'next time you want to report an issue')
+            remember = False
+        self.qsettings().setValue(
+            'github/remember_credentials', int(remember))
+
+    def get_user_credentials(self):  # pragma: no cover
+        # reason: hard to test methods that shows modal dialogs
+        username, remember = self._get_credentials_from_qsettings()
 
         if remember and username:
+            # get password from keyring
             try:
-                return username, keyring.get_password(
-                    'github', username), remember
+                password = keyring.get_password('github', username)
             except RuntimeError:
+                # no safe keyring backend
                 _logger().warn('failed to retrieve password from keyring...')
+            else:
+                return username, password, remember
+
+        # ask for credentials
         username, password, remember = DlgGitHubLogin.login(
             QtWidgets.qApp.activeWindow(), username, remember)
+
         if remember:
-            self.qsettings().setValue('github/username', username)
-            try:
-                keyring.set_password('github', username, password)
-            except RuntimeError:
-                _logger().warn('failed to save password in keyring, you '
-                               'will be prompted for your credentials '
-                               'next time you want to report an issue')
-                remember = False
-            self.qsettings().setValue(
-                'github/remember_credentials', int(remember))
+            self._store_credentials(username, password, remember)
+
         return username, password, remember

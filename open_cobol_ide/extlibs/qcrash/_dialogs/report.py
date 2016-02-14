@@ -2,6 +2,7 @@ import logging
 
 from qcrash._forms import dlg_report_bug_ui
 from qcrash.qt import QtGui, QtWidgets
+from qcrash._dialogs.review import DlgReview
 
 
 _logger = logging.getLogger(__name__)
@@ -31,13 +32,16 @@ class DlgReport(QtWidgets.QDialog):
 
     def __init__(self, backends, window_title='Report an issue...',
                  window_icon=None, traceback=None, issue_title='',
-                 issue_description='', **kwargs):
+                 issue_description='', include_log=True, include_sys_info=True,
+                 **kwargs):
         """
         """
         super(DlgReport, self).__init__(**kwargs)
         self._traceback = traceback
         self.ui = dlg_report_bug_ui.Ui_Dialog()
         self.ui.setupUi(self)
+        self.ui.cb_include_sys_info.setChecked(include_sys_info)
+        self.ui.cb_include_application_log.setChecked(include_log)
         self.setWindowTitle(window_title)
         self.setWindowIcon(QtGui.QIcon.fromTheme('tools-report-bug')
                            if window_icon is None else window_icon)
@@ -73,8 +77,22 @@ class DlgReport(QtWidgets.QDialog):
         backend = bt.backend
         title = backend.formatter.format_title(
             str(self.ui.lineEditTitle.text()))
+
+        sys_info = None
+        if self.ui.cb_include_sys_info.isChecked():
+            sys_info = api.get_system_information()
+
+        log = None
+        if self.ui.cb_include_application_log.isChecked():
+            log = api.get_application_log()
+
         body = backend.formatter.format_body(
-            str(description), api.get_system_information(),
-            api.get_application_log(), self._traceback)
+            str(description), sys_info, log, self._traceback)
+
+        if backend.need_review:  # pragma: no cover
+            body = DlgReview.review(body, self)
+            if body is None:
+                return  # user cancelled the review dialog
+
         if backend.send_report(title, body):
             self.accept()

@@ -64,7 +64,7 @@ def set_qsettings(qsettings):
 def show_report_dialog(window_title='Report an issue...',
                        window_icon=None, traceback=None, issue_title='',
                        issue_description='', parent=None,
-                       modal=None):
+                       modal=None, include_log=True, include_sys_info=True):
     """
     Show the issue report dialog manually.
 
@@ -74,6 +74,8 @@ def show_report_dialog(window_title='Report an issue...',
     :param issue_title: optional issue title
     :param issue_description: optional issue description
     :param parent: parent widget
+    :param include_log: Initial state of the include log check box
+    :param include_sys_info: Initial state of the include system info check box
     """
     if not _backends:
         raise ValueError('no backends found, you must at least install one '
@@ -82,7 +84,8 @@ def show_report_dialog(window_title='Report an issue...',
     dlg = DlgReport(_backends, window_title=window_title,
                     window_icon=window_icon, traceback=traceback,
                     issue_title=issue_title,
-                    issue_description=issue_description, parent=parent)
+                    issue_description=issue_description, parent=parent,
+                    include_log=include_log, include_sys_info=include_sys_info)
     if modal:
         dlg.show()
         return dlg
@@ -109,10 +112,11 @@ _qsettings = QtCore.QSettings('QCrash')
 
 __all__ = [
     'backends',
-    'get_application_log',
-    'get_system_information',
     'install_backend',
+    'get_backends',
     'install_except_hook',
     'set_qsettings',
     'show_report_dialog',
+    'get_application_log',
+    'get_system_information',
 ]

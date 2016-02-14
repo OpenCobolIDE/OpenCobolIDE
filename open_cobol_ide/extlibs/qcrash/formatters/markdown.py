@@ -16,7 +16,7 @@ NB_LINES_MAX = 50
 
 class MardownFormatter(BaseFormatter):
     """
-    Formats the issue report using html
+    Formats the issue report using Markdown.
     """
     def format_body(self, description, sys_info=None, log=None,
                     traceback=None):

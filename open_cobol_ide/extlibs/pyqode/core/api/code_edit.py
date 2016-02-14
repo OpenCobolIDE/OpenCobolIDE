@@ -406,6 +406,23 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
     def show_context_menu(self, value):
         self._show_ctx_mnu = value
 
+    @property
+    def select_line_on_copy_empty(self):
+        """
+        :return: state of "whole line selecting" on copy with empty selection
+        :rtype: bool
+        """
+        return self._select_line_on_copy_empty
+
+    @select_line_on_copy_empty.setter
+    def select_line_on_copy_empty(self, value):
+        """
+        To turn on/off selecting the whole line when copy with empty selection is triggered
+
+        Default is True
+        """
+        self._select_line_on_copy_empty = value
+
     def __init__(self, parent=None, create_default_actions=True):
         """
         :param parent: Parent widget
@@ -450,6 +467,7 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
             ':/fonts/rc/SourceCodePro-Bold.ttf')
         self._font_family = self._DEFAULT_FONT
         self._mimetypes = []
+        self._select_line_on_copy_empty = True
 
         # Flags/Working variables
         self._last_mouse_pos = QtCore.QPoint(0, 0)
@@ -851,11 +869,14 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
         return False
 
     def cut(self):
+        """
+        Cuts the selected text or the whole line if no text was selected.
+        """
         tc = self.textCursor()
         helper = TextHelper(self)
         tc.beginEditBlock()
         no_selection = False
-        if not helper.current_line_text().strip():
+        if not helper.current_line_text():
             tc.deleteChar()
         else:
             if not self.textCursor().hasSelection():
@@ -868,7 +889,12 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
         self.setTextCursor(tc)
 
     def copy(self):
-        if not self.textCursor().hasSelection():
+        """
+        Copy the selected text to the clipboard. If no text was selected, the
+        entire line is copied (this feature can be turned off by
+        setting :attr:`select_line_on_copy_empty` to False.
+        """
+        if self.select_line_on_copy_empty and not self.textCursor().hasSelection():
             TextHelper(self).select_whole_line()
         super(CodeEdit, self).copy()
 
