@@ -55,7 +55,8 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
             self.tbwVersions.setItem(i, 0, item)
         try:
             with open(logger.get_path(), 'r') as f:
-                self.textEditLog.setText(f.read())
+                self.textEditLog.setPlainText(
+                    '\n'.join(f.read().splitlines()[-1000:]))
         except FileNotFoundError:
             self.textEditLog.setText('')
         self.checkBoxVerbose.toggled.connect(self._on_verbose_toggled)
