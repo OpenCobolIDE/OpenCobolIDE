@@ -749,6 +749,12 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
         for action in menu.actions():
             self.removeAction(action)
 
+    def menus(self):
+        """
+        Returns the list of sub context menus.
+        """
+        return self._menus
+
     @QtCore.Slot()
     def delete(self):
         """ Deletes the selected text """

@@ -3,6 +3,11 @@ from pyqode.qt import QtCore, QtWidgets
 
 
 class PicOffsetsTable(QtWidgets.QTableWidget):
+    """
+    Displays the pic field offsets.
+    """
+    #: signal emitted when the widget should be shown (i.e. when the pic info
+    #: has been updated)
     show_requested = QtCore.Signal()
 
     def __init__(self, parent=None):
@@ -18,6 +23,13 @@ class PicOffsetsTable(QtWidgets.QTableWidget):
         self.setSelectionMode(self.SingleSelection)
 
     def set_editor(self, editor):
+        """
+        Sets the associated editor, when the editor's offset calculator mode
+        emit the signal pic_infos_available, the table is automatically
+        refreshed.
+
+        You can also refresh manually by calling :meth:`update_pic_infos`.
+        """
         if self._editor is not None:
             try:
                 self._editor.offset_calculator.pic_infos_available.disconnect(
@@ -31,6 +43,12 @@ class PicOffsetsTable(QtWidgets.QTableWidget):
                 self._update)
         except AttributeError:
             pass
+
+    def update_pic_infos(self, infos):
+        """
+        Update the pic filed informations shown in the table.
+        """
+        self._update(infos)
 
     def _update(self, infos):
         self.clearContents()

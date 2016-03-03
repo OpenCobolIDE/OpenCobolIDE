@@ -3,16 +3,14 @@ This module contains a widget that can show the html preview of an
 editor.
 """
 from weakref import proxy
-from pyqode.qt import QtCore, QtWebWidgets, QtWidgets
+from pyqode.qt import QtCore, QtWidgets
 from pyqode.core.api import DelayJobRunner
 
-if QtWebWidgets.QWebView is None:
-    WebView = QtWidgets.QWidget
-else:
-    WebView = QtWebWidgets.QWebView
 
-
-class HtmlPreviewWidget(WebView):
+class HtmlPreviewWidget(QtWidgets.QTextEdit):
+    """
+    Display html preview of a document as rich text in a QTextEdit.
+    """
     hide_requested = QtCore.Signal()
     show_requested = QtCore.Signal()
 
@@ -20,23 +18,12 @@ class HtmlPreviewWidget(WebView):
         super(HtmlPreviewWidget, self).__init__(parent)
         self._editor = None
         self._timer = DelayJobRunner(delay=1000)
-        try:
-            # prevent opening internal links when using QtWebKit
-            self.page().setLinkDelegationPolicy(
-                QtWebWidgets.QWebPage.DelegateAllLinks)
-        except (TypeError, AttributeError):
-            # no needed with QtWebEngine, internal links are properly handled
-            # by the default implementation
-            pass
 
     def set_editor(self, editor):
-        url = QtCore.QUrl('')
-        if editor is not None:
-            url = QtCore.QUrl.fromLocalFile(editor.file.path)
         try:
-            self.setHtml(editor.to_html(), url)
+            self.setHtml(editor.to_html())
         except (TypeError, AttributeError):
-            self.setHtml('<center>No preview available...</center>', url)
+            self.setHtml('<center>No preview available...</center>')
             self._editor = None
             self.hide_requested.emit()
         else:
@@ -54,25 +41,18 @@ class HtmlPreviewWidget(WebView):
 
     def _update_preview(self):
         try:
-            self.page()
-        except RuntimeError:
-            # c++ object deleted between last call to _on_text_changed and
-            # now
-            return
-        url = QtCore.QUrl('')
-        if self._editor is not None:
-            url = QtCore.QUrl.fromLocalFile(self._editor.file.path)
-        try:
-            try:
-                frame = self.page().mainFrame()
-                pos = frame.scrollBarValue(QtCore.Qt.Vertical)
-                self.setHtml(self._editor.to_html(), url)
-                frame.setScrollBarValue(QtCore.Qt.Vertical, pos)
-            except AttributeError:
-                # Not possible with QtWebEngine???
-                # self._scroll_pos = self.page().mainFrame().scrollBarValue(
-                    # QtCore.Qt.Vertical)
-                self.setHtml(self._editor.to_html(), url)
+            # remember cursor/scrollbar position
+            p = self.textCursor().position()
+            v = self.verticalScrollBar().value()
+
+            # display new html
+            self.setHtml(self._editor.to_html())
+
+            # restore cursor/scrollbar position
+            c = self.textCursor()
+            c.setPosition(p)
+            self.setTextCursor(c)
+            self.verticalScrollBar().setValue(v)
         except (TypeError, AttributeError):
-            self.setHtml('<center>No preview available...</center>', url)
+            self.setHtml('<center>No preview available...</center>')
             self.hide_requested.emit()

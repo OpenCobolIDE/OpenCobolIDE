@@ -82,6 +82,18 @@ class ModesManager(Manager):
             name_or_klass = name_or_klass.__name__
         return self._modes[name_or_klass]
 
+    def keys(self):
+        """
+        Returns the list of the names of the installed modes.
+        """
+        return self._modes.keys()
+
+    def values(self):
+        """
+        Returns the list of installed modes.
+        """
+        return self._modes.values()
+
     def __len__(self):
         return len(list(self._modes.values()))
 

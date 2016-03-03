@@ -686,8 +686,11 @@ class FileSystemContextMenu(QtWidgets.QMenu):
     @classmethod
     def get_linux_file_explorer(cls):
         if cls._explorer is None:
-            output = subprocess.check_output(
-                ['xdg-mime', 'query', 'default', 'inode/directory']).decode()
+            try:
+                output = subprocess.check_output(
+                    ['xdg-mime', 'query', 'default', 'inode/directory']).decode()
+            except subprocess.CalledProcessError:
+                output = ''
             if output:
                 explorer = output.splitlines()[0].replace(
                     '.desktop', '').replace('-folder-handler', '').split(

@@ -121,6 +121,18 @@ class PanelsManager(Manager):
                 return panel
         raise KeyError(name_or_klass)
 
+    def keys(self):
+        """
+        Returns the list of installed panel names.
+        """
+        return self._modes.keys()
+
+    def values(self):
+        """
+        Returns the list of installed panels.
+        """
+        return self._modes.values()
+
     def __iter__(self):
         lst = []
         for zone, zone_dict in self._panels.items():
