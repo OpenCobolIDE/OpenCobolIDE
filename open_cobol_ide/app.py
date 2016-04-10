@@ -63,11 +63,11 @@ class Application(QtCore.QObject):
             qcrash.backends.EmailBackend(QCRASH_EMAIL, 'OpenCobolIDE'))
         qcrash.set_qsettings(Settings()._settings)
         qcrash.install_except_hook(except_hook=self._report_exception)
-        if hasattr(sys, 'frozen') and sys.platform == 'win32':
-            sys.stdout = open(os.path.join(system.get_cache_directory(),
-                                           'ocide_stdout.log'), 'w')
-            sys.stderr = open(os.path.join(system.get_cache_directory(),
-                                           'ocide_stderr.log'), 'w')
+        # if hasattr(sys, 'frozen') and sys.platform == 'win32':
+        #     sys.stdout = open(os.path.join(system.get_cache_directory(),
+        #                                    'ocide_stdout.log'), 'w')
+        #     sys.stderr = open(os.path.join(system.get_cache_directory(),
+        #                                    'ocide_stderr.log'), 'w')
         if parse_args and not system.darwin:
             files = self.handle_command_line_args()
         else:
