@@ -9,7 +9,7 @@ class DlgReview(QtWidgets.QDialog):
     """
     Dialog for reviewing the final report.
     """
-    def __init__(self, content, parent):
+    def __init__(self, content, log, parent):
         """
         :param content: content of the final report, before review
         :param parent: parent widget
@@ -17,10 +17,14 @@ class DlgReview(QtWidgets.QDialog):
         super(DlgReview, self).__init__(parent)
         self.ui = dlg_review_ui.Ui_Dialog()
         self.ui.setupUi(self)
-        self.ui.plainTextEdit.setPlainText(content)
+        self.ui.edit_main.setPlainText(content)
+        if log:
+            self.ui.edit_log.setPlainText(log)
+        else:
+            self.ui.tabWidget.tabBar().hide()
 
     @classmethod
-    def review(cls, content, parent):  # pragma: no cover
+    def review(cls, content, log, parent):  # pragma: no cover
         """
         Reviews the final bug report.
 
@@ -30,7 +34,7 @@ class DlgReview(QtWidgets.QDialog):
         :returns: the reviewed report content or None if the review was
                   canceled.
         """
-        dlg = DlgReview(content, parent)
+        dlg = DlgReview(content, log, parent)
         if dlg.exec_():
-            return dlg.ui.plainTextEdit.toPlainText()
-        return None
+            return dlg.ui.edit_main.toPlainText(), dlg.ui.edit_log.toPlainText()
+        return None, None

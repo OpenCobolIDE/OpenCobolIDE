@@ -14,14 +14,12 @@ class BaseFormatter(object):
         """
         return title
 
-    def format_body(self, description, sys_info=None, log=None,
-                    traceback=None):
+    def format_body(self, description, sys_info=None, traceback=None):
         """
         Not implemented.
 
         :param description: Description of the issue, written by the user.
         :param sys_info: Optional system information string
-        :param log: Optional application log
         :param traceback: Optional traceback.
         """
         raise NotImplementedError

@@ -18,8 +18,7 @@ class MardownFormatter(BaseFormatter):
     """
     Formats the issue report using Markdown.
     """
-    def format_body(self, description, sys_info=None, log=None,
-                    traceback=None):
+    def format_body(self, description, sys_info=None, traceback=None):
         """
         Formats the body using markdown.
 
@@ -40,10 +39,5 @@ class MardownFormatter(BaseFormatter):
             sys_info = '- %s' % '\n- '.join(sys_info.splitlines())
             body += BODY_ITEM_TEMPLATE % {
                 'name': 'System information', 'value': sys_info
-            }
-        if log:
-            log = '\n'.join(log.splitlines()[-NB_LINES_MAX:])
-            body += BODY_ITEM_TEMPLATE % {
-                'name': 'Application log', 'value': '```\n%s\n```' % log
             }
         return body

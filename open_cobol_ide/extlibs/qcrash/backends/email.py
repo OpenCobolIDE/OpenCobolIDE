@@ -1,6 +1,8 @@
 """
 This module containes the email backend.
 """
+import tempfile
+import os
 from .base import BaseBackend
 from ..formatters.email import EmailFormatter
 from ..qt import QtCore, QtGui
@@ -30,8 +32,11 @@ class EmailBackend(BaseBackend):
         self.formatter.app_name = app_name
         self.email = email
 
-    def send_report(self, title, body):
-        url = QtCore.QUrl(
-            "mailto:%s?subject=%s&body=%s" % (self.email, title, body))
+    def send_report(self, title, body, application_log=None):
+        base_url = "mailto:%s?subject=%s" % (self.email, title)
+        if application_log:
+            body += "\nApplication log\n----------------\n\n%s" % application_log
+        base_url += '&body=%s' % body
+        url = QtCore.QUrl(base_url)
         QtGui.QDesktopServices.openUrl(url)
         return False

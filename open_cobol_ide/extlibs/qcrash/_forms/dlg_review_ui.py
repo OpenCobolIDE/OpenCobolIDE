@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/dev/qcrash/forms/dlg_review.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/QCrash/forms/dlg_review.ui'
 #
 # Created by: PyQt5 UI code generator 5.5.1
 #
@@ -24,9 +24,25 @@ class Ui_Dialog(object):
 "border-radius:3px;")
         self.label.setObjectName("label")
         self.verticalLayout.addWidget(self.label)
-        self.plainTextEdit = QtWidgets.QPlainTextEdit(Dialog)
-        self.plainTextEdit.setObjectName("plainTextEdit")
-        self.verticalLayout.addWidget(self.plainTextEdit)
+        self.tabWidget = QtWidgets.QTabWidget(Dialog)
+        self.tabWidget.setObjectName("tabWidget")
+        self.tab = QtWidgets.QWidget()
+        self.tab.setObjectName("tab")
+        self.gridLayout = QtWidgets.QGridLayout(self.tab)
+        self.gridLayout.setObjectName("gridLayout")
+        self.edit_main = QtWidgets.QPlainTextEdit(self.tab)
+        self.edit_main.setObjectName("edit_main")
+        self.gridLayout.addWidget(self.edit_main, 0, 0, 1, 1)
+        self.tabWidget.addTab(self.tab, "")
+        self.tab_2 = QtWidgets.QWidget()
+        self.tab_2.setObjectName("tab_2")
+        self.gridLayout_2 = QtWidgets.QGridLayout(self.tab_2)
+        self.gridLayout_2.setObjectName("gridLayout_2")
+        self.edit_log = QtWidgets.QPlainTextEdit(self.tab_2)
+        self.edit_log.setObjectName("edit_log")
+        self.gridLayout_2.addWidget(self.edit_log, 0, 0, 1, 1)
+        self.tabWidget.addTab(self.tab_2, "")
+        self.verticalLayout.addWidget(self.tabWidget)
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
@@ -34,6 +50,7 @@ class Ui_Dialog(object):
         self.verticalLayout.addWidget(self.buttonBox)
 
         self.retranslateUi(Dialog)
+        self.tabWidget.setCurrentIndex(0)
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -42,3 +59,5 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Review"))
         self.label.setText(_translate("Dialog", "<html><head/><body><p align=\"center\">Review the final report</p></body></html>"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Dialog", "General"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", "Log"))

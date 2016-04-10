@@ -11,11 +11,14 @@ class DlgGitHubLogin(QtWidgets.QDialog):
     HTML = '<html><head/><body><p align="center"><img src="%s"/></p>' \
         '<p align="center">Sign in to GitHub</p></body></html>'
 
-    def __init__(self, parent, username, remember):
+    def __init__(self, parent, username, remember, remember_password):
         super(DlgGitHubLogin, self).__init__(parent)
         self.ui = dlg_github_login_ui.Ui_Dialog()
 
         self.ui.setupUi(self)
+
+        self.ui.cb_remember.toggled.connect(
+            self.ui.cb_remember_password.setEnabled)
 
         mark = GH_MARK_NORMAL
         if self.palette().base().color().lightness() < 128:
@@ -28,6 +31,8 @@ class DlgGitHubLogin(QtWidgets.QDialog):
         self.ui.bt_sign_in.setDisabled(True)
         self.ui.le_username.setText(username)
         self.ui.cb_remember.setChecked(remember)
+        self.ui.cb_remember_password.setChecked(remember_password)
+        self.ui.cb_remember_password.setEnabled(remember)
         if username:
             self.ui.le_password.setFocus()
         else:
@@ -39,9 +44,10 @@ class DlgGitHubLogin(QtWidgets.QDialog):
         self.ui.bt_sign_in.setEnabled(enable)
 
     @classmethod
-    def login(cls, parent, username, remember):  # pragma: no cover
-        dlg = DlgGitHubLogin(parent, username, remember)
+    def login(cls, parent, username, remember, remember_pswd):  # pragma: no cover
+        dlg = DlgGitHubLogin(parent, username, remember, remember_pswd)
         if dlg.exec_() == dlg.Accepted:
             return dlg.ui.le_username.text(), dlg.ui.le_password.text(), \
-                dlg.ui.cb_remember.isChecked()
-        return None, None, None
+                dlg.ui.cb_remember.isChecked(), \
+                dlg.ui.cb_remember_password.isEnabled() and dlg.ui.cb_remember_password.isChecked()
+        return None, None, None, None

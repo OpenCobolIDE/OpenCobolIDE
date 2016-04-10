@@ -40,11 +40,15 @@ class Ui_Dialog(object):
         self.cb_remember = QtWidgets.QCheckBox(Dialog)
         self.cb_remember.setObjectName("cb_remember")
         self.verticalLayout.addWidget(self.cb_remember)
+        self.cb_remember_password = QtWidgets.QCheckBox(Dialog)
+        self.cb_remember_password.setObjectName("cb_remember_password")
+        self.verticalLayout.addWidget(self.cb_remember_password)
         self.bt_sign_in = QtWidgets.QPushButton(Dialog)
         self.bt_sign_in.setObjectName("bt_sign_in")
         self.verticalLayout.addWidget(self.bt_sign_in)
 
         self.retranslateUi(Dialog)
+        self.cb_remember.toggled['bool'].connect(self.cb_remember_password.setEnabled)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
@@ -54,6 +58,7 @@ class Ui_Dialog(object):
         self.label_2.setText(_translate("Dialog", "Username:"))
         self.label_3.setText(_translate("Dialog", "Password: "))
         self.cb_remember.setText(_translate("Dialog", "Remember me"))
+        self.cb_remember_password.setText(_translate("Dialog", "Remember password"))
         self.bt_sign_in.setText(_translate("Dialog", "Sign in"))
 
 from . import qcrash_rc

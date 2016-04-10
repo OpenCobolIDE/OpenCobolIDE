@@ -34,8 +34,7 @@ class EmailFormatter(BaseFormatter):
             return '[%s] %s' % (self.app_name, title)
         return title
 
-    def format_body(self, description, sys_info=None, log=None,
-                    traceback=None):
+    def format_body(self, description, sys_info=None, traceback=None):
         """
         Formats the body in plain text. (add a series of '-' under each section
             title).
@@ -60,11 +59,5 @@ class EmailFormatter(BaseFormatter):
             name = 'System information'
             body += BODY_ITEM_TEMPLATE % {
                 'name': name, 'value': sys_info, 'delim': delim
-            }
-        if log:
-            name = 'Application log'
-            log = '\n'.join(log.splitlines()[-NB_LINES_MAX:])
-            body += BODY_ITEM_TEMPLATE % {
-                'name': name, 'value': log, 'delim': delim
             }
         return body

@@ -50,12 +50,13 @@ class BaseBackend(object):
         """
         self.formatter = formatter
 
-    def send_report(self, title, body):
+    def send_report(self, title, body, application_log=None):
         """
         Sends the actual bug report.
 
         :param title: title of the report, already formatted.
         :param body: body of the reporit, already formtatted.
+        :param application_log: Content of the application log. Default is None.
 
         :returns: Whether the dialog should be closed.
         """
