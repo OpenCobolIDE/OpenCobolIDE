@@ -16,6 +16,7 @@ def get_path():
     Gets the log file path
     """
     pth = os.path.join(get_cache_directory(), "OpenCobolIDE.log")
+    print(pth)
     return pth
 
 
@@ -42,6 +43,7 @@ def setup_logging(version, level=logging.INFO):
 
 def clear_logs():
     rotating_file_handler.doRollover()
+    failures = []
     for i in range(6):
         filename = 'OpenCobolIDE.log%s' % ('' if not i else '.%d' % i)
         pth = os.path.join(get_cache_directory(), filename)
@@ -51,6 +53,8 @@ def clear_logs():
             if os.path.exists(pth):
                 logging.getLogger('open_cobol_ide').exception(
                     'failed to remove log file %r', pth)
+                failures.append(pth)
+    return failures
 
 
 def get_application_log():

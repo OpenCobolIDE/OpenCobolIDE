@@ -141,10 +141,16 @@ cobcrun --runtime-env
             DlgAbout._flg_log_level = True
 
     def _clear_logs(self):
-        logger.clear_logs()
-        QtWidgets.QMessageBox.information(self, 'Logs cleared',
-                                          'Log files have been cleared.')
-        self.textEditLog.clear()
+        failures = logger.clear_logs()
+        if not failures:
+            self.textEditLog.clear()
+            QtWidgets.QMessageBox.information(self, 'Logs cleared',
+                                              'Log files have been cleared.')
+        else:
+            QtWidgets.QMessageBox.warning(
+                self, 'Failed to clear logs',
+                'Failed to remove the following log files: %r' %
+                failures)
 
 
 def _logger():
