@@ -5,6 +5,7 @@ Controls the COBOL specific action (compile, run and change program type)
 import logging
 import os
 import subprocess
+import sys
 from pyqode.core.api import TextHelper
 from pyqode.core.modes import CheckerMessage, CheckerMessages
 from pyqode.qt import QtCore, QtGui, QtWidgets
@@ -343,6 +344,10 @@ class CobolController(Controller):
         self.ui.consoleOutput.append(
             "Launched in external terminal")
         pyqode_console = system.which('pyqode-console')
+        pyqode_console = None
+        if pyqode_console is None:
+            from pyqode.core.tools import console
+            pyqode_console = '%s %s' % (sys.executable, console.__file__)
         env = os.environ.copy()
         for k, v in Settings().run_environemnt.items():
             env[k] = v
