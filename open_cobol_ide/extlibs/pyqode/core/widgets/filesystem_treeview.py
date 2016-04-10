@@ -77,15 +77,29 @@ class FileSystemTreeView(QtWidgets.QTreeView):
             debug('accepting %s', finfo.filePath())
             return True
 
-    #: signal emitted when the user deleted a file
+    #: signal emitted when the user deleted a file or a directory
+    #: Deprecated, use files_deleted instead.
     #: Parameters:
     #: - path (str): path of the file that got deleted
+    #: Note that if the removed path is a directory, this signal will be emitted for every file
+    #: found recursively in the parent directory
     file_deleted = QtCore.Signal(str)
-    #: signal emitted when the user renamed a file
+
+    #: Signal emitted when the user deleted a file or a directory,
+    #: it is emitted only once with all the files deleted.
+    files_deleted = QtCore.Signal(list)
+
+    #: signal emitted when the user renamed a file or a directory
+    #: Deprecated, use files_renamed instead.
     #: Parameters:
     #: - old (str): old path
     #: - new (str): new path
     file_renamed = QtCore.Signal(str, str)
+
+    #: Signal emitted when the user renamed a file or a directory,
+    #: it is emitted once with all the renamed files (not directgories)
+    files_renamed = QtCore.Signal(list)
+
     #: signal emitted when the user created a file
     #: Parameters:
     #: - path (str): path of the file that got created
@@ -435,6 +449,7 @@ class FileSystemHelper:
                     QtWidgets.QMessageBox.warning(
                         self.tree_view, _('Failed to remove %s') % fn, str(e))
                     _logger().exception('failed to remove %s', fn)
+            self.tree_view.files_deleted.emit(deleted_files)
             for d in deleted_files:
                 debug('%s removed', d)
                 self.tree_view.file_deleted.emit(os.path.normpath(d))
@@ -469,9 +484,24 @@ class FileSystemHelper:
             QtWidgets.QLineEdit.Normal, name)
         if status:
             dest = os.path.join(pardir, new_name)
+            old_files = []
+            if os.path.isdir(src):
+                old_files = self._get_files(src)
+            else:
+                old_files = [src]
             os.rename(src, dest)
+            if os.path.isdir(dest):
+                new_files = self._get_files(dest)
+            else:
+                new_files = [dest]
             self.tree_view.file_renamed.emit(os.path.normpath(src),
                                              os.path.normpath(dest))
+            renamed_files = []
+            for old_f, new_f in zip(old_files, new_files):
+                self.tree_view.file_renamed.emit(old_f, new_f)
+                renamed_files.append((old_f, new_f))
+            # emit all changes in one go
+            self.tree_view.files_renamed.emit(renamed_files)
 
     def create_directory(self):
         """
