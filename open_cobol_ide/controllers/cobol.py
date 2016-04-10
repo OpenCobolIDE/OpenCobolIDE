@@ -341,8 +341,6 @@ class CobolController(Controller):
         :param program: program to run
         :param wd: working directory
         """
-        self.ui.consoleOutput.append(
-            "Launched in external terminal")
         pyqode_console = system.which('pyqode-console')
         pyqode_console = None
         if pyqode_console is None:
@@ -359,14 +357,28 @@ class CobolController(Controller):
             cmd = [pyqode_console, program]
             if file_type == FileType.MODULE:
                 cmd.insert(1, system.which('cobcrun'))
-            subprocess.Popen(cmd, cwd=wd,
-                             creationflags=subprocess.CREATE_NEW_CONSOLE,
-                             env=env)
+            try:
+                subprocess.Popen(cmd, cwd=wd,
+                                 creationflags=subprocess.CREATE_NEW_CONSOLE,
+                                 env=env)
+            except (OSError, subprocess.CalledProcessError):
+                msg = "Failed to launch program in external terminal " % \
+                    ' '.join(cmd)
+                _logger().exception(msg)
+                self.ui.consoleOutput.append(msg)
+                return
         elif system.darwin:
             cmd = ['open', program]
             if file_type == FileType.MODULE:
                 cmd.insert(1, system.which('cobcrun'))
-            subprocess.Popen(cmd, cwd=wd, env=env)
+            try:
+                subprocess.Popen(cmd, cwd=wd, env=env)
+            except (OSError, subprocess.CalledProcessError):
+                msg = "Failed to launch program in external terminal " % \
+                    ' '.join(cmd)
+                _logger().exception(msg)
+                self.ui.consoleOutput.append(msg)
+                return
         else:
             if file_type == FileType.EXECUTABLE:
                 cmd = ['"%s %s"' % (pyqode_console, program)]
@@ -375,10 +387,19 @@ class CobolController(Controller):
                                        program)]
             cmd = system.shell_split(
                 Settings().external_terminal_command.strip()) + cmd
-            subprocess.Popen(' '.join(cmd), cwd=wd, shell=True,
-                             env=env)
+            try:
+                subprocess.Popen(' '.join(cmd), cwd=wd, shell=True,
+                                 env=env)
+            except (OSError, subprocess.CalledProcessError):
+                msg = "Failed to launch program in external terminal " % \
+                    ' '.join(cmd)
+                _logger().exception(msg)
+                self.ui.consoleOutput.append(msg)
+                return
         _logger().info('running program in external terminal: %s',
                        ' '.join(cmd))
+        self.ui.consoleOutput.append(
+            "Launched in external terminal")
 
     def _run(self):
         """
