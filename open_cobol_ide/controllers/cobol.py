@@ -342,10 +342,11 @@ class CobolController(Controller):
         :param wd: working directory
         """
         pyqode_console = system.which('pyqode-console')
-        pyqode_console = None
         if pyqode_console is None:
             from pyqode.core.tools import console
-            pyqode_console = '%s %s' % (sys.executable, console.__file__)
+            pyqode_console = [sys.executable, console.__file__]
+        else:
+            pyqode_console = [pyqode_console]
         env = os.environ.copy()
         for k, v in Settings().run_environemnt.items():
             env[k] = v
@@ -354,7 +355,7 @@ class CobolController(Controller):
         if file_type == FileType.MODULE:
             program = QtCore.QFileInfo(program).baseName()
         if system.windows:
-            cmd = [pyqode_console, program]
+            cmd = pyqode_console + [program]
             if file_type == FileType.MODULE:
                 cmd.insert(1, system.which('cobcrun'))
             try:
@@ -362,8 +363,7 @@ class CobolController(Controller):
                                  creationflags=subprocess.CREATE_NEW_CONSOLE,
                                  env=env)
             except (OSError, subprocess.CalledProcessError):
-                msg = "Failed to launch program in external terminal " % \
-                    ' '.join(cmd)
+                msg = "Failed to launch program in external terminal (cmd=%s) " % ' '.join(cmd)
                 _logger().exception(msg)
                 self.ui.consoleOutput.append(msg)
                 return
@@ -374,32 +374,29 @@ class CobolController(Controller):
             try:
                 subprocess.Popen(cmd, cwd=wd, env=env)
             except (OSError, subprocess.CalledProcessError):
-                msg = "Failed to launch program in external terminal " % \
-                    ' '.join(cmd)
+                msg = "Failed to launch program in external terminal (cmd=%s) " % ' '.join(cmd)
                 _logger().exception(msg)
                 self.ui.consoleOutput.append(msg)
                 return
         else:
             if file_type == FileType.EXECUTABLE:
-                cmd = ['"%s %s"' % (pyqode_console, program)]
+                cmd = ['"%s %s"' % (' '.join(pyqode_console), program)]
             else:
-                cmd = ['"%s %s %s"' % (pyqode_console, system.which('cobcrun'),
-                                       program)]
+                cmd = ['"%s %s %s"' % (' '.join(pyqode_console), system.which('cobcrun'),program)]
             cmd = system.shell_split(
                 Settings().external_terminal_command.strip()) + cmd
             try:
                 subprocess.Popen(' '.join(cmd), cwd=wd, shell=True,
                                  env=env)
             except (OSError, subprocess.CalledProcessError):
-                msg = "Failed to launch program in external terminal " % \
-                    ' '.join(cmd)
+                msg = "Failed to launch program in external terminal (cmd=%s) " % ' '.join(cmd)
                 _logger().exception(msg)
                 self.ui.consoleOutput.append(msg)
                 return
         _logger().info('running program in external terminal: %s',
                        ' '.join(cmd))
         self.ui.consoleOutput.append(
-            "Launched in external terminal")
+            "Launched in external terminal: %s" % ' '.join(cmd))
 
     def _run(self):
         """
