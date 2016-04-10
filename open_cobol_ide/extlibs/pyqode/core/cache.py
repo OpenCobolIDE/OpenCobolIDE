@@ -35,8 +35,11 @@ class Cache(object):
     over QSettings.
 
     """
-    def __init__(self, suffix=''):
-        self._settings = QtCore.QSettings('pyQode', 'pyqode.core%s' % suffix)
+    def __init__(self, suffix='', qsettings=None):
+        if qsettings is None:
+            self._settings = QtCore.QSettings('pyQode', 'pyqode.core%s' % suffix)
+        else:
+            self._settings = qsettings
 
     def clear(self):
         """

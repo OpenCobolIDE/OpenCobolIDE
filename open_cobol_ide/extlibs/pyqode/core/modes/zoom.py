@@ -3,7 +3,7 @@
 This module contains the ZoomMode which lets you zoom in and out the editor.
 """
 from pyqode.core.api.mode import Mode
-from pyqode.qt import QtCore
+from pyqode.qt import QtCore, QtGui, QtWidgets
 
 
 class ZoomMode(Mode):
@@ -26,9 +26,30 @@ class ZoomMode(Mode):
             self.editor.mouse_wheel_activated.connect(
                 self._on_wheel_event)
             self.editor.key_pressed.connect(self._on_key_pressed)
+            self.mnu_zoom = QtWidgets.QMenu("Zoom")
+            a = self.mnu_zoom.addAction(QtGui.QIcon.fromTheme(
+                'zoom-in'), 'Zoom in')
+            a.setShortcut('Ctrl++')
+            a.triggered.connect(self.editor.zoom_in)
+
+            a = self.mnu_zoom.addAction(QtGui.QIcon.fromTheme(
+                'zoom-out'), 'Zoom out')
+            a.setShortcut('Ctrl+-')
+            a.triggered.connect(self.editor.zoom_out)
+
+            a = self.mnu_zoom.addAction(QtGui.QIcon.fromTheme(
+                'zoom-fit-best'), 'Reset zoom')
+            a.setShortcut('Ctrl+0')
+            a.triggered.connect(self.editor.reset_zoom)
+
+            a = self.mnu_zoom.menuAction()
+            a.setIcon(QtGui.QIcon.fromTheme('zoom'))
+            self.editor.add_action(a, sub_menu=None)
         else:
             self.editor.mouse_wheel_activated.disconnect(
                 self._on_wheel_event)
+            self.editor.remove_action(self.mnu_zoom.menuAction(),
+                                      sub_menu=None)
             self.editor.key_pressed.disconnect(self._on_key_pressed)
 
     def _on_key_pressed(self, event):

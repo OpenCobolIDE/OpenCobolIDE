@@ -160,6 +160,7 @@ class CheckerMode(Mode, QtCore.QObject):
         QtCore.QObject.__init__(self)
         # max number of messages to keep good performances
         self.limit = 200
+        self.ignore_rules = []
         self._job_runner = DelayJobRunner(delay=delay)
         self._messages = []
         self._worker = worker
@@ -167,6 +168,15 @@ class CheckerMode(Mode, QtCore.QObject):
         self._show_tooltip = show_tooltip
         self._pending_msg = []
         self._finished = True
+
+    def set_ignore_rules(self, rules):
+        """
+        Sets the ignore rules for the linter.
+
+        Rules are a list of string that the actual linter function will check
+        to reject some warnings/errors.
+        """
+        self.ignore_rules = rules
 
     def add_messages(self, messages):
         """
@@ -319,10 +329,17 @@ class CheckerMode(Mode, QtCore.QObject):
             self.editor.toPlainText()
         except (TypeError, RuntimeError):
             return
+        try:
+            max_line_length = self.editor.modes.get(
+                'RightMarginMode').position
+        except KeyError:
+            max_line_length = 79
         request_data = {
             'code': self.editor.toPlainText(),
             'path': self.editor.file.path,
-            'encoding': self.editor.file.encoding
+            'encoding': self.editor.file.encoding,
+            'ignore_rules': self.ignore_rules,
+            'max_line_length': max_line_length,
         }
         try:
             self.editor.backend.send_request(

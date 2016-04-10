@@ -532,14 +532,17 @@ class BaseTabWidget(QtWidgets.QTabWidget):
 class OpenFilesPopup(QtWidgets.QDialog):
     triggered = QtCore.Signal(str)
 
-    def __init__(self, *args):
-        super(OpenFilesPopup, self).__init__(*args)
+    def __init__(self, parent=None, qsettings=None):
+        super(OpenFilesPopup, self).__init__(parent)
         self.ui = popup_open_files_ui.Ui_Dialog()
         self.ui.setupUi(self)
         self.ui.tableWidget.itemActivated.connect(self._on_item_activated)
         self.ui.tableWidget.itemDoubleClicked.connect(self._on_item_activated)
-        settings = QtCore.QSettings('pyQode', 'pyqode.core')
-        self.sort_enabled = bool(settings.value(
+        if qsettings is None:
+            self.settings = QtCore.QSettings('pyQode', 'pyqode.core')
+        else:
+            self.settings = qsettings
+        self.sort_enabled = bool(self.settings.value(
             'sortOpenFilesAlphabetically', False))
         self.ui.checkBox.setChecked(self.sort_enabled)
         self.ui.checkBox.stateChanged.connect(self._on_sort_changed)
@@ -589,8 +592,7 @@ class OpenFilesPopup(QtWidgets.QDialog):
 
     def _on_sort_changed(self, *_):
         self.sort_enabled = self.ui.checkBox.isChecked()
-        settings = QtCore.QSettings('pyQode', 'pyqode.core')
-        settings.setValue(
+        self.settings.setValue(
             'sortOpenFilesAlphabetically', self.sort_enabled)
         self.set_filenames(self._filenames)
 
@@ -664,7 +666,8 @@ class SplittableTabWidget(QtWidgets.QSplitter):
             self._shortcut = value
             self._action_popup.setShortcut(self._shortcut)
 
-    def __init__(self, parent=None, root=True, create_popup=True):
+    def __init__(self, parent=None, root=True, create_popup=True,
+                 qsettings=None):
         super(SplittableTabWidget, self).__init__(parent)
         SplittableTabWidget.tab_widget_klass._detached_window_class = \
             SplittableTabWidget.detached_window_klass
@@ -675,7 +678,7 @@ class SplittableTabWidget(QtWidgets.QSplitter):
             self._action_popup.setShortcut(self._shortcut)
             self._action_popup.triggered.connect(self._show_popup)
             self.addAction(self._action_popup)
-            self.popup = OpenFilesPopup()
+            self.popup = OpenFilesPopup(qsettings=qsettings)
             self.popup.setWindowFlags(
                 QtCore.Qt.Popup | QtCore.Qt.FramelessWindowHint)
             self.popup.triggered.connect(self._on_popup_triggered)
@@ -1108,9 +1111,10 @@ class SplittableCodeEditTabWidget(SplittableTabWidget):
 
     CLOSED_TABS_HISTORY_LIMIT = 10
 
-    def __init__(self, parent=None, root=True):
+    def __init__(self, parent=None, root=True, qsettings=None):
         SplittableTabWidget.detached_window_klass = DetachedEditorWindow
-        super(SplittableCodeEditTabWidget, self).__init__(parent, root)
+        super(SplittableCodeEditTabWidget, self).__init__(
+            parent, root, qsettings=qsettings)
         self.main_tab_widget.tabBar().double_clicked.connect(
             self.tab_bar_double_clicked.emit)
         if root:
