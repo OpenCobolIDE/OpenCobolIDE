@@ -126,8 +126,11 @@ class EncodingPanel(Panel):
                                  path))
         # load text as binary and mark it as red, user might make use the
         # binary to recognize the original encoding
-        with open(path, 'rb') as file:
-            content = str(file.read(16))
+        try:
+            with open(path, 'rb') as file:
+                content = str(file.read(16))
+        except OSError:
+            content = ''
         # set plain text
         self.editor.setPlainText(
             content, self.editor.file.get_mimetype(path),

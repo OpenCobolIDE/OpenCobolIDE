@@ -112,6 +112,7 @@ class FileSystemTreeView(QtWidgets.QTreeView):
 
     def __init__(self, parent=None):
         super(FileSystemTreeView, self).__init__(parent)
+        self._path_to_set = None
         self.context_menu = None
         self._root_path = None
         self.root_path = ''
@@ -124,6 +125,12 @@ class FileSystemTreeView(QtWidgets.QTreeView):
         self._hide_extra_colums = True
         from pyqode.core.widgets import FileIconProvider
         self.set_icon_provider(FileIconProvider())
+
+    def showEvent(self, event):
+        super(FileSystemTreeView, self).showEvent(event)
+        if self._path_to_set:
+            self.set_root_path(self._path_to_set, self._hide_extra_colums)
+            self._path_to_set = None
 
     def set_icon_provider(self, icon_provider):
         self._icon_provider = icon_provider
@@ -200,6 +207,10 @@ class FileSystemTreeView(QtWidgets.QTreeView):
         :param path: root path - str
         :param hide_extra_columns: Hide extra column (size, paths,...)
         """
+        if not self.isVisible():
+            self._path_to_set = path
+            self._hide_extra_colums = hide_extra_columns
+            return
         if sys.platform == 'win32' and os.path.splitunc(path)[0]:
             mdl = QtGui.QStandardItemModel(1, 1)
             item = QtGui.QStandardItem(
@@ -235,16 +246,21 @@ class FileSystemTreeView(QtWidgets.QTreeView):
     def _on_path_loaded(self, path):
         if os.path.normpath(path) != self._root_path:
             return
-        self.setModel(self._fs_model_proxy)
-        file_root_index = self._fs_model_source.setRootPath(self._root_path)
-        root_index = self._fs_model_proxy.mapFromSource(file_root_index)
-        self.setRootIndex(root_index)
-        if not os.path.ismount(self._root_path):
-            self.expandToDepth(0)
-        if self._hide_extra_colums:
-            self.setHeaderHidden(True)
-            for i in range(1, 4):
-                self.hideColumn(i)
+        try:
+            self.setModel(self._fs_model_proxy)
+            file_root_index = self._fs_model_source.setRootPath(
+                self._root_path)
+            root_index = self._fs_model_proxy.mapFromSource(file_root_index)
+            self.setRootIndex(root_index)
+            if not os.path.ismount(self._root_path):
+                self.expandToDepth(0)
+            if self._hide_extra_colums:
+                self.setHeaderHidden(True)
+                for i in range(1, 4):
+                    self.hideColumn(i)
+        except RuntimeError:
+            # wrapped C/C++ object of type FileSystemTreeView has been deleted
+            return
 
     def filePath(self, index):
         """

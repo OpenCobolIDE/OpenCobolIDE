@@ -468,8 +468,6 @@ class BaseTabWidget(QtWidgets.QTabWidget):
             SplittableTabWidget.tab_under_menu = None
         if not clones:
             widget.setParent(None)
-            widget.deleteLater()
-            del widget
         else:
             try:
                 clones[0].syntax_highlighter.setDocument(document)
@@ -1196,8 +1194,11 @@ class SplittableCodeEditTabWidget(SplittableTabWidget):
             # not a code edit
             old_content = ''
         else:
-            with open(path, encoding=encoding) as f:
-                old_content = f.read()
+            try:
+                with open(path, encoding=encoding) as f:
+                    old_content = f.read()
+            except OSError:
+                old_content = ''
         if widget.dirty:
             try:
                 self.main_tab_widget.save_widget(widget)
