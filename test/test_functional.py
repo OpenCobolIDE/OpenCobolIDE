@@ -82,8 +82,8 @@ def test_functional_external_terminal(app):
     assert app.win.ui.actionRun.isEnabled()
     app.cobol.run()
     QTest.qWait(1000)
-    assert app.win.ui.consoleOutput.toPlainText() == \
-        'Launched in external terminal'
+    assert 'Launched in external terminal' in app.win.ui.consoleOutput.toPlainText()
+
     Settings().external_terminal = False
 
 
