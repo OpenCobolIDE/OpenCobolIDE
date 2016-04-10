@@ -184,7 +184,7 @@ class Application(QtCore.QObject):
 
         # setup logger
         debug = args.verbose or Settings().verbose
-        logger.setup_logging(__version__, debug)
+        logger.setup_logging(__version__, level=Settings().log_level)
 
         # show runtime env
         if args.runtime_env:

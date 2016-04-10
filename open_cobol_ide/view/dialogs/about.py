@@ -12,12 +12,24 @@ from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.forms import dlg_about_ui
 
 
+LEVELS_VALUES = {
+    'ERROR': logging.ERROR,
+    'WARNING': logging.WARNING,
+    'INFO': logging.INFO,
+    'DEBUG': logging.DEBUG,
+    'PYQODE_DEBUG': 1,
+}
+
+
+LEVEL_NAMES = {v: k for k, v in LEVELS_VALUES.items()}
+
+
 class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
     """
     Shows the about text, the license, the authors list and the 3rd party
     libraries versions.
     """
-    _flg_verbose = False
+    _flg_log_level = False
 
     HEADERS = [
         'GnuCOBOL',
@@ -32,7 +44,6 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        self.checkBoxVerbose.setChecked(Settings().verbose)
         self.tabWidget.setCurrentIndex(0)
         self.tbwVersions.setColumnCount(1)
         self.tbwVersions.setRowCount(len(self.HEADERS))
@@ -59,7 +70,6 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
                     '\n'.join(f.read().splitlines()[-1000:]))
         except FileNotFoundError:
             self.textEditLog.setText('')
-        self.checkBoxVerbose.toggled.connect(self._on_verbose_toggled)
 
         self.edit_compiler_infos.setFont(
             QtGui.QFont(Settings().font, 9))
@@ -71,6 +81,14 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
             ':/fonts/rc/SourceCodePro-Bold.ttf')
 
         self.edit_compiler_infos.setPlainText(DlgAbout.get_cobc_runtime_env())
+
+        try:
+            name = LEVEL_NAMES[Settings().log_level]
+        except KeyError:
+            name = 'INFO'
+        self.combo_log_level.setCurrentText(name)
+        self.combo_log_level.currentIndexChanged.connect(
+            self._on_log_level_changed)
 
         self.bt_clear_logs.clicked.connect(self._clear_logs)
 
@@ -111,13 +129,16 @@ cobcrun --runtime-env
         }
         return gnucobol_infos
 
-    def _on_verbose_toggled(self, state):
-        Settings().verbose = state
-        if not DlgAbout._flg_verbose:
+    def _on_log_level_changed(self, index):
+        name = self.combo_log_level.itemText(index)
+        lvl = LEVELS_VALUES[name]
+        Settings().log_level = lvl
+        logging.getLogger().setLevel(lvl)
+        if not DlgAbout._flg_log_level:
             QtWidgets.QMessageBox.information(
                 self, 'Restart required',
                 'You need to restart the IDE for the change to be applied.')
-            DlgAbout._flg_verbose = True
+            DlgAbout._flg_log_level = True
 
     def _clear_logs(self):
         for i in range(6):

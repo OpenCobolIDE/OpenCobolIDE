@@ -11,7 +11,7 @@ from open_cobol_ide.app import Application  # noqa
 from open_cobol_ide.logger import setup_logging  # noqa
 from open_cobol_ide.settings import Settings  # noqa
 
-setup_logging(__version__, debug=True)
+setup_logging(__version__)
 
 _app = None
 

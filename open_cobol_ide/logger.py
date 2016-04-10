@@ -16,7 +16,7 @@ def get_path():
     return pth
 
 
-def setup_logging(version, debug):
+def setup_logging(version, level=logging.INFO):
     """
     Configures the logger, adds a stream handler and a file handler.
 
@@ -31,7 +31,7 @@ def setup_logging(version, debug):
         level=logging.WARNING, handlers=handlers,
         format='%(asctime)s:%(msecs)03d::%(levelname)s::%(process)d::%(name)s'
         '::%(message)s', datefmt='%H:%M:%S')
-    logging.getLogger().setLevel(logging.INFO if not debug else logging.DEBUG)
+    logging.getLogger().setLevel(level)
     ocide_logger = logging.getLogger('open_cobol_ide')
     ocide_logger.info('version: %s', version)
 

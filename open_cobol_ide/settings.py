@@ -1,6 +1,7 @@
 """
 This module contains a class for accessing the application settings.
 """
+import logging
 import json
 import os
 import sys
@@ -159,6 +160,14 @@ class Settings(object):
     @verbose.setter
     def verbose(self, value):
         self._settings.setValue('verbose', int(value))
+
+    @property
+    def log_level(self):
+        return int(self._settings.value('env/log_level', logging.INFO))
+
+    @log_level.setter
+    def log_level(self, value):
+        self._settings.setValue('env/log_level', value)
 
     #
     # Editor settings settings

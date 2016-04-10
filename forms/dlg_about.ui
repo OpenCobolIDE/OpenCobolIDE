@@ -61,7 +61,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -954,13 +954,39 @@ p, li { white-space: pre-wrap; }
           <number>0</number>
          </property>
          <item>
-          <widget class="QCheckBox" name="checkBoxVerbose">
-           <property name="statusTip">
-            <string>Enable verbose mode (require a restart of the application).</string>
-           </property>
+          <widget class="QLabel" name="label_3">
            <property name="text">
-            <string>Verbose</string>
+            <string>Log level:</string>
            </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="combo_log_level">
+           <item>
+            <property name="text">
+             <string>ERROR</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>WARNING</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>INFO</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>DEBUG</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>PYQODE_DEBUG</string>
+            </property>
+           </item>
           </widget>
          </item>
          <item>
