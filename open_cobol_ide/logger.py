@@ -16,7 +16,6 @@ def get_path():
     Gets the log file path
     """
     pth = os.path.join(get_cache_directory(), "OpenCobolIDE.log")
-    print(pth)
     return pth
 
 
