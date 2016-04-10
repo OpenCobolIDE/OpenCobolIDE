@@ -110,14 +110,23 @@ class InteractiveConsole(QTextEdit):
             self._writer = writer
 
     def _on_stdout(self):
-        raw = self.process.readAllStandardOutput()
-        txt = bytes(raw).decode(locale.getpreferredencoding())
+        raw = bytes(self.process.readAllStandardOutput())
+        try:
+            txt = raw.decode(sys.getfilesystemencoding())
+        except UnicodeDecodeError:
+            txt = str(raw).replace("b'", '')[:-1].replace(
+                '\\r\\n', '\n').replace('\\\\', '\\')
+        _logger().debug('stdout: %s', txt)
         self._writer(self, txt, self.stdout_color)
 
     def _on_stderr(self):
-        txt = bytes(self.process.readAllStandardError()).decode(
-            locale.getpreferredencoding())
-        _logger().debug('%s', txt)
+        raw = bytes(self.process.readAllStandardError())
+        try:
+            txt = raw.decode(sys.getfilesystemencoding())
+        except UnicodeDecodeError:
+            txt = str(raw).replace("b'", '')[:-1].replace(
+                '\\r\\n', '\n').replace('\\\\', '\\')
+        _logger().debug('stderr: %s', txt)
         self._writer(self, txt, self.stderr_color)
 
     @property

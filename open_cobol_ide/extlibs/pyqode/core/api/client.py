@@ -319,7 +319,10 @@ class JsonTcpClient(QtNetwork.QTcpSocket):
             comm('decoding payload as json object')
             obj = json.loads(data)
             comm('response received: %r', obj)
-            results = obj['results']
+            try:
+                results = obj['results']
+            except (KeyError, TypeError):
+                results = None
             # possible callback
             if self._callback and self._callback():
                 self._callback()(results)
