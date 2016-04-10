@@ -69,7 +69,6 @@ class MainWindow(QtWidgets.QMainWindow):
         _logger().debug('CLOSING')
         self.ui.tabWidgetEditors.closeEvent(event)
         if event.isAccepted():
-            self.save_state()
             _logger().debug('CLOSED')
 
     def dragEnterEvent(self, event):

@@ -211,9 +211,7 @@ class ViewController(Controller):
         _logger().debug('showing page %r' % page)
         self.ui.stackedWidget.setCurrentIndex(int(page))
         if page == Page.HOME:
-            if self._page != -1:
-                s = Settings()
-                s.outline_visible = self.ui.dockWidgetNavPanel.isVisible()
+            self.main_window.save_state()
             if not system.ubuntu:
                 self.ui.menuBar.hide()
             self.ui.statusbar.hide()
@@ -229,9 +227,10 @@ class ViewController(Controller):
             self.ui.btOpenFile.setFocus()
         else:
             self._apply_perspective()
-            self.ui.dockWidgetNavPanel.setVisible(Settings().outline_visible)
-            self.ui.dockWidgetFileSystem.setVisible(True)
             self.ui.widgetHome.hide()
+            self.main_window.restore_state()
+            self.ui.dockWidgetOffsets.hide()
+            self.ui.dockWidgetLogs.hide()
 
     def _apply_perspective(self):
         """
