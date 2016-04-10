@@ -8,6 +8,9 @@ import os
 from open_cobol_ide.system import get_cache_directory
 
 
+rotating_file_handler = None
+
+
 def get_path():
     """
     Gets the log file path
@@ -24,9 +27,10 @@ def setup_logging(version, level=logging.INFO):
     :param debug: True to enable debug log level, otherwise the info log
         level is used.
     """
-    handler = logging.handlers.RotatingFileHandler(
+    global rotating_file_handler
+    rotating_file_handler = logging.handlers.RotatingFileHandler(
             get_path(), maxBytes=2*1024*1024, backupCount=5)
-    handlers = [handler, logging.StreamHandler()]
+    handlers = [rotating_file_handler, logging.StreamHandler()]
     logging.basicConfig(
         level=logging.WARNING, handlers=handlers,
         format='%(asctime)s:%(msecs)03d::%(levelname)s::%(process)d::%(name)s'
@@ -34,6 +38,19 @@ def setup_logging(version, level=logging.INFO):
     logging.getLogger().setLevel(level)
     ocide_logger = logging.getLogger('open_cobol_ide')
     ocide_logger.info('version: %s', version)
+
+
+def clear_logs():
+    rotating_file_handler.doRollover()
+    for i in range(6):
+        filename = 'OpenCobolIDE.log%s' % ('' if not i else '.%d' % i)
+        pth = os.path.join(get_cache_directory(), filename)
+        try:
+            os.remove(pth)
+        except OSError:
+            if os.path.exists(pth):
+                logging.getLogger('open_cobol_ide').exception(
+                    'failed to remove log file %r', pth)
 
 
 def get_application_log():

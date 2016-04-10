@@ -69,7 +69,7 @@ class DlgAbout(QtWidgets.QDialog, dlg_about_ui.Ui_Dialog):
                 self.textEditLog.setPlainText(
                     '\n'.join(f.read().splitlines()[-1000:]))
         except FileNotFoundError:
-            self.textEditLog.setText('')
+            self.textEditLog.setPlainText('')
 
         self.edit_compiler_infos.setFont(
             QtGui.QFont(Settings().font, 9))
@@ -141,14 +141,7 @@ cobcrun --runtime-env
             DlgAbout._flg_log_level = True
 
     def _clear_logs(self):
-        for i in range(6):
-            filename = 'OpenCobolIDE.log%s' % ('' if not i else '.%d' % i)
-            pth = os.path.join(system.get_cache_directory(), filename)
-            try:
-                os.remove(pth)
-            except OSError:
-                if os.path.exists(pth):
-                    _logger().exception('failed to remove log file %r', pth)
+        logger.clear_logs()
         QtWidgets.QMessageBox.information(self, 'Logs cleared',
                                           'Log files have been cleared.')
         self.textEditLog.clear()
