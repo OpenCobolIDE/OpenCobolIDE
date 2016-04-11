@@ -1,7 +1,7 @@
 import logging
 
 from qcrash._forms import dlg_report_bug_ui
-from qcrash.qt import QtGui, QtCore, QtWidgets
+from qcrash.qt import QtGui, QtWidgets
 from qcrash._dialogs.review import DlgReview
 
 

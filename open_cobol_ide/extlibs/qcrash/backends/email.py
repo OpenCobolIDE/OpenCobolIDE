@@ -1,8 +1,6 @@
 """
 This module containes the email backend.
 """
-import tempfile
-import os
 from .base import BaseBackend
 from ..formatters.email import EmailFormatter
 from ..qt import QtCore, QtGui
