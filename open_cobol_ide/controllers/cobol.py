@@ -350,8 +350,9 @@ class CobolController(Controller):
         env = os.environ.copy()
         for k, v in Settings().run_environemnt.items():
             env[k] = v
-        env['PATH'] = GnuCobolCompiler.setup_process_environment().value(
-            'PATH')
+        if 'PATH' not in env.keys():
+            env['PATH'] = GnuCobolCompiler.setup_process_environment().value(
+                'PATH')
         if file_type == FileType.MODULE:
             program = QtCore.QFileInfo(program).baseName()
         if system.windows:
