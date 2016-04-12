@@ -27,7 +27,7 @@ class CobolCodeEdit(CodeEditBase):
     """
 
     def __init__(self, parent=None):
-        super().__init__(parent)
+        super().__init__(parent, free_format=Settings().free_format)
         self.syntax_highlighter.color_scheme = ColorScheme(
             Settings().color_scheme)
         self.linter_mode = self.modes.append(CobolLinterMode())

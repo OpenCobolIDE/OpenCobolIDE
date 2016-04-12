@@ -4,7 +4,7 @@ from pyqode.cobol.api.parsers.names import defined_names
 
 
 #: Free format cobol: ON/OFF
-free_format = False
+free_format = None
 #: Whether cobol keywords case is lower or UPPER
 lower_case_keywords = False
 
@@ -70,5 +70,8 @@ class CobolCodeCompletionProvider:
 
 
 def get_outline(data):
-    root_node, _, _ = defined_names(data['code'], free_format)
-    return [ch.to_definition().to_dict() for ch in root_node.children]
+    if free_format is None:
+        return None
+    else:
+        root_node, _, _ = defined_names(data['code'], free_format)
+        return [ch.to_definition().to_dict() for ch in root_node.children]

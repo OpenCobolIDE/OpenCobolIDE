@@ -60,11 +60,11 @@ class CobolCodeEdit(api.CodeEdit):
     def comment_indicator(self, value):
         self._comment_indicator = value
 
-    def __init__(self, parent=None, color_scheme='qt'):
+    def __init__(self, parent=None, color_scheme='qt', free_format=False):
         super().__init__(parent)
         self.file = self.CobolFileManager(self)
         self._lower_case_keywords = False
-        self._free_format = False
+        self._free_format = None
         self._comment_indicator = '*> '
         self.word_separators.remove('-')
         self._start_server()
@@ -77,6 +77,7 @@ class CobolCodeEdit(api.CodeEdit):
             panels.ReadOnlyPanel(), api.Panel.Position.TOP
         )
         self.indenter_mode.min_column = 7
+        self.free_format = free_format
 
     def _start_server(self):
         if hasattr(sys, "frozen"):

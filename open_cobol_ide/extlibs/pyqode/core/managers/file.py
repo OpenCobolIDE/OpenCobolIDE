@@ -238,7 +238,8 @@ class FileManager(Manager):
                 encoding = cached_encoding
         enable_modes = os.path.getsize(path) < self._limit
         for m in self.editor.modes:
-            m.enabled = enable_modes
+            if m.enabled:
+                m.enabled = enable_modes
         if not enable_modes:
             self.editor.modes.clear()
         # open file and get its content
