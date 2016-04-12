@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/dev/qcrash/forms/dlg_report_bug.ui'
+# Form implementation generated from reading ui file '/home/colin/dev/QCrash/forms/dlg_report_bug.ui'
 #
 # Created by: PyQt5 UI code generator 5.5.1
 #
@@ -27,6 +27,7 @@ class Ui_Dialog(object):
         self.label_2.setObjectName("label_2")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_2)
         self.plainTextEditDesc = QtWidgets.QPlainTextEdit(Dialog)
+        self.plainTextEditDesc.setTabChangesFocus(True)
         self.plainTextEditDesc.setObjectName("plainTextEditDesc")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.plainTextEditDesc)
         self.cb_include_sys_info = QtWidgets.QCheckBox(Dialog)

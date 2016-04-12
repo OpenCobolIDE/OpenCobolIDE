@@ -1,7 +1,7 @@
 import logging
 
 from qcrash._forms import dlg_report_bug_ui
-from qcrash.qt import QtGui, QtWidgets
+from qcrash.qt import QtCore, QtGui, QtWidgets
 from qcrash._dialogs.review import DlgReview
 
 
@@ -34,10 +34,9 @@ class DlgReport(QtWidgets.QDialog):
                  window_icon=None, traceback=None, issue_title='',
                  issue_description='', include_log=True, include_sys_info=True,
                  **kwargs):
-        """
-        """
         super(DlgReport, self).__init__(**kwargs)
         self._traceback = traceback
+        self.window_icon = window_icon
         self.ui = dlg_report_bug_ui.Ui_Dialog()
         self.ui.setupUi(self)
         self.ui.cb_include_sys_info.setChecked(include_sys_info)
@@ -47,6 +46,7 @@ class DlgReport(QtWidgets.QDialog):
                            if window_icon is None else window_icon)
         self.ui.lineEditTitle.setText(issue_title)
         self.ui.plainTextEditDesc.setPlainText(issue_description)
+        self.setWindowFlags(self.windowFlags() & ~QtCore.Qt.WindowContextHelpButtonHint)
 
         self.ui.lineEditTitle.textChanged.connect(self._enable_buttons)
         self.ui.plainTextEditDesc.textChanged.connect(self._enable_buttons)
@@ -75,6 +75,7 @@ class DlgReport(QtWidgets.QDialog):
         bt = self.sender()
         description = self.ui.plainTextEditDesc.toPlainText()
         backend = bt.backend
+        backend.parent_widget = self
         title = backend.formatter.format_title(
             str(self.ui.lineEditTitle.text()))
 
@@ -90,7 +91,7 @@ class DlgReport(QtWidgets.QDialog):
             str(description), sys_info, self._traceback)
 
         if backend.need_review:  # pragma: no cover
-            body, log = DlgReview.review(body, log, self)
+            body, log = DlgReview.review(body, log, self, self.window_icon)
             if body is None and log is None:
                 return  # user cancelled the review dialog
 

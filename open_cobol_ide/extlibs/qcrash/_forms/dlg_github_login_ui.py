@@ -11,7 +11,8 @@ from qcrash.qt import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(400, 254)
+        Dialog.resize(366, 248)
+        Dialog.setMinimumSize(QtCore.QSize(350, 0))
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.lbl_html = QtWidgets.QLabel(Dialog)
@@ -43,8 +44,6 @@ class Ui_Dialog(object):
         self.bt_sign_in = QtWidgets.QPushButton(Dialog)
         self.bt_sign_in.setObjectName("bt_sign_in")
         self.verticalLayout.addWidget(self.bt_sign_in)
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout.addItem(spacerItem)
 
         self.retranslateUi(Dialog)
         self.cb_remember.toggled['bool'].connect(self.cb_remember_password.setEnabled)

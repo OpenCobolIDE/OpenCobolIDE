@@ -212,6 +212,20 @@ def serve_forever(args=None):
         argument parser. Default is None to let the JsonServer setup its own
         parser and parse command line arguments.
     """
+    class Unbuffered(object):
+        def __init__(self, stream):
+            self.stream = stream
+
+        def write(self, data):
+            self.stream.write(data)
+            self.stream.flush()
+
+        def __getattr__(self, attr):
+            return getattr(self.stream, attr)
+
+    sys.stdout = Unbuffered(sys.stdout)
+    sys.stderr = Unbuffered(sys.stderr)
+
     server = JsonServer(args=args)
     server.serve_forever()
 

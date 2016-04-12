@@ -73,13 +73,13 @@ class GithubBackend(BaseBackend):
                 self.qsettings().setValue('github/remember_credentials', 0)
                 if self._show_msgbox:
                     QtWidgets.QMessageBox.warning(
-                      QtWidgets.qApp.activeWindow(), 'Invalid credentials',
+                      self.parent_widget, 'Invalid credentials',
                       'Failed to create github issue, invalid credentials...')
             else:
                 # other issue
                 if self._show_msgbox:
                     QtWidgets.QMessageBox.warning(
-                        QtWidgets.qApp.activeWindow(),
+                        self.parent_widget,
                         'Failed to create issue',
                         'Failed to create github issue. Error %d' %
                         e.response.code)
@@ -88,7 +88,7 @@ class GithubBackend(BaseBackend):
             issue_nbr = ret['number']
             if self._show_msgbox:
                 ret = QtWidgets.QMessageBox.question(
-                    QtWidgets.qApp.activeWindow(), 'Issue created on github',
+                    self.parent_widget, 'Issue created on github',
                     'Issue successfully created. Would you like to open the '
                     'ticket in your web browser?')
             if ret in [QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.Ok]:
@@ -146,7 +146,7 @@ class GithubBackend(BaseBackend):
 
         # ask for credentials
         username, password, remember, remember_pswd = DlgGitHubLogin.login(
-            QtWidgets.qApp.activeWindow(), username, remember, remember_pswd)
+            self.parent_widget, username, remember, remember_pswd)
 
         if remember:
             self._store_credentials(username, password, remember, remember_pswd)
