@@ -381,12 +381,13 @@ class BackendProcess(QtCore.QProcess):
 
     def _on_process_stdout_ready(self):
         """ Logs process output """
+        if not self:
+            return
         o = self.readAllStandardOutput()
         try:
             output = bytes(o).decode(self._encoding)
         except TypeError:
             output = bytes(o.data()).decode(self._encoding)
-        output = output[:output.rfind('\n')]
         for line in output.splitlines():
             self._srv_logger.log(1, line)
 
@@ -399,7 +400,6 @@ class BackendProcess(QtCore.QProcess):
             output = bytes(o).decode(self._encoding)
         except TypeError:
             output = bytes(o.data()).decode(self._encoding)
-        output = output[:output.rfind('\n')]
         for line in output.splitlines():
             self._srv_logger.error(line)
 
