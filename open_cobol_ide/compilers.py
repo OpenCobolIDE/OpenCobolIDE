@@ -165,11 +165,10 @@ class GnuCobolCompiler(QtCore.QObject):
     # GC output messages format depends on the underlying compiler
     # See https://github.com/OpenCobolIDE/OpenCobolIDE/issues/206
     OUTPUT_PATTERN_GCC = re.compile(
-        r'^(?P<filename>[\w\.\-_\s]*):(?P<line>\s*\d*):(?P<type>[\w\s]*):'
-        r'(?P<error>[\w\s,\-\.:\'"\$]*)$')
+        r'^(?P<filename>[\w\.\-_\s]*):(?P<line>\s*\d*):(?P<type>[\w\s]*):(?P<error>.*)$')
     OUTPUT_PATTERN_MSVC = re.compile(
         r'^(?P<filename>[\w\.\-_\s]*)\((?P<line>\s*\d*)\):(?P<type>[\w\s]*):'
-        '(?P<error>[\w\s,\-\.:\'"\$]*)$')
+        '(?P<error>.*)$')
 
     OUTPUT_PATTERNS = [OUTPUT_PATTERN_GCC, OUTPUT_PATTERN_MSVC]
 
