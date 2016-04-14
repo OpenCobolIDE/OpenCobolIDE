@@ -245,7 +245,7 @@ class CheckerMode(Mode, QtCore.QObject):
                 message.decoration = TextDecoration(
                     self.editor.textCursor(), start_line=message.line,
                     tooltip=tooltip, draw_order=3)
-                message.decoration.select_line()
+                message.decoration.set_full_width()
                 message.decoration.set_as_error(color=QtGui.QColor(
                     message.color))
                 self.editor.decorations.append(message.decoration)
