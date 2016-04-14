@@ -19,3 +19,5 @@ BRANCH_END = QtCore.QRegExp(r'END-\w*$')
 DIVISION = QtCore.QRegExp(r'.*DIVISION( USING [a-zA-Z-]*)?.*\.$')
 #: This pattern identifiers a SECTION
 SECTION = QtCore.QRegExp(r'.*SECTION.*\.$')
+#: This pattern identify
+VAR_PATTERN = QtCore.QRegExp(r'\s*\d+\s.*.+')

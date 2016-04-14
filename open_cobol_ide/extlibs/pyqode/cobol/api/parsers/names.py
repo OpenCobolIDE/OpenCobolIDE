@@ -209,14 +209,16 @@ def parse_pic_field(l, c, last_section_node, last_vars, line):
     m = re.findall(r'pic.*\.', line, re.IGNORECASE)
     if m:
         description = ' '.join([t for t in m[0].split(' ') if t])
-        try:
-            index = description.lower().index('value')
-        except ValueError:
-            description.replace('.', '')
-        else:
-            description = description[:index]
     else:
-        description = ''
+        description = line
+    try:
+        index = description.lower().index('value')
+    except ValueError:
+        description = description.replace('.', '')
+    else:
+        description = description[index:].replace('value', '')[:80]
+    if lvl == int('78', 16):
+        lvl = 1
     if lvl == 1:
         parent_node = last_section_node
         last_vars.clear()
@@ -305,15 +307,16 @@ def defined_names(code, free_format=False):
             elif regex.SECTION.indexIn(line.upper()) != -1:
                 if last_section_node:
                     last_section_node.end_line = i
+                if last_div_node is None:
+                    name = 'PROCEDURE DIVISION'
+                    for to_check in ['WORKING-STORAGE', 'LOCAL-STORAGE', 'LINKAGE', 'REPORT ', 'SCREEN']:
+                        if to_check in line.upper():
+                            name = 'DATA DIVISION'
+                    last_div_node = Name(Name.Type.Division, -1, -1, name, name)
+                    root_node.add_child(last_div_node)
                 last_section_node = parse_section(
                     i, column, last_div_node, last_vars, line)
             # VARIABLES
-            elif (last_div_node is not None and
-                    "DATA DIVISION" in last_div_node.name.upper()):
-                v = parse_pic_field(
-                    i, column, last_section_node, last_vars, line)
-                if v:
-                    variables.append(v)
             # PARAGRAPHS
             elif (last_div_node is not None and
                   "PROCEDURE DIVISION" in last_div_node.name.upper()):
@@ -326,6 +329,17 @@ def defined_names(code, free_format=False):
                         if last_par:
                             last_par.end_line = i
                         last_par = p
+            elif regex.VAR_PATTERN.indexIn(line.upper()) != -1 or line.upper().lstrip().startswith('FD'):
+                if last_div_node is None:
+                    last_div_node = Name(Name.Type.Division, -1, -1, 'DATA DIVISION', '')
+                    root_node.add_child(last_div_node)
+                if last_section_node is None:
+                    last_section_node = Name(Name.Type.Section, -1, -1, 'WORKING-STORAGE SECTION', '')
+                    last_div_node.add_child(last_section_node)
+                v = parse_pic_field(
+                    i, column, last_section_node, last_vars, line)
+                if v:
+                    variables.append(v)
 
     # close last div
     if last_par:
@@ -339,5 +353,5 @@ def defined_names(code, free_format=False):
 
 
 if __name__ == '__main__':
-    with open('/home/colin/Documents/OpenCobolIDE/test/testfiles/TEST-PRINTER.cbl') as f:
+    with open('/home/colin/dev/OpenCobolIDE/test/testfiles/test.cpy') as f:
         defined_names(f.read())

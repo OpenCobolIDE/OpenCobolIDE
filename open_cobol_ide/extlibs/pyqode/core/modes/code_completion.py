@@ -275,7 +275,7 @@ class CodeCompletionMode(Mode, QtCore.QObject):
         self._trigger_key = QtCore.Qt.Key_Space
         self._trigger_len = 1
         self._trigger_symbols = ['.']
-        self._case_sensitive = True
+        self._case_sensitive = False
         self._completer = None
         self._filter_mode = self.FILTER_PREFIX
         self._last_cursor_line = -1
