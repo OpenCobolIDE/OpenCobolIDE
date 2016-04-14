@@ -149,3 +149,10 @@ def test_compile(path, ftype, expected_results, output_file_path):
 def test_get_dependencies(filename, expected_results):
     results = GnuCobolCompiler().get_dependencies(filename)
     assert sorted(results) == sorted(expected_results)
+
+
+def test_parse_output():
+    code = "HelloWorld.cbl: 5: Error: Invalid indicator ';' at column 7 \n" \
+        "HelloWorld.cbl: 3: Error: TCOP: No such file or directory"
+    msgs = GnuCobolCompiler.parse_output(code, 'test/testfiles')
+    assert len(msgs) == 2
