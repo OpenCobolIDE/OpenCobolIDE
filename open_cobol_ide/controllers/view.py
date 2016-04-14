@@ -42,6 +42,8 @@ class ViewController(Controller):
         self._perspective = 'default'
         self._nav_was_visible = True
         self._offset_was_visible = True
+        self._flg_fs_visible = False
+        self._flg_nav_visible = False
         self.setup_icons()
         self.ui.tabWidgetEditors.setContextMenuPolicy(
             QtCore.Qt.CustomContextMenu)
@@ -70,6 +72,11 @@ class ViewController(Controller):
                 }
                 ''')
         self.ui.actionFullscreen.setChecked(Settings().fullscreen)
+
+    def restore_state(self):
+        self.main_window.restore_state()
+        self._flg_fs_visible = self.ui.dockWidgetFileSystem.isVisible()
+        self._flg_nav_visible = self.ui.dockWidgetNavPanel.isVisible()
 
     def toggle_perspective(self):
         self.show_perspective(
@@ -217,6 +224,8 @@ class ViewController(Controller):
             self.ui.statusbar.hide()
             self.ui.toolBarCOBOL.hide()
             self.ui.toolBarFile.hide()
+            self._flg_fs_visible = self.ui.dockWidgetFileSystem.isVisible()
+            self._flg_nav_visible = self.ui.dockWidgetNavPanel.isVisible()
             self.ui.dockWidgetLogs.hide()
             self.ui.dockWidgetNavPanel.hide()
             self.ui.dockWidgetOffsets.hide()
@@ -228,7 +237,8 @@ class ViewController(Controller):
         else:
             self._apply_perspective()
             self.ui.widgetHome.hide()
-            self.main_window.restore_state()
+            self.ui.dockWidgetFileSystem.setVisible(self._flg_fs_visible)
+            self.ui.dockWidgetNavPanel.setVisible(self._flg_nav_visible)
             self.ui.dockWidgetOffsets.hide()
             self.ui.dockWidgetLogs.hide()
 

@@ -89,7 +89,6 @@ class Application(QtCore.QObject):
         self.win.app = self
 
         self.view.show_perspective(Settings().perspective)
-        self.view.show_home_page()
 
         self.update_app_style()
 
@@ -154,6 +153,8 @@ class Application(QtCore.QObject):
             self.win.showFullScreen()
         else:
             self.win.show()
+            self.view.restore_state()
+            self.view.show_home_page()
         return self.app.exec_()
 
     @staticmethod

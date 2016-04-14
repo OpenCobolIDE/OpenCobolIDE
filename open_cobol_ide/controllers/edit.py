@@ -190,6 +190,7 @@ class EditController(Controller):
             return editor
 
     def _on_last_tab_closed(self):
+        self.main_window.save_state()
         self.main_window.setWindowTitle(self.app.title)
         self.ui.twNavigation.set_editor(None)
         self.app.view.show_home_page()
