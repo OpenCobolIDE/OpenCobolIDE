@@ -489,7 +489,7 @@ class Settings(object):
     @property
     def cobc_extensions(self):
         values = eval(self._settings.value('cobcExtensions',
-                      "['.cob', '.cbl', '.pco', '.cpy', '.lst']"))
+                      "['.cob', '.cbl', '.pco', '.lst']"))
         return [v.lower() for v in values]
 
     @cobc_extensions.setter
@@ -720,7 +720,7 @@ class Settings(object):
     # -----------------
     def default_config_dir(self):
         compiler_path = self.default_compiler_path()
-        if compiler_path:
+        if compiler_path and system.windows:
             root = os.path.abspath(os.path.join(
                 os.path.dirname(compiler_path), '..'))
             default = os.path.join(root, 'config')
@@ -753,7 +753,7 @@ class Settings(object):
     # -----------------
     def default_copy_dir(self):
         compiler_path = self.default_compiler_path()
-        if compiler_path:
+        if compiler_path and system.windows:
             root = os.path.abspath(os.path.join(
                 os.path.dirname(compiler_path), '..'))
             default = os.path.join(root, 'copy')
@@ -785,7 +785,7 @@ class Settings(object):
     # -----------------
     def default_include_dir(self):
         compiler_path = self.default_compiler_path()
-        if compiler_path:
+        if compiler_path and system.windows:
             root = os.path.abspath(os.path.join(
                 os.path.dirname(compiler_path), '..'))
             default = os.path.join(root, 'include')
@@ -818,7 +818,7 @@ class Settings(object):
     # -----------------
     def default_lib_path(self):
         compiler_path = self.default_compiler_path()
-        if compiler_path:
+        if compiler_path and system.windows:
             root = os.path.abspath(os.path.join(
                 os.path.dirname(compiler_path), '..'))
             default = os.path.join(root, 'lib')

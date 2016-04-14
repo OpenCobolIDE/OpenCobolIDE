@@ -527,20 +527,20 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.copybook_paths = ''
             settings.library_search_path = ''
             settings.libraries = ''
-            settings.cobc_extensions = ['.cob', '.cbl', '.pco', '.cpy', '.lst']
+            settings.cobc_extensions = ['.cob', '.cbl', '.pco', '.lst']
             if system.windows:
                 settings.vcvarsall = ''
                 settings.vcvarsall_arch = 'x86'
             settings.path = settings.default_path()
             settings.path_enabled = True
             settings.cob_config_dir = settings.default_config_dir()
-            settings.cob_config_dir_enabled = True
+            settings.cob_config_dir_enabled = system.windows
             settings.cob_copy_dir = settings.default_copy_dir()
-            settings.cob_copy_dir_enabled = True
+            settings.cob_copy_dir_enabled = system.windows
             settings.cob_include_path = settings.default_include_dir()
-            settings.cob_include_path_enabled = True
+            settings.cob_include_path_enabled = system.windows
             settings.cob_lib_path = settings.default_lib_path()
-            settings.cob_lib_path_enabled = True
+            settings.cob_lib_path_enabled = system.windows
         elif index == 4:
             settings.dbpre = ''
             settings.dbpre_extensions = ['.scb']
