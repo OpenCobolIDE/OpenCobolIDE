@@ -412,7 +412,7 @@ class Settings(object):
 
     @property
     def compiler_path(self):
-        default = self.default_compiler_path()
+        default = 'cobc.exe' if system.windows else 'cobc'
         path = self._settings.value('compilerPath', default)
         return system.normpath(path)
 
@@ -719,10 +719,10 @@ class Settings(object):
     # COB_CONFIG_DIR
     # -----------------
     def default_config_dir(self):
-        compiler_path = self.compiler_path
+        compiler_path = self.default_compiler_path()
         if compiler_path:
             root = os.path.abspath(os.path.join(
-                os.path.dirname(self.compiler_path), '..'))
+                os.path.dirname(compiler_path), '..'))
             default = os.path.join(root, 'config')
             return default
         return ''
@@ -752,10 +752,10 @@ class Settings(object):
     # COB_COPY_DIR
     # -----------------
     def default_copy_dir(self):
-        compiler_path = self.compiler_path
+        compiler_path = self.default_compiler_path()
         if compiler_path:
             root = os.path.abspath(os.path.join(
-                os.path.dirname(self.compiler_path), '..'))
+                os.path.dirname(compiler_path), '..'))
             default = os.path.join(root, 'copy')
             return system.normpath(default)
         return ''
@@ -784,10 +784,10 @@ class Settings(object):
     # COB_INCLUDE_PATH
     # -----------------
     def default_include_dir(self):
-        compiler_path = self.compiler_path
+        compiler_path = self.default_compiler_path()
         if compiler_path:
             root = os.path.abspath(os.path.join(
-                os.path.dirname(self.compiler_path), '..'))
+                os.path.dirname(compiler_path), '..'))
             default = os.path.join(root, 'include')
             return default
         return ''
@@ -817,10 +817,10 @@ class Settings(object):
     # COB_LIB_PATH
     # -----------------
     def default_lib_path(self):
-        compiler_path = self.compiler_path
+        compiler_path = self.default_compiler_path()
         if compiler_path:
             root = os.path.abspath(os.path.join(
-                os.path.dirname(self.compiler_path), '..'))
+                os.path.dirname(compiler_path), '..'))
             default = os.path.join(root, 'lib')
             return default
         return ''

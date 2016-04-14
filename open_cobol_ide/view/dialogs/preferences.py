@@ -522,7 +522,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.copy_runtime_dlls = False
             settings.free_format = False
             settings.cobol_standard = GnuCobolStandard.default
-            settings.compiler_path = Settings.default_compiler_path()
+            settings.compiler_path = 'cobc.exe' if system.windows else 'cobc'
             settings.compiler_flags = ['-debug']
             settings.copybook_paths = ''
             settings.library_search_path = ''
