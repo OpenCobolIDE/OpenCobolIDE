@@ -58,38 +58,41 @@ def lint(request_data):
     print('running open_cobol_ide.linter.lint')
     code = request_data['code']
     path = request_data['path']
+    extension = os.path.splitext(path)[1]
     print('valid compiler extensions: %r' %
           settings.Settings().cobc_extensions)
-    # code might not have been saved yet, run cobc on a tmp file
-    # we use a time stamp to avoid overwriting the file another cobc
-    # instance might be compiling.
-    file_name = os.path.split(path)[1]
-    file_name, ext = os.path.splitext(file_name)
-    tmp_name = '%s.%s%s' % (file_name, str(int(time.time())), ext)
-    tmp_pth = os.path.join(tempfile.gettempdir(), tmp_name)
-    print('writing code to temporary file: %r' % tmp_pth)
-    with open(tmp_pth, 'w') as f:
-        f.write(code)
-    compiler = GnuCobolCompiler()
-    pgm, args = make_linter_command(tmp_name, path)
-    print('linter command: %s %s' % (pgm, ' '.join(args)))
-    process = QtCore.QProcess()
-    process.setProcessEnvironment(
-        GnuCobolCompiler.setup_process_environment())
-    process.setWorkingDirectory(os.path.dirname(tmp_pth))
-    process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
-    print('running compiler process')
-    print('working directory: %s' % process.workingDirectory())
-    process.start(pgm, args)
-    print('waiting for compilation to finish...')
-    process.waitForFinished()
-    output = process.readAllStandardOutput().data().decode(
-        locale.getpreferredencoding())
-    print('linter raw output: %s' % output)
-    messages = compiler.parse_output(output, process.workingDirectory())
-    print('linter parsed output: %r' % messages)
-    print('removing temporary file...')
-    os.remove(tmp_pth)
+    messages = []
+    if extension.lower() in settings.Settings().cobc_extensions:
+        # code might not have been saved yet, run cobc on a tmp file
+        # we use a time stamp to avoid overwriting the file another cobc
+        # instance might be compiling.
+        file_name = os.path.split(path)[1]
+        file_name, ext = os.path.splitext(file_name)
+        tmp_name = '%s.%s%s' % (file_name, str(int(time.time())), ext)
+        tmp_pth = os.path.join(tempfile.gettempdir(), tmp_name)
+        print('writing code to temporary file: %r' % tmp_pth)
+        with open(tmp_pth, 'w') as f:
+            f.write(code)
+        compiler = GnuCobolCompiler()
+        pgm, args = make_linter_command(tmp_name, path)
+        print('linter command: %s %s' % (pgm, ' '.join(args)))
+        process = QtCore.QProcess()
+        process.setProcessEnvironment(
+            GnuCobolCompiler.setup_process_environment())
+        process.setWorkingDirectory(os.path.dirname(tmp_pth))
+        process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
+        print('running compiler process')
+        print('working directory: %s' % process.workingDirectory())
+        process.start(pgm, args)
+        print('waiting for compilation to finish...')
+        process.waitForFinished()
+        output = process.readAllStandardOutput().data().decode(
+            locale.getpreferredencoding())
+        print('linter raw output: %s' % output)
+        messages = compiler.parse_output(output, process.workingDirectory())
+        print('linter parsed output: %r' % messages)
+        print('removing temporary file...')
+        os.remove(tmp_pth)
     return messages
 
 
