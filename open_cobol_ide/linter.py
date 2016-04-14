@@ -42,7 +42,7 @@ def make_linter_command(cobol_file_name, original_file_path):
             if lib:
                 args.append('-l%s' % lib)
     args.append(cobol_file_name)
-    pgm = Settings().compiler_path
+    pgm = Settings().full_compiler_path
     return pgm, args
 
 
