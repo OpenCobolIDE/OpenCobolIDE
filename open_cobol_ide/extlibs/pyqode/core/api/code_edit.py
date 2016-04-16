@@ -501,6 +501,7 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
         self.setMouseTracking(True)
         self.setCenterOnScroll(True)
         self.setLineWrapMode(self.NoWrap)
+        self.setCursorWidth(2)
 
     def __repr__(self):
         return '%s(path=%r)' % (self.__class__.__name__, self.file.path)
