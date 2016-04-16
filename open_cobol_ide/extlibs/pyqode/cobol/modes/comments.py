@@ -97,34 +97,18 @@ class CommentsMode(Mode):
                     cursor.setPosition(cursor.position() + indent)
                     cursor.movePosition(cursor.Right, cursor.KeepAnchor, l)
                     cursor.insertText("")
-                    if i == 0:
-                        sel_start -= l
-                        sel_end -= l
-                    else:
-                        sel_end -= l
                 # comment
                 else:
                     cursor.movePosition(QtGui.QTextCursor.StartOfLine)
-                    cursor.setPosition(cursor.position() + indent)
-                    cursor.insertText(comment_symbol)
-                    if i == 0:
-                        sel_start += l
-                        sel_end += l
+                    if self.editor.free_format:
+                        cursor.setPosition(cursor.position() + indent)
                     else:
-                        sel_end += l
+                        cursor.movePosition(QtGui.QTextCursor.Right, QtGui.QTextCursor.MoveAnchor, 6)
+                    cursor.insertText(comment_symbol)
             # next line
-            cursor.movePosition(QtGui.QTextCursor.EndOfLine)
-            if not cursor.atEnd():
-                cursor.setPosition(cursor.position() + 1)
+            cursor.movePosition(cursor.NextBlock)
         cursor.endEditBlock()
-        if has_selection:
-            if comment:
-                cursor.setPosition(sel_start - len(comment_symbol))
-            else:
-                cursor.setPosition(sel_start + len(comment_symbol))
-            cursor.setPosition(sel_end, QtGui.QTextCursor.KeepAnchor)
-        else:
-            if not cursor.atEnd():
-                cursor.setPosition(sel_start + (l if not comment else -l))
-                cursor.movePosition(cursor.Down, cursor.MoveAnchor, 1)
-        self.editor.setTextCursor(cursor)
+        if not has_selection:
+            cursor = self.editor.textCursor()
+            cursor.movePosition(cursor.Down, cursor.MoveAnchor)
+            self.editor.setTextCursor(cursor)

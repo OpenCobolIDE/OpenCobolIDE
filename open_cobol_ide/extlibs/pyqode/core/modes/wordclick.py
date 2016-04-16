@@ -38,13 +38,13 @@ class WordClickMode(Mode, QtCore.QObject):
     def on_state_changed(self, state):
         if state:
             self.editor.mouse_moved.connect(self._on_mouse_moved)
-            self.editor.mouse_pressed.connect(self._on_mouse_pressed)
+            self.editor.mouse_released.connect(self._on_mouse_released)
             self.editor.key_released.connect(self._on_key_released)
             self.editor.mouse_double_clicked.connect(
                 self._on_mouse_double_clicked)
         else:
             self.editor.mouse_moved.disconnect(self._on_mouse_moved)
-            self.editor.mouse_pressed.disconnect(self._on_mouse_pressed)
+            self.editor.mouse_released.disconnect(self._on_mouse_released)
             self.editor.key_released.disconnect(self._on_key_released)
             self.editor.mouse_double_clicked.disconnect(
                 self._on_mouse_double_clicked)
@@ -91,7 +91,7 @@ class WordClickMode(Mode, QtCore.QObject):
     def _check_word_cursor(self, cursor):
         pass
 
-    def _on_mouse_pressed(self, event):
+    def _on_mouse_released(self, event):
         """ mouse pressed callback """
         if event.button() == 1 and self._deco:
             cursor = TextHelper(self.editor).word_under_mouse_cursor()

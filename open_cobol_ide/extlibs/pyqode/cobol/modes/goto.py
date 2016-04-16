@@ -34,13 +34,13 @@ class GoToDefinitionMode(Mode, QObject):
         super(GoToDefinitionMode, self).on_state_changed(state)
         if state:
             self.editor.mouse_moved.connect(self._on_mouse_moved)
-            self.editor.mouse_pressed.connect(self._on_mouse_pressed)
+            self.editor.mouse_released.connect(self._on_mouse_released)
             self.editor.add_action(self.action_goto, sub_menu='COBOL')
             self.editor.mouse_double_clicked.connect(
                 self._timer.cancel_requests)
         else:
             self.editor.mouse_moved.disconnect(self._on_mouse_moved)
-            self.editor.mouse_pressed.disconnect(self._on_mouse_pressed)
+            self.editor.mouse_released.disconnect(self._on_mouse_released)
             self.editor.remove_action(self.action_goto, sub_menu='Python')
             self.editor.mouse_double_clicked.disconnect(
                 self._timer.cancel_requests)
@@ -65,7 +65,7 @@ class GoToDefinitionMode(Mode, QObject):
             self._previous_cursor_start = -1
             self._previous_cursor_end = -1
 
-    def _on_mouse_pressed(self, event):
+    def _on_mouse_released(self, event):
         """ mouse pressed callback """
         if event.button() == 1 and self._deco:
             cursor = TextHelper(self.editor).word_under_mouse_cursor()
