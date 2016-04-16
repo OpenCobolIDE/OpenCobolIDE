@@ -13,6 +13,7 @@ from pyqode.core.tools import console
 from open_cobol_ide import __version__, backend
 from pyqode.core.backend import server as core_server
 from pyqode.core.api.syntax_highlighter import get_all_styles
+from pygments import lexers
 
 version = __version__
 if '.dev' in version or '.a' in version or '.b' in version or '.rc' in version:
@@ -59,6 +60,14 @@ for s in get_all_styles():
         pygments_styles.append(module)
 print('pygment styles', pygments_styles)
 
+pygments_lexers = []
+lexers_dir = os.path.dirname(lexers.__file__)
+for file in os.listdir(lexers_dir):
+    name = os.path.splitext(file)[0]
+    if name not in ['__pycache__']:
+        pygments_lexers.append('pygments.lexers.%s' % name)
+print('pygment lexers', pygments_lexers)
+
 
 # build options
 options = {
@@ -86,7 +95,7 @@ options = {
         'packaging._compat',
         'packaging._structures',
         'packaging.__about__',
-    ] + pygments_styles
+    ] + pygments_styles + pygments_lexers
 }
 
 if windows:
