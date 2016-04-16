@@ -216,6 +216,7 @@ class ViewController(Controller):
         :type page: open_cobol_ide.core.constants.Page
         """
         _logger().debug('showing page %r' % page)
+        current_page = self.ui.stackedWidget.currentIndex()
         self.ui.stackedWidget.setCurrentIndex(int(page))
         if page == Page.HOME:
             self.main_window.save_state()
@@ -235,12 +236,13 @@ class ViewController(Controller):
             self.ui.widgetHome.show()
             self.ui.btOpenFile.setFocus()
         else:
-            self._apply_perspective()
-            self.ui.widgetHome.hide()
-            self.ui.dockWidgetFileSystem.setVisible(self._flg_fs_visible)
-            self.ui.dockWidgetNavPanel.setVisible(self._flg_nav_visible)
-            self.ui.dockWidgetOffsets.hide()
-            self.ui.dockWidgetLogs.hide()
+            if page != current_page:
+                self._apply_perspective()
+                self.ui.widgetHome.hide()
+                self.ui.dockWidgetFileSystem.setVisible(self._flg_fs_visible)
+                self.ui.dockWidgetNavPanel.setVisible(self._flg_nav_visible)
+                self.ui.dockWidgetOffsets.hide()
+                self.ui.dockWidgetLogs.hide()
 
     def _apply_perspective(self):
         """
