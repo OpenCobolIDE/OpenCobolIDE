@@ -252,12 +252,12 @@ class GnuCobolCompiler(QtCore.QObject):
         def get_output_path(input_path):
             dirname, filename = os.path.split(input_path)
             basename = os.path.splitext(filename)[0]
-            possible_extensions = ['.exe', '.dll', '.so', '.dylib']
+            possible_extensions = ['.exe', '.dll', '.so', '.dylib', '']
             for ext in possible_extensions:
                 candidate = os.path.join(dirname, basename + ext)
                 if os.path.exists(candidate):
                     return candidate
-            return None
+            return 'none'
 
         from open_cobol_ide.view.dialogs.preferences import DEFAULT_TEMPLATE
         working_dir = tempfile.gettempdir()
@@ -269,28 +269,37 @@ class GnuCobolCompiler(QtCore.QObject):
 
         _logger().debug('check compiler')
 
+        success = False
         status, output = run_command(compiler, ['-x', cbl_path],
                                      working_dir=working_dir)
         dest = get_output_path(cbl_path)
         if dest:
+            success = status == 0 and os.path.exists(dest)
+            # detect default executable extension
             GnuCobolCompiler.extensions[0] = os.path.splitext(dest)[1]
             try:
                 os.remove(dest)
             except OSError:
                 pass
+        else:
+            success = False
 
         status, output = run_command(compiler, [cbl_path],
                                      working_dir=working_dir)
         dest = get_output_path(cbl_path)
         if dest:
+            success = status == 0 and os.path.exists(dest)
+            # detect default module extension
             GnuCobolCompiler.extensions[1] = os.path.splitext(dest)[1]
             try:
                 os.remove(dest)
             except OSError:
                 pass
+        else:
+            success = False
 
         _logger().info('GnuCOBOL compiler check: %s',
-                       'success' if status == 0 else 'fail')
+                       'success' if success else 'fail')
         _logger().info('Executable extension: %s' %
                        GnuCobolCompiler.extensions[0])
         _logger().info('Module extension: %s' %
@@ -300,6 +309,9 @@ class GnuCobolCompiler(QtCore.QObject):
             os.remove(cbl_path)
         except OSError:
             pass
+
+        if not success:
+            status = -1
 
         return output, status
 
