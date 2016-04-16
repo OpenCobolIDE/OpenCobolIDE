@@ -223,7 +223,7 @@ class PygmentsSH(SyntaxHighlighter):
                 print(m)
                 self._lexer = get_lexer_for_mimetype(m[0])
             except (ClassNotFound, IndexError, ImportError):
-                self._lexer = get_lexer_for_mimetype('text/x-plain')
+                self._lexer = get_lexer_for_mimetype('text/plain')
         if self._lexer is None:
             _logger().warning('failed to get lexer from filename: %s, using '
                               'plain text instead...', filename)
