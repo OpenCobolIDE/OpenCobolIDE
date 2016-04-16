@@ -77,13 +77,15 @@ class FoldDetector(object):
         """
         prev_fold_level = TextBlockHelper.get_fold_lvl(previous_block)
         if text.strip() == '':
-            # blank line always have the same level as the previous line,
+            # blank line always have the same level as the previous line
             fold_level = prev_fold_level
         else:
             fold_level = self.detect_fold_level(
                 previous_block, current_block)
             if fold_level > self.limit:
                 fold_level = self.limit
+
+        prev_fold_level = TextBlockHelper.get_fold_lvl(previous_block)
 
         if fold_level > prev_fold_level:
             # apply on previous blank lines
@@ -93,16 +95,6 @@ class FoldDetector(object):
                 block = block.previous()
             TextBlockHelper.set_fold_trigger(
                 block, True)
-
-        delta_abs = abs(fold_level - prev_fold_level)
-        if delta_abs > 1:
-            if fold_level > prev_fold_level:
-                # try to fix inconsistent fold level
-                _logger().debug(
-                    '(l%d) inconsistent fold level, difference between '
-                    'consecutive blocks cannot be greater than 1 (%d).',
-                    current_block.blockNumber() + 1, delta_abs)
-                fold_level = prev_fold_level + 1
 
         # update block fold level
         if text.strip():

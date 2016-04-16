@@ -66,7 +66,6 @@ class CommentsMode(Mode):
         cursor = self.editor.textCursor()
         cursor.beginEditBlock()
         sel_start = cursor.selectionStart()
-        sel_end = cursor.selectionEnd()
         has_selection = True
         if not cursor.hasSelection():
             cursor.select(QtGui.QTextCursor.LineUnderCursor)
@@ -86,10 +85,7 @@ class CommentsMode(Mode):
             if not self.editor.free_format:
                 full_line = 6 * ' ' + full_line[6:]
             line = full_line.lstrip()
-            if comment_symbol.strip() == '*':
-                indent = 6
-            else:
-                indent = len(full_line) - len(line)
+            indent = len(full_line) - len(line)
             if line != "":
                 cursor.movePosition(QtGui.QTextCursor.StartOfLine)
                 # Uncomment
@@ -99,8 +95,8 @@ class CommentsMode(Mode):
                     cursor.insertText("")
                 # comment
                 else:
-                    cursor.movePosition(QtGui.QTextCursor.StartOfLine)
                     if self.editor.free_format:
+                        print('indent', indent)
                         cursor.setPosition(cursor.position() + indent)
                     else:
                         cursor.movePosition(QtGui.QTextCursor.Right, QtGui.QTextCursor.MoveAnchor, 6)
