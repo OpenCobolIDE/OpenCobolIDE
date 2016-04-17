@@ -137,8 +137,6 @@ class CobolFoldDetector(FoldDetector):
                     TextBlockHelper.set_fold_trigger(prev, False)
 
             return lvl
-        else:
-            print("nowhere", block.text())
 
         # other lines follow their previous fold level
         plvl = TextBlockHelper.get_fold_lvl(prev_block)

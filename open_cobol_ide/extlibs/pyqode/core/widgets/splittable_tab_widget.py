@@ -169,14 +169,44 @@ class BaseTabWidget(QtWidgets.QTabWidget):
         Closes every editors tabs except the current one.
         """
         current_widget = self.widget(self.tab_under_menu())
-        self._try_close_dirty_tabs(exept=current_widget)
-        i = 0
-        while self.count() > 1:
-            widget = self.widget(i)
-            if widget != current_widget:
-                self.remove_tab(i)
-            else:
-                i = 1
+        if self._try_close_dirty_tabs(exept=current_widget):
+            i = 0
+            while self.count() > 1:
+                widget = self.widget(i)
+                if widget != current_widget:
+                    self.remove_tab(i)
+                else:
+                    i = 1
+
+    @QtCore.Slot()
+    def close_left(self):
+        """
+        Closes every editors tabs on the left of the current one.
+        """
+        current_widget = self.widget(self.tab_under_menu())
+        index = self.indexOf(current_widget)
+        if self._try_close_dirty_tabs(tab_range=range(index)):
+            while True:
+                widget = self.widget(0)
+                if widget != current_widget:
+                    self.remove_tab(0)
+                else:
+                    break
+
+    @QtCore.Slot()
+    def close_right(self):
+        """
+        Closes every editors tabs on the left of the current one.
+        """
+        current_widget = self.widget(self.tab_under_menu())
+        index = self.indexOf(current_widget)
+        if self._try_close_dirty_tabs(tab_range=range(index + 1, self.count())):
+            while True:
+                widget = self.widget(self.count() - 1)
+                if widget != current_widget:
+                    self.remove_tab(self.count() - 1)
+                else:
+                    break
 
     @QtCore.Slot()
     def close_all(self):
@@ -270,9 +300,11 @@ class BaseTabWidget(QtWidgets.QTabWidget):
     def _create_tab_bar_menu(self):
         context_mnu = QtWidgets.QMenu()
         for name, slot, icon in [
-                (_('Close'), self.close, 'window-close'),
-                (_('Close others'), self.close_others, 'tab-close-other'),
-                (_('Close all'), self.close_all,
+                (_('Close tab'), self.close, 'document-close'),
+                (_('Close tabs to the left'), self.close_left, 'tab-close-other'),
+                (_('Close tabs to the right'), self.close_right, 'tab-close-other'),
+                (_('Close others tabs'), self.close_others, 'tab-close-other'),
+                (_('Close all tabs'), self.close_all,
                  'project-development-close-all'),
                 (None, None, None),
                 (_('Detach tab'), self.detach_tab, 'tab-detach')]:
@@ -284,6 +316,10 @@ class BaseTabWidget(QtWidgets.QTabWidget):
                 qaction.triggered.connect(slot)
                 if icon:
                     qaction.setIcon(QtGui.QIcon.fromTheme(icon))
+            if slot == self.close_left:
+                self.a_close_left = qaction
+            elif slot == self.close_right:
+                self.a_close_right = qaction
             context_mnu.addAction(qaction)
             self.addAction(qaction)
         context_mnu.addSeparator()
@@ -301,6 +337,10 @@ class BaseTabWidget(QtWidgets.QTabWidget):
             context_mnu.addSeparator()
         for action in self.context_actions:
             context_mnu.addAction(action)
+        tab = self.widget(self.tab_under_menu())
+        index = self.indexOf(tab)
+        self.a_close_right.setEnabled(0 <= index < self.count() - 1)
+        self.a_close_left.setEnabled(0 < index <= self.count() - 1)
         self._context_mnu = context_mnu
         return context_mnu
 
@@ -312,7 +352,7 @@ class BaseTabWidget(QtWidgets.QTabWidget):
             self._create_tab_bar_menu().popup(self.tabBar().mapToGlobal(
                 position))
 
-    def _collect_dirty_tabs(self, skip=None):
+    def _collect_dirty_tabs(self, skip=None, tab_range=None):
         """
         Collects the list of dirty tabs
 
@@ -320,22 +360,27 @@ class BaseTabWidget(QtWidgets.QTabWidget):
         """
         widgets = []
         filenames = []
-        for i in range(self.count()):
+        if tab_range is None:
+            tab_range = range(self.count())
+        for i in tab_range:
             widget = self.widget(i)
             try:
                 if widget.dirty and widget != skip:
                     widgets.append(widget)
-                    filenames.append(widget.file.path)
+                    if widget.file.path:
+                        filenames.append(widget.file.path)
+                    else:
+                        filenames.append(widget.documentTitle())
             except AttributeError:
                 pass
         return widgets, filenames
 
-    def _try_close_dirty_tabs(self, exept=None):
+    def _try_close_dirty_tabs(self, exept=None, tab_range=None):
         """
         Tries to close dirty tabs. Uses DlgUnsavedFiles to ask the user
         what he wants to do.
         """
-        widgets, filenames = self._collect_dirty_tabs(skip=exept)
+        widgets, filenames = self._collect_dirty_tabs(skip=exept, tab_range=tab_range)
         if not len(filenames):
             return True
         dlg = DlgUnsavedFiles(self, files=filenames)
