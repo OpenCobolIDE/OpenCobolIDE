@@ -23,9 +23,9 @@ Then fire up OpenCobolIDE, open the preferences dialog and go to the compiler ta
       .. note:: when you've changed an environmnent variable, you can check if the compiler works by clicking on the
                 ``check compiler`` button.
 
-    - if the compiler is build with MSVC, you will also need to indicate the path of vcvars32.bat of the
+    - if the compiler is build with MSVC, you will also need to indicate the path of vcvarsall.bat of the
       compiler used to build GnuCOBOL. If using Visual Studio 2010, you can find this file in
-      ``c:\Program Files(x86)\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat``
+      ``c:\Program Files(x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat``
 
 Here is the setup I use for working with `GnuCOBOL 2.0 MSVC`_:
 
