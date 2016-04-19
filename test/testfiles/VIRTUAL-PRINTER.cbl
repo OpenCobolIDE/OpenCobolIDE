@@ -37,9 +37,14 @@
        MAIN-PRINTER.
            IF(PA-RESET = "O")
                OPEN OUTPUT FPRINTER
+               if(PA-WHEN = "AFTER")
+                   if(PA-WHEN = "AFTER")
+                       WRITE ENREG-PRINTER
+                   END-IF
+               END-IF
            ELSE
-               OPEN EXTEND FPRINTER
-               IF(PA-WHEN = "AFTER")
+                OPEN EXTEND FPRINTER
+                IF(PA-WHEN = "AFTER")
                    IF(PA-WHAT = "PAGE")
                        MOVE '>------------------------------------------'
       -'------------------------------------<' TO ENREG-PRINTER
@@ -50,7 +55,7 @@
                            MOVE SPACES TO ENREG-PRINTER
                            WRITE ENREG-PRINTER
                        END-PERFORM
-                    END-IF
+                   END-IF
                 END-IF
                 WRITE ENREG-PRINTER FROM PA-BUFFER
                 IF(PA-WHEN = "BEFORE")
@@ -65,7 +70,7 @@
                            WRITE ENREG-PRINTER
                        END-PERFORM
                    END-IF
-               END-IF
+                END-IF
            END-IF
            CLOSE FPRINTER
            MOVE "N"        TO PA-RESET
