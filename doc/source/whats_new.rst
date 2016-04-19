@@ -33,6 +33,7 @@ bugs in OCIDE until the final 1.0 version of HackEdit is ready.*
 
 Improvements:
 
+- add a checkbox in the status bar to quickly switch between fixed and free format
 - improve saving and restoring window state (hidden dock widgets will stay hidden).
 - allow to see pyqode debug log messages
 - improve logging system to easily make the distinction between the current log content and content of other instances.
