@@ -6,83 +6,18 @@ from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.forms import dlg_file_type_ui
 
 
-EXE_TEMPLATE = """      ******************************************************************
+TEMPLATE = """      ******************************************************************
       * Author:
       * Date:
       * Purpose:
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       PROGRAM-ID. YOUR-PROGRAM-NAME.
-       ENVIRONMENT DIVISION.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       CONFIGURATION SECTION.
-      *-----------------------
-       INPUT-OUTPUT SECTION.
-      *-----------------------
-       DATA DIVISION.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       FILE SECTION.
-      *-----------------------
-       WORKING-STORAGE SECTION.
-      *-----------------------
+       PROGRAM-ID. hello.
        PROCEDURE DIVISION.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       MAIN-PROCEDURE.
-      **
-      * The main procedure of the program
-      **
-            DISPLAY "Hello world"
-            STOP RUN.
-      ** add other procedures here
-       END PROGRAM YOUR-PROGRAM-NAME.
-
+           DISPLAY "Hello, world".
+           STOP RUN.
 """
-
-MODULE_TEMPLATE = """      ******************************************************************
-      * Author:
-      * Date:
-      * Purpose:
-      * Tectonics: cobc
-      ******************************************************************
-       IDENTIFICATION DIVISION.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       PROGRAM-ID. YOUR-PROGRAM.
-       ENVIRONMENT DIVISION.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       CONFIGURATION SECTION.
-      *-----------------------
-       INPUT-OUTPUT SECTION.
-      *-----------------------
-       DATA DIVISION.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       FILE SECTION.
-      *-----------------------
-       WORKING-STORAGE SECTION.
-      *-----------------------
-       LINKAGE SECTION.
-      **-*-*-*-*-*-*-*-*-*-*-*-*-*
-       01 PARAMETRES.
-      **
-      * Input/Output parameters from/to the calling PROGRAM
-      **
-           02 PA-RETURN-CODE PIC 99 VALUE 0.
-       PROCEDURE DIVISION USING PARAMETRES.
-      *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-       MAIN-PROCEDURE.
-      **
-      * The main procedure of the program
-      **
-        DISPLAY "Hello world"
-        MOVE 0 TO PA-RETURN-CODE
-        STOP RUN.
-      ** add other procedures here
-       END PROGRAM YOUR-PROGRAM.
-
-"""
-
-TEMPLATES = [EXE_TEMPLATE, MODULE_TEMPLATE, '']
 
 
 class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
@@ -121,7 +56,7 @@ class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
         """
         Gets the selected file template
         """
-        return TEMPLATES[self.comboBoxType.currentIndex()]
+        return TEMPLATE
 
     @QtCore.Slot(str)
     def on_lineEditName_textChanged(self, txt):
