@@ -30,6 +30,40 @@ bugs in OCIDE until the final 1.0 version of HackEdit is ready.*
 
 .. _HackEdit: https://github.com/HackEdit/hackedit
 
+4.7.3
+-----
+
+Improvements:
+
+- improve saving and restoring window state (hidden dock widgets will stay hidden).
+- allow to see pyqode debug log messages
+- improve logging system to easily make the distinction between the current log content and content of other instances.
+- don't include full compiler path in default configuration (already set in PATH)
+- update to latest qcrash:
+    - split report into general and application log
+    - GitHubBackend: upload log file as a gist
+    - add option to save login only.
+- update to latest pyqode:
+    - many improvements to the cobol code folding
+    - add zoom menu to the editor context menu
+    - add ability to close tabs on the left/right of the current tab.
+    - fix cursor not visible under margins
+    - and many other bug fixes
+- include all available pygments lexer in the frozen build on Windows and OSX (you will have basic syntax highlighting
+  for file that are not cobol sources, e.g. bash, foxpro, ...).
+
+
+Fixed bugs:
+
+- fix compiler output not parsed correctly if ';' in error message
+- prevent overriding  RunEnv['PATH'] by CompilerEnv['PATH']
+- fix linter not working if no compiler full path specified (will now use PATH to find the full compiler path).
+- fix clear logs not working on Windows
+- fix PermissionError when determining the available icon themes
+- fix spelling error GnuCobol -> GnuCOBOL in about dialog.
+- fix external terminal not working anymore on GNU/Linux.
+- fix generic editor's backend not working in frozen mode
+
 4.7.2
 -----
 
