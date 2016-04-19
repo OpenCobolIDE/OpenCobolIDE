@@ -1,5 +1,10 @@
-from pyqode.cobol.api import regex, keywords
+from pyqode.cobol.api import regex
 from pyqode.core.api import FoldDetector, TextBlockHelper
+
+
+OFFSET_DIVISION = 0
+OFFSET_SECTION = 1
+OFFSET_OTHER = 2
 
 
 class CobolFoldDetector(FoldDetector):
@@ -12,13 +17,19 @@ class CobolFoldDetector(FoldDetector):
         self.variables = set()
         self.divisions = []
 
+    def is_valid(self, block):
+        return block is not None and block.isValid()
+
     def stripped_texts(self, block, prev_block):
         ctext = block.text().rstrip().upper()
         if ctext.find(' USING ') != -1:
             ctext = ctext[:ctext.find(' USING ')] + '.'
-        ptext = prev_block.text().rstrip().upper()
-        if ptext.find(' USING ') != -1:
-            ptext = ptext[:ptext.find(' USING ')] + '.'
+        if self.is_valid(prev_block):
+            ptext = prev_block.text().rstrip().upper()
+            if ptext.find(' USING ') != -1:
+                ptext = ptext[:ptext.find(' USING ')] + '.'
+        else:
+            ptext = ''
         return ctext, ptext
 
     def is_in_data_division(self, block):
@@ -33,111 +44,54 @@ class CobolFoldDetector(FoldDetector):
                 return div_type == 'procedure'
         return False
 
+    def normalize_text(self, text):
+        """
+        Normalize text, when fixed format is ON, replace the first 6 chars by a space.
+        """
+        if not self.editor.free_format:
+            text = ' ' * 5 + text[6:]
+        return text.upper()
+
+    def get_indent(self, normalized_text):
+        return len(normalized_text) - len(normalized_text.lstrip())
+
     def detect_fold_level(self, prev_block, block):
-        if not prev_block:
-            return 0
         ctext, ptext = self.stripped_texts(block, prev_block)
         if not self.editor.free_format:
-            ctext = ' ' * 6 + ctext[7:]
-            ptext = ' ' * 6 + ptext[7:]
-        if regex.DIVISION.indexIn(ctext) != -1:
-            div_type = 'data'
-            if 'PROCEDURE' in ctext:
-                div_type = 'procedure'
-            self.divisions.append((block, div_type))
-            return 0
-        elif regex.SECTION.indexIn(ctext) != -1:
-            return 1
-        elif regex.DIVISION.indexIn(ptext) != -1:
-            return 1
-        # inside PROCEDURE DIVISION
-        if self.is_in_proc_division(block):
-            # we only detect outline of paragraphes
-            stext = ctext.strip().upper().replace('.', '')
-            if regex.PARAGRAPH_PATTERN.indexIn(ctext) != -1 and stext not in keywords.RESERVED:
-                # paragraph
-                return 2
+            ctext = self.normalize_text(ctext)
+            ptext = self.normalize_text(ptext)
+        if regex.DIVISION.indexIn(ctext) != -1 and not ctext.lstrip().startswith('*'):
+            return OFFSET_DIVISION
+        elif regex.SECTION.indexIn(ctext) != -1 and not ctext.lstrip().startswith('*'):
+            return OFFSET_SECTION
+        else:
+            # anywhere else, folding is mostly based on the indentation level
+            indent = self.get_indent(ctext)
+            pindent = self.get_indent(ptext)
+
+            if ctext.strip().upper().startswith('END-') and self.is_valid(prev_block) and pindent > indent:
+                # find previous block with the same indent, use it's fold level + 1 to include
+                # the end-branch statement in the fold scope
+                pblock = prev_block
+                while self.is_valid(pblock) and (pindent != indent or len(ptext.strip()) == 0):
+                    pblock = pblock.previous()
+                    ptext = self.normalize_text(pblock.text())
+                    pindent = self.get_indent(ptext)
+                lvl = TextBlockHelper.get_fold_lvl(pblock.next())
             else:
-                in_keywords = ptext.strip().upper().replace('.', '') in keywords.RESERVED
-                prev = prev_block
-                while prev.text().strip() == '' and prev.isValid():
-                    prev = prev.previous()
-                prtext = prev.text()
-                if not self.editor.free_format:
-                    prtext = ' ' * 6 + ptext[7:]
-                if 'SECTION' in prtext or 'DIVISION' in prtext:
-                    return 2
-                # content of a paragraph
-                if regex.PARAGRAPH_PATTERN.indexIn(prtext) != -1 and not in_keywords:
-                    return 3
-                else:
-                    cstxt = ctext.lstrip()
-                    pstxt = ptext.lstrip()
-                    plvl = TextBlockHelper.get_fold_lvl(prev_block)
-                    if regex.LOOP_PATTERN.indexIn(pstxt) != -1:
-                        pstxt = '$L$O$OP$'
-                    if regex.BRANCH_END.indexIn(pstxt) == 0:
-                        if cstxt in ['ELSE']:
-                            return plvl - 2
-                        return plvl - 1
-                    if regex.BRANCH_END.indexIn(cstxt) == 0:
-                        nblock = block.next()
-                        if nblock.isValid():
-                            TextBlockHelper.set_fold_lvl(nblock, plvl - 1)
-                        return plvl
-                    if 'ELSE' in cstxt:
-                        return plvl - 1
-                    for token in ['IF', 'ELSE', '$L$O$OP$', 'READ']:
-                        if pstxt.startswith(token) and not pstxt.endswith('END-%s' % token):
-                            if token == '$L$O$OP$' and ptext.lstrip().startswith('PERFORM'):
-                                tokens = [t for t in ptext.strip().split() if t]
-                                try:
-                                    tag = tokens[1]
-                                except IndexError:
-                                    pass
-                                else:
-                                    if tag not in list(self.variables) + ['VARYING', 'WITH']:
-                                        # out-of-line perform
-                                        continue
-                            return plvl + 1
-                    return plvl
-        # INSIDE  DATA DIVISION
-        elif self.is_in_data_division(block):
-            # here folding is based on the indentation level
-            indent = len(ctext) - len(ctext.lstrip())
-            if not ctext.lstrip().startswith('*'):
-                tokens = [t for t in ctext.split(' ') if t]
-                try:
-                    name = tokens[1]
-                except IndexError:
-                    pass
-                else:
-                    self.variables.add(name)
+                lvl = OFFSET_OTHER + indent
 
-            lvl = 3 + indent
+            # if not self.editor.free_format and (ctext.lstrip().startswith('-') or ctext.lstrip().startswith('*')):
+            if not self.editor.free_format and (ctext.lstrip().startswith('-')):
+                # use previous fold level
+                lvl = TextBlockHelper.get_fold_lvl(prev_block)
 
-            if not ctext.lstrip().startswith('*'):
-                # fix fold level of previous comment lines.
-                prev = prev_block
-                flg_trigger = False
-                ptext = prev.text().upper()
-                if not self.editor.free_format:
-                    ptext = ' ' * 6 + ptext[7:]
-                while (ptext.strip().startswith('*') or not ptext.strip()) and prev.isValid():
-                    TextBlockHelper.set_fold_lvl(prev, lvl)
-                    TextBlockHelper.set_fold_trigger(prev, False)
-                    prev = prev.previous()
-                    flg_trigger = True
-                    ptext = prev.text().upper()
-                    if not self.editor.free_format:
-                        ptext = ' ' * 6 + ptext[7:]
-                if flg_trigger and 'SECTION' in ptext or 'DIVISION' in ptext:
-                    TextBlockHelper.set_fold_trigger(prev, True)
+            if not self.editor.free_format and ctext.strip().startswith('*'):
+                if regex.DIVISION.indexIn(ptext) != -1 and not ptext.lstrip().startswith('*'):
+                    lvl = OFFSET_SECTION
+                elif regex.SECTION.indexIn(ptext) != -1 and not ptext.lstrip().startswith('*'):
+                    return OFFSET_SECTION + 1
                 else:
-                    TextBlockHelper.set_fold_trigger(prev, False)
+                    lvl = TextBlockHelper.get_fold_lvl(prev_block)
 
             return lvl
-
-        # other lines follow their previous fold level
-        plvl = TextBlockHelper.get_fold_lvl(prev_block)
-        return plvl
