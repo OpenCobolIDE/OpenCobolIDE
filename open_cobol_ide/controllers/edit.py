@@ -117,12 +117,9 @@ class EditController(Controller):
             QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self._lbl_encoding.setText('UTF-8')
         # format
-        self._lbl_format = QtWidgets.QLabel()
-        self._lbl_format.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self._lbl_format.setAlignment(
-            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-        self._lbl_format.setText(
-            'Free format' if Settings().free_format else 'Fixed format')
+        self._cb_free_format = QtWidgets.QCheckBox('Free format')
+        self._cb_free_format.setChecked(Settings().free_format)
+        self._cb_free_format.toggled.connect(self._on_free_format_toggled)
         # cursor position
         self._lbl_cursor = QtWidgets.QLabel()
         self._lbl_cursor.setFrameShape(QtWidgets.QFrame.NoFrame)
@@ -142,7 +139,7 @@ class EditController(Controller):
         self.ui.statusbar.addWidget(self._lbl_path, True)
         self.ui.statusbar.addAction(self.ui.actionEnableLinter)
         self.ui.statusbar.addPermanentWidget(linter_btn)
-        self.ui.statusbar.addPermanentWidget(self._lbl_format)
+        self.ui.statusbar.addPermanentWidget(self._cb_free_format)
         self.ui.statusbar.addPermanentWidget(self._lbl_cursor)
         self.ui.statusbar.addPermanentWidget(self._lbl_encoding)
         self.ui.statusbar.setStyleSheet(
@@ -283,8 +280,7 @@ class EditController(Controller):
                 c = self._get_cursor_pos_in_bytes(c, encoding)
             self._lbl_cursor.setText('%d:%d' % (l + 1, c + 1))
             self._lbl_encoding.setText(encoding)
-            self._lbl_format.setText(
-                'Free format' if Settings().free_format else 'Fixed format')
+            self._cb_free_format.setChecked(Settings().free_format)
             self._lbl_path.setText(self.current_editor.file.path)
         else:
             self._lbl_cursor.setText('n/a')
@@ -304,6 +300,7 @@ class EditController(Controller):
             self.app.update_app_style()
             self.app.home.update_style()
             QtGui.QIcon.setThemeName(Settings().icon_theme)
+            self._update_status_bar_labels()
             for editor in self.ui.tabWidgetEditors.widgets(
                     include_clones=True):
                 update_editor_settings(editor)
@@ -320,7 +317,6 @@ class EditController(Controller):
                     self.ui.actionEnableLinter.setEnabled(False)
                 else:
                     self.ui.actionEnableLinter.setEnabled(True)
-            self._update_status_bar_labels()
 
     def _on_file_deleted(self, editor):
         if QtWidgets.QMessageBox.question(
@@ -341,3 +337,8 @@ class EditController(Controller):
 
     def _on_enable_linter_toggled(self, is_checked):
         self.current_editor.linter_mode.enabled = is_checked
+
+    def _on_free_format_toggled(self, state):
+        Settings().free_format = state
+        for editor in self.ui.tabWidgetEditors.widgets(include_clones=True):
+            update_editor_settings(editor)
