@@ -8,10 +8,8 @@ accomplished, please visit the `issues page on github`_.
 Next Version
 =============
 
-We plan to improve the code template mechanism to let you define your own code
-template that will be used for new file creation. We might also add a small
-macro system to automatically fill up details such as author, date, and so
-on...
+OpenCobolIDE is in maintenance mode. No new features planned, only critical bugfixes. Note that it may automatically
+receive new features if they are implemented in pyQode.
 
 Changelog
 =========
