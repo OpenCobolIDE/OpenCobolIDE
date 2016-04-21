@@ -1,11 +1,14 @@
-Main Authors
-============
+- **Colin Duquesnoy** (@ColinDuquesnoy)
+    Main developper
 
-- Colin Duquesnoy (@ColinDuquesnoy) <colin.duquesnoy@gmail.com>
+- **Céline Thiry** (@CelineThiry)
+    Graphic designer (application icon)
 
-Contributors
-============
+- **Simon Sobisch** (@GitMensch)
+    Testing
 
-- Céline Thiry <thiry.celi@gmail.com>
-- Gatien Bovyn (@Astalaseven)
-- @vlinhart
+- **Gatien Bovyn** (@Astalaseven)
+    Testing/Code Contributor
+
+- **Vlinhart** (@vlinhart)
+    Contributor (documentation)
