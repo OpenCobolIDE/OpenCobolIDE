@@ -62,6 +62,7 @@ Fixed bugs:
 - fix spelling error GnuCobol -> GnuCOBOL in about dialog.
 - fix external terminal not working anymore on GNU/Linux.
 - fix generic editor's backend not working in frozen mode
+- fix default icon theme not correctly detected on Plasma 5.6 (maybe on other linux desktops too).
 
 4.7.2
 -----
