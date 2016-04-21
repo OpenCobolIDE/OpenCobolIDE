@@ -31,9 +31,9 @@ def main():
     from open_cobol_ide import system
     from open_cobol_ide.app import Application
     from open_cobol_ide.settings import Settings
+    app = Application()
     if system.linux:
         QtGui.QIcon.setThemeName(Settings().icon_theme)
-    app = Application()
     ret_code = app.run()
     app.close()
     return ret_code

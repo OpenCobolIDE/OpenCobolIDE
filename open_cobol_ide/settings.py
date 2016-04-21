@@ -5,7 +5,7 @@ import logging
 import json
 import os
 import sys
-from pyqode.qt import QtCore, QtWidgets
+from pyqode.qt import QtCore, QtWidgets, QtGui
 from pyqode.qt.QtCore import QSettings
 from open_cobol_ide import system
 from open_cobol_ide.enums import FileType, GnuCobolStandard
@@ -302,7 +302,7 @@ class Settings(object):
 
     @property
     def icon_theme(self):
-        return self._settings.value('icon_theme', '')
+        return self._settings.value('icon_theme', QtGui.QIcon.themeName())
 
     @icon_theme.setter
     def icon_theme(self, value):
