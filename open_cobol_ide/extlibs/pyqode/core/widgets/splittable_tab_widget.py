@@ -320,6 +320,10 @@ class BaseTabWidget(QtWidgets.QTabWidget):
                 self.a_close_left = qaction
             elif slot == self.close_right:
                 self.a_close_right = qaction
+            elif slot == self.close_others:
+                self.a_close_others = qaction
+            elif slot == self.close_all:
+                self.a_close_all = qaction
             context_mnu.addAction(qaction)
             self.addAction(qaction)
         context_mnu.addSeparator()
@@ -339,8 +343,10 @@ class BaseTabWidget(QtWidgets.QTabWidget):
             context_mnu.addAction(action)
         tab = self.widget(self.tab_under_menu())
         index = self.indexOf(tab)
-        self.a_close_right.setEnabled(0 <= index < self.count() - 1)
-        self.a_close_left.setEnabled(0 < index <= self.count() - 1)
+        self.a_close_right.setVisible(0 <= index < self.count() - 1)
+        self.a_close_left.setVisible(0 < index <= self.count() - 1)
+        self.a_close_others.setVisible(self.count() > 1)
+        self.a_close_all.setVisible(self.count() > 1)
         self._context_mnu = context_mnu
         return context_mnu
 

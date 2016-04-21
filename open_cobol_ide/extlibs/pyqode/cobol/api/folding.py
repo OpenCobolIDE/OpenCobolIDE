@@ -22,12 +22,8 @@ class CobolFoldDetector(FoldDetector):
 
     def stripped_texts(self, block, prev_block):
         ctext = block.text().rstrip().upper()
-        if ctext.find(' USING ') != -1:
-            ctext = ctext[:ctext.find(' USING ')] + '.'
         if self.is_valid(prev_block):
             ptext = prev_block.text().rstrip().upper()
-            if ptext.find(' USING ') != -1:
-                ptext = ptext[:ptext.find(' USING ')] + '.'
         else:
             ptext = ''
         return ctext, ptext
@@ -49,11 +45,12 @@ class CobolFoldDetector(FoldDetector):
         Normalize text, when fixed format is ON, replace the first 6 chars by a space.
         """
         if not self.editor.free_format:
-            text = ' ' * 5 + text[6:]
+            text = ' ' * 6 + text[6:]
         return text.upper()
 
     def get_indent(self, normalized_text):
-        return len(normalized_text) - len(normalized_text.lstrip())
+        indent = len(normalized_text) - len(normalized_text.lstrip())
+        return indent + indent % 2
 
     def detect_fold_level(self, prev_block, block):
         ctext, ptext = self.stripped_texts(block, prev_block)
@@ -90,7 +87,7 @@ class CobolFoldDetector(FoldDetector):
                 if regex.DIVISION.indexIn(ptext) != -1 and not ptext.lstrip().startswith('*'):
                     lvl = OFFSET_SECTION
                 elif regex.SECTION.indexIn(ptext) != -1 and not ptext.lstrip().startswith('*'):
-                    return OFFSET_SECTION + 1
+                    return OFFSET_SECTION + 2
                 else:
                     lvl = TextBlockHelper.get_fold_lvl(prev_block)
 

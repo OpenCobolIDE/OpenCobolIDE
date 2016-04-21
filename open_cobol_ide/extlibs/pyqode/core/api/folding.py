@@ -277,20 +277,8 @@ class FoldScope(object):
         TextBlockHelper.set_collapsed(self._trigger, False)
         for block in self.blocks(ignore_blank_lines=False):
             block.setVisible(True)
-        for region in self.child_regions():
-            if not region.collapsed:
-                region.unfold()
-            else:
-                # leave it closed but open the last blank lines and the
-                # trigger line
-                start, bstart = region.get_range(ignore_blank_lines=True)
-                _, bend = region.get_range(ignore_blank_lines=False)
-                block = self._trigger.document().findBlockByNumber(start)
-                block.setVisible(True)
-                block = self._trigger.document().findBlockByNumber(bend)
-                while block.blockNumber() > bstart:
-                    block.setVisible(True)
-                    block = block.previous()
+            if TextBlockHelper.is_fold_trigger(block):
+                TextBlockHelper.set_collapsed(block, False)
 
     def blocks(self, ignore_blank_lines=True):
         """
@@ -301,12 +289,8 @@ class FoldScope(object):
         """
         start, end = self.get_range(ignore_blank_lines=ignore_blank_lines)
         block = self._trigger.next()
-        ref_lvl = self.scope_level
         while block.blockNumber() <= end and block.isValid():
-            lvl = TextBlockHelper.get_fold_lvl(block)
-            trigger = TextBlockHelper.is_fold_trigger(block)
-            if lvl == ref_lvl and not trigger:
-                yield block
+            yield block
             block = block.next()
 
     def child_regions(self):
