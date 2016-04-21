@@ -72,6 +72,7 @@ class Application(QtCore.QObject):
             files = self.handle_command_line_args()
         else:
             files = []
+        _logger().info('files to open: %r' % files)
         self.name = 'OpenCobolIDE'
         self.version = __version__
         self.title = '%s %s' % (self.name, self.version)
@@ -106,9 +107,7 @@ class Application(QtCore.QObject):
         else:
             _logger().info('GnuCOBOL version: %s',
                            GnuCobolCompiler.get_version(include_all=False))
-        # open specified files
-        for f in files:
-            self.file.open_file(f)
+        self._files = files
 
     def restart(self):
         """
@@ -155,6 +154,10 @@ class Application(QtCore.QObject):
             self.win.show()
             self.view.restore_state()
             self.view.show_home_page()
+            if self._files:
+                # open specified files
+                for f in self._files:
+                    self.file.open_file(f)
         return self.app.exec_()
 
     @staticmethod
