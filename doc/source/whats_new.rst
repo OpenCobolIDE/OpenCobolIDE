@@ -50,7 +50,7 @@ Improvements:
     - and many other bug fixes
 - include all available pygments lexer in the frozen build on Windows and OSX (you will have basic syntax highlighting
   for file that are not cobol sources, e.g. bash, foxpro, ...).
-
+- simplify new file templates + use free format setting to choose the correct template.
 
 Fixed bugs:
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>356</width>
-    <height>130</height>
+    <height>180</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,37 +21,45 @@
    <item>
     <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
-      <widget class="QLabel" name="labelName">
+      <widget class="QLabel" name="label">
        <property name="text">
-        <string>Name</string>
+        <string>Template:</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <widget class="QComboBox" name="comboBoxType">
+       <property name="toolTip">
+        <string>New file template (program, module or empty)</string>
+       </property>
+       <property name="statusTip">
+        <string>New file template (program, module or empty)</string>
+       </property>
        <item>
-        <widget class="QLineEdit" name="lineEditName">
-         <property name="toolTip">
-          <string>Program name (without path and without extension)</string>
-         </property>
-         <property name="statusTip">
-          <string>Program name (without path and without extension)</string>
-         </property>
-        </widget>
+        <property name="text">
+         <string>Program</string>
+        </property>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBoxExtension"/>
+        <property name="text">
+         <string>Module</string>
+        </property>
        </item>
-      </layout>
+       <item>
+        <property name="text">
+         <string>Empty</string>
+        </property>
+       </item>
+      </widget>
      </item>
-     <item row="1" column="0">
+     <item row="2" column="0">
       <widget class="QLabel" name="labelDir">
        <property name="text">
         <string>Directory</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="2" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QLineEdit" name="lineEditPath">
@@ -78,6 +86,30 @@
        </item>
       </layout>
      </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="labelName">
+       <property name="text">
+        <string>Name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLineEdit" name="lineEditName">
+         <property name="toolTip">
+          <string>Program name (without path and without extension)</string>
+         </property>
+         <property name="statusTip">
+          <string>Program name (without path and without extension)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBoxExtension"/>
+       </item>
+      </layout>
+     </item>
     </layout>
    </item>
    <item>
@@ -97,6 +129,7 @@
  </widget>
  <tabstops>
   <tabstop>buttonBox</tabstop>
+  <tabstop>comboBoxType</tabstop>
   <tabstop>lineEditName</tabstop>
   <tabstop>comboBoxExtension</tabstop>
   <tabstop>lineEditPath</tabstop>

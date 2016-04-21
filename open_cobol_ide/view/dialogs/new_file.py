@@ -6,18 +6,89 @@ from open_cobol_ide.settings import Settings
 from open_cobol_ide.view.forms import dlg_file_type_ui
 
 
-TEMPLATE = """      ******************************************************************
+EXE_TEMPLATE = '''      ******************************************************************
       * Author:
       * Date:
       * Purpose:
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. hello.
+       PROGRAM-ID. YOUR-PROGRAM-NAME.
+       DATA DIVISION.
+       FILE SECTION.
+       WORKING-STORAGE SECTION.
        PROCEDURE DIVISION.
-           DISPLAY "Hello, world".
+       MAIN-PROCEDURE.
+            DISPLAY "Hello world"
+            STOP RUN.
+       END PROGRAM YOUR-PROGRAM-NAME.
+
+'''
+
+MODULE_TEMPLATE = '''      ******************************************************************
+      * Author:
+      * Date:
+      * Purpose:
+      * Tectonics: cobc
+      ******************************************************************
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. YOUR-PROGRAM.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       LINKAGE SECTION.
+       01 PARAMETRES.
+           02 PA-RETURN-CODE PIC 99 VALUE 0.
+       PROCEDURE DIVISION USING PARAMETRES.
+       MAIN-PROCEDURE.
+           DISPLAY "Hello world"
+           MOVE 0 TO PA-RETURN-CODE
            STOP RUN.
-"""
+       END PROGRAM YOUR-PROGRAM.
+'''
+
+TEMPLATES = [EXE_TEMPLATE, MODULE_TEMPLATE, '']
+
+
+EXE_TEMPLATE_FREE = '''*>****************************************************************
+*> Author:
+*> Date:
+*> Purpose:
+*> Tectonics: cobc
+*>****************************************************************
+IDENTIFICATION DIVISION.
+PROGRAM-ID. YOUR-PROGRAM-NAME.
+DATA DIVISION.
+FILE SECTION.
+WORKING-STORAGE SECTION.
+PROCEDURE DIVISION.
+MAIN-PROCEDURE.
+    DISPLAY "Hello world"
+    STOP RUN.
+END PROGRAM YOUR-PROGRAM-NAME.
+'''
+
+MODULE_TEMPLATE_FREE = '''*>****************************************************************
+*> Author:
+*> Date:
+*> Purpose:
+*> Tectonics: cobc
+*>*****************************************************************
+IDENTIFICATION DIVISION.
+PROGRAM-ID. YOUR-PROGRAM.
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+LINKAGE SECTION.
+01 PARAMETRES.
+   02 PA-RETURN-CODE PIC 99 VALUE 0.
+PROCEDURE DIVISION USING PARAMETRES.
+MAIN-PROCEDURE.
+   DISPLAY "Hello world"
+   MOVE 0 TO PA-RETURN-CODE
+   STOP RUN.
+END PROGRAM YOUR-PROGRAM.
+'''
+
+FREE_TEMPLATES = [EXE_TEMPLATE_FREE, MODULE_TEMPLATE_FREE, '']
 
 
 class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
@@ -56,7 +127,10 @@ class DlgNewFile(QtWidgets.QDialog, dlg_file_type_ui.Ui_Dialog):
         """
         Gets the selected file template
         """
-        return TEMPLATE
+        if Settings().free_format:
+            return FREE_TEMPLATES[self.comboBoxType.currentIndex()]
+        else:
+            return TEMPLATES[self.comboBoxType.currentIndex()]
 
     @QtCore.Slot(str)
     def on_lineEditName_textChanged(self, txt):
