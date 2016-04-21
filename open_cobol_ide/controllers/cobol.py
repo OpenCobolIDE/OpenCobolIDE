@@ -350,7 +350,7 @@ class CobolController(Controller):
         env = os.environ.copy()
         for k, v in Settings().run_environemnt.items():
             env[k] = v
-        if 'PATH' not in env.keys():
+        if 'PATH' not in Settings().run_environemnt.keys():
             env['PATH'] = GnuCobolCompiler.setup_process_environment().value(
                 'PATH')
         if file_type == FileType.MODULE:
