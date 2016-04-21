@@ -280,12 +280,14 @@ class EditController(Controller):
                 c = self._get_cursor_pos_in_bytes(c, encoding)
             self._lbl_cursor.setText('%d:%d' % (l + 1, c + 1))
             self._lbl_encoding.setText(encoding)
+            self._cb_free_format.setEnabled(True)
             self._cb_free_format.setChecked(Settings().free_format)
             self._lbl_path.setText(self.current_editor.file.path)
         else:
             self._lbl_cursor.setText('n/a')
             self._lbl_encoding.setText('n/a')
-            self._lbl_format.setText('n/a')
+            self._cb_free_format.setChecked(False)
+            self._cb_free_format.setEnabled(False)
             self._lbl_path.setText('n/a')
 
     def edit_preferences(self):
