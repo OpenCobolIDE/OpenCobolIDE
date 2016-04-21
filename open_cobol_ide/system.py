@@ -138,7 +138,7 @@ def icon_themes():
                     files = []
                 if 'cursors' not in files and 'index.theme' in files:
                     themes.append(d)
-    return list(set(themes))
+    return sorted(list(set(themes)))
 
 
 def normpath(path):
