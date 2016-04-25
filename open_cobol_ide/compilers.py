@@ -266,6 +266,8 @@ class GnuCobolCompiler(QtCore.QObject):
                 except OSError:
                     # log something
                     _logger().exception('failed to remove check compiler destination')
+                    return False
+            return True
 
         from open_cobol_ide.view.dialogs.preferences import DEFAULT_TEMPLATE
         working_dir = tempfile.gettempdir()
@@ -274,13 +276,15 @@ class GnuCobolCompiler(QtCore.QObject):
             with open(cbl_path, 'w') as f:
                 f.write(DEFAULT_TEMPLATE)
         except OSError as e:
-            return False, 'Failed to create %s, error=%r' % (cbl_path, e)
+            return 'Failed to create %s, error=%r' % (cbl_path, e), -1
         dest = os.path.join(tempfile.gettempdir(),
                             'test' + ('.exe' if system.windows else ''))
 
+        _logger().debug('removing executable test if still exists...')
+        if not rm_dest(dest):
+            return 'Failed to remove %r before checking if compilation of executable works.\n' \
+                'Please remove this file before attempting a new compilation check!' % dest, -1
         _logger().debug('check compiler')
-
-        rm_dest(dest)
         success1 = False
         status, output1 = run_command(compiler, ['-x', cbl_path], working_dir=working_dir)
         dest = get_output_path(cbl_path, possible_extensions=['.exe', '.bat', ''])
@@ -294,11 +298,14 @@ class GnuCobolCompiler(QtCore.QObject):
                 try:
                     os.remove(dest)
                 except OSError:
-                    pass
+                    _logger().exception('failed to remove destination file: %r' % dest)
 
         dest = os.path.join(tempfile.gettempdir(),
                             'test' + ('.dll' if system.windows else '.so' if system.linux else '.dylib'))
-        rm_dest(dest)
+        _logger().debug('removing executable test if still exists...')
+        if not rm_dest(dest):
+            return 'Failed to remove %r before checking if compilation of module works.\n' \
+                'Please remove this file before attempting a new compilation check!' % dest, -1
         success2 = False
         status, output2 = run_command(compiler, [cbl_path], working_dir=working_dir)
         dest = get_output_path(cbl_path, possible_extensions=['.so', '.dll', '.dylib'])
@@ -312,7 +319,7 @@ class GnuCobolCompiler(QtCore.QObject):
                 try:
                     os.remove(dest)
                 except OSError:
-                    pass
+                    _logger().exception('failed to remove destination file: %r' % dest)
 
         _logger().info('GnuCOBOL compiler check: %s (%d/%d)',
                        'success' if success1 and success2 else 'fail',
@@ -326,7 +333,7 @@ class GnuCobolCompiler(QtCore.QObject):
         try:
             os.remove(cbl_path)
         except OSError:
-            pass
+            _logger().exception('failed to remove test file: %r' % dest)
 
         if not success1 or not success2:
             status = -1
