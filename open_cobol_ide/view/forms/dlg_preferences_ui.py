@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/dev/OpenCobolIDE/forms/dlg_preferences.ui'
+# Form implementation generated from reading ui file '/home/colin/Documents/OpenCobolIDE/forms/dlg_preferences.ui'
 #
 # Created by: PyQt5 UI code generator 5.5.1
 #
@@ -46,7 +46,7 @@ class Ui_Dialog(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 728, 749))
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 676, 707))
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
@@ -275,7 +275,7 @@ class Ui_Dialog(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollArea_2.setObjectName("scrollArea_2")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 364, 362))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 364, 342))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_8 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
@@ -364,7 +364,7 @@ class Ui_Dialog(object):
         self.scrollArea_5.setWidgetResizable(True)
         self.scrollArea_5.setObjectName("scrollArea_5")
         self.scrollAreaWidgetContents_7 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_7.setGeometry(QtCore.QRect(0, 0, 708, 918))
+        self.scrollAreaWidgetContents_7.setGeometry(QtCore.QRect(0, 0, 708, 872))
         self.scrollAreaWidgetContents_7.setObjectName("scrollAreaWidgetContents_7")
         self.formLayout_6 = QtWidgets.QFormLayout(self.scrollAreaWidgetContents_7)
         self.formLayout_6.setFieldGrowthPolicy(QtWidgets.QFormLayout.ExpandingFieldsGrow)
@@ -596,7 +596,7 @@ class Ui_Dialog(object):
         self.scrollArea_4.setWidgetResizable(True)
         self.scrollArea_4.setObjectName("scrollArea_4")
         self.scrollAreaWidgetContents_6 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_6.setGeometry(QtCore.QRect(0, 0, 223, 244))
+        self.scrollAreaWidgetContents_6.setGeometry(QtCore.QRect(0, 0, 203, 230))
         self.scrollAreaWidgetContents_6.setObjectName("scrollAreaWidgetContents_6")
         self.verticalLayout_13 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_6)
         self.verticalLayout_13.setObjectName("verticalLayout_13")
@@ -666,7 +666,7 @@ class Ui_Dialog(object):
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollArea_3.setObjectName("scrollArea_3")
         self.scrollAreaWidgetContents_5 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_5.setGeometry(QtCore.QRect(0, 0, 337, 556))
+        self.scrollAreaWidgetContents_5.setGeometry(QtCore.QRect(0, 0, 289, 515))
         self.scrollAreaWidgetContents_5.setObjectName("scrollAreaWidgetContents_5")
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_5)
         self.verticalLayout_9.setObjectName("verticalLayout_9")
@@ -911,7 +911,7 @@ class Ui_Dialog(object):
         self.listWidgetColorSchemes.setStatusTip(_translate("Dialog", "Pygments color schemes."))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabStyle), _translate("Dialog", "Style"))
         self.label_compiler_path.setText(_translate("Dialog", "Compiler path:"))
-        self.lineEditCompilerPath.setToolTip(_translate("Dialog", "<html><head/><body><p>Full path to the GnuCOBOL compiler.</p></body></html>"))
+        self.lineEditCompilerPath.setToolTip(_translate("Dialog", "<html><head/><body><p>GnuCOBOL compiler path (complete path or executable name if correct path is defined in PATH).</p></body></html>"))
         self.lineEditCompilerPath.setStatusTip(_translate("Dialog", "Full path to the GnuCOBOL compiler."))
         self.toolButtonCustomCompilerPath.setText(_translate("Dialog", "..."))
         self.toolButtonCheckCompiler.setText(_translate("Dialog", "Check compiler"))

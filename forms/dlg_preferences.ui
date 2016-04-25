@@ -109,8 +109,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>728</width>
-               <height>749</height>
+               <width>676</width>
+               <height>707</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -642,7 +642,7 @@ as possible to get back to the previous indentation level.</string>
                <x>0</x>
                <y>0</y>
                <width>364</width>
-               <height>362</height>
+               <height>342</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -847,7 +847,7 @@ as possible to get back to the previous indentation level.</string>
                <x>0</x>
                <y>0</y>
                <width>708</width>
-               <height>918</height>
+               <height>872</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_6">
@@ -869,7 +869,7 @@ as possible to get back to the previous indentation level.</string>
                 <item>
                  <widget class="PathLineEdit" name="lineEditCompilerPath">
                   <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Full path to the GnuCOBOL compiler.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GnuCOBOL compiler path (complete path or executable name if correct path is defined in PATH).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
                   <property name="statusTip">
                    <string>Full path to the GnuCOBOL compiler.</string>
@@ -1391,8 +1391,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>223</width>
-               <height>244</height>
+               <width>203</width>
+               <height>230</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_13" stretch="0,1">
@@ -1543,8 +1543,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>337</width>
-               <height>556</height>
+               <width>289</width>
+               <height>515</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
