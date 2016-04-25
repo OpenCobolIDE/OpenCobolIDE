@@ -250,10 +250,9 @@ class GnuCobolCompiler(QtCore.QObject):
     @classmethod
     @memoized
     def check_compiler(cls, compiler):
-        def get_output_path(input_path):
+        def get_output_path(input_path, possible_extensions):
             dirname, filename = os.path.split(input_path)
             basename = os.path.splitext(filename)[0]
-            possible_extensions = ['.exe', '.bat', '.so', '.dll', '.dylib', '']
             for ext in possible_extensions:
                 candidate = os.path.join(dirname, basename + ext)
                 if os.path.exists(candidate):
@@ -284,7 +283,7 @@ class GnuCobolCompiler(QtCore.QObject):
         rm_dest(dest)
         success1 = False
         status, output1 = run_command(compiler, ['-x', cbl_path], working_dir=working_dir)
-        dest = get_output_path(cbl_path)
+        dest = get_output_path(cbl_path, possible_extensions=['.exe', '.bat', ''])
         if dest:
             if os.path.exists(dest):
                 success1 = True
@@ -302,7 +301,7 @@ class GnuCobolCompiler(QtCore.QObject):
         rm_dest(dest)
         success2 = False
         status, output2 = run_command(compiler, [cbl_path], working_dir=working_dir)
-        dest = get_output_path(cbl_path)
+        dest = get_output_path(cbl_path, possible_extensions=['.so', '.dll', '.dylib'])
         if dest:
             if os.path.exists(dest):
                 success2 = True
