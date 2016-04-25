@@ -252,68 +252,86 @@ class GnuCobolCompiler(QtCore.QObject):
         def get_output_path(input_path):
             dirname, filename = os.path.split(input_path)
             basename = os.path.splitext(filename)[0]
-            possible_extensions = ['.exe', '.dll', '.so', '.dylib', '']
+            possible_extensions = ['.exe', '.bat', '.so', '.dll', '.dylib', '']
             for ext in possible_extensions:
                 candidate = os.path.join(dirname, basename + ext)
                 if os.path.exists(candidate):
                     return candidate
             return 'none'
 
+        def rm_dest(dest):
+            if os.path.exists(dest):
+                try:
+                    os.remove(dest)
+                except OSError:
+                    # log something
+                    _logger().exception('failed to remove check compiler destination')
+
         from open_cobol_ide.view.dialogs.preferences import DEFAULT_TEMPLATE
         working_dir = tempfile.gettempdir()
         cbl_path = os.path.join(working_dir, 'test.cbl')
-        with open(cbl_path, 'w') as f:
-            f.write(DEFAULT_TEMPLATE)
+        try:
+            with open(cbl_path, 'w') as f:
+                f.write(DEFAULT_TEMPLATE)
+        except OSError as e:
+            return False, 'Failed to create %s, error=%r' % (cbl_path, e)
         dest = os.path.join(tempfile.gettempdir(),
                             'test' + ('.exe' if system.windows else ''))
 
         _logger().debug('check compiler')
 
-        success = False
-        status, output = run_command(compiler, ['-x', cbl_path],
-                                     working_dir=working_dir)
+        rm_dest(dest)
+        success1 = False
+        status, output1 = run_command(compiler, ['-x', cbl_path], working_dir=working_dir)
         dest = get_output_path(cbl_path)
         if dest:
-            success = status == 0 and os.path.exists(dest)
-            # detect default executable extension
-            GnuCobolCompiler.extensions[0] = os.path.splitext(dest)[1]
-            try:
-                os.remove(dest)
-            except OSError:
-                pass
-        else:
-            success = False
+            if os.path.exists(dest):
+                success1 = True
+                if status != 0:
+                    _logger().warn('test executable compilation returned a non-zero return code')
+                # detect default executable extension
+                GnuCobolCompiler.extensions[0] = os.path.splitext(dest)[1]
+                try:
+                    os.remove(dest)
+                except OSError:
+                    pass
 
-        status, output = run_command(compiler, [cbl_path],
-                                     working_dir=working_dir)
+        dest = os.path.join(tempfile.gettempdir(),
+                            'test' + ('.dll' if system.windows else '.so' if system.linux else '.dylib'))
+        rm_dest(dest)
+        success2 = False
+        status, output2 = run_command(compiler, [cbl_path], working_dir=working_dir)
         dest = get_output_path(cbl_path)
         if dest:
-            success = status == 0 and os.path.exists(dest)
-            # detect default module extension
-            GnuCobolCompiler.extensions[1] = os.path.splitext(dest)[1]
-            try:
-                os.remove(dest)
-            except OSError:
-                pass
-        else:
-            success = False
+            if os.path.exists(dest):
+                success2 = True
+                if status != 0:
+                    _logger().warn('test executable compilation returned a non-zero return code')
+                # detect default executable extension
+                GnuCobolCompiler.extensions[1] = os.path.splitext(dest)[1]
+                try:
+                    os.remove(dest)
+                except OSError:
+                    pass
 
-        _logger().info('GnuCOBOL compiler check: %s',
-                       'success' if success else 'fail')
-        _logger().info('Executable extension: %s' %
-                       GnuCobolCompiler.extensions[0])
-        _logger().info('Module extension: %s' %
-                       GnuCobolCompiler.extensions[1])
+        _logger().info('GnuCOBOL compiler check: %s (%d/%d)',
+                       'success' if success1 and success2 else 'fail',
+                       success1, success2)
+        if success1:
+            _logger().info('Executable extension: %s' % GnuCobolCompiler.extensions[0])
+
+        if success2:
+            _logger().info('Module extension: %s' % GnuCobolCompiler.extensions[1])
 
         try:
             os.remove(cbl_path)
         except OSError:
             pass
 
-        if not success:
+        if not success1 or not success2:
             status = -1
 
-        return output, status
+        return '%s\n%s' % (output1, output2), status
 
     @staticmethod
     def get_cobc_infos():
