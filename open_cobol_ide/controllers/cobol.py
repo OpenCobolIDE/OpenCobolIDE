@@ -177,7 +177,7 @@ class CobolController(Controller):
                 'configuration'
         elif dotted_extension.lower() in Settings().esqloc_extensions:
             compiler_works = EsqlOCCompiler().is_working()
-            msg = 'esqlOC compiler not workign, please check your SQL COBOL ' \
+            msg = 'esqlOC compiler not working, please check your SQL COBOL ' \
                 'configuration'
         return compiler_works, msg
 

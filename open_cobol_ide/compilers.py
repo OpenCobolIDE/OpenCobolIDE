@@ -138,8 +138,9 @@ def check_compiler():
                   'non standard directory, you can specify that directory ' \
                   'in the preferences dialog (build & run tab).'
         else:
-            msg = 'You have to install the package open-cobol using your ' \
-                  "distribution's package manager"
+            msg = 'You have to either install one of the packages gnu-cobol or open-cobol ' \
+                  "using your distribution's package manager or " \
+                  'build it from source.'
         raise CompilerNotFound(msg)
 
 

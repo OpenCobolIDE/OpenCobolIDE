@@ -28,7 +28,7 @@ class DlgCheckCompiler(QtWidgets.QDialog):
         if exit_code == 0:
             output = 'Compiler works!'
         else:
-            output = 'Complier check failed:\n\nExit code: %d\nOutput:%s' % (
+            output = 'Compiler check failed:\n\nExit code: %d\nOutput:%s' % (
                 exit_code, output)
 
         self.ui.label.setText('Output:')
