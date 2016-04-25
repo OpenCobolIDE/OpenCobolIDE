@@ -43,6 +43,8 @@ class DlgCheckCompiler(QtWidgets.QDialog):
                     ' additional installation of MinGW in '
                     '%s:\MinGW' % sys.executable[0])
 
+        GnuCobolCompiler.check_compiler.reset()
+
     @classmethod
     def check(cls, parent, compiler_path):
         dlg = cls(compiler_path, parent)
