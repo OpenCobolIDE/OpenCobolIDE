@@ -44,6 +44,7 @@ Improvements:
     - add option to save login only.
 - update to latest pyqode:
     - many improvements to the cobol code folding
+    - name parser works with incomplete sources (copybooks or programs which have DIVISIONS in copybooks)
     - add zoom menu to the editor context menu
     - add ability to close tabs on the left/right of the current tab.
     - fix cursor not visible under margins
