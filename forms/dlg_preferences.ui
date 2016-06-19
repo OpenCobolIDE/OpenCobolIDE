@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>764</width>
-    <height>852</height>
+    <width>791</width>
+    <height>873</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -109,8 +109,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>676</width>
-               <height>707</height>
+               <width>755</width>
+               <height>770</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -632,197 +632,178 @@ as possible to get back to the previous indentation level.</string>
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QScrollArea" name="scrollArea_2">
-            <property name="widgetResizable">
-             <bool>true</bool>
+           <widget class="QGroupBox" name="groupBox_5">
+            <property name="title">
+             <string>Application style</string>
             </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>364</width>
-               <height>342</height>
-              </rect>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_8">
-              <item>
-               <widget class="QGroupBox" name="groupBox_5">
-                <property name="title">
-                 <string>Application style</string>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_2">
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_3">
-                   <item>
-                    <spacer name="horizontalSpacer_3">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item>
-                    <widget class="QRadioButton" name="radioButtonColorWhite">
-                     <property name="toolTip">
-                      <string>Use native style</string>
-                     </property>
-                     <property name="statusTip">
-                      <string>Use native style</string>
-                     </property>
-                     <property name="text">
-                      <string>&amp;Native</string>
-                     </property>
-                     <property name="checked">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QRadioButton" name="radioButtonColorDark">
-                     <property name="toolTip">
-                      <string>Use a global dark style (using QDarkStyleSheet)</string>
-                     </property>
-                     <property name="statusTip">
-                      <string>Use a global dark style (using QDarkStyleSheet)</string>
-                     </property>
-                     <property name="text">
-                      <string>Dark</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <spacer name="horizontalSpacer_4">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QFormLayout" name="layoutIconTheme">
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="lblIconTheme">
-                     <property name="text">
-                      <string>Icon theme:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QComboBox" name="comboBoxIconTheme"/>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupBox_6">
-                <property name="title">
-                 <string>Editor font</string>
-                </property>
-                <layout class="QFormLayout" name="formLayout_3">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_3">
-                   <property name="text">
-                    <string>Editor font:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <layout class="QHBoxLayout" name="horizontalLayout_4">
-                   <item>
-                    <widget class="QFontComboBox" name="fontComboBox">
-                     <property name="toolTip">
-                      <string>Change editor font</string>
-                     </property>
-                     <property name="statusTip">
-                      <string>Change editor font</string>
-                     </property>
-                     <property name="fontFilters">
-                      <set>QFontComboBox::MonospacedFonts</set>
-                     </property>
-                     <property name="currentFont">
-                      <font>
-                       <family>Clean</family>
-                      </font>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_4">
-                   <property name="text">
-                    <string>Font size:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <layout class="QHBoxLayout" name="horizontalLayout_5">
-                   <item>
-                    <widget class="QSpinBox" name="spinBoxFontSize">
-                     <property name="toolTip">
-                      <string>Change editor font size</string>
-                     </property>
-                     <property name="statusTip">
-                      <string>Change editor font size</string>
-                     </property>
-                     <property name="value">
-                      <number>10</number>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupBox_7">
-                <property name="title">
-                 <string>Editor color scheme</string>
-                </property>
-                <layout class="QGridLayout" name="gridLayout_4">
-                 <item row="0" column="0">
-                  <widget class="QListWidget" name="listWidgetColorSchemes">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Pygments color schemes.</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Pygments color schemes.</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="CobolCodeEdit" name="plainTextEdit"/>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-             </layout>
-            </widget>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item>
+                <spacer name="horizontalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioButtonColorWhite">
+                 <property name="toolTip">
+                  <string>Use native style</string>
+                 </property>
+                 <property name="statusTip">
+                  <string>Use native style</string>
+                 </property>
+                 <property name="text">
+                  <string>&amp;Native</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioButtonColorDark">
+                 <property name="toolTip">
+                  <string>Use a global dark style (using QDarkStyleSheet)</string>
+                 </property>
+                 <property name="statusTip">
+                  <string>Use a global dark style (using QDarkStyleSheet)</string>
+                 </property>
+                 <property name="text">
+                  <string>Dark</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_4">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QFormLayout" name="layoutIconTheme">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="lblIconTheme">
+                 <property name="text">
+                  <string>Icon theme:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="comboBoxIconTheme"/>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_6">
+            <property name="title">
+             <string>Editor font</string>
+            </property>
+            <layout class="QFormLayout" name="formLayout_3">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Editor font:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <item>
+                <widget class="QFontComboBox" name="fontComboBox">
+                 <property name="toolTip">
+                  <string>Change editor font</string>
+                 </property>
+                 <property name="statusTip">
+                  <string>Change editor font</string>
+                 </property>
+                 <property name="fontFilters">
+                  <set>QFontComboBox::MonospacedFonts</set>
+                 </property>
+                 <property name="currentFont">
+                  <font>
+                   <family>Clean</family>
+                  </font>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>Font size:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_5">
+               <item>
+                <widget class="QSpinBox" name="spinBoxFontSize">
+                 <property name="toolTip">
+                  <string>Change editor font size</string>
+                 </property>
+                 <property name="statusTip">
+                  <string>Change editor font size</string>
+                 </property>
+                 <property name="value">
+                  <number>10</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_7">
+            <property name="title">
+             <string>Editor color scheme</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_4">
+             <item row="0" column="0">
+              <widget class="QListWidget" name="listWidgetColorSchemes">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Pygments color schemes.</string>
+               </property>
+               <property name="statusTip">
+                <string>Pygments color schemes.</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="CobolCodeEdit" name="plainTextEdit"/>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -846,8 +827,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>708</width>
-               <height>872</height>
+               <width>735</width>
+               <height>918</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_6">
@@ -1380,146 +1361,167 @@ as possible to get back to the previous indentation level.</string>
          <attribute name="title">
           <string>Run</string>
          </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_10">
+         <layout class="QVBoxLayout" name="verticalLayout_10" stretch="0,1">
           <item>
-           <widget class="QScrollArea" name="scrollArea_4">
-            <property name="widgetResizable">
-             <bool>true</bool>
+           <layout class="QFormLayout" name="formLayout_13">
+            <property name="leftMargin">
+             <number>6</number>
             </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents_6">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>203</width>
-               <height>230</height>
-              </rect>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_13" stretch="0,1">
+            <property name="topMargin">
+             <number>6</number>
+            </property>
+            <property name="rightMargin">
+             <number>6</number>
+            </property>
+            <property name="bottomMargin">
+             <number>6</number>
+            </property>
+            <item row="2" column="0">
+             <widget class="QLabel" name="lbl_external_terminal_command">
+              <property name="text">
+               <string>External terminal command:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="lineEditRunTerm">
+              <property name="toolTip">
+               <string>External terminal command (filename is appended at the end of the command)</string>
+              </property>
+              <property name="statusTip">
+               <string>External terminal command</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_42">
+              <property name="text">
+               <string>Working Directory:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <layout class="QHBoxLayout" name="horizontalLayout_19">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
               <item>
-               <layout class="QFormLayout" name="formLayout_13">
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <item row="0" column="0">
-                 <widget class="QCheckBox" name="checkBoxRunExtTerm">
-                  <property name="text">
-                   <string>Run in e&amp;xternal terminal:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="lbl_external_terminal_command">
-                  <property name="text">
-                   <string>Command:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QLineEdit" name="lineEditRunTerm">
-                  <property name="toolTip">
-                   <string>External terminal command (filename is appended at the end of the command)</string>
-                  </property>
-                  <property name="statusTip">
-                   <string>External terminal command</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
+               <widget class="PathLineEdit" name="edit_working_dir"/>
               </item>
               <item>
-               <widget class="QGroupBox" name="groupBox_12">
-                <property name="title">
-                 <string>Environment</string>
+               <widget class="QToolButton" name="bt_working_dir">
+                <property name="text">
+                 <string>...</string>
                 </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_13">
-                 <item>
-                  <widget class="QTableWidget" name="tw_run_env">
-                   <property name="selectionMode">
-                    <enum>QAbstractItemView::SingleSelection</enum>
-                   </property>
-                   <property name="selectionBehavior">
-                    <enum>QAbstractItemView::SelectRows</enum>
-                   </property>
-                   <attribute name="horizontalHeaderCascadingSectionResizes">
-                    <bool>false</bool>
-                   </attribute>
-                   <attribute name="horizontalHeaderDefaultSectionSize">
-                    <number>300</number>
-                   </attribute>
-                   <attribute name="horizontalHeaderStretchLastSection">
-                    <bool>true</bool>
-                   </attribute>
-                   <attribute name="verticalHeaderVisible">
-                    <bool>false</bool>
-                   </attribute>
-                   <column>
-                    <property name="text">
-                     <string>Key</string>
-                    </property>
-                   </column>
-                   <column>
-                    <property name="text">
-                     <string>Value</string>
-                    </property>
-                   </column>
-                  </widget>
-                 </item>
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_14">
-                   <item>
-                    <widget class="QPushButton" name="bt_add_run_env">
-                     <property name="text">
-                      <string>Add </string>
-                     </property>
-                     <property name="icon">
-                      <iconset theme="list-add">
-                       <normaloff>.</normaloff>.</iconset>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="bt_rm_run_env">
-                     <property name="text">
-                      <string>Remove</string>
-                     </property>
-                     <property name="icon">
-                      <iconset theme="list-remove">
-                       <normaloff>.</normaloff>.</iconset>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="bt_clear_run_env">
-                     <property name="text">
-                      <string>Clear</string>
-                     </property>
-                     <property name="icon">
-                      <iconset theme="edit-clear">
-                       <normaloff>.</normaloff>.</iconset>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <spacer name="verticalSpacer_5">
-                     <property name="orientation">
-                      <enum>Qt::Vertical</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>20</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
                </widget>
               </item>
              </layout>
-            </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QCheckBox" name="checkBoxRunExtTerm">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_43">
+              <property name="text">
+               <string>Run in external terminal:</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_12">
+            <property name="title">
+             <string>Environment</string>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_13">
+             <item>
+              <widget class="QTableWidget" name="tw_run_env">
+               <property name="selectionMode">
+                <enum>QAbstractItemView::SingleSelection</enum>
+               </property>
+               <property name="selectionBehavior">
+                <enum>QAbstractItemView::SelectRows</enum>
+               </property>
+               <attribute name="horizontalHeaderCascadingSectionResizes">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>300</number>
+               </attribute>
+               <attribute name="horizontalHeaderStretchLastSection">
+                <bool>true</bool>
+               </attribute>
+               <attribute name="verticalHeaderVisible">
+                <bool>false</bool>
+               </attribute>
+               <column>
+                <property name="text">
+                 <string>Key</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Value</string>
+                </property>
+               </column>
+              </widget>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_14">
+               <item>
+                <widget class="QPushButton" name="bt_add_run_env">
+                 <property name="text">
+                  <string>Add </string>
+                 </property>
+                 <property name="icon">
+                  <iconset theme="list-add">
+                   <normaloff>.</normaloff>.</iconset>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="bt_rm_run_env">
+                 <property name="text">
+                  <string>Remove</string>
+                 </property>
+                 <property name="icon">
+                  <iconset theme="list-remove">
+                   <normaloff>.</normaloff>.</iconset>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="bt_clear_run_env">
+                 <property name="text">
+                  <string>Clear</string>
+                 </property>
+                 <property name="icon">
+                  <iconset theme="edit-clear">
+                   <normaloff>.</normaloff>.</iconset>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_5">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -1543,8 +1545,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>289</width>
-               <height>515</height>
+               <width>755</width>
+               <height>746</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">

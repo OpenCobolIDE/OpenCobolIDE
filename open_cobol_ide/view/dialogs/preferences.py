@@ -163,8 +163,16 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.color_picker_4
         ]
 
+        self.bt_working_dir.clicked.connect(self._select_working_dir)
+
         self.initial_settings = Settings().export_to_dict()
         self.reset(all_tabs=True)
+
+    def _select_working_dir(self):
+        path = QtWidgets.QFileDialog.getExistingDirectory(
+            self, 'Select working directory')
+        if path:
+            self.edit_working_dir.setText(path)
 
     def _check_compiler(self, *_):
         self.apply()
@@ -416,6 +424,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
                     index, 0, QtWidgets.QTableWidgetItem(key))
                 self.tw_run_env.setItem(
                     index, 1, QtWidgets.QTableWidgetItem(value))
+            self.edit_working_dir.setText(settings.working_dir)
         # compiler
         if self.tabWidget.currentIndex() == 2 or all_tabs:
             self.cbAutoDetectSublmodules.setChecked(
@@ -515,6 +524,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.external_terminal = False
             settings.external_terminal_command = None
             settings.run_environemnt = {}
+            settings.working_dir = ''
         # compiler
         elif index == 2:
             settings.autodetect_submodules = True
@@ -654,6 +664,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             env[self.tw_run_env.item(i, 0).text()] = self.tw_run_env.item(
                 i, 1).text()
         settings.run_environemnt = env
+        settings.working_dir = self.edit_working_dir.text()
 
     @classmethod
     def edit_preferences(cls, parent):

@@ -375,6 +375,14 @@ class Settings(object):
     def external_terminal_command(self, cmd):
         self._settings.setValue('shell', cmd)
 
+    @property
+    def working_dir(self):
+        return self._settings.value('workingDirectory', '')
+
+    @working_dir.setter
+    def working_dir(self, value):
+        self._settings.setValue('workingDirectory', str(value))
+
     # Compiler settings
     # ----------------------
     @property

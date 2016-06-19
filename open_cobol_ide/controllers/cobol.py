@@ -415,20 +415,23 @@ class CobolController(Controller):
         if not os.path.isabs(output_dir):
             output_dir = os.path.join(
                 os.path.dirname(editor.file.path), output_dir)
-        wd = output_dir
+        if Settings().working_dir:
+            wd = Settings().working_dir
+        else:
+            wd = output_dir
         filename = os.path.splitext(editor.file.name)[0] + \
             GnuCobolCompiler().extension_for_type(file_type)
-        program = os.path.join(wd, filename)
+        program = os.path.join(output_dir, filename)
         if not os.path.exists(program):
             _logger().warning('cannot run %s, file does not exists',
                               program)
             return
+        _logger().info('running program: %r (working dir=%r)', program, wd)
         if Settings().external_terminal:
             self._run_in_external_terminal(program, wd, file_type)
             self.enable_run(True)
             self.enable_compile(True)
         else:
-            _logger().info('running program')
             self.ui.consoleOutput.setFocus(True)
             for item in self.run_buttons + [self.ui.actionRun]:
                 item.setEnabled(False)
