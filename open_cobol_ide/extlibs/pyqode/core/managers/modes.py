@@ -50,25 +50,9 @@ class ModesManager(Manager):
         and deleted.
 
         """
-        import sys
         while len(self._modes):
             key = sorted(list(self._modes.keys()))[0]
-            mode = self.remove(key)
-            refcount = sys.getrefcount(mode)
-            if refcount > 2:
-                try:
-                    import objgraph
-                except ImportError:
-                    _logger().warning(
-                        'potential memory leak detected on mode %r...\n'
-                        'Install the objgraph package to know what objects are'
-                        ' holding references the mode.' % mode)
-                else:
-                    _logger().warning(
-                        'potential memory leak detected on mode: %r.\n'
-                        'see stderr for a backrefs dot graph...' % mode)
-                    objgraph.show_backrefs([mode], output=sys.stderr)
-            del mode
+            self.remove(key)
 
     def get(self, name_or_klass):
         """

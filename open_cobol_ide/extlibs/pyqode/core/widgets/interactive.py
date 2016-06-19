@@ -36,6 +36,9 @@ class InteractiveConsole(QTextEdit):
           process started, process finished)
         - stderr_color: color of the process stderr
 
+    .. deprecated: Since v2.10.0, this widget is deprecated, you should use
+        :class:`pyqode.core.widgets.OutputWindow` instead.
+
     """
     #: Signal emitted when the process has finished.
     process_finished = Signal(int)

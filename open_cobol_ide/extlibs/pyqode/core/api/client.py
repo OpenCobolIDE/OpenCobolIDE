@@ -393,9 +393,11 @@ class BackendProcess(QtCore.QProcess):
 
     def _on_process_stderr_ready(self):
         """ Logs process output (stderr) """
-        if not self:
+        try:
+            o = self.readAllStandardError()
+        except (TypeError, RuntimeError):
+            # widget already deleted
             return
-        o = self.readAllStandardError()
         try:
             output = bytes(o).decode(self._encoding)
         except TypeError:

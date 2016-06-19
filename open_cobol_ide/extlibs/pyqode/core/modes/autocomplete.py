@@ -18,15 +18,14 @@ class AutoCompleteMode(Mode):
         - [ -> ]
         - { -> }
     """
-    #: Auto complete mapping, maps input key with completion text.
-    MAPPING = {'"': '"', "'": "'", "(": ")", "{": "}", "[": "]"}
-    #: The format to use for each symbol in mapping when there is a selection
-    SELECTED_QUOTES_FORMATS = {key: '%s%s%s' for key in MAPPING.keys()}
-    #: The format to use for each symbol in mapping when there is no selection
-    QUOTES_FORMATS = {key: '%s' for key in MAPPING.keys()}
-
     def __init__(self):
         super(AutoCompleteMode, self).__init__()
+        #: Auto complete mapping, maps input key with completion text.
+        self.MAPPING = {'"': '"', "'": "'", "(": ")", "{": "}", "[": "]"}
+        #: The format to use for each symbol in mapping when there is a selection
+        self.SELECTED_QUOTES_FORMATS = {key: '%s%s%s' for key in self.MAPPING.keys()}
+        #: The format to use for each symbol in mapping when there is no selection
+        self.QUOTES_FORMATS = {key: '%s' for key in self.MAPPING.keys()}
         self.logger = logging.getLogger(__name__)
         self._ignore_post = False
 

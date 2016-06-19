@@ -80,28 +80,12 @@ class PanelsManager(Manager):
         Removes all panel from the editor.
 
         """
-        import sys
         for i in range(4):
             while len(self._panels[i]):
                 key = sorted(list(self._panels[i].keys()))[0]
                 panel = self.remove(key)
                 panel.setParent(None)
                 panel.deleteLater()
-                refcount = sys.getrefcount(panel)
-                if refcount > 2:
-                    try:
-                        import objgraph
-                    except ImportError:
-                        _logger().warning(
-                            'potential memory leak detected on panel: %r\n'
-                            'Install the objgraph package to know what objects'
-                            ' are holding references the panel...', panel)
-                    else:
-                        _logger().warning(
-                            'potential memory leak detected on panel: %r\n'
-                            'see stderr for a backrefs dot graph...', panel)
-                        objgraph.show_backrefs([panel], output=sys.stderr)
-                del panel
 
     def get(self, name_or_klass):
         """

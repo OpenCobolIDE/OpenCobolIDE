@@ -5,6 +5,7 @@ import inspect
 import logging
 import mimetypes
 import os
+import io
 import sys
 import uuid
 import weakref
@@ -436,21 +437,6 @@ class BaseTabWidget(QtWidgets.QTabWidget):
                         pass
                 if rm:
                     self.remove_tab(index)
-
-        cnt = sys.getrefcount(widget)
-        if cnt > 2:
-            try:
-                import objgraph
-            except ImportError:
-                _logger().warning(
-                    'potential memory leak detected on widget: %r\n'
-                    'Install the objgraph package to know what objects are '
-                    'holding references the editor widget...' % widget)
-            else:
-                _logger().warning('potential memory detected on widget: %r\n'
-                                  'see stderr for a backrefs dot graph...' %
-                                  widget)
-                objgraph.show_backrefs([widget], output=sys.stderr)
 
     @staticmethod
     def _close_widget(widget):
@@ -1250,7 +1236,7 @@ class SplittableCodeEditTabWidget(SplittableTabWidget):
             old_content = ''
         else:
             try:
-                with open(path, encoding=encoding) as f:
+                with io.open(path, encoding=encoding) as f:
                     old_content = f.read()
             except OSError:
                 old_content = ''

@@ -300,14 +300,14 @@ def defined_names(code, free_format=False):
         if not line.isspace() and not line.strip().startswith("*"):
             line = line.strip()
             # DIVISIONS
-            if regex.DIVISION.indexIn(line.upper()) != -1:
+            if regex.DIVISION.indexIn(line.upper()) != -1 and 'EXIT' not in line.upper():
                 # remember
                 if last_div_node is not None:
                     last_div_node.end_line = i
                 last_div_node, last_section_node = parse_division(
                     i, column, line, root_node, last_section_node)
             # SECTIONS
-            elif regex.SECTION.indexIn(line.upper()) != -1:
+            elif regex.SECTION.indexIn(line.upper()) != -1 and 'EXIT' not in line.upper():
                 if last_section_node:
                     last_section_node.end_line = i
                 if last_div_node is None:

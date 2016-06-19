@@ -10,7 +10,7 @@ widget, i.e. pyqode.core is a generic code editor widget.
 import logging
 
 
-__version__ = '2.9.0'
+__version__ = '2.10.0.dev0'
 
 
 logging.addLevelName(1, "PYQODEDEBUGCOMM")

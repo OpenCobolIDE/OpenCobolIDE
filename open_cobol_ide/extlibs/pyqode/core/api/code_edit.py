@@ -914,6 +914,10 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
         super(CodeEdit, self).resizeEvent(e)
         self.panels.resize()
 
+    def closeEvent(self, e):
+        self.close()
+        super(CodeEdit, self).closeEvent(e)
+
     def paintEvent(self, e):
         """
         Overrides paint event to update the list of visible blocks and emit
@@ -1082,7 +1086,7 @@ class CodeEdit(QtWidgets.QPlainTextEdit):
 
     def setReadOnly(self, read_only):
         if read_only != self.isReadOnly():
-            super().setReadOnly(read_only)
+            super(CodeEdit, self).setReadOnly(read_only)
             from pyqode.core.panels import ReadOnlyPanel
             try:
                 panel = self.panels.get(ReadOnlyPanel)
