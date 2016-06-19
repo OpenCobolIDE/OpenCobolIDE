@@ -36,6 +36,7 @@ class SubsequenceSortFilterProxyModel(QtCore.QSortFilterProxyModel):
 
     def set_prefix(self, prefix):
         self.filter_patterns = []
+        self.filter_patterns_case_sensitive = []
         self.sort_patterns = []
         if self.case == QtCore.Qt.CaseInsensitive:
             flags = re.IGNORECASE
@@ -44,6 +45,7 @@ class SubsequenceSortFilterProxyModel(QtCore.QSortFilterProxyModel):
         for i in reversed(range(1, len(prefix) + 1)):
             ptrn = '.*%s.*%s' % (prefix[0:i], prefix[i:])
             self.filter_patterns.append(re.compile(ptrn, flags))
+            self.filter_patterns_case_sensitive.append(re.compile(ptrn, 0))
             ptrn = '%s.*%s' % (prefix[0:i], prefix[i:])
             self.sort_patterns.append(re.compile(ptrn, flags))
         self.prefix = prefix
@@ -65,8 +67,9 @@ class SubsequenceSortFilterProxyModel(QtCore.QSortFilterProxyModel):
             except ValueError:
                 return False
         for i, patterns in enumerate(zip(self.filter_patterns,
+                                         self.filter_patterns_case_sensitive,
                                          self.sort_patterns)):
-            pattern, sort_pattern = patterns
+            pattern, pattern_case, sort_pattern = patterns
             match = re.match(pattern, completion)
             if match:
                 # compute rank, the lowest rank the closer it is from the
@@ -75,6 +78,9 @@ class SubsequenceSortFilterProxyModel(QtCore.QSortFilterProxyModel):
                 for m in sort_pattern.finditer(completion):
                     start, end = m.span()
                 rank = start + i * 10
+                if re.match(pattern_case, completion):
+                    # favorise completions where case is matched
+                    rank -= 10
                 self.sourceModel().setData(
                     self.sourceModel().index(row, 0), rank, QtCore.Qt.UserRole)
                 return True
@@ -277,7 +283,7 @@ class CodeCompletionMode(Mode, QtCore.QObject):
         self._trigger_symbols = ['.']
         self._case_sensitive = False
         self._completer = None
-        self._filter_mode = self.FILTER_PREFIX
+        self._filter_mode = self.FILTER_FUZZY
         self._last_cursor_line = -1
         self._last_cursor_column = -1
         self._tooltips = {}
