@@ -286,7 +286,7 @@ class GnuCobolCompiler(QtCore.QObject):
                 'Please remove this file before attempting a new compilation check!' % dest, -1
         _logger().debug('check compiler')
         success1 = False
-        status, output1 = run_command(compiler, ['-x', cbl_path], working_dir=working_dir)
+        status, output1 = run_command(compiler, ['-v', '-x', cbl_path], working_dir=working_dir)
         dest = get_output_path(cbl_path, possible_extensions=['.exe', '.bat', ''])
         if dest:
             if os.path.exists(dest):
@@ -307,7 +307,7 @@ class GnuCobolCompiler(QtCore.QObject):
             return 'Failed to remove %r before checking if compilation of module works.\n' \
                 'Please remove this file before attempting a new compilation check!' % dest, -1
         success2 = False
-        status, output2 = run_command(compiler, [cbl_path], working_dir=working_dir)
+        status, output2 = run_command(compiler, ['-v', cbl_path], working_dir=working_dir)
         dest = get_output_path(cbl_path, possible_extensions=['.so', '.dll', '.dylib'])
         if dest:
             if os.path.exists(dest):

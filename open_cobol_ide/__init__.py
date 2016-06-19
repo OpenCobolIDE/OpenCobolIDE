@@ -2,4 +2,4 @@
 This package contains the code of the OpenCobolIDE application.
 """
 
-__version__ = '4.7.4.dev0'
+__version__ = '4.7.4.dev1'
