@@ -366,7 +366,7 @@ class CobolController(Controller):
             except (OSError, subprocess.CalledProcessError):
                 msg = "Failed to launch program in external terminal (cmd=%s) " % ' '.join(cmd)
                 _logger().exception(msg)
-                self.ui.consoleOutput.append(msg)
+                self.ui.consoleOutput.appendPlainText(msg)
                 return
         elif system.darwin:
             cmd = ['open', program]
@@ -377,13 +377,13 @@ class CobolController(Controller):
             except (OSError, subprocess.CalledProcessError):
                 msg = "Failed to launch program in external terminal (cmd=%s) " % ' '.join(cmd)
                 _logger().exception(msg)
-                self.ui.consoleOutput.append(msg)
+                self.ui.consoleOutput.appendPlainText(msg)
                 return
         else:
             if file_type == FileType.EXECUTABLE:
                 cmd = ['"%s %s"' % (' '.join(pyqode_console), program)]
             else:
-                cmd = ['"%s %s %s"' % (' '.join(pyqode_console), system.which('cobcrun'),program)]
+                cmd = ['"%s %s %s"' % (' '.join(pyqode_console), system.which('cobcrun'), program)]
             cmd = system.shell_split(
                 Settings().external_terminal_command.strip()) + cmd
             try:
@@ -392,11 +392,11 @@ class CobolController(Controller):
             except (OSError, subprocess.CalledProcessError):
                 msg = "Failed to launch program in external terminal (cmd=%s) " % ' '.join(cmd)
                 _logger().exception(msg)
-                self.ui.consoleOutput.append(msg)
+                self.ui.consoleOutput.appendPlainText(msg)
                 return
         _logger().info('running program in external terminal: %s',
                        ' '.join(cmd))
-        self.ui.consoleOutput.append(
+        self.ui.consoleOutput.appendPlainText(
             "Launched in external terminal: %s" % ' '.join(cmd))
 
     def _run(self):
@@ -442,8 +442,8 @@ class CobolController(Controller):
                     cobcrun, [os.path.splitext(editor.file.name)[0]], cwd=wd,
                     env=env)
             else:
-                self.ui.consoleOutput.start_process(program, cwd=wd,
-                                                    env=env)
+                self.ui.consoleOutput.start_process(program, working_dir=wd,
+                                                    env=env, print_command=True)
 
     def _on_run_finished(self):
         self.enable_compile(True)

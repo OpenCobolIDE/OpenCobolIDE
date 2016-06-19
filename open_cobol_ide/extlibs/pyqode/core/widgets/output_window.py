@@ -755,7 +755,9 @@ def _ansi_color(code, theme):
             '#aaaa00': theme.yellow,
             '#0000aa': theme.blue,
             '#aa00aa': theme.magenta,
-            '#00aaaa': theme.cyan
+            '#00aaaa': theme.cyan,
+            '#000000': theme.background,
+            "#ffffff": theme.foreground
         }
         try:
             return mappings[color.name()]

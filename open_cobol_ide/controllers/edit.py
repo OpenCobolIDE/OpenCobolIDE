@@ -52,8 +52,6 @@ class EditController(Controller):
         if self.ui.actionPreferences.shortcut().toString().strip() == '':
             self.ui.actionPreferences.setShortcut('F2')
         self._setup_status_bar()
-        self.ui.consoleOutput.apply_color_scheme(
-            ColorScheme(Settings().color_scheme))
         self.ui.tvFileSystem.activated.connect(self._on_tvFileSystem_activated)
         self.ui.tvFileSystem.setHeaderHidden(True)
         self.ui.bt_fs_up.setIcon(QtGui.QIcon.fromTheme(
@@ -306,8 +304,6 @@ class EditController(Controller):
             for editor in self.ui.tabWidgetEditors.widgets(
                     include_clones=True):
                 update_editor_settings(editor)
-                self.ui.consoleOutput.apply_color_scheme(
-                    ColorScheme(Settings().color_scheme))
                 editor.rehighlight()
                 try:
                     self.ui.actionEnableLinter.blockSignals(True)
