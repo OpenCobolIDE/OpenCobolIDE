@@ -170,8 +170,9 @@ class GnuCobolCompiler(QtCore.QObject):
     OUTPUT_PATTERN_MSVC = re.compile(
         r'^(?P<filename>[\w\.\-_\s]*)\((?P<line>\s*\d*)\):(?P<type>[\w\s]*):'
         '(?P<error>.*)$')
+    OUTPUT_PATTERN_EXCEPTIONAL_MESSAGES = re.compile(r"^cobc: (?P<error>.*)$")
 
-    OUTPUT_PATTERNS = [OUTPUT_PATTERN_GCC, OUTPUT_PATTERN_MSVC]
+    OUTPUT_PATTERNS = [OUTPUT_PATTERN_GCC, OUTPUT_PATTERN_MSVC, OUTPUT_PATTERN_EXCEPTIONAL_MESSAGES]
 
     extensions = [
         # no extension for exe on linux and mac
@@ -558,15 +559,23 @@ class GnuCobolCompiler(QtCore.QObject):
             for ptrn in GnuCobolCompiler.OUTPUT_PATTERNS:
                 m = ptrn.match(l)
                 if m is not None:
-                    filename = m.group('filename')
-                    line = int(m.group('line')) - 1
+                    try:
+                        filename = m.group('filename')
+                        line = int(m.group('line')) - 1
+                        error_lvl = m.group('type').lower()
+                    except IndexError:
+                        filename = ''
+                        line = 0
+                        error_lvl = 'warning'
                     message = m.group('error')
-                    error_lvl = m.group('type').lower()
                     lvl = CheckerMessages.WARNING if 'warning' in error_lvl \
                         else CheckerMessages.ERROR
-                    # make relative path absolute
-                    path = os.path.abspath(os.path.join(
-                        working_directory, filename))
+                    if filename:
+                        # make relative path absolute
+                        path = os.path.abspath(os.path.join(
+                            working_directory, filename))
+                    else:
+                        path = '-'
                     msg = (message, lvl, int(line), 0, None,
                            None, path)
                     issues.append(msg)
