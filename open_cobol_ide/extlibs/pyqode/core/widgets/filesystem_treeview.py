@@ -424,8 +424,9 @@ class FileSystemHelper:
                     shutil.copytree(src, final_dest)
             except (IOError, OSError) as e:
                 QtWidgets.QMessageBox.warning(
-                    self.tree_view, _('Failed to copy file'), str(e))
-                _logger().exception('failed to copy %s to %s', src,
+                    self.tree_view, _('Copy failed'), _('Failed to copy "%s" to "%s".\n\n%s' %
+                                                        (src, destination, str(e))))
+                _logger().exception('failed to copy "%s" to "%s', src,
                                     destination)
             else:
                 debug('file copied %s', src)
@@ -435,6 +436,7 @@ class FileSystemHelper:
                     os.remove(src)
                 else:
                     shutil.rmtree(src)
+                self.tree_view.files_renamed.emit([(src, final_dest)])
 
     @staticmethod
     def _get_files(path):
@@ -454,7 +456,7 @@ class FileSystemHelper:
         urls = self.selected_urls()
         rep = QtWidgets.QMessageBox.question(
             self.tree_view, _('Confirm delete'),
-            _('Are you sure about deleting the selected files?'),
+            _('Are you sure about deleting the selected files/directories?'),
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
             QtWidgets.QMessageBox.Yes)
         if rep == QtWidgets.QMessageBox.Yes:
@@ -470,7 +472,8 @@ class FileSystemHelper:
                         deleted_files += files
                 except OSError as e:
                     QtWidgets.QMessageBox.warning(
-                        self.tree_view, _('Failed to remove %s') % fn, str(e))
+                        self.tree_view, _('Delete failed'),
+                        _('Failed to remove "%s".\n\n%s') % (fn, str(e)))
                     _logger().exception('failed to remove %s', fn)
             self.tree_view.files_deleted.emit(deleted_files)
             for d in deleted_files:
@@ -503,7 +506,7 @@ class FileSystemHelper:
         src = self.get_current_path()
         pardir, name = os.path.split(src)
         new_name, status = QtWidgets.QInputDialog.getText(
-            self.tree_view, _('Rename file'), _('New name:'),
+            self.tree_view, _('Rename '), _('New name:'),
             QtWidgets.QLineEdit.Normal, name)
         if status:
             dest = os.path.join(pardir, new_name)
@@ -512,19 +515,25 @@ class FileSystemHelper:
                 old_files = self._get_files(src)
             else:
                 old_files = [src]
-            os.rename(src, dest)
-            if os.path.isdir(dest):
-                new_files = self._get_files(dest)
+            try:
+                os.rename(src, dest)
+            except OSError as e:
+                QtWidgets.QMessageBox.warning(
+                    self.tree_view, _('Rename failed'),
+                    _('Failed to rename "%s" into "%s".\n\n%s') % (src, dest, str(e)))
             else:
-                new_files = [dest]
-            self.tree_view.file_renamed.emit(os.path.normpath(src),
-                                             os.path.normpath(dest))
-            renamed_files = []
-            for old_f, new_f in zip(old_files, new_files):
-                self.tree_view.file_renamed.emit(old_f, new_f)
-                renamed_files.append((old_f, new_f))
-            # emit all changes in one go
-            self.tree_view.files_renamed.emit(renamed_files)
+                if os.path.isdir(dest):
+                    new_files = self._get_files(dest)
+                else:
+                    new_files = [dest]
+                self.tree_view.file_renamed.emit(os.path.normpath(src),
+                                                 os.path.normpath(dest))
+                renamed_files = []
+                for old_f, new_f in zip(old_files, new_files):
+                    self.tree_view.file_renamed.emit(old_f, new_f)
+                    renamed_files.append((old_f, new_f))
+                # emit all changes in one go
+                self.tree_view.files_renamed.emit(renamed_files)
 
     def create_directory(self):
         """
@@ -545,12 +554,13 @@ class FileSystemHelper:
 
             if os.path.isfile(src):
                 src = os.path.dirname(src)
+            dir_name = os.path.join(src, name)
             try:
-                os.makedirs(os.path.join(src, name), exist_ok=True)
+                os.makedirs(dir_name, exist_ok=True)
             except OSError as e:
                 QtWidgets.QMessageBox.warning(
                     self.tree_view, _('Failed to create directory'),
-                    _('Failed to create directory: %s'), str(e))
+                    _('Failed to create directory: "%s".\n\n%s') % (dir_name, str(e)))
 
     def create_file(self):
         """
@@ -577,7 +587,7 @@ class FileSystemHelper:
             except OSError as e:
                 QtWidgets.QMessageBox.warning(
                     self.tree_view, _('Failed to create new file'),
-                    _('Failed to create file: %s') % str(e))
+                    _('Failed to create file: "%s".\n\n%s') % (path, str(e)))
             else:
                 self.tree_view.file_created.emit(os.path.normpath(path))
 

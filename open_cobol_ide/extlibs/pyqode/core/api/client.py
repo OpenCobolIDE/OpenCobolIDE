@@ -180,7 +180,6 @@ class JsonTcpClient(QtNetwork.QTcpSocket):
                  on_receive=None):
         super(JsonTcpClient, self).__init__(parent)
         self._port = port
-
         self._worker = worker_class_or_function
         self._args = args
         self._header_complete = False
@@ -250,9 +249,12 @@ class JsonTcpClient(QtNetwork.QTcpSocket):
         """ Connects our client socket to the backend socket """
         if self is None:
             return
+        print("connecting", self._worker)
         comm('connecting to 127.0.0.1:%d', self._port)
         address = QtNetwork.QHostAddress('127.0.0.1')
         self.connectToHost(address, self._port)
+        if sys.platform == 'darwin':
+            self.waitForConnected()
 
     def _on_connected(self):
         comm('connected to backend: %s:%d', self.peerName(), self.peerPort())

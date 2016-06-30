@@ -1,6 +1,7 @@
 import os
 import sys
 
+from pyqode.core.backend import server
 from . import output_window
 
 
@@ -14,7 +15,7 @@ class Terminal(output_window.OutputWindow):
     a small widget for running commands in a PyQt application, it does not aim to be a perfect emulator,
     just a quick one.
     """
-    def __init__(self, parent=None, color_scheme=None):
+    def __init__(self, parent=None, color_scheme=None, backend=server.__file__):
         if sys.platform == 'win32':
             input_handler = output_window.BufferedInputHandler()
             program = 'cmd.exe'
@@ -28,7 +29,8 @@ class Terminal(output_window.OutputWindow):
             use_pty = True
             flg_bash = True
         working_dir = os.path.expanduser('~')
-        super(Terminal, self).__init__(parent=parent, color_scheme=color_scheme, input_handler=input_handler)
+        super(Terminal, self).__init__(parent=parent, color_scheme=color_scheme, input_handler=input_handler,
+                                       backend=backend)
         self._formatter.flg_bash = flg_bash
         self.start_process(program, arguments=args, print_command=False, use_pseudo_terminal=use_pty,
                            working_dir=working_dir)

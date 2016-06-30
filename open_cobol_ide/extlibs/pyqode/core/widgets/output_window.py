@@ -19,6 +19,8 @@ from pyqode.qt import QtWidgets, QtGui, QtCore
 from pyqode.qt.QtGui import QColor
 from pyqode.qt.QtWidgets import qApp
 
+from . import pty_wrapper
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Widget
@@ -107,7 +109,7 @@ class OutputWindow(CodeEdit):
         self._input_handler.process = self._process
 
     def __init__(self, parent=None, color_scheme=None, formatter=None, input_handler=None, backend=server.__file__,
-                 link_regex=re.compile(r'("|\')(?P<url>(/|[a-zA-Z]:\\)[\w/\s\\]*)("|\')(, line (?P<line>\d*))?')):
+                 link_regex=re.compile(r'("|\')(?P<url>(/|[a-zA-Z]:\\)[\w/\s\\\.\-]*)("|\')(, line (?P<line>\d*))?')):
         """
         :param parent: parent widget, if any
         :param color_scheme: color scheme to use
@@ -159,7 +161,7 @@ class OutputWindow(CodeEdit):
             arguments = []
         if sys.platform != 'win32' and use_pseudo_terminal:
             pgm = sys.executable
-            args = [__file__, program] + arguments
+            args = [pty_wrapper.__file__, program] + arguments
             self.flg_use_pty = use_pseudo_terminal
         else:
             pgm = program
@@ -276,9 +278,12 @@ class OutputWindow(CodeEdit):
         """
         if self._process.state() != self._process.Running:
             return
+        tc = self.textCursor()
+        tc.setPosition(self._formatter._last_cursor_pos)
+        self.setTextCursor(tc)
         if self.input_handler.key_press_event(event):
             super(OutputWindow, self).keyPressEvent(event)
-            self._formatter._last_cursor_pos = self.textCursor().position()
+        self._formatter._last_cursor_pos = self.textCursor().position()
 
     def mouseMoveEvent(self, event):
         """
@@ -286,7 +291,6 @@ class OutputWindow(CodeEdit):
         """
         c = self.cursorForPosition(event.pos())
         block = c.block()
-        found = False
         self._link_match = None
         self.viewport().setCursor(QtCore.Qt.IBeamCursor)
         for match in self.link_regex.finditer(block.text()):
@@ -296,7 +300,6 @@ class OutputWindow(CodeEdit):
             if start <= c.positionInBlock() <= end:
                 self._link_match = match
                 self.viewport().setCursor(QtCore.Qt.PointingHandCursor)
-                found = True
                 break
 
         self._last_hovered_block = block
@@ -330,6 +333,7 @@ class OutputWindow(CodeEdit):
         self._reset_stylesheet()
         self.setCenterOnScroll(False)
         self.setMouseTracking(True)
+        self.setUndoRedoEnabled(False)
         search_panel = panels.SearchAndReplacePanel()
         self.panels.append(search_panel, search_panel.Position.TOP)
         self.action_copy.setShortcut('Ctrl+Shift+C')
@@ -1470,16 +1474,3 @@ def _logger():
     Returns a logger instance for this module.
     """
     return logging.getLogger(__name__)
-
-
-def pty_wrapper_main():
-    """
-    Main function of the pty wrapper script
-    """
-    from pyqode.core.widgets import pty
-    # fixme: find a way to use a pty and keep stdout and stderr as separate channels
-    pty.spawn(sys.argv[1:])
-
-
-if __name__ == '__main__':
-    pty_wrapper_main()

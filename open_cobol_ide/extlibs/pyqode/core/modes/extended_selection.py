@@ -34,7 +34,7 @@ class ExtendedSelectionMode(Mode):
         self.extended_sel_modifier = QtCore.Qt.ControlModifier
         self.matched_sel_modifier = QtCore.Qt.AltModifier
         self.continuation_characters = ('.',)
-        self.word_sel_shortcut = QtGui.QKeySequence('Ctrl+W')
+        self.word_sel_shortcut = QtGui.QKeySequence('Ctrl+Alt+M')
         self.action_select_word = QtWidgets.QAction(self.editor)
         self.action_select_word.setText(_('Select word'))
         self.action_select_word.setShortcut(self.word_sel_shortcut)
@@ -42,7 +42,7 @@ class ExtendedSelectionMode(Mode):
         self.action_select_word.setShortcutContext(
             QtCore.Qt.WidgetShortcut)
 
-        self.extended_sel_shortcut = QtGui.QKeySequence('Ctrl+Shift+W')
+        self.extended_sel_shortcut = QtGui.QKeySequence('Ctrl+Shift+M')
         self.action_select_extended_word = QtWidgets.QAction(self.editor)
         self.action_select_extended_word.setText(_('Select extended word'))
         self.action_select_extended_word.setShortcut(

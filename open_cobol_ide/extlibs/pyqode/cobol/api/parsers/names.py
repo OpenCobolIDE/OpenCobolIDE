@@ -240,6 +240,11 @@ def parse_pic_field(l, c, last_section_node, last_vars, line):
     node = Name(Name.Type.Variable, l, c, name, description)
     parent_node.add_child(node)
     last_vars[lvl] = node
+    # remove closed variables
+    levels = sorted(last_vars.keys(), reverse=True)
+    for l in levels:
+        if l > lvl:
+            last_vars.pop(l)
     return node
 
 
@@ -356,5 +361,7 @@ def defined_names(code, free_format=False):
 
 
 if __name__ == '__main__':
-    with open('/home/colin/dev/OpenCobolIDE/test/testfiles/test.cpy') as f:
-        defined_names(f.read())
+    with open('/Users/Colin/test.cbl') as f:
+        root, variables, paragraphs = defined_names(f.read())
+
+        print(root)

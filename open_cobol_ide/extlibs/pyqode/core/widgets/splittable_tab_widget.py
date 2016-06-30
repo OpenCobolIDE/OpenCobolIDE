@@ -147,6 +147,10 @@ class BaseTabWidget(QtWidgets.QTabWidget):
 
         #: A list of additional context menu actions
         self.context_actions = []
+        self.a_close = None
+        self.a_close_all = None
+        self._menu_pos = None
+        self._create_tab_bar_menu()
 
         self.detached_tabs = []
 
@@ -155,7 +159,10 @@ class BaseTabWidget(QtWidgets.QTabWidget):
         Returns the tab that sits under the context menu.
         :return: QWidget
         """
-        return self.tabBar().tabAt(self._menu_pos)
+        if self._menu_pos:
+            return self.tabBar().tabAt(self._menu_pos)
+        else:
+            return self.currentIndex()
 
     @QtCore.Slot()
     def close(self):
@@ -317,7 +324,10 @@ class BaseTabWidget(QtWidgets.QTabWidget):
                 qaction.triggered.connect(slot)
                 if icon:
                     qaction.setIcon(QtGui.QIcon.fromTheme(icon))
-            if slot == self.close_left:
+            if slot == self.close and self.a_close is None:
+                self.a_close = qaction
+                self.addAction(self.a_close)
+            elif slot == self.close_left:
                 self.a_close_left = qaction
             elif slot == self.close_right:
                 self.a_close_right = qaction
@@ -325,8 +335,9 @@ class BaseTabWidget(QtWidgets.QTabWidget):
                 self.a_close_others = qaction
             elif slot == self.close_all:
                 self.a_close_all = qaction
+                self.addAction(self.a_close_all)
             context_mnu.addAction(qaction)
-            self.addAction(qaction)
+            # self.addAction(qaction)
         context_mnu.addSeparator()
         menu = QtWidgets.QMenu(_('Split'), context_mnu)
         menu.setIcon(QtGui.QIcon.fromTheme('split'))
@@ -342,12 +353,17 @@ class BaseTabWidget(QtWidgets.QTabWidget):
             context_mnu.addSeparator()
         for action in self.context_actions:
             context_mnu.addAction(action)
+
         tab = self.widget(self.tab_under_menu())
         index = self.indexOf(tab)
         self.a_close_right.setVisible(0 <= index < self.count() - 1)
         self.a_close_left.setVisible(0 < index <= self.count() - 1)
         self.a_close_others.setVisible(self.count() > 1)
         self.a_close_all.setVisible(self.count() > 1)
+
+        self.a_close.setShortcut('Ctrl+W')
+        self.a_close_all.setShortcut('Ctrl+Shift+W')
+
         self._context_mnu = context_mnu
         return context_mnu
 
@@ -356,8 +372,9 @@ class BaseTabWidget(QtWidgets.QTabWidget):
             self._menu_pos = position
             SplittableTabWidget.tab_under_menu = self.widget(
                 self.tab_under_menu())
-            self._create_tab_bar_menu().popup(self.tabBar().mapToGlobal(
-                position))
+            mnu = self._create_tab_bar_menu()
+            mnu.exec_(self.tabBar().mapToGlobal(position))
+            self._menu_pos = None
 
     def _collect_dirty_tabs(self, skip=None, tab_range=None):
         """
@@ -1433,7 +1450,9 @@ class SplittableCodeEditTabWidget(SplittableTabWidget):
         """
         to_close = []
         for widget in self.widgets(include_clones=True):
-            if widget.file.path == path:
+            p = os.path.normpath(os.path.normcase(widget.file.path))
+            path = os.path.normpath(os.path.normcase(path))
+            if p == path:
                 to_close.append(widget)
         for widget in to_close:
             tw = widget.parent_tab_widget
@@ -1453,7 +1472,9 @@ class SplittableCodeEditTabWidget(SplittableTabWidget):
         to_rename = []
         title = os.path.split(new_path)[1]
         for widget in self.widgets(include_clones=True):
-            if widget.file.path == old_path:
+            p = os.path.normpath(os.path.normcase(widget.file.path))
+            old_path = os.path.normpath(os.path.normcase(old_path))
+            if p == old_path:
                 to_rename.append(widget)
         for widget in to_rename:
             tw = widget.parent_tab_widget
