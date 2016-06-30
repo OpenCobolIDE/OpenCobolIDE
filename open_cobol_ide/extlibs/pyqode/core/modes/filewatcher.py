@@ -161,8 +161,12 @@ class FileWatcherMode(Mode, QtCore.QObject):
             Cache().set_cursor_position(
                 self.editor.file.path,
                 self.editor.textCursor().position())
-            self.editor.file.open(self.editor.file.path)
-            self.file_reloaded.emit()
+            if os.path.exists(self.editor.file.path):
+                self.editor.file.open(self.editor.file.path)
+                self.file_reloaded.emit()
+            else:
+                # file moved just after a change, see OpenCobolIDE/OpenCobolIDE#337
+                self._notify_deleted_file()
 
         args = (_("File changed"),
                 _("The file <i>%s</i> has changed externally.\nDo you want to "

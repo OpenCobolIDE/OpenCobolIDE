@@ -1072,9 +1072,17 @@ class BufferedInputHandler(InputHandler):
                 self.insert_text(event.text())
             elif delete:
                 if event.key() == QtCore.Qt.Key_Backspace:
-                    self.backspace()
+                    if self._cursor_pos > 0:
+                        self.backspace()
+                    else:
+                        ignore = True
                 else:
-                    self.delete()
+                    if len(self._input_buffer):
+                        self.delete()
+                    else:
+                        ignore = True
+            else:
+                ignore = True
         return not ignore
 
     def insert_text(self, txt):
@@ -1085,8 +1093,9 @@ class BufferedInputHandler(InputHandler):
         self._cursor_pos += len(txt)
 
     def backspace(self):
-        self._input_buffer = self._input_buffer[:self._cursor_pos - 1] + self._input_buffer[self._cursor_pos:]
-        self._cursor_pos -= 1
+        count = 1
+        self._input_buffer = self._input_buffer[:self._cursor_pos - count] + self._input_buffer[self._cursor_pos:]
+        self._cursor_pos -= count
         if self._cursor_pos < 0:
             self._cursor_pos = 0
 
