@@ -6,6 +6,7 @@ import logging
 import os
 import subprocess
 import sys
+import tempfile
 from pyqode.core.api import TextHelper
 from pyqode.core.modes import CheckerMessage, CheckerMessages
 from pyqode.qt import QtCore, QtGui, QtWidgets
@@ -20,6 +21,29 @@ from open_cobol_ide.settings import Settings
 LOG_PAGE_COMPILER = 0
 LOG_PAGE_ISSUES = 1
 LOG_PAGE_RUN = 2
+
+RUN_PROGRAM_SCRIPT = '''#! /bin/bash
+cd %s
+
+%s
+'''
+PATH_RUN_PROGRAM_SCRIPT = os.path.join(tempfile.gettempdir(), 'run_program.sh')
+
+RUN_MODULE_SCRIPT = '''#! /bin/bash
+cd %s
+
+%s %s
+'''
+PATH_RUN_MODULE_SCRIPT = os.path.join(tempfile.gettempdir(), 'run_module.sh')
+
+
+def create_script(path, script, args):
+    import stat
+    script = script % args
+    with open(path, 'w') as f:
+        f.write(script)
+    st = os.stat(path)
+    os.chmod(path, st.st_mode | stat.S_IEXEC)
 
 
 class CompilationThread(QtCore.QThread):
@@ -369,9 +393,12 @@ class CobolController(Controller):
                 self.ui.consoleOutput.appendPlainText(msg)
                 return
         elif system.darwin:
-            cmd = ['open', program]
             if file_type == FileType.MODULE:
-                cmd.insert(1, system.which('cobcrun'))
+                create_script(PATH_RUN_MODULE_SCRIPT, RUN_MODULE_SCRIPT, (wd, system.which('cobcrun'), program))
+                cmd = ['open', '-n', '-a', 'Terminal', '--args', PATH_RUN_MODULE_SCRIPT]
+            else:
+                create_script(PATH_RUN_PROGRAM_SCRIPT, RUN_PROGRAM_SCRIPT, (wd, program))
+                cmd = ['open', '-n', '-a', 'Terminal', '--args', PATH_RUN_PROGRAM_SCRIPT]
             try:
                 subprocess.Popen(cmd, cwd=wd, env=env)
             except (OSError, subprocess.CalledProcessError):
