@@ -278,7 +278,7 @@ class Application(QtCore.QObject):
             self._reported_tracebacks.append(_tb)
             title = '[Unhandled exception] %s' % exc.__class__.__name__
             description = 'An unhandled exception has occured:\n\n'\
-                          '%s\n\nWould like to send a bug report to the ' \
+                          '%s\n\nWould you like to send a bug report to the ' \
                           'development team?' % tb
             answer = QtWidgets.QMessageBox.critical(
                 self.win, title, description,
