@@ -591,7 +591,7 @@
           <number>6</number>
          </property>
          <item row="0" column="0">
-          <widget class="OutputWindow" name="consoleOutput">
+          <widget class="MyOutputWindow" name="consoleOutput">
            <property name="toolTip">
             <string>Program output</string>
            </property>
@@ -613,7 +613,7 @@
      <x>0</x>
      <y>0</y>
      <width>1366</width>
-     <height>30</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1332,9 +1332,9 @@
    <header>open_cobol_ide/view/widgets</header>
   </customwidget>
   <customwidget>
-   <class>OutputWindow</class>
+   <class>MyOutputWindow</class>
    <extends>QTextEdit</extends>
-   <header>pyqode.core.widgets</header>
+   <header>open_cobol_ide.view.widgets</header>
   </customwidget>
   <customwidget>
    <class>ErrorsTable</class>

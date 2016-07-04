@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/dev/OpenCobolIDE/forms/ide.ui'
+# Form implementation generated from reading ui file 'D:\Documents\OpenCobolIDE\forms\ide.ui'
 #
-# Created by: PyQt5 UI code generator 5.6.1.dev1604260930
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -27,12 +27,10 @@ class Ui_MainWindow(object):
         self.pageHome = QtWidgets.QWidget()
         self.pageHome.setObjectName("pageHome")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.pageHome)
-        self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.widgetHome = QtWidgets.QWidget(self.pageHome)
         self.widgetHome.setObjectName("widgetHome")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widgetHome)
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         spacerItem = QtWidgets.QSpacerItem(20, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem)
@@ -178,7 +176,6 @@ class Ui_MainWindow(object):
         self.tabCompiler = QtWidgets.QWidget()
         self.tabCompiler.setObjectName("tabCompiler")
         self.gridLayout_6 = QtWidgets.QGridLayout(self.tabCompiler)
-        self.gridLayout_6.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_6.setObjectName("gridLayout_6")
         self.textEditCompilerOutput = QtWidgets.QTextEdit(self.tabCompiler)
         self.textEditCompilerOutput.setReadOnly(True)
@@ -206,7 +203,7 @@ class Ui_MainWindow(object):
         self.gridLayout_5.setContentsMargins(6, 6, 6, 6)
         self.gridLayout_5.setSpacing(6)
         self.gridLayout_5.setObjectName("gridLayout_5")
-        self.consoleOutput = OutputWindow(self.tabProgramOutput)
+        self.consoleOutput = MyOutputWindow(self.tabProgramOutput)
         self.consoleOutput.setObjectName("consoleOutput")
         self.gridLayout_5.addWidget(self.consoleOutput, 0, 0, 1, 1)
         icon = QtGui.QIcon.fromTheme("media-playback-start")
@@ -215,7 +212,7 @@ class Ui_MainWindow(object):
         self.dockWidgetLogs.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.dockWidgetLogs)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1366, 30))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1366, 21))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -590,7 +587,7 @@ class Ui_MainWindow(object):
 ""))
         self.actionEnableLinter.setShortcut(_translate("MainWindow", "Ctrl+Shift+L"))
 
-from open_cobol_ide.view.widgets import RecentFilesListWidget, TabWidget
+from open_cobol_ide.view.widgets import MyOutputWindow, RecentFilesListWidget, TabWidget
 from pyqode.cobol.widgets import OutlineTreeWidget, PicOffsetsTable
-from pyqode.core.widgets import ErrorsTable, FileSystemTreeView, OutputWindow
+from pyqode.core.widgets import ErrorsTable, FileSystemTreeView
 from . import ide_rc

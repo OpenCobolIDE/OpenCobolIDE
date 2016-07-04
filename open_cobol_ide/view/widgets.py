@@ -4,7 +4,8 @@ Widgets in this module are used as promoted widgets in Qt Designer
 import os
 from pyqode.cobol.api import icons
 from pyqode.qt import QtCore, QtGui, QtWidgets
-from pyqode.core.widgets import SplittableCodeEditTabWidget
+from pyqode.core.backend import server
+from pyqode.core.widgets import SplittableCodeEditTabWidget, OutputWindow
 from pyqode.core.widgets import FileSystemContextMenu, FileIconProvider as \
     PyQodeIconProvider
 import sys
@@ -188,3 +189,9 @@ class ColorPicker(QtWidgets.QPushButton):
         dlg.setCurrentColor(QtGui.QColor(self._color))
         dlg.exec_()
         self.color = dlg.currentColor()
+
+
+class MyOutputWindow(OutputWindow):
+    def __init__(self, parent=None):
+        backend = os.path.join(os.getcwd(), 'core-backend.exe') if hasattr(sys, 'frozen') else server.__file__
+        super(MyOutputWindow, self).__init__(parent=parent, backend=backend)

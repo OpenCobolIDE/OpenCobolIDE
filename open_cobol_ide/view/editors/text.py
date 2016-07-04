@@ -10,5 +10,5 @@ class TextEdit(widgets.TextCodeEdit):
     """
     def __init__(self, parent=None):
         super().__init__(
-            parent, server_script=os.path.join(os.getcwd(), 'core-server.exe')
+            parent, server_script=os.path.join(os.getcwd(), 'core-backend.exe')
             if hasattr(sys, 'frozen') else server.__file__)
