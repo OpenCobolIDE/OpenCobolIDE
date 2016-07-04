@@ -143,7 +143,6 @@ class Application(QtCore.QObject):
                 self.app.setStyleSheet(qss)
                 return
         elif system.windows and QtCore.QSysInfo.windowsVersion() == QtCore.QSysInfo.WV_WINDOWS10:
-            print('SET STYLESHEET')
             self.app.setStyleSheet('QToolBar { background-color: white;};')
         else:
             self.app.setStyleSheet('')
