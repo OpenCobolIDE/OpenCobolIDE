@@ -1080,14 +1080,19 @@ class CodeEditTabWidget(BaseTabWidget):
             editor.file._path = path
         else:
             path = editor.file.path
-        editor.file.save(path)
-        tw = editor.parent_tab_widget
-        text = tw.tabText(tw.indexOf(editor)).replace('*', '')
-        tw.setTabText(tw.indexOf(editor), text)
-        for clone in [editor] + editor.clones:
-            if clone != editor:
-                tw = clone.parent_tab_widget
-                tw.setTabText(tw.indexOf(clone), text)
+        try:
+            editor.file.save(path)
+        except Exception as e:
+            QtWidgets.QMessageBox.warning(editor, "Failed to save file", 'Failed to save %r.\n\nError="%s"' %
+                                          (path, e))
+        else:
+            tw = editor.parent_tab_widget
+            text = tw.tabText(tw.indexOf(editor)).replace('*', '')
+            tw.setTabText(tw.indexOf(editor), text)
+            for clone in [editor] + editor.clones:
+                if clone != editor:
+                    tw = clone.parent_tab_widget
+                    tw.setTabText(tw.indexOf(clone), text)
         return True
 
     def _get_widget_path(self, editor):
