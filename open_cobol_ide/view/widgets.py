@@ -193,5 +193,9 @@ class ColorPicker(QtWidgets.QPushButton):
 
 class MyOutputWindow(OutputWindow):
     def __init__(self, parent=None):
-        backend = os.path.join(os.getcwd(), 'core-backend.exe') if hasattr(sys, 'frozen') else server.__file__
+        cwd = os.path.dirname(sys.executable)
+        base_backend = 'core-backend'
+        if sys.platform == 'win32':
+            base_backend += '.exe'
+        backend = os.path.join(cwd, base_backend) if hasattr(sys, 'frozen') else server.__file__
         super(MyOutputWindow, self).__init__(parent=parent, backend=backend)
