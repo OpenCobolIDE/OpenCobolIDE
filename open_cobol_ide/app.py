@@ -142,7 +142,11 @@ class Application(QtCore.QObject):
                     qss = qdarkstyle.load_stylesheet(qt_api in PYSIDE_API)
                 self.app.setStyleSheet(qss)
                 return
-        self.app.setStyleSheet('')
+        elif system.windows and QtCore.QSysInfo.windowsVersion() == QtCore.QSysInfo.WV_WINDOWS10:
+            print('SET STYLESHEET')
+            self.app.setStyleSheet('QToolBar { background-color: white;};')
+        else:
+            self.app.setStyleSheet('')
 
     def run(self):
         """
