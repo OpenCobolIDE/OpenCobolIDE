@@ -28,6 +28,26 @@ bugs in OCIDE until the final 1.0 version of HackEdit is ready.*
 
 .. _HackEdit: https://github.com/HackEdit/hackedit
 
+4.7.4
+-----
+
+Improvements:
+
+- a new output window with support for the most common ANSI Escape Codes.
+- use a white toolbar on Windows 10
+- add support for parsing exceptional messages from GnuCOBOL (e.g. when there is a configuration issue)
+- improve run in external terminal on OSX (working dir is now correctly used and running a module with cobcrun
+  should now be working)
+- add ability to choose a custom working directory in the run preferences
+- use -v option when checking for compiler checks
+
+Fixed bugs:
+
+- fix compiler path tooltip (the full path is not required since version 4.7)
+- fix typo in unhandled exception dialog
+- fix typo in compiler check dialog
+- fix check compiler can only be used once
+
 4.7.3
 -----
 
