@@ -33,7 +33,7 @@ install:
 
 script:
  - pip install -e .
- - catchsegv py.test --cov pyqode
+ - catchsegv py.test --cov open_cobol_ide
 
 after_success:
  - coveralls
