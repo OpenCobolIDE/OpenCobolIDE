@@ -362,11 +362,15 @@ class BackendProcess(QtCore.QProcess):
     def _on_process_started(self):
         """ Logs process started """
         comm('backend process started')
+        if self is None:
+            return
         self.starting = False
         self.running = True
 
     def _on_process_error(self, error):
         """ Logs process error """
+        if self is None:
+            return
         if error not in PROCESS_ERROR_STRING:
             error = -1
         if not self._prevent_logs:

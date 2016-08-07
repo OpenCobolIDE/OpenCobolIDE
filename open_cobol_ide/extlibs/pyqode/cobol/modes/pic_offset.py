@@ -35,7 +35,6 @@ class OffsetCalculatorMode(QObject, Mode):
         editor.add_action(self.action, sub_menu='COBOL')
         self.action.triggered.connect(self._compute_offsets)
 
-    @Slot()
     def _compute_offsets(self):
         original_tc = self.editor.textCursor()
         tc = self.editor.textCursor()

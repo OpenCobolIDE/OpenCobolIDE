@@ -140,7 +140,6 @@ class EncodingsMenu(QtWidgets.QMenu):
         if DlgPreferredEncodingsEditor.edit_encoding(self):
             self._refresh()
 
-    @QtCore.Slot(QtWidgets.QAction)
     def _on_encoding_triggered(self, action):
         self.reload_requested.emit(action.data())
 
@@ -174,12 +173,10 @@ class EncodingsContextMenu(EncodingsMenu):
             self.parent().file.encoding)
         super(EncodingsContextMenu, self)._refresh()
 
-    @QtCore.Slot(str)
     def _on_reload_requested(self, encoding):
         self._encoding = encoding
         self._timer.start()
 
-    @QtCore.Slot()
     def _reload(self):
         self._timer.stop()
         try:

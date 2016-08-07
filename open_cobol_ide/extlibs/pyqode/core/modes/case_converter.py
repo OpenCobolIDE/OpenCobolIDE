@@ -22,14 +22,12 @@ class CaseConverterMode(Mode):
         self.action_to_lower = None
         self.action_to_upper = None
 
-    @QtCore.Slot()
     def to_upper(self):
         """
         Converts selected text to upper
         """
         TextHelper(self.editor).selected_text_to_upper()
 
-    @QtCore.Slot()
     def to_lower(self):
         """
         Converts selected text to lower

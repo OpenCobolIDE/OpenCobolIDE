@@ -80,14 +80,12 @@ class TabWidget(QTabWidget):
         # the C++ class loose the wrapped obj type).
         self._widgets = []
 
-    @QtCore.Slot()
     def close(self):
         """
         Closes the active editor
         """
         self.tabCloseRequested.emit(self.currentIndex())
 
-    @QtCore.Slot()
     def close_others(self):
         """
         Closes every editors tabs except the current one.
@@ -102,7 +100,6 @@ class TabWidget(QTabWidget):
             else:
                 i = 1
 
-    @QtCore.Slot()
     def close_all(self):
         """
         Closes all editors
@@ -126,7 +123,6 @@ class TabWidget(QTabWidget):
                 code_edit, code_edit.file.name, code_edit.file.path)
             code_edit._tab_name = file_name
 
-    @QtCore.Slot()
     def save_current(self, path=None):
         """
         Save current editor content. Leave file to None to erase the previous
@@ -163,7 +159,6 @@ class TabWidget(QTabWidget):
             pass
         return False
 
-    @QtCore.Slot()
     def save_all(self):
         """
         Save all editors.

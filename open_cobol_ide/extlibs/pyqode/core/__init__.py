@@ -16,6 +16,7 @@ __version__ = '2.10.1'
 logging.addLevelName(1, "PYQODEDEBUGCOMM")
 logging.addLevelName(5, "PYQODEDEBUG")
 
+
 try:
     # check if application code is using gettext
     _('')
