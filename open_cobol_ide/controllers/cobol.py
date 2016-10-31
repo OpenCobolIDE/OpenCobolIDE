@@ -384,9 +384,8 @@ class CobolController(Controller):
             if file_type == FileType.MODULE:
                 cmd.insert(1, system.which('cobcrun'))
             try:
-                subprocess.Popen(cmd, cwd=wd,
-                                 creationflags=subprocess.CREATE_NEW_CONSOLE,
-                                 env=env)
+                _logger().debug("running program in external terminal: %r, %r, %r" % (cmd, wd, env))
+                subprocess.Popen(cmd, cwd=wd, creationflags=subprocess.CREATE_NEW_CONSOLE, env=env)
             except (OSError, subprocess.CalledProcessError):
                 msg = "Failed to launch program in external terminal (cmd=%s) " % ' '.join(cmd)
                 _logger().exception(msg)
