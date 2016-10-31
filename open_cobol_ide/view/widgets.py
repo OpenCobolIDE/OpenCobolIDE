@@ -4,12 +4,11 @@ Widgets in this module are used as promoted widgets in Qt Designer
 import os
 from pyqode.cobol.api import icons
 from pyqode.qt import QtCore, QtGui, QtWidgets
-from pyqode.core.backend import server
 from pyqode.core.widgets import SplittableCodeEditTabWidget, OutputWindow
 from pyqode.core.widgets import FileSystemContextMenu, FileIconProvider as \
     PyQodeIconProvider
 import sys
-from open_cobol_ide import system
+from open_cobol_ide import backend, system
 from open_cobol_ide.settings import Settings
 
 
@@ -197,5 +196,5 @@ class MyOutputWindow(OutputWindow):
         base_backend = 'core-backend'
         if sys.platform == 'win32':
             base_backend += '.exe'
-        backend = os.path.join(cwd, base_backend) if hasattr(sys, 'frozen') else server.__file__
-        super(MyOutputWindow, self).__init__(parent=parent, backend=backend)
+        backend_path = os.path.join(cwd, base_backend) if hasattr(sys, 'frozen') else backend.__file__
+        super(MyOutputWindow, self).__init__(parent=parent, backend=backend_path)
