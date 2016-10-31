@@ -214,44 +214,51 @@ class CheckerMode(Mode, QtCore.QObject):
         QtCore.QTimer.singleShot(1, self._remove_batch)
 
     def _add_batch(self):
-        if self.editor is None:
-            return
-        for i in range(10):
-            if not len(self._pending_msg):
-                # all pending message added
-                self._finished = True
-                _logger(self.__class__).log(5, 'finished')
-                self.editor.repaint()
-                return False
-            message = self._pending_msg.pop(0)
-            if message.line >= 0:
-                try:
-                    usd = message.block.userData()
-                except AttributeError:
-                    message.block = self.editor.document().findBlockByNumber(
-                        message.line)
-                    usd = message.block.userData()
-                if usd is None:
-                    usd = TextBlockUserData()
-                    message.block.setUserData(usd)
-                # check if the same message already exists
-                if message in usd.messages:
-                    continue
-                self._messages.append(message)
-                usd.messages.append(message)
-                tooltip = None
-                if self._show_tooltip:
-                    tooltip = message.description
-                message.decoration = TextDecoration(
-                    self.editor.textCursor(), start_line=message.line,
-                    tooltip=tooltip, draw_order=3)
-                message.decoration.set_full_width()
-                message.decoration.set_as_error(color=QtGui.QColor(
-                    message.color))
-                self.editor.decorations.append(message.decoration)
-        QtCore.QTimer.singleShot(1, self._add_batch)
-        self.editor.repaint()
-        return True
+        def inner():
+            if self.editor is None:
+                return
+            for i in range(10):
+                if not len(self._pending_msg):
+                    # all pending message added
+                    self._finished = True
+                    _logger(self.__class__).log(5, 'finished')
+                    self.editor.repaint()
+                    return False
+                message = self._pending_msg.pop(0)
+                if message.line >= 0:
+                    try:
+                        usd = message.block.userData()
+                    except AttributeError:
+                        message.block = self.editor.document().findBlockByNumber(
+                            message.line)
+                        usd = message.block.userData()
+                    if usd is None:
+                        usd = TextBlockUserData()
+                        message.block.setUserData(usd)
+                    # check if the same message already exists
+                    if message in usd.messages:
+                        continue
+                    self._messages.append(message)
+                    usd.messages.append(message)
+                    tooltip = None
+                    if self._show_tooltip:
+                        tooltip = message.description
+                    message.decoration = TextDecoration(
+                        self.editor.textCursor(), start_line=message.line,
+                        tooltip=tooltip, draw_order=3)
+                    message.decoration.set_full_width()
+                    message.decoration.set_as_error(color=QtGui.QColor(
+                        message.color))
+                    self.editor.decorations.append(message.decoration)
+            QtCore.QTimer.singleShot(1, self._add_batch)
+            self.editor.repaint()
+            return True
+
+        try:
+            return inner()
+        except RuntimeError:
+            # editor got deleted while timer was running.
+            return False
 
     def remove_message(self, message):
         """
