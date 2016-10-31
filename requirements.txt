@@ -2,10 +2,9 @@ pygments
 pyqode.core
 pyqode.cobol
 pyqode.qt
+qcrash
 qdarkstyle
 githubpy
 keyring
-
-
 pyqode-uic
 pyqt-distutils
