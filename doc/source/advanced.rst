@@ -108,3 +108,16 @@ Here are some screen-shots of a working configuration:
 
    .. image:: _static/configured_compiler_for_dbpre.png
         :align: center
+
+Developer mode
+--------------
+
+By default, OpenCobolIDE embeds a series of third party libraries and modify python's sys import path to always load the
+bundled libraries first. Those libraries are bundled inside the opencobolide python package (this path is internally
+used to set the ``OCIDE_EXTLIBS_PATH`` environment variable).
+
+This behaviour can be changed by setting the ``OCIDE_DEV_MODE`` environment variable to 1. If you do so, you'll need to
+install the required third-parties yourself. This can be done easily by running the following command at the root
+of the OpenCobolIDE's source directory:
+
+``pip install -r requirements.txt``
