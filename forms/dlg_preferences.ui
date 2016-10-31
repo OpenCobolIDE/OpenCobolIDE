@@ -24,16 +24,7 @@
     <normaloff>:/ide-icons/rc/silex-192x192.png</normaloff>:/ide-icons/rc/silex-192x192.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <property name="leftMargin">
-    <number>6</number>
-   </property>
-   <property name="topMargin">
-    <number>6</number>
-   </property>
-   <property name="rightMargin">
-    <number>6</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>6</number>
    </property>
    <item row="6" column="0">
@@ -55,16 +46,7 @@
       <string notr="true"/>
      </property>
      <layout class="QGridLayout" name="widget_2">
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
+      <property name="margin">
        <number>0</number>
       </property>
       <property name="spacing">
@@ -82,7 +64,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>3</number>
         </property>
         <property name="usesScrollButtons">
          <bool>true</bool>
@@ -109,8 +91,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>755</width>
-               <height>770</height>
+               <width>868</width>
+               <height>722</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -625,7 +607,8 @@ as possible to get back to the previous indentation level.</string>
         <widget class="QWidget" name="tabStyle">
          <attribute name="icon">
           <iconset theme="applications-graphics">
-           <normaloff>.</normaloff>.</iconset>
+           <normaloff/>
+          </iconset>
          </attribute>
          <attribute name="title">
           <string>Style</string>
@@ -811,7 +794,8 @@ as possible to get back to the previous indentation level.</string>
         <widget class="QWidget" name="tabCompiler">
          <attribute name="icon">
           <iconset theme="exec">
-           <normaloff>.</normaloff>.</iconset>
+           <normaloff/>
+          </iconset>
          </attribute>
          <attribute name="title">
           <string>Compiler</string>
@@ -827,8 +811,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>735</width>
-               <height>918</height>
+               <width>742</width>
+               <height>886</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_6">
@@ -871,7 +855,8 @@ as possible to get back to the previous indentation level.</string>
                   </property>
                   <property name="icon">
                    <iconset theme="emblem-checked">
-                    <normaloff>.</normaloff>.</iconset>
+                    <normaloff/>
+                   </iconset>
                   </property>
                  </widget>
                 </item>
@@ -1183,7 +1168,8 @@ as possible to get back to the previous indentation level.</string>
                     </property>
                     <property name="icon">
                      <iconset theme="folder-open">
-                      <normaloff>.</normaloff>.</iconset>
+                      <normaloff/>
+                     </iconset>
                     </property>
                    </widget>
                   </item>
@@ -1194,7 +1180,8 @@ as possible to get back to the previous indentation level.</string>
                     </property>
                     <property name="icon">
                      <iconset theme="list-add">
-                      <normaloff>.</normaloff>.</iconset>
+                      <normaloff/>
+                     </iconset>
                     </property>
                    </widget>
                   </item>
@@ -1356,7 +1343,8 @@ as possible to get back to the previous indentation level.</string>
         <widget class="QWidget" name="tabRun">
          <attribute name="icon">
           <iconset theme="media-playback-start">
-           <normaloff>.</normaloff>.</iconset>
+           <normaloff/>
+          </iconset>
          </attribute>
          <attribute name="title">
           <string>Run</string>
@@ -1364,16 +1352,7 @@ as possible to get back to the previous indentation level.</string>
          <layout class="QVBoxLayout" name="verticalLayout_10" stretch="0,1">
           <item>
            <layout class="QFormLayout" name="formLayout_13">
-            <property name="leftMargin">
-             <number>6</number>
-            </property>
-            <property name="topMargin">
-             <number>6</number>
-            </property>
-            <property name="rightMargin">
-             <number>6</number>
-            </property>
-            <property name="bottomMargin">
+            <property name="margin">
              <number>6</number>
             </property>
             <item row="2" column="0">
@@ -1420,14 +1399,14 @@ as possible to get back to the previous indentation level.</string>
             <item row="1" column="1">
              <widget class="QCheckBox" name="checkBoxRunExtTerm">
               <property name="text">
-               <string/>
+               <string>Run in external terminal</string>
               </property>
              </widget>
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_43">
               <property name="text">
-               <string>Run in external terminal:</string>
+               <string>Terminal mode:</string>
               </property>
              </widget>
             </item>
@@ -1480,7 +1459,8 @@ as possible to get back to the previous indentation level.</string>
                  </property>
                  <property name="icon">
                   <iconset theme="list-add">
-                   <normaloff>.</normaloff>.</iconset>
+                   <normaloff/>
+                  </iconset>
                  </property>
                 </widget>
                </item>
@@ -1491,7 +1471,8 @@ as possible to get back to the previous indentation level.</string>
                  </property>
                  <property name="icon">
                   <iconset theme="list-remove">
-                   <normaloff>.</normaloff>.</iconset>
+                   <normaloff/>
+                  </iconset>
                  </property>
                 </widget>
                </item>
@@ -1502,7 +1483,8 @@ as possible to get back to the previous indentation level.</string>
                  </property>
                  <property name="icon">
                   <iconset theme="edit-clear">
-                   <normaloff>.</normaloff>.</iconset>
+                   <normaloff/>
+                  </iconset>
                  </property>
                 </widget>
                </item>
@@ -1545,8 +1527,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>755</width>
-               <height>746</height>
+               <width>336</width>
+               <height>555</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -1713,16 +1695,7 @@ as possible to get back to the previous indentation level.</string>
                      </item>
                      <item row="2" column="1">
                       <layout class="QVBoxLayout" name="verticalLayout_6">
-                       <property name="leftMargin">
-                        <number>3</number>
-                       </property>
-                       <property name="topMargin">
-                        <number>3</number>
-                       </property>
-                       <property name="rightMargin">
-                        <number>3</number>
-                       </property>
-                       <property name="bottomMargin">
+                       <property name="margin">
                         <number>3</number>
                        </property>
                        <item>

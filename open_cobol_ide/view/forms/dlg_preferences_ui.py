@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/colin/dev/OpenCobolIDE/forms/dlg_preferences.ui'
+# Form implementation generated from reading ui file '/home/colin/Projects/OpenCobolIDE/forms/dlg_preferences.ui'
 #
-# Created by: PyQt5 UI code generator 5.6.1.dev1604260930
+# Created by: PyQt5 UI code generator 5.7
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -47,7 +47,7 @@ class Ui_Dialog(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 755, 770))
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 868, 722))
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_7.setContentsMargins(0, 0, 0, 0)
@@ -358,7 +358,7 @@ class Ui_Dialog(object):
         self.scrollArea_5.setWidgetResizable(True)
         self.scrollArea_5.setObjectName("scrollArea_5")
         self.scrollAreaWidgetContents_7 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_7.setGeometry(QtCore.QRect(0, 0, 735, 918))
+        self.scrollAreaWidgetContents_7.setGeometry(QtCore.QRect(0, 0, 742, 886))
         self.scrollAreaWidgetContents_7.setObjectName("scrollAreaWidgetContents_7")
         self.formLayout_6 = QtWidgets.QFormLayout(self.scrollAreaWidgetContents_7)
         self.formLayout_6.setFieldGrowthPolicy(QtWidgets.QFormLayout.ExpandingFieldsGrow)
@@ -611,7 +611,6 @@ class Ui_Dialog(object):
         self.horizontalLayout_19.addWidget(self.bt_working_dir)
         self.formLayout_13.setLayout(3, QtWidgets.QFormLayout.FieldRole, self.horizontalLayout_19)
         self.checkBoxRunExtTerm = QtWidgets.QCheckBox(self.tabRun)
-        self.checkBoxRunExtTerm.setText("")
         self.checkBoxRunExtTerm.setObjectName("checkBoxRunExtTerm")
         self.formLayout_13.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.checkBoxRunExtTerm)
         self.label_43 = QtWidgets.QLabel(self.tabRun)
@@ -670,7 +669,7 @@ class Ui_Dialog(object):
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollArea_3.setObjectName("scrollArea_3")
         self.scrollAreaWidgetContents_5 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_5.setGeometry(QtCore.QRect(0, 0, 755, 746))
+        self.scrollAreaWidgetContents_5.setGeometry(QtCore.QRect(0, 0, 336, 555))
         self.scrollAreaWidgetContents_5.setObjectName("scrollAreaWidgetContents_5")
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_5)
         self.verticalLayout_9.setContentsMargins(0, 0, 0, 0)
@@ -836,7 +835,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.addWidget(self.widget, 0, 0, 1, 1)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(3)
         self.stackedWidgetSQL.setCurrentIndex(0)
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
@@ -983,7 +982,8 @@ class Ui_Dialog(object):
         self.lineEditRunTerm.setStatusTip(_translate("Dialog", "External terminal command"))
         self.label_42.setText(_translate("Dialog", "Working Directory:"))
         self.bt_working_dir.setText(_translate("Dialog", "..."))
-        self.label_43.setText(_translate("Dialog", "Run in external terminal:"))
+        self.checkBoxRunExtTerm.setText(_translate("Dialog", "Run in external terminal"))
+        self.label_43.setText(_translate("Dialog", "Terminal mode:"))
         self.groupBox_12.setTitle(_translate("Dialog", "Environment"))
         item = self.tw_run_env.horizontalHeaderItem(0)
         item.setText(_translate("Dialog", "Key"))
