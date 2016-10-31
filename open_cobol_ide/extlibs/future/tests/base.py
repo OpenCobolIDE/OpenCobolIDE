@@ -6,7 +6,6 @@ import sys
 import re
 import warnings
 import io
-import functools
 from textwrap import dedent
 
 from future.utils import bind_method, PY26, PY3, PY2, PY27
@@ -377,7 +376,6 @@ def expectedFailurePY3(func):
     if not PY3:
         return func
     return unittest.expectedFailure(func)
-
 
 def expectedFailurePY26(func):
     if not PY26:

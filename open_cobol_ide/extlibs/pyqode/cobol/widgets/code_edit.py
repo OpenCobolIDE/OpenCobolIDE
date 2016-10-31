@@ -168,6 +168,7 @@ class CobolCodeEdit(api.CodeEdit):
         self.occurences_highlighter_mode = self.modes.append(
             modes.OccurrencesHighlighterMode()
         )
+        self.occurences_highlighter_mode.case_sensitive = False
         self.backspace_mode = self.modes.append(
             cobmodes.SmartBackSpaceMode()
         )

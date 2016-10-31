@@ -12,7 +12,7 @@ import string
 
 from collections import namedtuple
 
-from pyqode.core.api import CodeEdit, SyntaxHighlighter
+from pyqode.core.api import CodeEdit, SyntaxHighlighter, TextHelper
 from pyqode.core.api.client import PROCESS_ERROR_STRING
 from pyqode.core.backend import server
 from pyqode.qt import QtWidgets, QtGui, QtCore
@@ -279,9 +279,14 @@ class OutputWindow(CodeEdit):
         if self._process.state() != self._process.Running:
             return
         tc = self.textCursor()
+        sel_start = tc.selectionStart()
+        sel_end = tc.selectionEnd()
         tc.setPosition(self._formatter._last_cursor_pos)
         self.setTextCursor(tc)
         if self.input_handler.key_press_event(event):
+            tc.setPosition(sel_start)
+            tc.setPosition(sel_end, tc.KeepAnchor)
+            self.setTextCursor(tc)
             super(OutputWindow, self).keyPressEvent(event)
         self._formatter._last_cursor_pos = self.textCursor().position()
 
@@ -318,6 +323,9 @@ class OutputWindow(CodeEdit):
             else:
                 line = 0
             self.open_file_requested.emit(path, line)
+
+    def eventFilter(self, *args):
+        return False
 
     #
     # Utility methods
@@ -364,6 +372,8 @@ class OutputWindow(CodeEdit):
             environ.insert(k, v)
         if sys.platform != 'win32':
             environ.insert('TERM', 'xterm')
+            environ.insert('LINES', '24')
+            environ.insert('COLUMNS', '450')
         environ.insert('PYTHONUNBUFFERED', '1')
         environ.insert('QT_LOGGING_TO_CONSOLE', '1')
         return environ
@@ -803,9 +813,10 @@ class ImmediateInputHandler(InputHandler):
             cursor.movePosition(cursor.EndOfBlock)
             self.edit.setTextCursor(cursor)
         code = _qkey_to_ascii(event)
-        if code is not None:
+        if code:
             self.process.writeData(code)
-        return False
+            return False
+        return True
 
     def paste(self, text):
         self.process.write(text.encode())
@@ -822,7 +833,8 @@ def _qkey_to_ascii(event):
         control_modifier = QtCore.Qt.MetaModifier
     else:
         control_modifier = QtCore.Qt.ControlModifier
-    if event.modifiers() == control_modifier:
+    ctrl = int(event.modifiers() & control_modifier) != 0
+    if ctrl:
         if event.key() == QtCore.Qt.Key_P:
             return b'\x10'
         elif event.key() == QtCore.Qt.Key_N:
@@ -961,20 +973,21 @@ class BufferedInputHandler(InputHandler):
     """
     def __init__(self):
         super(BufferedInputHandler, self).__init__()
-        self._input_buffer = ''
         self._history = CommandHistory()
-        self._cursor_pos = 0
 
     def _insert_command(self, command):
         """
         Insert command by replacing the current input buffer and display it on the text edit.
         """
+        self._clear_user_buffer()
         tc = self.edit.textCursor()
-        for _ in self._input_buffer:
-            tc.deletePreviousChar()
         tc.insertText(command)
-        self._input_buffer = command
-        self._cursor_pos = len(command)
+        self.edit.setTextCursor(tc)
+
+    def _clear_user_buffer(self):
+        tc = self.edit.textCursor()
+        for _ in self._get_input_buffer():
+            tc.deletePreviousChar()
         self.edit.setTextCursor(tc)
 
     def is_code_completion_popup_visible(self):
@@ -989,17 +1002,16 @@ class BufferedInputHandler(InputHandler):
         """
         Manages our own buffer and send it to the subprocess when user pressed RETURN.
         """
+        input_buffer = self._get_input_buffer()
         ctrl = int(event.modifiers() & QtCore.Qt.ControlModifier) != 0
+        shift = int(event.modifiers() & QtCore.Qt.ShiftModifier) != 0
         delete = event.key() in [QtCore.Qt.Key_Backspace, QtCore.Qt.Key_Delete]
         ignore = False
-        if delete and not self._input_buffer:
+        if delete and not input_buffer and not shift:
             return False
         if ctrl:
-            if event.key() == QtCore.Qt.Key_V:
-                # Paste to usr buffer
-                text = QtWidgets.qApp.clipboard().text()
-                self._input_buffer += text
-                self.edit.insertPlainText(text)
+            if shift and event.key() == QtCore.Qt.Key_V:
+                self.edit.insertPlainText(QtWidgets.qApp.clipboard().text())
                 return False
             elif event.key() == QtCore.Qt.Key_L:
                 self.edit.clear()
@@ -1007,41 +1019,34 @@ class BufferedInputHandler(InputHandler):
                     self.process.write(b'\r')
                 self.process.write(b'\n')
                 return False
-            elif event.key() == QtCore.Qt.Key_Backspace:
-                return False
+        if (shift or ctrl) and event.key() == QtCore.Qt.Key_Backspace:
+            if input_buffer.strip() != '':
+                return True
+            self._clear_user_buffer()
+            return False
         if event.key() == QtCore.Qt.Key_Up:
             if self.is_code_completion_popup_visible():
                 return True
             self._insert_command(self._history.scroll_up())
             return False
+        if event.key() == QtCore.Qt.Key_Left:
+            return bool(input_buffer)
         if event.key() == QtCore.Qt.Key_Down:
             if self.is_code_completion_popup_visible():
                 return True
             self._insert_command(self._history.scroll_down())
             return False
-        if event.key() == QtCore.Qt.Key_Left:
-            self._cursor_pos -= 1
-            if self._cursor_pos < 0:
-                self._cursor_pos = 0
-                ignore = True
-            return not ignore
-        if event.key() == QtCore.Qt.Key_Right:
-            self._cursor_pos += 1
-            if self._cursor_pos > len(self._input_buffer):
-                self._cursor_pos = len(self._input_buffer)
-                ignore = True
-            return not ignore
         if event.key() == QtCore.Qt.Key_Home:
             tc = self.edit.textCursor()
-            tc.movePosition(tc.Left, tc.MoveAnchor, self._cursor_pos)
+            tc.movePosition(tc.StartOfBlock)
+            tc.movePosition(tc.Right, tc.MoveAnchor, self.edit._formatter._prefix_len)
             self.edit.setTextCursor(tc)
-            self._cursor_pos = 0
             return False
         if event.key() == QtCore.Qt.Key_End:
             tc = self.edit.textCursor()
             tc.movePosition(tc.EndOfBlock)
             self.edit.setTextCursor(tc)
-            self._cursor_pos = len(self._input_buffer)
+            self._cursor_pos = len(self._get_input_buffer())
             return False
         if event.key() in [QtCore.Qt.Key_Return, QtCore.Qt.Key_Enter]:
             if self.is_code_completion_popup_visible():
@@ -1054,57 +1059,21 @@ class BufferedInputHandler(InputHandler):
                 # remove user buffer from text edit, the content of the buffer will be
                 # drawn as soon as we write it to the process stdin
                 tc = self.edit.textCursor()
-                for _ in self._input_buffer:
+                for _ in input_buffer:
                     tc.deletePreviousChar()
                 self.edit.setTextCursor(tc)
-            self._history.add_command(self._input_buffer)
+            self._history.add_command(input_buffer)
             if sys.platform == 'win32':
-                self._input_buffer += "\r"
-            self._input_buffer += "\n"
-            self.process.write(self._input_buffer.encode())
-            self._input_buffer = ""
-            self._cursor_pos = 0
+                input_buffer += "\r"
+            input_buffer += "\n"
+            self.process.write(input_buffer.encode())
             if self.edit.flg_use_pty or 'cmd.exe' in self.process.program():
-                ignore = True
-        else:
-            printable = len(event.text()) and event.text() in string.printable
-            if not delete and printable:
-                self.insert_text(event.text())
-            elif delete:
-                if event.key() == QtCore.Qt.Key_Backspace:
-                    if self._cursor_pos > 0:
-                        self.backspace()
-                    else:
-                        ignore = True
-                else:
-                    if len(self._input_buffer):
-                        self.delete()
-                    else:
-                        ignore = True
-            else:
                 ignore = True
         return not ignore
 
-    def insert_text(self, txt):
-        if txt == '\t':
-            txt = ' ' * 4
-        self._input_buffer = self._input_buffer[:self._cursor_pos] + txt + \
-            self._input_buffer[self._cursor_pos:]
-        self._cursor_pos += len(txt)
-
-    def backspace(self):
-        count = 1
-        self._input_buffer = self._input_buffer[:self._cursor_pos - count] + self._input_buffer[self._cursor_pos:]
-        self._cursor_pos -= count
-        if self._cursor_pos < 0:
-            self._cursor_pos = 0
-
-    def delete(self):
-        self._input_buffer = self._input_buffer[:self._cursor_pos] + self._input_buffer[self._cursor_pos + 1:]
-
-    def paste(self, text):
-        self.insert_text(text)
-        CodeEdit.paste(self.edit)
+    def _get_input_buffer(self):
+        current_line = TextHelper(self.edit).current_line_text()
+        return current_line[self.edit._formatter._prefix_len:]
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -1261,6 +1230,7 @@ class OutputFormatter(object):
             if i != len(parts) - 1:
                 self._cursor_back(1)
         self._last_cursor_pos = self._cursor.position()
+        self._prefix_len = self._cursor.positionInBlock()
         self._text_edit.setTextCursor(self._cursor)
 
     def _draw_chars(self, data, to_draw):

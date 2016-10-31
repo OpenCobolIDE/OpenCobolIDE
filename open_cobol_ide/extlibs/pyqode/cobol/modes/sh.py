@@ -17,7 +17,7 @@ def make_cobol_patterns(fixed_format=True):
     if fixed_format:
         comment = any('comment', [r"\*>[^\n]*|(^.{6})\*[^\n]*"])
     else:
-        comment = any('comment', [r"\*>[^\n]*|\s*\*[^\n]*"])
+        comment = any('comment', [r"\*>[^\n]*|^\*.*"])
     keywords_reserved = any(
         'keyword_reserved',
         ['(^|(?<=[^0-9a-zA-Z_\-]))(%s)\s*($|(?=[^0-9a-zA-Z_\-]))' %

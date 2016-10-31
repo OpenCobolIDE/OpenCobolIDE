@@ -192,4 +192,4 @@ class EncodingsContextMenu(EncodingsMenu):
             except KeyError:
                 pass
             else:
-                panel.cancel()
+                panel.close_panel()

@@ -2,6 +2,8 @@ import os
 import sys
 
 from pyqode.core.backend import server
+from pyqode.core import modes
+
 from . import output_window
 
 
@@ -35,6 +37,15 @@ class Terminal(output_window.OutputWindow):
         self.start_process(program, arguments=args, print_command=False, use_pseudo_terminal=use_pty,
                            working_dir=working_dir)
 
+    def _init_code_edit(self, backend):
+        self.modes.append(modes.SymbolMatcherMode())
+        self.modes.append(modes.IndenterMode())
+        super(Terminal, self)._init_code_edit(backend)
+        try:
+            self.panels.remove('ReadOnlyPanel')
+        except KeyError:
+            pass
+
     def change_directory(self, directory):
         """
         Changes the current directory.
@@ -45,6 +56,7 @@ class Terminal(output_window.OutputWindow):
         """
         self._process.write(('cd %s\n' % directory).encode())
         if sys.platform == 'win32':
+            self._process.write((os.path.splitdrive(directory)[0] + '\r\n').encode())
             self.clear()
         else:
             self._process.write(b'\x0C')

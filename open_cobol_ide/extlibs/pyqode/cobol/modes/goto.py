@@ -73,7 +73,7 @@ class GoToDefinitionMode(Mode, QObject):
                 self._timer.request_job(self.word_clicked.emit, cursor)
 
     def find_definition(self, symbol, definition):
-        if symbol in TextHelper(self.editor).line_text(definition.line):
+        if symbol.lower() in TextHelper(self.editor).line_text(definition.line).lower():
             return definition
         for ch in definition.children:
             d = self.find_definition(symbol, ch)
@@ -138,6 +138,7 @@ class GoToDefinitionMode(Mode, QObject):
             QTimer.singleShot(100, self._goto_def)
 
     def _goto_def(self):
-        line = self._definition.line
-        col = self._definition.column
-        TextHelper(self.editor).goto_line(line, move=True, column=col)
+        if self._definition:
+            line = self._definition.line
+            col = self._definition.column
+            TextHelper(self.editor).goto_line(line, move=True, column=col)
