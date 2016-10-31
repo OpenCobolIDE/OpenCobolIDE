@@ -469,11 +469,9 @@ class CobolController(Controller):
             if file_type == FileType.MODULE:
                 cobcrun = system.which('cobcrun')
                 self.ui.consoleOutput.start_process(
-                    cobcrun, [os.path.splitext(editor.file.name)[0]], cwd=wd,
-                    env=env)
+                    cobcrun, [os.path.splitext(editor.file.name)[0]], working_dir=wd, env=env)
             else:
-                self.ui.consoleOutput.start_process(program, working_dir=wd,
-                                                    env=env, print_command=True)
+                self.ui.consoleOutput.start_process(program, working_dir=wd, env=env, print_command=True)
 
     def _on_run_finished(self):
         self.enable_compile(True)
