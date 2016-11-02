@@ -939,7 +939,7 @@ as possible to get back to the previous indentation level.</string>
                 <item>
                  <widget class="PathLineEdit" name="lineEditVCVARS">
                   <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to VCVARSALL.bat. It is needed if you're using a GnuCobol compiler built with Visual Studio.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;The VCVARSALL.bat file is located under the VC directory of you Visual Studio installation. Make sure to use the same version as the one used to build the compiler!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to VCVARSALL.bat. It is needed if you're using a GnuCOBOL compiler built with Visual Studio.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;The VCVARSALL.bat file is located under the VC directory of you Visual Studio installation. Make sure to use the same version as the one used to build the compiler!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
                  </widget>
                 </item>

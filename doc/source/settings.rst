@@ -102,7 +102,7 @@ Compiler settings
 .. image:: _static/compiler-settings.png
     :align: center
 
-This tab let you change the GnuCobol compiler settings.
+This tab let you change the GnuCOBOL compiler settings.
 
 .. warning:: Those settings are applied globally to every file you compile with the IDE. At the moment there is no way
              to set custom compiler settings per file.
@@ -138,7 +138,7 @@ to the source file. You can define another relative or absolute directory if you
 Associated extensions
 +++++++++++++++++++++
 
-Associate custom extension with the GnuCobol compiler. Extensions should be dotted (.cbl) and lowercase. The uppercase
+Associate custom extension with the GnuCOBOL compiler. Extensions should be dotted (.cbl) and lowercase. The uppercase
 version will be handled by the ide automatically.
 
 Standard
