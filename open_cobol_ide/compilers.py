@@ -342,6 +342,21 @@ class GnuCobolCompiler(QtCore.QObject):
         return '%s\n%s' % (output1, output2), status
 
     @staticmethod
+    def get_cobc_help():
+        compiler = Settings().compiler_path
+        args = ['--help']
+
+        if not compiler:
+            return 'cannot run command, no compiler path defined'
+
+        status, output = run_command(compiler, args)
+
+        if status != 0:
+            output = 'command "cobc --help" failed with exit code %d.\nProcess output: %s' % (status, output)
+
+        return output
+
+    @staticmethod
     def get_cobc_infos():
         compiler = Settings().compiler_path
         args = ['--info']
