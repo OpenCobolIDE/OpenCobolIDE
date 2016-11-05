@@ -464,7 +464,7 @@ class Settings(object):
         for v in lst:
             if v:
                 ret_val.append(v.replace('&', ''))
-        return list(set(ret_val))
+        return sorted(list(set(ret_val)))
 
     @compiler_flags.setter
     def compiler_flags(self, value):

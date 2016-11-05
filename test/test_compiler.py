@@ -57,23 +57,27 @@ dll_ext = GnuCobolCompiler().extension_for_type(FileType.MODULE)
         '-x',
         '-o', '%s' % os.path.join('bin', 'HelloWorld' + exe_ext),
         '-std=default',
+        '-Wall',
         '-debug'
     ]),
     (True, GnuCobolStandard.default, FileType.EXECUTABLE, [
         '-x',
         '-o', '%s' % os.path.join('bin', 'HelloWorld' + exe_ext),
         '-std=default',
+        '-Wall',
         '-debug',
         '-free'
     ]),
     (False, GnuCobolStandard.default, FileType.MODULE, [
         '-o', '%s' % os.path.join('bin', 'HelloWorld' + dll_ext),
         '-std=default',
+        '-Wall',
         '-debug'
     ]),
     (True, GnuCobolStandard.default, FileType.MODULE, [
         '-o', '%s' % os.path.join('bin', 'HelloWorld' + dll_ext),
         '-std=default',
+        '-Wall',
         '-debug',
         '-free'
     ]),
@@ -81,23 +85,27 @@ dll_ext = GnuCobolCompiler().extension_for_type(FileType.MODULE)
         '-x',
         '-o', '%s' % os.path.join('bin', 'HelloWorld' + exe_ext),
         '-std=mf',
+        '-Wall',
         '-debug'
     ]),
     (True, GnuCobolStandard.mf, FileType.EXECUTABLE, [
         '-x',
         '-o', '%s' % os.path.join('bin', 'HelloWorld' + exe_ext),
         '-std=mf',
+        '-Wall',
         '-debug',
         '-free'
     ]),
     (False, GnuCobolStandard.mf, FileType.MODULE, [
         '-o', '%s' % os.path.join('bin', 'HelloWorld' + dll_ext),
         '-std=mf',
+        '-Wall',
         '-debug'
     ]),
     (True, GnuCobolStandard.mf, FileType.MODULE, [
         '-o', '%s' % os.path.join('bin', 'HelloWorld' + dll_ext),
         '-std=mf',
+        '-Wall',
         '-debug',
         '-free'
     ])
