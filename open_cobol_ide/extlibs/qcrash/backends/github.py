@@ -73,8 +73,8 @@ class GithubBackend(BaseBackend):
                 self.qsettings().setValue('github/remember_credentials', 0)
                 if self._show_msgbox:
                     QtWidgets.QMessageBox.warning(
-                      self.parent_widget, 'Invalid credentials',
-                      'Failed to create github issue, invalid credentials...')
+                        self.parent_widget, 'Invalid credentials',
+                        'Failed to create github issue, invalid credentials...')
             else:
                 # other issue
                 if self._show_msgbox:
