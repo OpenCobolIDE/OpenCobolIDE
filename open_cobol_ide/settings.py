@@ -459,12 +459,12 @@ class Settings(object):
 
     @property
     def compiler_flags(self):
-        lst = eval(self._settings.value('compilerFlags', '["-debug"]'))
+        lst = eval(self._settings.value('compilerFlags', '["-debug", "-Wall"]'))
         ret_val = []
         for v in lst:
             if v:
                 ret_val.append(v.replace('&', ''))
-        return ret_val
+        return list(set(ret_val))
 
     @compiler_flags.setter
     def compiler_flags(self, value):

@@ -445,6 +445,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             self.cb_g.setChecked(self.cb_g.text().replace('&', '') in flags)
             self.cb_static.setChecked(self.cb_static.text().replace('&', '') in flags)
             self.cb_debug.setChecked(self.cb_debug.text().replace('&', '') in flags)
+            self.cb_w.setChecked(self.cb_w.text().replace('&', '') in flags)
+            self.cb_wall.setChecked(self.cb_wall.text().replace('&', '') in flags)
             for v in self.flags_in_checkbox:
                 try:
                     flags.remove(v)
@@ -533,7 +535,7 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
             settings.free_format = False
             settings.cobol_standard = GnuCobolStandard.default
             settings.compiler_path = 'cobc.exe' if system.windows else 'cobc'
-            settings.compiler_flags = ['-debug']
+            settings.compiler_flags = ['-debug', '-Wall']
             settings.copybook_paths = ''
             settings.library_search_path = ''
             settings.libraries = ''
@@ -624,7 +626,8 @@ class DlgPreferences(QtWidgets.QDialog, dlg_preferences_ui.Ui_Dialog):
         settings.output_directory = self.lineEditOutputDirectory.text()
         settings.copy_runtime_dlls = self.cb_copy_runtime_dlls.isChecked()
         cb_flags = [self.cb_g, self.cb_ftrace, self.cb_ftraceall,
-                    self.cb_debugging_line, self.cb_static, self.cb_debug]
+                    self.cb_debugging_line, self.cb_static, self.cb_debug,
+                    self.cb_w, self.cb_wall]
         flags = [cb.text() for cb in cb_flags if cb.isChecked()]
         flags += system.shell_split(self.le_compiler_flags.text())
         settings.compiler_flags = flags

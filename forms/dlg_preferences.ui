@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1190</width>
-    <height>962</height>
+    <width>1280</width>
+    <height>1024</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -109,8 +109,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>1154</width>
-               <height>859</height>
+               <width>728</width>
+               <height>749</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -826,9 +826,9 @@ as possible to get back to the previous indentation level.</string>
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>-110</y>
-               <width>1134</width>
-               <height>969</height>
+               <y>0</y>
+               <width>1224</width>
+               <height>960</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_6">
@@ -1115,7 +1115,7 @@ as possible to get back to the previous indentation level.</string>
                 <property name="topMargin">
                  <number>0</number>
                 </property>
-                <item row="2" column="0">
+                <item row="2" column="1">
                  <widget class="QCheckBox" name="cb_ftrace">
                   <property name="toolTip">
                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Generate trace code&lt;/p&gt;&lt;p&gt;   - Executed SECTION/PARAGRAPH&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1125,7 +1125,7 @@ as possible to get back to the previous indentation level.</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="0">
+                <item row="0" column="1">
                  <widget class="QCheckBox" name="cb_static">
                   <property name="toolTip">
                    <string>Link statically</string>
@@ -1135,7 +1135,7 @@ as possible to get back to the previous indentation level.</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="2">
+                <item row="0" column="3">
                  <widget class="QCheckBox" name="cb_g">
                   <property name="toolTip">
                    <string>Enable C compiler debug / stack check / trace</string>
@@ -1145,7 +1145,7 @@ as possible to get back to the previous indentation level.</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="2">
+                <item row="2" column="3">
                  <widget class="QCheckBox" name="cb_debugging_line">
                   <property name="toolTip">
                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable debugging lines&lt;/p&gt;&lt;p&gt;  - 'D' in indicator column or floating &amp;gt;&amp;gt;D&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1155,7 +1155,7 @@ as possible to get back to the previous indentation level.</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="1">
+                <item row="2" column="2">
                  <widget class="QCheckBox" name="cb_ftraceall">
                   <property name="toolTip">
                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Generate trace code&lt;/p&gt;&lt;p&gt;  - Executed SECTION/PARAGRAPH/STATEMENTS&lt;/p&gt;&lt;p&gt;  - Turned on by -debug&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1165,23 +1165,43 @@ as possible to get back to the previous indentation level.</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="1">
+                <item row="0" column="2">
                  <widget class="QCheckBox" name="cb_debug">
                   <property name="text">
                    <string>-debug</string>
                   </property>
                  </widget>
                 </item>
+                <item row="0" column="0">
+                 <widget class="QCheckBox" name="cb_w">
+                  <property name="toolTip">
+                   <string>Enable all warnings</string>
+                  </property>
+                  <property name="text">
+                   <string>-W</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QCheckBox" name="cb_wall">
+                  <property name="toolTip">
+                   <string>Enable most warnings</string>
+                  </property>
+                  <property name="text">
+                   <string>-Wall</string>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
-              <item row="11" column="0">
+              <item row="12" column="0">
                <widget class="QLabel" name="label_37">
                 <property name="text">
                  <string>Copybook paths:</string>
                 </property>
                </widget>
               </item>
-              <item row="11" column="1">
+              <item row="12" column="1">
                <layout class="QHBoxLayout" name="horizontalLayout_12">
                 <property name="leftMargin">
                  <number>0</number>
@@ -1251,14 +1271,14 @@ as possible to get back to the previous indentation level.</string>
                 </item>
                </layout>
               </item>
-              <item row="12" column="0">
+              <item row="13" column="0">
                <widget class="QLabel" name="label_17">
                 <property name="text">
                  <string>Library paths:</string>
                 </property>
                </widget>
               </item>
-              <item row="12" column="1">
+              <item row="13" column="1">
                <layout class="QHBoxLayout" name="horizontalLayout_10">
                 <property name="leftMargin">
                  <number>0</number>
@@ -1334,31 +1354,17 @@ as possible to get back to the previous indentation level.</string>
                 </item>
                </layout>
               </item>
-              <item row="13" column="0">
+              <item row="14" column="0">
                <widget class="QLabel" name="label_18">
                 <property name="text">
                  <string>Libraries</string>
                 </property>
                </widget>
               </item>
-              <item row="13" column="1">
+              <item row="14" column="1">
                <widget class="QLineEdit" name="lineEditLibs">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the libraries you would like your programs to link with here (-l option)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-              <item row="15" column="0">
-               <widget class="QLabel" name="label_35">
-                <property name="text">
-                 <string>Extra compiler flags</string>
-                </property>
-               </widget>
-              </item>
-              <item row="15" column="1">
-               <widget class="QLineEdit" name="le_compiler_flags">
-                <property name="toolTip">
-                 <string>You can add other compiler flags here</string>
                 </property>
                </widget>
               </item>
@@ -1376,6 +1382,20 @@ as possible to get back to the previous indentation level.</string>
                <widget class="QCheckBox" name="cb_copy_runtime_dlls">
                 <property name="text">
                  <string>Copy runtime dlls to output directory</string>
+                </property>
+               </widget>
+              </item>
+              <item row="11" column="0">
+               <widget class="QLabel" name="label_35">
+                <property name="text">
+                 <string>Extra compiler flags</string>
+                </property>
+               </widget>
+              </item>
+              <item row="11" column="1">
+               <widget class="QLineEdit" name="le_compiler_flags">
+                <property name="toolTip">
+                 <string>You can add other compiler flags here</string>
                 </property>
                </widget>
               </item>
@@ -1577,8 +1597,8 @@ as possible to get back to the previous indentation level.</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>1154</width>
-               <height>835</height>
+               <width>301</width>
+               <height>558</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
