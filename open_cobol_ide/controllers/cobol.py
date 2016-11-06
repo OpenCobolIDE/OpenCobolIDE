@@ -7,6 +7,7 @@ import os
 import subprocess
 import sys
 import tempfile
+
 from pyqode.core.api import TextHelper
 from pyqode.core.modes import CheckerMessage, CheckerMessages
 from pyqode.qt import QtCore, QtGui, QtWidgets
@@ -366,9 +367,11 @@ class CobolController(Controller):
         :param wd: working directory
         """
         pyqode_console = system.which('pyqode-console')
+        cobc_run_insert_pos = 1
         if pyqode_console is None:
             from pyqode.core.tools import console
             pyqode_console = [sys.executable, console.__file__]
+            cobc_run_insert_pos = 2
         else:
             pyqode_console = [pyqode_console]
         env = os.environ.copy()
@@ -382,7 +385,7 @@ class CobolController(Controller):
         if system.windows:
             cmd = pyqode_console + [program]
             if file_type == FileType.MODULE:
-                cmd.insert(1, system.which('cobcrun'))
+                cmd.insert(cobc_run_insert_pos, system.which('cobcrun'))
             try:
                 _logger().debug("running program in external terminal: %r, %r, %r" % (cmd, wd, env))
                 subprocess.Popen(cmd, cwd=wd, creationflags=subprocess.CREATE_NEW_CONSOLE, env=env)
@@ -410,20 +413,16 @@ class CobolController(Controller):
                 cmd = ['"%s %s"' % (' '.join(pyqode_console), program)]
             else:
                 cmd = ['"%s %s %s"' % (' '.join(pyqode_console), system.which('cobcrun'), program)]
-            cmd = system.shell_split(
-                Settings().external_terminal_command.strip()) + cmd
+            cmd = system.shell_split(Settings().external_terminal_command.strip()) + cmd
             try:
-                subprocess.Popen(' '.join(cmd), cwd=wd, shell=True,
-                                 env=env)
+                subprocess.Popen(' '.join(cmd), cwd=wd, shell=True, env=env)
             except (OSError, subprocess.CalledProcessError):
                 msg = "Failed to launch program in external terminal (cmd=%s) " % ' '.join(cmd)
                 _logger().exception(msg)
                 self.ui.consoleOutput.appendPlainText(msg)
                 return
-        _logger().info('running program in external terminal: %s',
-                       ' '.join(cmd))
-        self.ui.consoleOutput.appendPlainText(
-            "Launched in external terminal: %s" % ' '.join(cmd))
+        _logger().info('running program in external terminal: %s', ' '.join(cmd))
+        self.ui.consoleOutput.appendPlainText("Launched in external terminal: %s" % ' '.join(cmd))
 
     def _run(self):
         """
