@@ -581,7 +581,7 @@ class GnuCobolCompiler(QtCore.QObject):
                     except IndexError:
                         filename = ''
                         line = 0
-                        error_lvl = 'warning'
+                        error_lvl = 'error'
                     message = m.group('error')
                     lvl = CheckerMessages.WARNING if 'warning' in error_lvl \
                         else CheckerMessages.ERROR
