@@ -107,6 +107,8 @@ This tab let you change the GnuCOBOL compiler settings.
 .. warning:: Those settings are applied globally to every file you compile with the IDE. At the moment there is no way
              to set custom compiler settings per file.
 
+.. note:: These settings don't support environment variable expansion.
+
 Compiler path
 +++++++++++++
 
@@ -189,6 +191,8 @@ Run settings
 
 .. image:: _static/run-settings.png
     :align: center
+
+.. note:: These settings don't support environment variable expansion.
 
 External terminal
 +++++++++++++++++
