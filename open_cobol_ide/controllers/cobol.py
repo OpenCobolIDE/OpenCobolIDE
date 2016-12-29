@@ -210,6 +210,8 @@ class CobolController(Controller):
         """
         Compiles the current editor
         """
+        if self.app.edit.current_editor is None:
+            return
         # make sure the associated compiler is working, otherwise disable
         # compile/run actions
         path = self.app.edit.current_editor.file.path
@@ -355,6 +357,8 @@ class CobolController(Controller):
         """
         Compiles and run the current editor.
         """
+        if self.app.edit.current_editor is None:
+            return
         self.ui.consoleOutput.clear()
         self._run_requested = True
         self.compile()
