@@ -240,8 +240,6 @@ class FileManager(Manager):
         for m in self.editor.modes:
             if m.enabled:
                 m.enabled = enable_modes
-        if not enable_modes:
-            self.editor.modes.clear()
         # open file and get its content
         try:
             with open(path, 'Ur', encoding=encoding) as file:

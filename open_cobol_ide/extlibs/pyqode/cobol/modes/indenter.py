@@ -23,9 +23,12 @@ class IndenterMode(Mode):
     :attr:`pyqode.core.api.CodeEdit.indent_requested` or
     :attr:`pyqode.core.api.CodeEdit.unindent_requested`.
     """
+    @property
+    def min_column(self):
+        return 0 if self.editor.free_format else 7
+
     def __init__(self):
         super(IndenterMode, self).__init__()
-        self.min_column = 7
 
     def on_state_changed(self, state):
         if state:
@@ -45,8 +48,7 @@ class IndenterMode(Mode):
         tab_len = self.editor.tab_length
         cursor.beginEditBlock()
         nb_lines = len(cursor.selection().toPlainText().splitlines())
-        if (cursor.atBlockStart() and cursor.position() ==
-                cursor.selectionEnd()):
+        if (cursor.atBlockStart() and cursor.position() == cursor.selectionEnd()):
             nb_lines += 1
         block = doc.findBlock(cursor.selectionStart())
         i = 0
@@ -54,13 +56,8 @@ class IndenterMode(Mode):
         while i < nb_lines:
             nb_space_to_add = tab_len
             cursor = QtGui.QTextCursor(block)
-            indentation = TextHelper(self.editor).line_indent(block)
-            if indentation < self.min_column:
-                # align with at least 7th char
-                nb_space_to_add = self.min_column
-                if block.text().strip().startswith('*') and indentation == 0:
-                    nb_space_to_add -= 1
             cursor.movePosition(cursor.StartOfLine, cursor.MoveAnchor)
+            cursor.movePosition(cursor.Right, cursor.MoveAnchor, self.min_column)
             if self.editor.use_spaces_instead_of_tabs:
                 for _ in range(nb_space_to_add):
                     cursor.insertText(" ")
@@ -86,24 +83,25 @@ class IndenterMode(Mode):
         i = 0
         _logger().debug('unindent selection: %d lines', nb_lines)
         while i < nb_lines:
-            txt = block.text()
+            txt = block.text()[self.min_column:]
             _logger().debug('line to unindent: %s', txt)
             _logger().debug('self.editor.use_spaces_instead_of_tabs: %r',
                             self.editor.use_spaces_instead_of_tabs)
             if self.editor.use_spaces_instead_of_tabs:
-                indentation = (len(txt) - len(txt.lstrip()) -
-                               self.min_column)
+                indentation = len(txt) - len(txt.lstrip())
             else:
                 indentation = len(txt) - len(txt.replace('\t', ''))
-            _logger().debug('unindent line %d: %d spaces (min indent=%d)',
-                            i, indentation, self.min_column)
+            _logger().debug('unindent line %d: %d spaces (min indent=%d)', i, indentation, self.min_column)
             if indentation > 0:
                 c = QtGui.QTextCursor(block)
                 c.movePosition(c.StartOfLine, cursor.MoveAnchor)
-                for _ in range(tab_len):
-                    txt = block.text()
-                    if len(txt) and txt[0] == ' ':
-                        c.deleteChar()
+                c.movePosition(c.Right, cursor.MoveAnchor, indentation + self.min_column)
+                max_spaces = indentation % tab_len
+                if max_spaces == 0:
+                    max_spaces = tab_len
+                spaces = self.count_deletable_spaces(c, max_spaces)
+                for _ in range(spaces):
+                    c.deletePreviousChar()
             block = block.next()
             i += 1
         return cursor
@@ -119,21 +117,16 @@ class IndenterMode(Mode):
         else:
             # simply insert indentation at the cursor position
             tab_len = self.editor.tab_length
+            if cursor.positionInBlock() < self.min_column and not cursor.atBlockEnd():
+                cursor.movePosition(cursor.Right, cursor.MoveAnchor, self.min_column)
             cursor.beginEditBlock()
             if self.editor.use_spaces_instead_of_tabs:
-                if cursor.positionInBlock() < self.min_column:
-                    nb_space_to_add = (self.min_column -
-                                       cursor.positionInBlock())
-                    if cursor.block().text().strip().startswith('*'):
-                        nb_space_to_add -= 1
-                else:
-                    nb_space_to_add = (
-                        tab_len - (cursor.positionInBlock() -
-                                   self.min_column) % tab_len)
+                nb_space_to_add = tab_len - (cursor.positionInBlock() - self.min_column) % tab_len
                 cursor.insertText(nb_space_to_add * " ")
             else:
                 cursor.insertText('\t')
             cursor.endEditBlock()
+            self.editor.setTextCursor(cursor)
 
     def count_deletable_spaces(self, cursor, max_spaces):
         # count the number of spaces deletable, stop at tab len
@@ -169,18 +162,17 @@ class IndenterMode(Mode):
         else:
             tab_len = self.editor.tab_length
             indentation = cursor.positionInBlock()
-            max_spaces = tab_len - (indentation - (indentation % tab_len))
+            indentation -= self.min_column
+            if indentation == 0:
+                return
+            max_spaces = indentation % tab_len
+            if max_spaces == 0:
+                max_spaces = tab_len
             spaces = self.count_deletable_spaces(cursor, max_spaces)
             _logger().info('deleting %d space before cursor' % spaces)
             cursor.beginEditBlock()
-            if spaces:
-                # delete spaces before cursor
-                for _ in range(spaces):
-                    cursor.deletePreviousChar()
-            else:
-                # un-indent whole line
-                _logger().debug('un-indent whole line')
-                cursor = self.unindent_selection(cursor)
+            for _ in range(spaces):
+                cursor.deletePreviousChar()
             cursor.endEditBlock()
             self.editor.setTextCursor(cursor)
             _logger().debug(cursor.block().text())

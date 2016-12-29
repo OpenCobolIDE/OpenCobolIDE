@@ -38,7 +38,6 @@ class CobolCodeEdit(api.CodeEdit):
     def free_format(self, free_fmt):
         if free_fmt != self._free_format:
             self._free_format = free_fmt
-            self.indenter_mode.min_column = 7 if not free_fmt else 0
             self.margins.enabled = not free_fmt
             self.syntax_highlighter.rehighlight()
             self._update_backend_format()
@@ -76,7 +75,6 @@ class CobolCodeEdit(api.CodeEdit):
         self.read_only_panel = self.panels.append(
             panels.ReadOnlyPanel(), api.Panel.Position.TOP
         )
-        self.indenter_mode.min_column = 7
         self.free_format = free_format
 
     def _start_server(self):
@@ -204,6 +202,26 @@ class CobolCodeEdit(api.CodeEdit):
         except NotRunning:
             QtCore.QTimer.singleShot(
                 100, self._update_backend_proposed_kw_case)
+
+    def _do_home_key(self, event=None, select=False):
+        """ Performs home key action """
+        # get nb char to first significative char
+        min_column = self.indenter_mode.min_column
+        text = api.TextHelper(self).current_line_text()[min_column:]
+        indent = len(text) - len(text.lstrip())
+        delta = (self.textCursor().positionInBlock() - indent - min_column)
+        cursor = self.textCursor()
+        move = QtGui.QTextCursor.MoveAnchor
+        if select:
+            move = QtGui.QTextCursor.KeepAnchor
+        if delta > 0:
+            cursor.movePosition(QtGui.QTextCursor.Left, move, delta)
+        else:
+            cursor.movePosition(QtGui.QTextCursor.StartOfBlock, move)
+            cursor.movePosition(QtGui.QTextCursor.Right, cursor.MoveAnchor, min_column)
+        self.setTextCursor(cursor)
+        if event:
+            event.accept()
 
 for ext in CobolCodeEdit.extensions:
     mimetypes.add_type(CobolCodeEdit.mimetypes[0], ext)

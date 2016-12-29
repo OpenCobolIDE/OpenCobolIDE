@@ -44,10 +44,13 @@ class SubsequenceSortFilterProxyModel(QtCore.QSortFilterProxyModel):
             flags = 0
         for i in reversed(range(1, len(prefix) + 1)):
             ptrn = '.*%s.*%s' % (prefix[0:i], prefix[i:])
-            self.filter_patterns.append(re.compile(ptrn, flags))
-            self.filter_patterns_case_sensitive.append(re.compile(ptrn, 0))
-            ptrn = '%s.*%s' % (prefix[0:i], prefix[i:])
-            self.sort_patterns.append(re.compile(ptrn, flags))
+            try:
+                self.filter_patterns.append(re.compile(ptrn, flags))
+                self.filter_patterns_case_sensitive.append(re.compile(ptrn, 0))
+                ptrn = '%s.*%s' % (prefix[0:i], prefix[i:])
+                self.sort_patterns.append(re.compile(ptrn, flags))
+            except Exception:
+                continue
         self.prefix = prefix
 
     def filterAcceptsRow(self, row, _):
