@@ -39,7 +39,7 @@ New features:
 - improved indentation in fixed mode (TAB/SHIFT+TAB)
 - add support for going to a section using F7
 - updated list of COBOL keywoards for GnuCOBOL 2.x users
-- updated bundled GnuCOBOL version on windows: now at GnuCOBOL 2.0rc2 (build made by Arnold Trembly, can be downloaded here: http://www.arnoldtrembley.com/GnuCOBOL.htm)
+- updated bundled GnuCOBOL version on windows: now at GnuCOBOL 2.0rc2 (build made by Arnold Trembley, can be downloaded here: http://www.arnoldtrembley.com/GnuCOBOL.htm)
 
 Fixed bugs:
 
