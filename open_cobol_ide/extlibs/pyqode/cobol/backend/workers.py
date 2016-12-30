@@ -33,11 +33,10 @@ def set_lower_case_keywords(lower_case):
 class CobolCodeCompletionProvider:
     def __init__(self):
         self._kwds = []
-        for keyword in (keywords.PSEUDO + keywords.RESERVED +
-                        keywords.CONSTANTS):
+        for keyword in keywords.RESERVED:
             self._kwds.append(
                 {'name': keyword, 'icon': icons.ICON_KEYWORD})
-        for keyword in keywords.NAME_CONSTANTS + keywords.FUNCTIONS:
+        for keyword in keywords.INTRINSICS:
             self._kwds.append(
                 {'name': keyword, 'icon': icons.ICON_FUNC})
 
