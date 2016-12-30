@@ -76,14 +76,8 @@ options = {
     # freeze the pygments default style along with our executable
     'includes': [
         'pkg_resources',
-        'keyring.backends.file',
-        'keyring.backends.Gnome',
-        'keyring.backends.Google',
-        'keyring.backends.keyczar',
         'keyring.backends.kwallet',
-        'keyring.backends.multi',
         'keyring.backends.OS_X',
-        'keyring.backends.pyfs',
         'keyring.backends.SecretService',
         'keyring.backends.Windows',
         'six',
