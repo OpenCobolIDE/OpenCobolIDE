@@ -1,12 +1,12 @@
 What's New?
-************
+***********
 
 This page lists the most prominent milestones achieved by the OpenCobolIDE
 developers. For more specific details about what is planned and what has been
 accomplished, please visit the `issues page on github`_.
 
 Next Version
-=============
+============
 
 OpenCobolIDE is in maintenance mode. No new features planned, only critical bugfixes. Note that it may automatically
 receive new features if they are implemented in pyQode.
@@ -27,6 +27,34 @@ HackEdit is in alpha stage for the now. We will continue to maintain and fix
 bugs in OCIDE until the final 1.0 version of HackEdit is ready.*
 
 .. _HackEdit: https://github.com/HackEdit/hackedit
+
+4.7.6
+-----
+
+New features:
+
+- add -W and -Wall compiler flags
+- add an help button next to the compiler flags settings, the help shows a dialog with the output of cobc --help
+- add buttons to change order of copybooks and libraries in compiler settings
+- improved indentation in fixed mode (TAB/SHIFT+TAB)
+- add support for going to a section using F7
+- updated list of COBOL keywoards for GnuCOBOL 2.x users
+
+Fixed bugs:
+
+- fix TypeError: start_process() got an unexpected keyword argument 'cwd' when running a module with cobcrun
+- fix OutputWindow backend cannot import pyqode (search not working in output window)
+- fix occasional RuntimeError: wrapped C/C object of type CobolCodeEdit has been deleted
+- fix MemoryError when reading log file
+- fix [Unhandled exception] UnicodeEncodeError when getting cursor position in bytes
+- fix change to Encoding leads to empty editor window
+- fix Preferences->Run misses a label/link for "run in external terminal"
+- fix goto (F7) sometimes going to a wrong identifier
+
+4.7.5
+-----
+
+Bug fix release for PyQt5.7
 
 4.7.4
 -----
