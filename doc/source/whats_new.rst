@@ -1,15 +1,11 @@
 What's New?
 ***********
 
+** OpenCobolIDE is no longer maintained **
+
 This page lists the most prominent milestones achieved by the OpenCobolIDE
 developers. For more specific details about what is planned and what has been
 accomplished, please visit the `issues page on github`_.
-
-Next Version
-============
-
-OpenCobolIDE is in maintenance mode. No new features planned, only critical bugfixes. Note that it may automatically
-receive new features if they are implemented in pyQode.
 
 Changelog
 =========
