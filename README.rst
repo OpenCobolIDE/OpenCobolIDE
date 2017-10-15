@@ -1,37 +1,7 @@
-**NOT MAINTAINED**
-
 OpenCobolIDE
 ------------
 
-.. image:: https://img.shields.io/pypi/v/OpenCobolIDE.svg
-   :target: https://pypi.python.org/pypi/OpenCobolIDE/
-   :alt: Latest PyPI version
-
-.. image:: https://img.shields.io/pypi/dm/OpenCobolIDE.svg
-   :target: https://pypi.python.org/pypi/OpenCobolIDE/
-   :alt: Number of PyPI downloads
-
-.. image:: https://img.shields.io/pypi/l/OpenCobolIDE.svg
-
-.. image:: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE.svg?branch=master
-   :target: https://travis-ci.org/OpenCobolIDE/OpenCobolIDE
-   :alt: Build status
-
-.. image:: https://coveralls.io/repos/OpenCobolIDE/OpenCobolIDE/badge.svg?branch=master
-   :target: https://coveralls.io/r/OpenCobolIDE/OpenCobolIDE?branch=master
-   :alt: Coverage Status
-
-
-OpenCobolIDE is a simple and lightweight COBOL IDE based on the GnuCOBOL
-compiler.
-
-
-The software is written in Python using `PyQt5`_ (or `PyQt4`_) and `pyQode`_
-
-
-Starting from version 4.7, **OpenCobolIDE has entered in maintainance mode**. **No new features will be accepted, only bug fixes**.
-
-OpenCobolIDE is no longer maintained, see https://github.com/OpenCobolIDE/OpenCobolIDE/issues/439
+**OpenCobolIDE is no longer maintained**, see https://github.com/OpenCobolIDE/OpenCobolIDE/issues/439
 
 Features:
 ---------
