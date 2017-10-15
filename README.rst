@@ -1,3 +1,5 @@
+**NOT MAINTAINED**
+
 OpenCobolIDE
 ------------
 
@@ -29,7 +31,7 @@ The software is written in Python using `PyQt5`_ (or `PyQt4`_) and `pyQode`_
 
 Starting from version 4.7, **OpenCobolIDE has entered in maintainance mode**. **No new features will be accepted, only bug fixes**.
 
-The next major version of OpenCobolIDE will be `HackEdit`_ , *a brand new project that will replace OCIDE when it is ready, currently in alpha...*
+OpenCobolIDE is no longer maintained, see https://github.com/OpenCobolIDE/OpenCobolIDE/issues/439
 
 Features:
 ---------
